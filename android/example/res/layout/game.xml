@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+    <ImageView android:layout_width="fill_parent" android:layout_height="fill_parent" android:src="@drawable/bg" android:scaleType="centerCrop" android:id="@+id/bg"/>
+    
+    <TextView 
+        android:layout_above="@+id/shipselector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Choose your ship"
+        android:textColor="#FFFFFFFF"
+        android:textSize="26sp" 
+        android:paddingBottom="13dip"/>
+    
+    <LinearLayout 
+        android:orientation="horizontal"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shipselection"
+        android:id="@+id/shipselector">
+        
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/stats_bugger" android:scaleType="centerCrop" android:id="@+id/bugger"/>
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/stats_windlord" android:scaleType="centerCrop" android:id="@+id/windlord"/>
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/stats_plissken" android:scaleType="centerCrop" android:id="@+id/plissken"/>
+         
+    </LinearLayout>
+    
+    <ImageView 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:src="@drawable/unlockbtn"
+        android:scaleType="centerCrop" 
+        android:id="@+id/unlock"
+        android:layout_alignRight="@+id/shipselector"
+        android:layout_marginRight="14dip"
+        android:layout_below="@+id/shipselector" />
+        
+</RelativeLayout>
