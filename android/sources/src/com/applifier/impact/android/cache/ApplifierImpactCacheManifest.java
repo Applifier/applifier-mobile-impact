@@ -1,313 +1,132 @@
 package com.applifier.impact.android.cache;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactProperties;
+import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 
 public class ApplifierImpactCacheManifest {
-	private String _manifestDirectory = null;
 	private JSONObject _manifestJson = null;
 	private String _manifestContent = "";
+	private ArrayList<ApplifierImpactCampaign> _cachedCampaigns = null;
 	
-	public ApplifierImpactCacheManifest (String manifestDir) {
-		_manifestDirectory = manifestDir;
+	public ApplifierImpactCacheManifest () {
 		readCacheManifest();
+		createCampaignsFromManifest();
 	}
 	
-	public JSONObject getCacheManifest () {
-		return _manifestJson;
-	}
-	
-	public int getCampaignAmount () {
-		if (_manifestJson == null) return 0;
-		
-		if (_manifestJson.has("va")) {
-			try {
-				return _manifestJson.getJSONArray("va").length();
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Couldn't resolve video amount");
-				return 0;
-			}
-		}
-		
-		return 0;
+	public int getCachedCampaignAmount () {
+		if (_cachedCampaigns == null) 
+			return 0;
+		else
+			return _cachedCampaigns.size();
 	}
 	
 	public ArrayList<String> getCachedCampaignIds () {
-		if (_manifestJson == null || !_manifestJson.has("va")) return null;
-		
-		ArrayList<String> retList = new ArrayList<String>();
-		JSONArray va = null;
-		JSONObject currentCampaign = null;
-		String currentId = null;
-		
-		try {
-			va = _manifestJson.getJSONArray("va");
-		}
-		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed manifest");
+		if (_cachedCampaigns == null) 
 			return null;
-		}
-		
-		for (int i = 0; i < va.length(); i++) {
-			currentId = null;
+		else {
+			ArrayList<String> retList = new ArrayList<String>();
 			
-			try {
-				currentCampaign = va.getJSONObject(i);
-				currentId = currentCampaign.getString("id");
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed manifest");
-				continue;
+			for (ApplifierImpactCampaign campaign : _cachedCampaigns) {
+				if (campaign != null)
+					retList.add(campaign.getCampaignId());
 			}
 			
-			if (currentId != null)
-				retList.add(currentId);
+			return retList;
 		}
-		
-		return retList;
 	}
 	
-	public JSONObject getCampaign (String id) {
-		if (id == null) return null;
-		
-		if (_manifestJson != null && _manifestJson.has("va")) {
-			JSONArray va = null;
-			JSONObject campaign = null;
-			String campaignId = null;
-			
-			try {
-				va = _manifestJson.getJSONArray("va");
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed manifest");
-				return null;
-			}
-			
-			for (int i = 0; i < va.length(); i++) {
-				try {
-					campaign = va.getJSONObject(i);
-				}
-				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed manifest");
-					continue;
-				}
-				
-				if (campaign != null && campaign.has("id")) {
-					try {
-						campaignId = campaign.getString("id");
-					}
-					catch (Exception e) {
-						Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed manifest");
-						continue;
-					}
-				}
-				
-				if (id.equals(campaignId))
+	public void setCachedCampaigns (ArrayList<ApplifierImpactCampaign> campaigns) {
+		_cachedCampaigns = campaigns;
+		writeCurrentCacheManifest();
+	}
+	
+	public ArrayList<ApplifierImpactCampaign> getCachedCampaigns () {
+		return _cachedCampaigns;
+	}
+	
+	public ApplifierImpactCampaign getCachedCampaign (String id) {
+		if (id == null || _cachedCampaigns == null) 
+			return null;
+		else {
+			for (ApplifierImpactCampaign campaign : _cachedCampaigns) {
+				if (campaign.getCampaignId().equals(id))
 					return campaign;
 			}
 		}
 		
-		return null;		
+		return null;
 	}
 	
-	public boolean removeCampaignFromManifest (JSONObject campaign) {
-		if (campaign == null) return false;
+	public boolean removeCampaignFromManifest (String campaignId) {		
+		if (campaignId == null || _cachedCampaigns == null) return false;
 		
-		JSONArray originalVa = null;
-		JSONArray newVa = new JSONArray();
-		JSONObject currentCampaign = null;
-		String currentCampaignId = null;
-		String targetCampaignId = null;
+		ApplifierImpactCampaign currentCampaign = null;
+		int indexOfCampaignToRemove = -1;
 		
-		try {			
-			targetCampaignId = campaign.getString("id");
-		}
-		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed cache manifest.");
-			return false;
-		}
-		
-		try {
-			originalVa = _manifestJson.getJSONArray("va");
-		}
-		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed cache manifest.");
-			return false;
-		}
-		
-		if (originalVa != null) {
-			for (int i = 0; i < originalVa.length(); i++) {
-				try {
-					currentCampaign = originalVa.getJSONObject(i);
-				}
-				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Couldn't get current campaign index.");
-					return false;
-				}
-				
-				try {
-					currentCampaignId = currentCampaign.getString("id");
-				}
-				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed cache manifest.");
-					return false;
-				}
-				
-				if (!currentCampaignId.equals(targetCampaignId)) {
-					newVa.put(currentCampaign);
-				}
-			}
+		for (int i = 0; i < _cachedCampaigns.size(); i++) {
+			currentCampaign = _cachedCampaigns.get(i);
 			
-			try {
-				_manifestJson.put("va", newVa);
+			if (currentCampaign.getCampaignId().equals(campaignId)) {
+				indexOfCampaignToRemove = i;
+				break;
 			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed cache manifest.");
-				return false;
-			}
-			
-			writeCurrentCacheManifest();			
 		}
-		else {
-			return false;
+		
+		if (indexOfCampaignToRemove > -1) {
+			_cachedCampaigns.remove(indexOfCampaignToRemove);
+			writeCurrentCacheManifest();
+			return true;
 		}
-				
-		return true;
+		
+		return false;
 	}
 	
-	public boolean addCampaignToManifest (JSONObject campaign) {
+	public boolean addCampaignToManifest (ApplifierImpactCampaign campaign) {
 		if (campaign == null) return false;
+		if (_cachedCampaigns == null)
+			_cachedCampaigns = new ArrayList<ApplifierImpactCampaign>();
 		
-		File manifest = getFileForManifest();
-		
-		if (!manifest.exists() || _manifestJson == null || !_manifestJson.has("va")) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Preparing new cache manifest");
-			prepareNewCacheManifest();
-		}
-		
-		String campaignId = null;
-		
-		try {
-			campaignId = campaign.getString("id");
-		}
-		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed cache manifest.");
-			return false;
-		}
-		
-		if (_manifestJson != null && _manifestJson.has("va") && getCampaign(campaignId) == null) {
-			try {
-				_manifestJson.getJSONArray("va").put(campaign);
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Problem creating JSON: " + e.getMessage());
-				return false;
-			}
-		}
-		
+		_cachedCampaigns.add(campaign);
 		writeCurrentCacheManifest();
-
+		
 		return true;
 	}
 	
-	public boolean updateCampaignInManifest (JSONObject campaign) {
-		if (campaign == null) return false;
-				
-		String campaignId = null;
-		JSONObject manifestCampaign = null;
+	public boolean updateCampaignInManifest (ApplifierImpactCampaign campaign) {
+		if (campaign == null || _cachedCampaigns == null) return false;
 		
-		if (campaign.has("id")) {
-			try {
-				campaignId = campaign.getString("id");
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed cache manifest.");
-				return false;
-			}
-			
-			if (campaignId == null) return false;
-			
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Updating campaign: " + campaignId);
-			manifestCampaign = getCampaign(campaignId);
-			
-			if (manifestCampaign != null) {
-				try {
-					if (!manifestCampaign.getString("v").equals(campaign.getString("v")) && !ApplifierImpact.cachemanager.isFileCached(campaign.getString("v"))) {
-						// TODO: Make check that the old video-file is not needed anymore by other campaigns and remove it
-						// ApplifierImpact.cachemanager.removeCachedFile(manifestCampaign.getString("v"));
-						
-						// TODO: Do not call cacheFile from here, caching should be done in cachemanager
-						ApplifierImpact.cachemanager.cacheFile(campaign.getString("v"), campaignId);
-					}
-				}
-				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed cache manifest.");
-					return false;				
-				}
-				
-				try {
-					manifestCampaign.put("s", campaign.getString("s"));
-					manifestCampaign.put("v", campaign.getString("v"));
-					Log.d(ApplifierImpactProperties.LOG_NAME, campaign.getString("s") + ", " + campaign.getString("v"));
-				}
-				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed cache manifest.");
-					return false;
-				}
-				
-				// TODO: Make check that you write cache only if the video file has not changed, if it has, wait for the write until download has finished
+		if (removeCampaignFromManifest(campaign.getCampaignId())) {
+			if (addCampaignToManifest(campaign)) {
 				writeCurrentCacheManifest();
+				return true;
 			}
 		}
 		
 		return false;
 	}
 	
-	private boolean prepareNewCacheManifest () {
-		_manifestJson = new JSONObject();
-		JSONArray ja = new JSONArray();
-		
-		try {
-			_manifestJson.put("va", ja);				
-		}
-		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Problem creating JSON: " + e.getMessage());
-			return false;
-		}
 	
-		return true;
-	}
-
-	private boolean readCacheManifest () {
-		File manifest = getFileForManifest();
-		BufferedReader br = null;
+	/* INTERNAL METHODS */
+	
+	private void createCampaignsFromManifest () {
+		if (_manifestJson == null) return;		
 		
-		if (manifest.exists() && manifest.canRead()) {
-			try {
-				br = new BufferedReader(new FileReader(manifest));
-				String line = null;
-				
-				while ((line = br.readLine()) != null) {
-					_manifestContent = _manifestContent.concat(line);
-				}
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Problem reading cachemanifest: " + e.getMessage());
-				return false;
-			}
-			
+		_cachedCampaigns = ApplifierImpactUtils.createCampaignsFromJson(_manifestJson);
+	}
+	
+	private boolean readCacheManifest () {		
+		File manifest = getFileForManifest();
+		_manifestContent = ApplifierImpactUtils.readFile(manifest);
+		
+		if (_manifestContent != null) {
 			try {
 				_manifestJson = new JSONObject(_manifestContent);
 			}
@@ -316,40 +135,23 @@ public class ApplifierImpactCacheManifest {
 				return false;
 			}
 			
-			try {
-				br.close();
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Problem closing reader: " + e.getMessage());
-			}
-						
 			return true;
-		}
-		else {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Cache manifest did not exist or couldn't be read");
 		}
 		
 		return false;
 	}
 	
 	private boolean writeCurrentCacheManifest () {
-		FileOutputStream fos = null;
+		JSONObject manifestToWrite = ApplifierImpactUtils.createJsonFromCampaigns(_cachedCampaigns);
 		
-		try {
-			fos = new FileOutputStream(getFileForManifest());
-			String content = _manifestJson.toString();
-			fos.write(content.getBytes());
-			fos.flush();
-			fos.close();
-		}
-		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Could not re-write cachemanifest: " + e.getMessage());
+		if (manifestToWrite != null) {
+			return ApplifierImpactUtils.writeFile(getFileForManifest(), manifestToWrite.toString());
 		}
 		
-		return true;
+		return false;
 	}
 	
 	private File getFileForManifest () {
-		return new File(_manifestDirectory + "/" + ApplifierImpactProperties.CACHE_MANIFEST_FILENAME);
+		return new File(ApplifierImpactUtils.getCacheDirectory() + "/" + ApplifierImpactProperties.CACHE_MANIFEST_FILENAME);
 	}
 }

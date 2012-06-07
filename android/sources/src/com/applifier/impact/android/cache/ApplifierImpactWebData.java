@@ -7,41 +7,31 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactProperties;
+import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 
 public class ApplifierImpactWebData {
 	private JSONObject _videoPlan = null;
+	private ArrayList<ApplifierImpactCampaign> _videoPlanCampaigns = null;
 	
 	public ApplifierImpactWebData () {
 		
 	}
 	
-	public JSONObject getVideoPlan () {
-		return _videoPlan;
+	public ArrayList<ApplifierImpactCampaign> getVideoPlanCampaigns () {
+		return _videoPlanCampaigns;
 	}
+	
 	
 	public int getCampaignAmount () {
-		if (_videoPlan == null) return 0;
-		
-		if (_videoPlan.has("va")) {
-			try {
-				return _videoPlan.getJSONArray("va").length();
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Couldn't resolve video amount");
-				return 0;
-			}
-		}
-		
-		return 0;
+		if (_videoPlanCampaigns == null) return 0;
+		return _videoPlanCampaigns.size();
 	}
 	
-	public boolean initVideoPlan (JSONObject cacheManifest) {		
+	public boolean initVideoPlan (ArrayList<String> cachedCampaignIds) {		
 		JSONObject data = new JSONObject();
 		JSONArray campaignIds = null;
-		ArrayList<String> cachedCampaignIds = ApplifierImpact.cachemanifest.getCachedCampaignIds();
-		//Log.d(ApplifierImpactProperties.LOG_NAME, cachedCampaignIds.toString());
 		
 		if (cachedCampaignIds != null && cachedCampaignIds.size() > 0) {
 			campaignIds = new JSONArray();
@@ -81,8 +71,6 @@ public class ApplifierImpactWebData {
 
 		in.close();*/
 		
-		JSONArray campaignstatus = new JSONArray();
-		
 		JSONArray videos = new JSONArray();
 		JSONObject tmpvideo = null;
 		
@@ -110,16 +98,9 @@ public class ApplifierImpactWebData {
 			_videoPlan = new JSONObject();
 			_videoPlan.put("va", videos);
 			
-			/*
-			tmpvideo = new JSONObject();
-			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video1.mp4");
-			tmpvideo.put("s", "update");
-			tmpvideo.put("id", "a1");
-			campaignstatus.put(tmpvideo);
-			_videoPlan.put("cs", campaignstatus);
-			*/
-			
 			Log.d(ApplifierImpactProperties.LOG_NAME, _videoPlan.toString(4));
+			
+			_videoPlanCampaigns = ApplifierImpactUtils.createCampaignsFromJson(_videoPlan);
 		}
 		catch (Exception e) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Great error!");

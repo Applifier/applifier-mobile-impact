@@ -2,15 +2,14 @@ package com.applifier.impact.android.view;
 
 import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactProperties;
+import com.applifier.impact.android.ApplifierImpactUtils;
 
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.VideoView;
 
 import com.applifier.impact.android.R;
@@ -44,7 +43,7 @@ public class ApplifierVideoPlayView extends FrameLayout {
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Creating custom view");
 		setBackgroundColor(0xBA000000);
 		inflate(getContext(), R.layout.applifier_showvideo, this);
-		((VideoView)findViewById(R.id.videoplayer)).setVideoPath(ApplifierImpact.cachemanager.getCacheDir() + "/video5.mp4");
+		((VideoView)findViewById(R.id.videoplayer)).setVideoPath(ApplifierImpactUtils.getCacheDirectory() + "/video5.mp4");
 		((VideoView)findViewById(R.id.videoplayer)).setOnCompletionListener(_listener);
 	}
 	

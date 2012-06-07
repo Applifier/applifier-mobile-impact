@@ -2,13 +2,11 @@ package com.applifier.impact.android;
 
 import java.util.ArrayList;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.cache.ApplifierImpactCacheManifest;
 import com.applifier.impact.android.cache.ApplifierImpactWebData;
 import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.video.IApplifierImpactVideoListener;
 import com.applifier.impact.android.view.ApplifierVideoCompletedView;
 import com.applifier.impact.android.view.ApplifierVideoPlayView;
@@ -27,10 +25,9 @@ public class ApplifierImpact {
 	public static ApplifierImpact instance = null;
 	public static ApplifierImpactCacheManifest cachemanifest = null;
 	public static ApplifierImpactCacheManager cachemanager = null;
+	public static ApplifierImpactWebData webdata = null;
 	
 	// Temporary data
-	private ApplifierImpactWebData _webdata = null;
-	private ArrayList<JSONObject> _currentImpact = null;
 	private Activity _currentActivity = null;
 	
 	// Views
@@ -68,6 +65,30 @@ public class ApplifierImpact {
 		if (_initialized) return; 
 		
 		cachemanager = new ApplifierImpactCacheManager();
+		cachemanifest = new ApplifierImpactCacheManifest();
+		webdata = new ApplifierImpactWebData();
+		
+		if (webdata.initVideoPlan(cachemanifest.getCachedCampaignIds())) {
+			ArrayList<ApplifierImpactCampaign> cachedCampaigns = cachemanifest.getCachedCampaigns();
+			ArrayList<ApplifierImpactCampaign> videoPlanCampaigns = webdata.getVideoPlanCampaigns();
+			ArrayList<ApplifierImpactCampaign> pruneList = ApplifierImpactUtils.createPruneList(cachedCampaigns, videoPlanCampaigns);
+			
+			if (cachedCampaigns != null)
+				Log.d(ApplifierImpactProperties.LOG_NAME, "Cached campaigns: " + cachedCampaigns.toString());
+			
+			if (videoPlanCampaigns != null)
+				Log.d(ApplifierImpactProperties.LOG_NAME, "Campaigns in videoPlan: " + videoPlanCampaigns.toString());
+			
+			if (pruneList != null)
+				Log.d(ApplifierImpactProperties.LOG_NAME, "Campaigns to prune: " + pruneList.toString());
+			
+			cachemanager.updateCache(videoPlanCampaigns, pruneList);
+			cachemanifest.setCachedCampaigns(webdata.getVideoPlanCampaigns());
+		}
+		
+		
+		/*
+		cachemanager = new ApplifierImpactCacheManager();
 		cachemanager.setCacheListener(new IApplifierImpactCacheListener() {			
 			@Override
 			public void onCachedCampaignsAvailable() {
@@ -88,9 +109,10 @@ public class ApplifierImpact {
 			Log.d(ApplifierImpactProperties.LOG_NAME, mergedCampaigns.toString());
 		else
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Jenkem");
-
 		
 		setupViews();
+		*/
+		
 		_initialized = true;
 	}
 		
@@ -99,6 +121,7 @@ public class ApplifierImpact {
 	}
 	
 	public boolean showImpact () {
+		/*
 		_currentImpact = new ArrayList<JSONObject>();
 		ArrayList<String> _cachedCampaigns = cachemanifest.getCachedCampaignIds();
 		
@@ -109,7 +132,7 @@ public class ApplifierImpact {
 				break;
 		}
 		
-		/*
+		
 		if (_currentImpact.size() < 3) {
 			int left = 3 - _currentImpact.size();
 			JSONObject plan = _webdata.getVideoPlan();
@@ -130,7 +153,7 @@ public class ApplifierImpact {
 					return false;
 				}
 			}
-		}*/
+		}
 				
 		Log.d(ApplifierImpactProperties.LOG_NAME, _currentImpact.toString());
 		
@@ -139,8 +162,8 @@ public class ApplifierImpact {
 		
 		if (_impactListener != null)
 			_impactListener.onImpactOpen();
-		
-		return true;
+		*/
+		return false;
 	}
 	
 	public void closeImpactView (View view, boolean reportClosed) {
@@ -156,8 +179,8 @@ public class ApplifierImpact {
 	}
 	
 	public boolean hasCampaigns () {
-		if (_webdata != null && cachemanifest != null) {
-			if (_webdata.getCampaignAmount() + cachemanifest.getCampaignAmount() > 2)
+		if (webdata != null && cachemanifest != null) {
+			if (webdata.getCampaignAmount() + cachemanifest.getCachedCampaignAmount() > 2)
 				return true;
 		}
 		
@@ -167,64 +190,7 @@ public class ApplifierImpact {
 	
 	/* PRIVATE METHODS */
 	
-	private ArrayList<ApplifierImpactCampaign> createCampaignsFromJson (JSONObject json) {
-		if (json != null && json.has("va")) {
-			ArrayList<ApplifierImpactCampaign> campaignData = new ArrayList<ApplifierImpactCampaign>();
-			JSONArray va = null;
-			JSONObject currentCampaign = null;
-			
-			try {
-				va = json.getJSONArray("va");
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
-			}
-			
-			for (int i = 0; i < va.length(); i++) {
-				try {
-					currentCampaign = va.getJSONObject(i);
-					campaignData.add(new ApplifierImpactCampaign(currentCampaign));
-				}
-				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
-				}				
-			}
-			
-			return campaignData;
-		}
-		
-		return null;
-	}
-	
-	private ArrayList<ApplifierImpactCampaign> mergeCampaignLists (ArrayList<ApplifierImpactCampaign> list1, ArrayList<ApplifierImpactCampaign> list2) {
-		ArrayList<ApplifierImpactCampaign> mergedData = new ArrayList<ApplifierImpactCampaign>();
-		
-		if (list1 == null || list1.size() == 0) return list2;
-		if (list2 == null || list2.size() == 0) return list1;
-		
-		if (list1 != null && list2 != null) {
-			mergedData.addAll(list1);
-			for (ApplifierImpactCampaign list1Campaign : list1) {
-				ApplifierImpactCampaign inputCampaign = null;
-				boolean match = false;
-				for (ApplifierImpactCampaign list2Campaign : list2) {
-					inputCampaign = list2Campaign;
-					if (list1Campaign.getCampaignId().equals(list2Campaign.getCampaignId())) {
-						match = true;
-						break;
-					}
-				}
-				
-				if (!match)
-					mergedData.add(inputCampaign);
-			}
-			
-			return mergedData;
-		}
-		
-		return null;
-	}
-	
+
 	private void focusToView (View view) {
 		view.setFocusable(true);
 		view.setFocusableInTouchMode(true);
