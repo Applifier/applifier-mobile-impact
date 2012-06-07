@@ -1,8 +1,10 @@
-package com.applifier.impact.android;
+package com.applifier.impact.android.campaign;
 
 import java.io.File;
 
 import org.json.JSONObject;
+
+import com.applifier.impact.android.ApplifierImpactProperties;
 
 import android.util.Log;
 
@@ -20,6 +22,22 @@ public class ApplifierImpactCampaign {
 	@Override
 	public String toString () {
 		return "(ID: " + getCampaignId() + ", STATUS: " + getCampaignStatus() + ", URL: " + getVideoUrl() + ")"; 
+	}
+	
+	public JSONObject toJson () {
+		JSONObject retObject = new JSONObject();
+		
+		try {
+			retObject.put("v", getVideoUrl());
+			retObject.put("s", getCampaignStatus());
+			retObject.put("id", getCampaignId());
+		}
+		catch (Exception e) {
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Error creating campaign JSON");
+			return null;
+		}
+		
+		return retObject;
 	}
 	
 	public String getCampaignId () {
