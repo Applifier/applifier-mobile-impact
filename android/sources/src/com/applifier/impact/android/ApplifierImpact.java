@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.cache.ApplifierImpactCacheManifest;
 import com.applifier.impact.android.cache.ApplifierImpactWebData;
-import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
+import com.applifier.impact.android.cache.IApplifierImpactDownloadListener;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
+import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
 import com.applifier.impact.android.video.IApplifierImpactVideoListener;
 import com.applifier.impact.android.view.ApplifierVideoCompletedView;
 import com.applifier.impact.android.view.ApplifierVideoPlayView;
@@ -19,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-public class ApplifierImpact {
+public class ApplifierImpact implements IApplifierImpactDownloadListener {
 	
 	// Impact components
 	public static ApplifierImpact instance = null;
@@ -37,7 +39,7 @@ public class ApplifierImpact {
 	
 	// Listeners
 	private IApplifierImpactListener _impactListener = null;
-	private IApplifierImpactCacheListener _cacheListener = null;
+	private IApplifierImpactCampaignListener _campaignListener = null;
 	private IApplifierImpactVideoListener _videoListener = null;
 	
 	private boolean _initialized = false;
@@ -53,8 +55,8 @@ public class ApplifierImpact {
 		_impactListener = listener;
 	}
 	
-	public void setCacheListener (IApplifierImpactCacheListener listener) {
-		_cacheListener = listener;
+	public void setCampaignListener (IApplifierImpactCampaignListener listener) {
+		_campaignListener = listener;
 	}
 	
 	public void setVideoListener (IApplifierImpactVideoListener listener) {
@@ -65,13 +67,14 @@ public class ApplifierImpact {
 		if (_initialized) return; 
 		
 		cachemanager = new ApplifierImpactCacheManager();
+		cachemanager.setDownloadListener(this);
 		cachemanifest = new ApplifierImpactCacheManifest();
 		webdata = new ApplifierImpactWebData();
 		
 		if (webdata.initVideoPlan(cachemanifest.getCachedCampaignIds())) {
 			ArrayList<ApplifierImpactCampaign> cachedCampaigns = cachemanifest.getCachedCampaigns();
 			ArrayList<ApplifierImpactCampaign> videoPlanCampaigns = webdata.getVideoPlanCampaigns();
-			ArrayList<ApplifierImpactCampaign> pruneList = ApplifierImpactUtils.createPruneList(cachedCampaigns, videoPlanCampaigns);
+			ArrayList<ApplifierImpactCampaign> pruneList = ApplifierImpactUtils.substractFromCampaignList(cachedCampaigns, videoPlanCampaigns);
 			
 			if (cachedCampaigns != null)
 				Log.d(ApplifierImpactProperties.LOG_NAME, "Cached campaigns: " + cachedCampaigns.toString());
@@ -79,41 +82,55 @@ public class ApplifierImpact {
 			if (videoPlanCampaigns != null)
 				Log.d(ApplifierImpactProperties.LOG_NAME, "Campaigns in videoPlan: " + videoPlanCampaigns.toString());
 			
-			if (pruneList != null)
+			if (pruneList != null) {
 				Log.d(ApplifierImpactProperties.LOG_NAME, "Campaigns to prune: " + pruneList.toString());
-			
-			cachemanager.updateCache(videoPlanCampaigns, pruneList);
-			cachemanifest.setCachedCampaigns(webdata.getVideoPlanCampaigns());
-		}
-		
-		
-		/*
-		cachemanager = new ApplifierImpactCacheManager();
-		cachemanager.setCacheListener(new IApplifierImpactCacheListener() {			
-			@Override
-			public void onCachedCampaignsAvailable() {
-				if (_cacheListener != null)
-					_cacheListener.onCachedCampaignsAvailable();
 			}
-		});
-		cachemanifest = new ApplifierImpactCacheManifest(cachemanager.getCacheDir());
-		_webdata = new ApplifierImpactWebData();
+			
+			// Update cache WILL START DOWNLOADS if needed, after this method you can check getDownloadingCampaigns which ones started downloading
+			cachemanager.updateCache(videoPlanCampaigns, pruneList);			
+			// Get downloading campaigns
+			ArrayList<ApplifierImpactCampaign> downloadingCampaigns = cachemanager.getDownloadingCampaigns();
+			
+			if (downloadingCampaigns != null)
+				videoPlanCampaigns = ApplifierImpactUtils.substractFromCampaignList(videoPlanCampaigns, downloadingCampaigns);
+			
+			// Set the leftover campaigns to cache (videoPlanCampaigns can be null)
+			cachemanifest.setCachedCampaigns(videoPlanCampaigns);
 		
-		if (_webdata.initVideoPlan(cachemanifest.getCacheManifest())) {
-			cachemanager.initCache(cachemanifest.getCacheManifest(), _webdata.getVideoPlan());
+			// If updateCache did not start any downloads and videoPlanCampaigns after all substractions still holds campaigns we can be sure that there are campaigns available
+			if ((!cachemanager.isDownloading() || (videoPlanCampaigns != null && videoPlanCampaigns.size() > 0)) && _campaignListener != null) {
+				Log.d(ApplifierImpactProperties.LOG_NAME, "Reporting cached campaigns available");
+				_campaignListener.onCampaignsAvailable();
+			}
+			
+			setupViews();
 		}
-		
-		ArrayList<ApplifierImpactCampaign> mergedCampaigns = mergeCampaignLists(createCampaignsFromJson(_webdata.getVideoPlan()), createCampaignsFromJson(cachemanifest.getCacheManifest()));
-		
-		if (mergedCampaigns != null)
-			Log.d(ApplifierImpactProperties.LOG_NAME, mergedCampaigns.toString());
-		else
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Jenkem");
-		
-		setupViews();
-		*/
-		
+
 		_initialized = true;
+	}
+	
+	@Override
+	public void onDownloadsStarted () {	
+		Log.d(ApplifierImpactProperties.LOG_NAME, "Downloads started.");
+	}
+	
+	@Override
+	public void onCampaignFilesDownloaded (ApplifierImpactCampaignHandler campaignHandler) {
+		if (campaignHandler == null || campaignHandler.getCampaign() == null) return;
+		
+		Log.d(ApplifierImpactProperties.LOG_NAME, "Downloads complete for: " + campaignHandler.getCampaign().toString());
+		cachemanifest.addCampaignToManifest(campaignHandler.getCampaign());
+		
+		if (_campaignListener != null && cachemanifest.getCachedCampaignAmount() > 0) {
+			// TODO: Double onCampaignsAvailable event: when cached available in the beginning and when download completes 
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Reporting cached campaigns available");
+			_campaignListener.onCampaignsAvailable();
+		}
+	}
+	
+	@Override
+	public void onAllDownloadsCompleted () {
+		Log.d(ApplifierImpactProperties.LOG_NAME, "Listener got \"All downloads completed.\"");
 	}
 		
 	public void changeActivity (Activity activity) {
@@ -121,48 +138,12 @@ public class ApplifierImpact {
 	}
 	
 	public boolean showImpact () {
-		/*
-		_currentImpact = new ArrayList<JSONObject>();
-		ArrayList<String> _cachedCampaigns = cachemanifest.getCachedCampaignIds();
-		
-		for (String id : _cachedCampaigns) {
-			_currentImpact.add(cachemanifest.getCampaign(id));
-			
-			if (_currentImpact.size() > 2)
-				break;
-		}
-		
-		
-		if (_currentImpact.size() < 3) {
-			int left = 3 - _currentImpact.size();
-			JSONObject plan = _webdata.getVideoPlan();
-			JSONArray va = null;
-			
-			try {
-				va = plan.getJSONArray("va");
-			}
-			catch (Exception e) {
-				return false;
-			}
-			
-			for (int i = 0; i < left; i++) {
-				try {
-					_currentImpact.add(va.getJSONObject(i));
-				}
-				catch (Exception e) {
-					return false;
-				}
-			}
-		}
-				
-		Log.d(ApplifierImpactProperties.LOG_NAME, _currentImpact.toString());
-		
 		_currentActivity.addContentView(_vs, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 		focusToView(_vs);
 		
 		if (_impactListener != null)
 			_impactListener.onImpactOpen();
-		*/
+
 		return false;
 	}
 	

@@ -45,6 +45,7 @@ public class ApplifierImpactUtils {
 		return null;
 	}
 	
+	/*
 	public static ArrayList<ApplifierImpactCampaign> mergeCampaignLists (ArrayList<ApplifierImpactCampaign> list1, ArrayList<ApplifierImpactCampaign> list2) {
 		ArrayList<ApplifierImpactCampaign> mergedData = new ArrayList<ApplifierImpactCampaign>();
 		
@@ -72,7 +73,7 @@ public class ApplifierImpactUtils {
 		}
 		
 		return null;
-	}
+	}*/
 	
 	public static String readFile (File fileToRead) {
 		String fileContent = "";
@@ -127,6 +128,18 @@ public class ApplifierImpactUtils {
 		return true;
 	}
 	
+	public static void removeFile (String fileName) {
+		File removeFile = new File (fileName);
+		File cachedVideoFile = new File (ApplifierImpactUtils.getCacheDirectory() + "/" + removeFile.getName());
+		
+		if (cachedVideoFile.exists()) {
+			if (!cachedVideoFile.delete())
+				Log.d(ApplifierImpactProperties.LOG_NAME, "Could not delete: " + cachedVideoFile.getAbsolutePath());
+			else
+				Log.d(ApplifierImpactProperties.LOG_NAME, "Deleted: " + cachedVideoFile.getAbsolutePath());
+		}
+	}
+		
 	public static JSONObject createJsonFromCampaigns (ArrayList<ApplifierImpactCampaign> campaignList) {
 		JSONObject retJson = new JSONObject();
 		JSONArray campaigns = new JSONArray();
@@ -144,19 +157,15 @@ public class ApplifierImpactUtils {
 		}
 		catch (Exception e) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Error while creating JSON from Campaigns");
+			return null;
 		}
-		
-		// TODO: Malformed JSON possibility to f*** up stuff
 		
 		return retJson;
 	}
-	
-	public static String getCacheDirectory () {
-		return Environment.getExternalStorageDirectory().toString() + "/" + ApplifierImpactProperties.CACHE_DIR_NAME;
-	}
-	
-	public static ArrayList<ApplifierImpactCampaign> createPruneList (ArrayList<ApplifierImpactCampaign> fromList, ArrayList<ApplifierImpactCampaign> substractionList) {
-		if (fromList == null || substractionList == null) return null;
+		
+	public static ArrayList<ApplifierImpactCampaign> substractFromCampaignList (ArrayList<ApplifierImpactCampaign> fromList, ArrayList<ApplifierImpactCampaign> substractionList) {
+		if (fromList == null) return null;
+		if (substractionList == null) return fromList;
 		
 		ArrayList<ApplifierImpactCampaign> pruneList = null;
 		
@@ -180,5 +189,26 @@ public class ApplifierImpactUtils {
 		}
 		
 		return pruneList;
+	}
+	
+	public static String getCacheDirectory () {
+		return Environment.getExternalStorageDirectory().toString() + "/" + ApplifierImpactProperties.CACHE_DIR_NAME;
+	}
+	
+	public static File createCacheDir () {
+		File tdir = new File (getCacheDirectory());
+		tdir.mkdirs();
+		return tdir;
+	}
+	
+	public static boolean isFileRequiredByCampaigns (String fileName, ArrayList<ApplifierImpactCampaign> campaigns) {
+		if (fileName == null) return false;
+		
+		for (ApplifierImpactCampaign campaign : campaigns) {
+			if (campaign.getVideoUrl().equals(fileName))
+				return true;
+		}
+		
+		return false;
 	}
 }

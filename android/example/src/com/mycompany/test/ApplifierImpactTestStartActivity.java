@@ -2,7 +2,7 @@ package com.mycompany.test;
 
 import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactProperties;
-import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
+import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
 
 import com.mycompany.test.R;
 
@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-public class ApplifierImpactTestStartActivity extends Activity implements IApplifierImpactCacheListener {
+public class ApplifierImpactTestStartActivity extends Activity implements IApplifierImpactCampaignListener {
 	private ApplifierImpact ai = null;
 	
 	/** Called when the activity is first created. */
@@ -29,7 +29,7 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
 
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Init impact");
 		ai = new ApplifierImpact(this, "892347239");
-		ai.setCacheListener(this);
+		ai.setCampaignListener(this);
 		ai.init();
     }
     
@@ -64,7 +64,8 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 	
-	public void onCachedCampaignsAvailable () {
+    @Override
+	public void onCampaignsAvailable () {
     	((ImageView)findViewById(R.id.playbtn)).setAlpha(255);
     	((ImageView)findViewById(R.id.playbtn)).setOnClickListener(new View.OnClickListener() {			
 			@Override

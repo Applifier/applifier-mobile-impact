@@ -52,7 +52,7 @@ public class ApplifierImpactCacheManifest {
 		return _cachedCampaigns;
 	}
 	
-	public ApplifierImpactCampaign getCachedCampaign (String id) {
+	public ApplifierImpactCampaign getCachedCampaignById (String id) {
 		if (id == null || _cachedCampaigns == null) 
 			return null;
 		else {
@@ -147,8 +147,9 @@ public class ApplifierImpactCacheManifest {
 		if (manifestToWrite != null) {
 			return ApplifierImpactUtils.writeFile(getFileForManifest(), manifestToWrite.toString());
 		}
-		
-		return false;
+		else {
+			return ApplifierImpactUtils.writeFile(getFileForManifest(), "");
+		}
 	}
 	
 	private File getFileForManifest () {

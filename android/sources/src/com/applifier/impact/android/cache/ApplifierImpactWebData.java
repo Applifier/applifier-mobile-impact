@@ -23,10 +23,18 @@ public class ApplifierImpactWebData {
 		return _videoPlanCampaigns;
 	}
 	
-	
 	public int getCampaignAmount () {
 		if (_videoPlanCampaigns == null) return 0;
 		return _videoPlanCampaigns.size();
+	}
+	
+	public ApplifierImpactCampaign getCampaignById (String campaignId) {
+		for (ApplifierImpactCampaign currentCampaign : _videoPlanCampaigns) {
+			if (currentCampaign.getCampaignId().equals(campaignId))
+				return currentCampaign;
+		}
+		
+		return null;
 	}
 	
 	public boolean initVideoPlan (ArrayList<String> cachedCampaignIds) {		
@@ -75,8 +83,16 @@ public class ApplifierImpactWebData {
 		JSONObject tmpvideo = null;
 		
 		try {
+			/*
 			tmpvideo = new JSONObject();
-			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video5.mp4");
+			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video4.mp4");
+			tmpvideo.put("s", "Ready");
+			tmpvideo.put("id", "a4");
+			videos.put(tmpvideo);
+			*/
+			
+			tmpvideo = new JSONObject();
+			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video4.mp4");
 			tmpvideo.put("s", "Ready");
 			tmpvideo.put("id", "a5");
 			videos.put(tmpvideo);
