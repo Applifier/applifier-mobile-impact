@@ -10,8 +10,8 @@ import com.applifier.impact.android.campaign.IApplifierImpactCampaignHandlerList
 
 import android.util.Log;
 
-public class ApplifierImpactCacheManager {
-	private IApplifierImpactDownloadListener _downloadListener = null;	
+public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHandlerListener {
+	private IApplifierCacheListener _downloadListener = null;	
 	private ArrayList<ApplifierImpactCampaign> _downloadingCampaigns = null;
 	private ArrayList<ApplifierImpactCampaignHandler> _downloadingHandlers = null;
 	
@@ -24,48 +24,38 @@ public class ApplifierImpactCacheManager {
 		return _downloadingCampaigns;
 	}
 	
-	public void setDownloadListener (IApplifierImpactDownloadListener listener) {
+	public void setDownloadListener (IApplifierCacheListener listener) {
 		_downloadListener = listener;
 	}
 	
-	public boolean isDownloading () {
+	public boolean hasDownloadingHandlers () {
 		return (_downloadingHandlers != null && _downloadingHandlers.size() > 0);
 	}
 	
 	public void initCache (ArrayList<ApplifierImpactCampaign> activeList, ArrayList<ApplifierImpactCampaign> pruneList) {
 		updateCache(activeList, pruneList);
 	}
-	
+		
 	public void updateCache (ArrayList<ApplifierImpactCampaign> activeList, ArrayList<ApplifierImpactCampaign> pruneList) {
+		if (_downloadListener != null)
+			_downloadListener.onCampaignUpdateStarted();
+		
+		// Active -list contains campaigns that came with the videoPlan
 		if (activeList != null) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Updating cache: Going through active campaigns");
-			
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Updating cache: Going through active campaigns");			
 			for (ApplifierImpactCampaign campaign : activeList) {
 				ApplifierImpactCampaignHandler campaignHandler = new ApplifierImpactCampaignHandler(campaign, activeList);
 				
 				if (campaignHandler.hasDownloads()) {
-					campaignHandler.setListener(new IApplifierImpactCampaignHandlerListener() {
-						@Override
-						public void onCampaignHandled(ApplifierImpactCampaignHandler campaignHandler) {
-							removeFromDownloadingHandlers(campaignHandler);
-							_downloadListener.onCampaignFilesDownloaded(campaignHandler);
-							
-							if (!isDownloading() && _downloadListener != null)
-			        			_downloadListener.onAllDownloadsCompleted();
-						}
-					});
-					
-					// TODO: Could be in a better place?
-					if (!isDownloading() && _downloadListener != null)
-						_downloadListener.onDownloadsStarted();
-					
+					campaignHandler.setListener(this);
 					addToDownloadingHandlers(campaignHandler);
 				}
-				
-				campaignHandler.handleCampaign();
 			}
 		}
 		
+		// Prune -list contains campaigns that were still in cache but not in the received videoPlan.
+		// There for they will not be put into cache. Check that the existing videos for those
+		// campaigns are not needed by current active ones and remove them if needed.
 		if (pruneList != null) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Updating cache: Pruning old campaigns");
 			for (ApplifierImpactCampaign campaign : pruneList) {
@@ -74,8 +64,23 @@ public class ApplifierImpactCacheManager {
 				}
 			}
 		}
+		
+		if (!hasDownloadingHandlers() && _downloadListener != null)
+			_downloadListener.onAllCampaignsReady();
 	}
 
+	
+	// EVENT METHDOS
+	
+	@Override
+	public void onCampaignHandled(ApplifierImpactCampaignHandler campaignHandler) {
+		removeFromDownloadingHandlers(campaignHandler);
+		_downloadListener.onCampaignReady(campaignHandler);
+		
+		if (!hasDownloadingHandlers() && _downloadListener != null)
+			_downloadListener.onAllCampaignsReady();
+	}	
+	
 	
 	// INTERNAL METHODS
 	

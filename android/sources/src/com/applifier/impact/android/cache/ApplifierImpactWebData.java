@@ -92,12 +92,11 @@ public class ApplifierImpactWebData {
 			*/
 			
 			tmpvideo = new JSONObject();
-			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video4.mp4");
+			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video5.mp4");
 			tmpvideo.put("s", "Ready");
 			tmpvideo.put("id", "a5");
 			videos.put(tmpvideo);
 			
-			/*
 			tmpvideo = new JSONObject();
 			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video2.mp4");
 			tmpvideo.put("s", "blaa2");
@@ -109,7 +108,6 @@ public class ApplifierImpactWebData {
 			tmpvideo.put("s", "blaa3");
 			tmpvideo.put("id", "a3");
 			videos.put(tmpvideo);
-			*/
 	
 			_videoPlan = new JSONObject();
 			_videoPlan.put("va", videos);

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.cache.ApplifierImpactCacheManifest;
 import com.applifier.impact.android.cache.ApplifierImpactWebData;
-import com.applifier.impact.android.cache.IApplifierImpactDownloadListener;
+import com.applifier.impact.android.cache.IApplifierCacheListener;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
@@ -21,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-public class ApplifierImpact implements IApplifierImpactDownloadListener {
+public class ApplifierImpact implements IApplifierCacheListener {
 	
 	// Impact components
 	public static ApplifierImpact instance = null;
@@ -72,8 +72,12 @@ public class ApplifierImpact implements IApplifierImpactDownloadListener {
 		webdata = new ApplifierImpactWebData();
 		
 		if (webdata.initVideoPlan(cachemanifest.getCachedCampaignIds())) {
+			
+			// Campaigns that are currently cached
 			ArrayList<ApplifierImpactCampaign> cachedCampaigns = cachemanifest.getCachedCampaigns();
+			// Campaigns that were received in the videoPlan
 			ArrayList<ApplifierImpactCampaign> videoPlanCampaigns = webdata.getVideoPlanCampaigns();
+			// Campaigns that were in cache but were not returned in the videoPlan (old or not current)
 			ArrayList<ApplifierImpactCampaign> pruneList = ApplifierImpactUtils.substractFromCampaignList(cachedCampaigns, videoPlanCampaigns);
 			
 			if (cachedCampaigns != null)
@@ -86,22 +90,24 @@ public class ApplifierImpact implements IApplifierImpactDownloadListener {
 				Log.d(ApplifierImpactProperties.LOG_NAME, "Campaigns to prune: " + pruneList.toString());
 			}
 			
-			// Update cache WILL START DOWNLOADS if needed, after this method you can check getDownloadingCampaigns which ones started downloading
+			// Update cache WILL START DOWNLOADS if needed, after this method you can check getDownloadingCampaigns which ones started downloads.
 			cachemanager.updateCache(videoPlanCampaigns, pruneList);			
 			// Get downloading campaigns
-			ArrayList<ApplifierImpactCampaign> downloadingCampaigns = cachemanager.getDownloadingCampaigns();
+			//ArrayList<ApplifierImpactCampaign> downloadingCampaigns = cachemanager.getDownloadingCampaigns();
 			
+			/*
 			if (downloadingCampaigns != null)
 				videoPlanCampaigns = ApplifierImpactUtils.substractFromCampaignList(videoPlanCampaigns, downloadingCampaigns);
-			
+			*/
 			// Set the leftover campaigns to cache (videoPlanCampaigns can be null)
-			cachemanifest.setCachedCampaigns(videoPlanCampaigns);
+			//cachemanifest.setCachedCampaigns(videoPlanCampaigns);
 		
 			// If updateCache did not start any downloads and videoPlanCampaigns after all substractions still holds campaigns we can be sure that there are campaigns available
+			/*
 			if ((!cachemanager.isDownloading() || (videoPlanCampaigns != null && videoPlanCampaigns.size() > 0)) && _campaignListener != null) {
 				Log.d(ApplifierImpactProperties.LOG_NAME, "Reporting cached campaigns available");
 				_campaignListener.onCampaignsAvailable();
-			}
+			}*/
 			
 			setupViews();
 		}
@@ -110,15 +116,15 @@ public class ApplifierImpact implements IApplifierImpactDownloadListener {
 	}
 	
 	@Override
-	public void onDownloadsStarted () {	
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Downloads started.");
+	public void onCampaignUpdateStarted () {	
+		Log.d(ApplifierImpactProperties.LOG_NAME, "Campaign updates started.");
 	}
 	
 	@Override
-	public void onCampaignFilesDownloaded (ApplifierImpactCampaignHandler campaignHandler) {
+	public void onCampaignReady (ApplifierImpactCampaignHandler campaignHandler) {
 		if (campaignHandler == null || campaignHandler.getCampaign() == null) return;
 		
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Downloads complete for: " + campaignHandler.getCampaign().toString());
+		Log.d(ApplifierImpactProperties.LOG_NAME, "Got onCampaignReady: " + campaignHandler.getCampaign().toString());
 		cachemanifest.addCampaignToManifest(campaignHandler.getCampaign());
 		
 		if (_campaignListener != null && cachemanifest.getCachedCampaignAmount() > 0) {
@@ -129,8 +135,8 @@ public class ApplifierImpact implements IApplifierImpactDownloadListener {
 	}
 	
 	@Override
-	public void onAllDownloadsCompleted () {
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Listener got \"All downloads completed.\"");
+	public void onAllCampaignsReady () {
+		Log.d(ApplifierImpactProperties.LOG_NAME, "Listener got \"All campaigns ready.\"");
 	}
 		
 	public void changeActivity (Activity activity) {
