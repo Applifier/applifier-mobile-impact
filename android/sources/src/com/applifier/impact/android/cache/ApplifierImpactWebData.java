@@ -103,12 +103,14 @@ public class ApplifierImpactWebData {
 			tmpvideo.put("id", "a2");
 			videos.put(tmpvideo);
 	
+			/*
 			tmpvideo = new JSONObject();
-			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video3.mp4");
+			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video5.mp4");
 			tmpvideo.put("s", "blaa3");
 			tmpvideo.put("id", "a3");
-			videos.put(tmpvideo);
-	
+			videos.put(tmpvideo);			
+			*/
+			
 			_videoPlan = new JSONObject();
 			_videoPlan.put("va", videos);
 			

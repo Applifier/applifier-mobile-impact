@@ -71,8 +71,7 @@ public class ApplifierImpact implements IApplifierCacheListener {
 		cachemanifest = new ApplifierImpactCacheManifest();
 		webdata = new ApplifierImpactWebData();
 		
-		if (webdata.initVideoPlan(cachemanifest.getCachedCampaignIds())) {
-			
+		if (webdata.initVideoPlan(cachemanifest.getCachedCampaignIds())) {			
 			// Campaigns that are currently cached
 			ArrayList<ApplifierImpactCampaign> cachedCampaigns = cachemanifest.getCachedCampaigns();
 			// Campaigns that were received in the videoPlan
@@ -92,23 +91,6 @@ public class ApplifierImpact implements IApplifierCacheListener {
 			
 			// Update cache WILL START DOWNLOADS if needed, after this method you can check getDownloadingCampaigns which ones started downloads.
 			cachemanager.updateCache(videoPlanCampaigns, pruneList);			
-			// Get downloading campaigns
-			//ArrayList<ApplifierImpactCampaign> downloadingCampaigns = cachemanager.getDownloadingCampaigns();
-			
-			/*
-			if (downloadingCampaigns != null)
-				videoPlanCampaigns = ApplifierImpactUtils.substractFromCampaignList(videoPlanCampaigns, downloadingCampaigns);
-			*/
-			// Set the leftover campaigns to cache (videoPlanCampaigns can be null)
-			//cachemanifest.setCachedCampaigns(videoPlanCampaigns);
-		
-			// If updateCache did not start any downloads and videoPlanCampaigns after all substractions still holds campaigns we can be sure that there are campaigns available
-			/*
-			if ((!cachemanager.isDownloading() || (videoPlanCampaigns != null && videoPlanCampaigns.size() > 0)) && _campaignListener != null) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Reporting cached campaigns available");
-				_campaignListener.onCampaignsAvailable();
-			}*/
-			
 			setupViews();
 		}
 
@@ -128,7 +110,6 @@ public class ApplifierImpact implements IApplifierCacheListener {
 		cachemanifest.addCampaignToManifest(campaignHandler.getCampaign());
 		
 		if (_campaignListener != null && cachemanifest.getCachedCampaignAmount() > 0) {
-			// TODO: Double onCampaignsAvailable event: when cached available in the beginning and when download completes 
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Reporting cached campaigns available");
 			_campaignListener.onCampaignsAvailable();
 		}

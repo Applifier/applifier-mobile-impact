@@ -20,7 +20,6 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	public ApplifierImpactCampaignHandler (ApplifierImpactCampaign campaign, ArrayList<ApplifierImpactCampaign> activeList) {
 		_campaign = campaign;
 		_activeCampaigns = activeList;
-		checkCampaign();
 	}
 	
 	public boolean hasDownloads () {
@@ -57,7 +56,7 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 		ApplifierImpactDownloader.addDownload(fileUrl);
 	}
 	
-	private void checkCampaign () {
+	public void initCampaign () {
 		// Check video
 		if (!isFileCached(_campaign.getVideoFilename())) {
 			if (!hasDownloads())

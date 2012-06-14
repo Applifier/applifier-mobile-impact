@@ -22,8 +22,6 @@ public class ApplifierImpactDownloader {
 	private static enum ApplifierDownloadEventType { DownloadCompleted };
 	
 	public static void addDownload (String downloadUrl) {
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Got download: " + downloadUrl);
-		
 		if (_downloadList == null) _downloadList = new ArrayList<String>();
 		
 		if (!isInDownloads(downloadUrl)) {
@@ -37,9 +35,7 @@ public class ApplifierImpactDownloader {
 	}
 	
 	public static void addListener (IApplifierImpactDownloadListener listener) {
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Got listener: ");
-		if (_downloadListeners == null) _downloadListeners = new ArrayList<IApplifierImpactDownloadListener>();
-		
+		if (_downloadListeners == null) _downloadListeners = new ArrayList<IApplifierImpactDownloadListener>();		
 		if (!_downloadListeners.contains(listener))
 			_downloadListeners.add(listener);
 	}
@@ -48,9 +44,7 @@ public class ApplifierImpactDownloader {
 		if (_downloadListeners == null) return;		
 		if (_downloadListeners.contains(listener)) {
 			_downloadListeners.remove(listener);
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Removing listener");
 		}
-			
 	}
 	
 	private static void removeDownload (String downloadUrl) {

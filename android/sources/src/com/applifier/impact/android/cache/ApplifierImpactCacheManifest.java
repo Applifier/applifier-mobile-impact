@@ -94,8 +94,10 @@ public class ApplifierImpactCacheManifest {
 		if (_cachedCampaigns == null)
 			_cachedCampaigns = new ArrayList<ApplifierImpactCampaign>();
 		
-		_cachedCampaigns.add(campaign);
-		writeCurrentCacheManifest();
+		if (getCachedCampaignById(campaign.getCampaignId()) == null) {
+			_cachedCampaigns.add(campaign);
+			writeCurrentCacheManifest();
+		}
 		
 		return true;
 	}
