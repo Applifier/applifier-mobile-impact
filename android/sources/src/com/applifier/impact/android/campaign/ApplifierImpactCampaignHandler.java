@@ -12,10 +12,12 @@ import com.applifier.impact.android.cache.ApplifierImpactDownloader;
 import com.applifier.impact.android.cache.IApplifierImpactDownloadListener;
 
 public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadListener {
+	
 	private ArrayList<String> _downloadList = null;
 	private ApplifierImpactCampaign _campaign = null;
 	private ArrayList<ApplifierImpactCampaign> _activeCampaigns = null;
 	private IApplifierImpactCampaignHandlerListener _handlerListener = null;
+	
 	
 	public ApplifierImpactCampaignHandler (ApplifierImpactCampaign campaign, ArrayList<ApplifierImpactCampaign> activeList) {
 		_campaign = campaign;
@@ -43,28 +45,15 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 			ApplifierImpactDownloader.removeListener(this);
 			_handlerListener.onCampaignHandled(this);
 		}
-	}	
+	}
 	
-	
-	/* INTERNAL METHODS */
-	
-	private void addToFileDownloads (String fileUrl) {
-		if (fileUrl == null) return;
-		if (_downloadList == null) _downloadList = new ArrayList<String>();
-		
-		_downloadList.add(fileUrl);
-		ApplifierImpactDownloader.addDownload(fileUrl);
+	@Override
+	public void onFileDownloadCancelled (String downloadUrl) {		
 	}
 	
 	public void initCampaign () {
 		// Check video
-		if (!isFileCached(_campaign.getVideoFilename())) {
-			if (!hasDownloads())
-				ApplifierImpactDownloader.addListener(this);
-			
-			addToFileDownloads(_campaign.getVideoUrl());
-		}
-		
+		checkFileAndDownloadIfNeeded(_campaign.getVideoUrl());
 		ApplifierImpactCampaign possiblyCachedCampaign = ApplifierImpact.cachemanifest.getCachedCampaignById(_campaign.getCampaignId());
 		
 		// If manifest has this campaign and their files are not the same, remove the cached file if not needed anymore.
@@ -75,6 +64,36 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 		// No downloads, report campaign done
 		if (!hasDownloads() && _handlerListener != null)
 			_handlerListener.onCampaignHandled(this);
+	}
+	
+	
+	/* INTERNAL METHODS */
+	
+	private void checkFileAndDownloadIfNeeded (String fileUrl) {
+		if (!isFileCached(fileUrl)) {
+			if (!hasDownloads())
+				ApplifierImpactDownloader.addListener(this);
+			
+			addToFileDownloads(fileUrl);
+		}
+		else if (!isFileOk(fileUrl)) {
+			ApplifierImpactUtils.removeFile(fileUrl);
+			ApplifierImpactDownloader.addListener(this);
+			addToFileDownloads(fileUrl);
+		}		
+	}
+	
+	private boolean isFileOk (String fileUrl) {
+		// TODO: Implement isFileOk
+		return true;
+	}
+	
+	private void addToFileDownloads (String fileUrl) {
+		if (fileUrl == null) return;
+		if (_downloadList == null) _downloadList = new ArrayList<String>();
+		
+		_downloadList.add(fileUrl);
+		ApplifierImpactDownloader.addDownload(fileUrl);
 	}
 	
 	private boolean isFileCached (String fileName) {

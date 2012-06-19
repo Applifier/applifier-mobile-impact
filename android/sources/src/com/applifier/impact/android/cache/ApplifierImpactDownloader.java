@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -16,10 +17,12 @@ import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.ApplifierImpactUtils;
 
 public class ApplifierImpactDownloader {
+	
 	private static ArrayList<String> _downloadList = null;
 	private static ArrayList<IApplifierImpactDownloadListener> _downloadListeners = null;
 	private static boolean _isDownloading = false;
-	private static enum ApplifierDownloadEventType { DownloadCompleted };
+	private static enum ApplifierDownloadEventType { DownloadCompleted, DownloadCancelled };
+	private static Vector<CacheDownload> _cacheDownloads = null;
 	
 	public static void addDownload (String downloadUrl) {
 		if (_downloadList == null) _downloadList = new ArrayList<String>();
@@ -46,6 +49,18 @@ public class ApplifierImpactDownloader {
 			_downloadListeners.remove(listener);
 		}
 	}
+	
+	public static void stopAllDownloads () {
+		if (_cacheDownloads != null) {
+			Log.d(ApplifierImpactProperties.LOG_NAME, "ApplifierImpactDownloader->stopAllDownloads()");
+			for (CacheDownload cd : _cacheDownloads) {
+				cd.cancel(true);
+			}
+		}
+	}
+	
+	
+	// INTERNAL METHODS
 	
 	private static void removeDownload (String downloadUrl) {
 		if (_downloadList == null) return;
@@ -84,6 +99,9 @@ public class ApplifierImpactDownloader {
 				case DownloadCompleted:
 					listener.onFileDownloadCompleted(downloadUrl);
 					break;
+				case DownloadCancelled:
+					listener.onFileDownloadCancelled(downloadUrl);
+					break;
 			}
 		}
 	}
@@ -91,6 +109,7 @@ public class ApplifierImpactDownloader {
 	private static void cacheFile (String url) {
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Starting download for: " + url);
 		CacheDownload cd = new CacheDownload();
+		addToCacheDownloads(cd);
 		cd.execute(url);
 	}
 	
@@ -119,17 +138,32 @@ public class ApplifierImpactDownloader {
 		return fos;
 	}
 	
+	private static void addToCacheDownloads (CacheDownload cd) {
+		if (_cacheDownloads == null) 
+			_cacheDownloads = new Vector<ApplifierImpactDownloader.CacheDownload>();
+		
+		_cacheDownloads.add(cd);
+	}
+	
+	private static void removeFromCacheDownloads (CacheDownload cd) {
+		if (_cacheDownloads != null)
+			_cacheDownloads.remove(cd);
+	}
+	
 	
 	/* INTERNAL CLASSES */
 	
 	private static class CacheDownload extends AsyncTask<String, Integer, String> {
 		private URL _downloadUrl = null;
+		private InputStream _input = null;
+		private OutputStream _output = null;
+		private File _targetFile = null;
+		private int _downloadLength = 0;
+		private URLConnection _urlConnection = null;
+		private boolean _cancelled = false;
 		
 		@Override
 	    protected String doInBackground(String... sUrl) {
-			URLConnection connection = null;
-			int downloadLength = 0;
-			
 			try {
 				_downloadUrl = new URL(sUrl[0]);
 			}
@@ -138,57 +172,74 @@ public class ApplifierImpactDownloader {
 			}
 			
 			try {
-				connection = _downloadUrl.openConnection();
-				connection.connect();
+				_urlConnection = _downloadUrl.openConnection();
+				_urlConnection.setConnectTimeout(10000);
+				_urlConnection.setReadTimeout(10000);
+				_urlConnection.connect();
 			}
 			catch (Exception e) {
 				Log.d(ApplifierImpactProperties.LOG_NAME, "Problems opening connection: " + e.getMessage());
 			}
 			
-			if (connection != null) {
-				downloadLength = connection.getContentLength();
-				InputStream input = null;
-				OutputStream output = null;
+			if (_urlConnection != null) {
+				_downloadLength = _urlConnection.getContentLength();
 				
 				try {
-					input = new BufferedInputStream(_downloadUrl.openStream());
+					_input = new BufferedInputStream(_downloadUrl.openStream());
 				}
 				catch (Exception e) {
 					Log.d(ApplifierImpactProperties.LOG_NAME, "Problems opening stream: " + e.getMessage());
 				}
 				
-				File target = new File(sUrl[0]);
-				output = getOutputStreamFor(target.getName());
+				_targetFile = new File(sUrl[0]);
+				_output = getOutputStreamFor(_targetFile.getName());
 				
 				byte data[] = new byte[1024];
 				long total = 0;
 				int count = 0;
 				
 				try {
-					while ((count = input.read(data)) != -1) {
+					while ((count = _input.read(data)) != -1) {
 						total += count;
-						publishProgress((int)(total * 100 / downloadLength));
-						output.write(data, 0, count);
+						publishProgress((int)(total * 100 / _downloadLength));
+						_output.write(data, 0, count);
+						
+						if (_cancelled) {
+							return null;
+						}
 					}
 				}
 				catch (Exception e) {
 					Log.d(ApplifierImpactProperties.LOG_NAME, "Problems downloading file: " + e.getMessage());
+					cancelDownload();
+					cacheNextFile();
+					return null;
 				}
 				
-				try {
-					output.flush();
-					output.close();
-					input.close();
-				}
-				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Problems closing connection: " + e.getMessage());
-				}
+				closeAndFlushConnection();
 			}
 						
 			return null;
 		}
 		
-	    @Override
+		protected void onCancelled (Object result) {
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Force stopping download!");
+			_cancelled = true;
+			cancelDownload();
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+        	if (!_cancelled) {
+    			removeDownload(_downloadUrl.toString());
+            	removeFromCacheDownloads(this);
+            	cacheNextFile();
+            	sendToListeners(ApplifierDownloadEventType.DownloadCompleted, _downloadUrl.toString());
+    			super.onPostExecute(result);
+        	}
+		}
+
+		@Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
 	    }
@@ -198,10 +249,27 @@ public class ApplifierImpactDownloader {
 	        super.onProgressUpdate(progress);
 	        
 	        if (progress[0] == 100) {
-	        	removeDownload(_downloadUrl.toString());
-	        	cacheNextFile();
-	        	sendToListeners(ApplifierDownloadEventType.DownloadCompleted, _downloadUrl.toString());
 	        }
+	    }
+	    
+	    private void closeAndFlushConnection () {			
+			try {
+				_output.flush();
+				_output.close();
+				_input.close();
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactProperties.LOG_NAME, "Problems closing connection: " + e.getMessage());
+			}	    	
+	    }
+	    
+	    private void cancelDownload () {
+	    	Log.d(ApplifierImpactProperties.LOG_NAME, "Download cancelled for: " + _downloadUrl.toString());
+			closeAndFlushConnection();
+			ApplifierImpactUtils.removeFile(_targetFile.toString());
+        	removeDownload(_downloadUrl.toString());
+        	removeFromCacheDownloads(this);
+        	sendToListeners(ApplifierDownloadEventType.DownloadCancelled, _downloadUrl.toString());
 	    }
 	}
 }

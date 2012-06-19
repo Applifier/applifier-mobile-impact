@@ -1,10 +1,15 @@
 package com.applifier.impact.android.cache;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.applifier.impact.android.ApplifierImpactProperties;
@@ -12,11 +17,17 @@ import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 
 public class ApplifierImpactWebData {
-	private JSONObject _videoPlan = null;
-	private ArrayList<ApplifierImpactCampaign> _videoPlanCampaigns = null;
 	
-	public ApplifierImpactWebData () {
-		
+	private JSONObject _videoPlan = null;
+	private VideoPlanLoader _videoPlanLoader = null;
+	private ArrayList<ApplifierImpactCampaign> _videoPlanCampaigns = null;
+	private IApplifierImpactWebDataListener _listener = null;
+	
+	public ApplifierImpactWebData () {	
+	}
+	
+	public void setWebDataListener (IApplifierImpactWebDataListener listener) {
+		_listener = listener;
 	}
 	
 	public ArrayList<ApplifierImpactCampaign> getVideoPlanCampaigns () {
@@ -66,31 +77,14 @@ public class ApplifierImpactWebData {
 					
 		// TODO: Send campaign ID's with the request
 		
-		/*
-		URL yahoo = new URL("http://www.yahoo.com/");
-		BufferedReader in = new BufferedReader(
-		            new InputStreamReader(
-		            yahoo.openStream()));
-
-		String inputLine;
-
-		while ((inputLine = in.readLine()) != null)
-		    System.out.println(inputLine);
-
-		in.close();*/
+		_videoPlanLoader = new VideoPlanLoader();
+		_videoPlanLoader.execute(ApplifierImpactProperties.WEBDATA_URL);
 		
+		/*
 		JSONArray videos = new JSONArray();
 		JSONObject tmpvideo = null;
 		
 		try {
-			/*
-			tmpvideo = new JSONObject();
-			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video4.mp4");
-			tmpvideo.put("s", "Ready");
-			tmpvideo.put("id", "a4");
-			videos.put(tmpvideo);
-			*/
-			
 			tmpvideo = new JSONObject();
 			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video5.mp4");
 			tmpvideo.put("s", "Ready");
@@ -103,14 +97,13 @@ public class ApplifierImpactWebData {
 			tmpvideo.put("id", "a2");
 			videos.put(tmpvideo);
 	
-			/*
+			
 			tmpvideo = new JSONObject();
-			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video5.mp4");
+			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video3.mp4");
 			tmpvideo.put("s", "blaa3");
 			tmpvideo.put("id", "a3");
 			videos.put(tmpvideo);			
-			*/
-			
+		
 			_videoPlan = new JSONObject();
 			_videoPlan.put("va", videos);
 			
@@ -121,8 +114,113 @@ public class ApplifierImpactWebData {
 		catch (Exception e) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Great error!");
 			return false;
-		}
+		}*/
 		
 		return true;
+	}
+	
+	private void videoPlanReceived (String json) {
+		try {
+			_videoPlan = new JSONObject(json);
+			_videoPlanCampaigns = ApplifierImpactUtils.createCampaignsFromJson(_videoPlan);
+		}
+		catch (Exception e) {
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON!");
+		}
+		
+		if (_listener != null)
+			_listener.onWebDataCompleted();
+	}
+	
+	
+	/* INTERNAL CLASSES */
+	
+	private class VideoPlanLoader extends AsyncTask<String, Integer, String> {
+		private URL _videoPlanUrl = null;
+		private URLConnection _urlConnection = null;
+		private int _downloadLength = 0;
+		private InputStream _input = null;
+		private String _urlData = "";
+		
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				_videoPlanUrl = new URL(params[0]);				
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactProperties.LOG_NAME, "Problems with url: " + e.getMessage());
+			}
+			
+			try {
+				_urlConnection = _videoPlanUrl.openConnection();
+				_urlConnection.setConnectTimeout(10000);
+				_urlConnection.setReadTimeout(10000);
+				_urlConnection.connect();
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactProperties.LOG_NAME, "Problems opening connection: " + e.getMessage());
+			}
+			
+			if (_urlConnection != null) {
+				_downloadLength = _urlConnection.getContentLength();
+				
+				try {
+					_input = new BufferedInputStream(_videoPlanUrl.openStream());
+				}
+				catch (Exception e) {
+					Log.d(ApplifierImpactProperties.LOG_NAME, "Problems opening stream: " + e.getMessage());
+				}
+				
+				byte data[] = new byte[1024];
+				long total = 0;
+				int count = 0;
+				
+				try {
+					while ((count = _input.read(data)) != -1) {
+						total += count;
+						publishProgress((int)(total * 100 / _downloadLength));
+						_urlData = _urlData.concat(new String(data));
+						
+						if (isCancelled())
+							return null;
+					}
+				}
+				catch (Exception e) {
+					closeAndFlushConnection();
+					Log.d(ApplifierImpactProperties.LOG_NAME, "Problems downloading file: " + e.getMessage());
+					return null;
+				}
+			}
+			
+			return null;
+		}
+
+		protected void onCancelled(Object result) {
+			closeAndFlushConnection();
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			if (!isCancelled()) {
+				closeAndFlushConnection();
+				videoPlanReceived(_urlData);
+			}
+			
+			super.onPostExecute(result);
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			super.onProgressUpdate(values);
+		}
+		
+		private void closeAndFlushConnection () {
+			try {
+				_input.close();
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactProperties.LOG_NAME, "Problems closing connection: " + e.getMessage());
+			}	
+		}
 	}
 }

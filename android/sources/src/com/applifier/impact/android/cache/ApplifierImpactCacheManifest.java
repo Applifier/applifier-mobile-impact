@@ -12,9 +12,11 @@ import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 
 public class ApplifierImpactCacheManifest {
+	
 	private JSONObject _manifestJson = null;
 	private String _manifestContent = "";
 	private ArrayList<ApplifierImpactCampaign> _cachedCampaigns = null;
+	
 	
 	public ApplifierImpactCacheManifest () {
 		readCacheManifest();
@@ -50,6 +52,21 @@ public class ApplifierImpactCacheManifest {
 	
 	public ArrayList<ApplifierImpactCampaign> getCachedCampaigns () {
 		return _cachedCampaigns;
+	}
+	
+	public ArrayList<ApplifierImpactCampaign> getViewableCachedCampaigns () {
+		ArrayList<ApplifierImpactCampaign> retList = new ArrayList<ApplifierImpactCampaign>();
+		
+		if (_cachedCampaigns != null) {
+			for (ApplifierImpactCampaign campaign : _cachedCampaigns) {
+				if (!campaign.getCampaignStatus().equals("viewed"))
+					retList.add(campaign);
+			}
+			
+			return retList;
+		}
+		
+		return null;
 	}
 	
 	public ApplifierImpactCampaign getCachedCampaignById (String id) {
@@ -115,6 +132,17 @@ public class ApplifierImpactCacheManifest {
 		return false;
 	}
 	
+	public boolean writeCurrentCacheManifest () {
+		JSONObject manifestToWrite = ApplifierImpactUtils.createJsonFromCampaigns(_cachedCampaigns);
+		
+		if (manifestToWrite != null) {
+			return ApplifierImpactUtils.writeFile(getFileForManifest(), manifestToWrite.toString());
+		}
+		else {
+			return ApplifierImpactUtils.writeFile(getFileForManifest(), "");
+		}
+	}
+	
 	
 	/* INTERNAL METHODS */
 	
@@ -141,17 +169,6 @@ public class ApplifierImpactCacheManifest {
 		}
 		
 		return false;
-	}
-	
-	private boolean writeCurrentCacheManifest () {
-		JSONObject manifestToWrite = ApplifierImpactUtils.createJsonFromCampaigns(_cachedCampaigns);
-		
-		if (manifestToWrite != null) {
-			return ApplifierImpactUtils.writeFile(getFileForManifest(), manifestToWrite.toString());
-		}
-		else {
-			return ApplifierImpactUtils.writeFile(getFileForManifest(), "");
-		}
 	}
 	
 	private File getFileForManifest () {

@@ -66,6 +66,17 @@ public class ApplifierImpactCampaign {
 		return null;
 	}
 	
+	public void setCampaignStatus (String status) {
+		if (checkDataIntegrity()) {
+			try {
+				_campaignJson.put("s", status);
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactProperties.LOG_NAME, "setCampaignStatus: This should not happen!");
+			}
+		}
+	}
+	
 	public String getVideoUrl () {
 		if (checkDataIntegrity()) {
 			try {

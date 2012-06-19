@@ -45,36 +45,6 @@ public class ApplifierImpactUtils {
 		return null;
 	}
 	
-	/*
-	public static ArrayList<ApplifierImpactCampaign> mergeCampaignLists (ArrayList<ApplifierImpactCampaign> list1, ArrayList<ApplifierImpactCampaign> list2) {
-		ArrayList<ApplifierImpactCampaign> mergedData = new ArrayList<ApplifierImpactCampaign>();
-		
-		if (list1 == null || list1.size() == 0) return list2;
-		if (list2 == null || list2.size() == 0) return list1;
-		
-		if (list1 != null && list2 != null) {
-			mergedData.addAll(list1);
-			for (ApplifierImpactCampaign list1Campaign : list1) {
-				ApplifierImpactCampaign inputCampaign = null;
-				boolean match = false;
-				for (ApplifierImpactCampaign list2Campaign : list2) {
-					inputCampaign = list2Campaign;
-					if (list1Campaign.getCampaignId().equals(list2Campaign.getCampaignId())) {
-						match = true;
-						break;
-					}
-				}
-				
-				if (!match)
-					mergedData.add(inputCampaign);
-			}
-			
-			return mergedData;
-		}
-		
-		return null;
-	}*/
-	
 	public static String readFile (File fileToRead) {
 		String fileContent = "";
 		BufferedReader br = null;
@@ -137,6 +107,9 @@ public class ApplifierImpactUtils {
 				Log.d(ApplifierImpactProperties.LOG_NAME, "Could not delete: " + cachedVideoFile.getAbsolutePath());
 			else
 				Log.d(ApplifierImpactProperties.LOG_NAME, "Deleted: " + cachedVideoFile.getAbsolutePath());
+		}
+		else {
+			Log.d(ApplifierImpactProperties.LOG_NAME, "File: " + cachedVideoFile.getAbsolutePath() + " doesn't exist.");
 		}
 	}
 		
@@ -202,10 +175,13 @@ public class ApplifierImpactUtils {
 	}
 	
 	public static boolean isFileRequiredByCampaigns (String fileName, ArrayList<ApplifierImpactCampaign> campaigns) {
-		if (fileName == null) return false;
+		if (fileName == null || campaigns == null) return false;
+		
+		File seekFile = new File(fileName);
 		
 		for (ApplifierImpactCampaign campaign : campaigns) {
-			if (campaign.getVideoUrl().equals(fileName))
+			File matchFile = new File(campaign.getVideoUrl());
+			if (seekFile.getName().equals(matchFile.getName()))
 				return true;
 		}
 		

@@ -25,8 +25,6 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ((ImageView)findViewById(R.id.playbtn)).setAlpha(80);
-
-
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Init impact");
 		ai = new ApplifierImpact(this, "892347239");
 		ai.setCampaignListener(this);
@@ -59,6 +57,7 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
 	
     @Override
 	protected void onDestroy() {
+    	ai.stopAll();
     	System.runFinalizersOnExit(true);		
     	super.onDestroy();		
 		android.os.Process.killProcess(android.os.Process.myPid());

@@ -1,5 +1,6 @@
 package com.applifier.impact.android.cache;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import com.applifier.impact.android.ApplifierImpact;
@@ -12,21 +13,18 @@ import com.applifier.impact.android.campaign.IApplifierImpactCampaignHandlerList
 import android.util.Log;
 
 public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHandlerListener {
+	
 	private IApplifierCacheListener _downloadListener = null;	
-	//private ArrayList<ApplifierImpactCampaign> _downloadingCampaigns = null;
 	private ArrayList<ApplifierImpactCampaignHandler> _downloadingHandlers = null;
 	private ArrayList<ApplifierImpactCampaignHandler> _handlers = null;	
 	private int amountPrepared = 0;
 	private int totalCampaigns = 0;
 	
+	
 	public ApplifierImpactCacheManager () {
 		ApplifierImpactUtils.createCacheDir();
 		Log.d(ApplifierImpactProperties.LOG_NAME, "External storagedir: " + ApplifierImpactUtils.getCacheDirectory());
 	}
-	/*
-	public ArrayList<ApplifierImpactCampaign> getDownloadingCampaigns () {
-		return _downloadingCampaigns;
-	}*/
 	
 	public void setDownloadListener (IApplifierCacheListener listener) {
 		_downloadListener = listener;
@@ -44,20 +42,18 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 		if (_downloadListener != null)
 			_downloadListener.onCampaignUpdateStarted();
 		
-		// Active -list contains campaigns that came with the videoPlan
-		if (activeList != null) {
-			totalCampaigns = activeList.size();
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Updating cache: Going through active campaigns");			
-			for (ApplifierImpactCampaign campaign : activeList) {
-				ApplifierImpactCampaignHandler campaignHandler = new ApplifierImpactCampaignHandler(campaign, activeList);
-				addToUpdatingHandlers(campaignHandler);
-				campaignHandler.setListener(this);
-				campaignHandler.initCampaign();
-				
-				if (campaignHandler.hasDownloads()) {
-					//Log.d(ApplifierImpactProperties.LOG_NAME, "Adding to downloading handlers");
-					addToDownloadingHandlers(campaignHandler);
-				}					
+		// Check cache directory and delete all files that don't match the current files in campaigns
+		if (ApplifierImpactUtils.getCacheDirectory() != null) {
+			File dir = new File(ApplifierImpactUtils.getCacheDirectory());
+			File[] fileList = dir.listFiles();
+			
+			if (fileList != null) {
+				for (File currentFile : fileList) {
+					Log.d(ApplifierImpactProperties.LOG_NAME, "Checking file: " + currentFile.getName());
+					if (!currentFile.getName().equals(ApplifierImpactProperties.CACHE_MANIFEST_FILENAME) && !ApplifierImpactUtils.isFileRequiredByCampaigns(currentFile.getName(), activeList)) {
+						ApplifierImpactUtils.removeFile(currentFile.getName());
+					}
+				}
 			}
 		}
 		
@@ -71,6 +67,22 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 				if (!ApplifierImpactUtils.isFileRequiredByCampaigns(campaign.getVideoUrl(), activeList)) {
 					ApplifierImpactUtils.removeFile(campaign.getVideoUrl());
 				}
+			}
+		}
+		
+		// Active -list contains campaigns that came with the videoPlan
+		if (activeList != null) {
+			totalCampaigns = activeList.size();
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Updating cache: Going through active campaigns");			
+			for (ApplifierImpactCampaign campaign : activeList) {
+				ApplifierImpactCampaignHandler campaignHandler = new ApplifierImpactCampaignHandler(campaign, activeList);
+				addToUpdatingHandlers(campaignHandler);
+				campaignHandler.setListener(this);
+				campaignHandler.initCampaign();
+				
+				if (campaignHandler.hasDownloads()) {
+					addToDownloadingHandlers(campaignHandler);
+				}					
 			}
 		}
 	}
@@ -107,10 +119,6 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 	private void removeFromDownloadingHandlers (ApplifierImpactCampaignHandler campaignHandler) {
 		if (_downloadingHandlers != null)
 			_downloadingHandlers.remove(campaignHandler);
-		/*
-		if (_downloadingCampaigns != null)
-			_downloadingCampaigns.remove(campaignHandler.getCampaign());
-		*/
 	}
 	
 	private void addToDownloadingHandlers (ApplifierImpactCampaignHandler campaignHandler) {
@@ -118,12 +126,5 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 			_downloadingHandlers = new ArrayList<ApplifierImpactCampaignHandler>();
 		
 		_downloadingHandlers.add(campaignHandler);
-		
-		/*
-		if (_downloadingCampaigns == null)
-			_downloadingCampaigns = new ArrayList<ApplifierImpactCampaign>();
-		
-		_downloadingCampaigns.add(campaignHandler.getCampaign());
-		*/
 	}
 }

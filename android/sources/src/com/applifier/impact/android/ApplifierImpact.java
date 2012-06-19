@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.cache.ApplifierImpactCacheManifest;
+import com.applifier.impact.android.cache.ApplifierImpactDownloader;
 import com.applifier.impact.android.cache.ApplifierImpactWebData;
 import com.applifier.impact.android.cache.IApplifierCacheListener;
+import com.applifier.impact.android.cache.IApplifierImpactWebDataListener;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
@@ -21,7 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-public class ApplifierImpact implements IApplifierCacheListener {
+public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpactWebDataListener {
 	
 	// Impact components
 	public static ApplifierImpact instance = null;
@@ -41,6 +43,9 @@ public class ApplifierImpact implements IApplifierCacheListener {
 	private IApplifierImpactListener _impactListener = null;
 	private IApplifierImpactCampaignListener _campaignListener = null;
 	private IApplifierImpactVideoListener _videoListener = null;
+	
+	// Currently Selected Campaign (for view)
+	private ApplifierImpactCampaign _selectedCampaign = null;
 	
 	private boolean _initialized = false;
 	
@@ -70,8 +75,16 @@ public class ApplifierImpact implements IApplifierCacheListener {
 		cachemanager.setDownloadListener(this);
 		cachemanifest = new ApplifierImpactCacheManifest();
 		webdata = new ApplifierImpactWebData();
+		webdata.setWebDataListener(this);
 		
 		if (webdata.initVideoPlan(cachemanifest.getCachedCampaignIds())) {			
+			_initialized = true;
+		}
+	}
+	
+	private void initCache () {
+		if (_initialized) {
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Init cache");
 			// Campaigns that are currently cached
 			ArrayList<ApplifierImpactCampaign> cachedCampaigns = cachemanifest.getCachedCampaigns();
 			// Campaigns that were received in the videoPlan
@@ -85,16 +98,13 @@ public class ApplifierImpact implements IApplifierCacheListener {
 			if (videoPlanCampaigns != null)
 				Log.d(ApplifierImpactProperties.LOG_NAME, "Campaigns in videoPlan: " + videoPlanCampaigns.toString());
 			
-			if (pruneList != null) {
+			if (pruneList != null)
 				Log.d(ApplifierImpactProperties.LOG_NAME, "Campaigns to prune: " + pruneList.toString());
-			}
 			
 			// Update cache WILL START DOWNLOADS if needed, after this method you can check getDownloadingCampaigns which ones started downloads.
 			cachemanager.updateCache(videoPlanCampaigns, pruneList);			
-			setupViews();
+			setupViews();		
 		}
-
-		_initialized = true;
 	}
 	
 	@Override
@@ -105,7 +115,8 @@ public class ApplifierImpact implements IApplifierCacheListener {
 	@Override
 	public void onCampaignReady (ApplifierImpactCampaignHandler campaignHandler) {
 		if (campaignHandler == null || campaignHandler.getCampaign() == null) return;
-		
+				
+		// TODO: Campaign with only changed data won't get updated
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Got onCampaignReady: " + campaignHandler.getCampaign().toString());
 		cachemanifest.addCampaignToManifest(campaignHandler.getCampaign());
 		
@@ -119,18 +130,29 @@ public class ApplifierImpact implements IApplifierCacheListener {
 	public void onAllCampaignsReady () {
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Listener got \"All campaigns ready.\"");
 	}
-		
+	
+	@Override
+	public void onWebDataCompleted () {
+		initCache();
+	}
+	
 	public void changeActivity (Activity activity) {
 		_currentActivity = activity;
 	}
 	
 	public boolean showImpact () {
-		_currentActivity.addContentView(_vs, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-		focusToView(_vs);
+		selectCampaign();
 		
-		if (_impactListener != null)
-			_impactListener.onImpactOpen();
-
+		if (_selectedCampaign != null) {
+			_currentActivity.addContentView(_vs, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+			focusToView(_vs);
+			
+			if (_impactListener != null)
+				_impactListener.onImpactOpen();
+			
+			return true;
+		}
+		
 		return false;
 	}
 	
@@ -155,9 +177,24 @@ public class ApplifierImpact implements IApplifierCacheListener {
 		return false;
 	}
 	
+	public void stopAll () {
+		Log.d(ApplifierImpactProperties.LOG_NAME, "ApplifierImpact->stopAll()");
+		ApplifierImpactDownloader.stopAllDownloads();
+	}
+	
 	
 	/* PRIVATE METHODS */
 	
+	
+	private void selectCampaign () {
+		ArrayList<ApplifierImpactCampaign> viewableCampaigns = cachemanifest.getViewableCachedCampaigns();
+		
+		if (viewableCampaigns != null && viewableCampaigns.size() > 0) {
+			int campaignIndex = (int)Math.round(Math.random() * (viewableCampaigns.size() - 1));
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Selected campaign index " + campaignIndex + ", out of " + viewableCampaigns.size());
+			_selectedCampaign = viewableCampaigns.get(campaignIndex);		
+		}
+	}
 
 	private void focusToView (View view) {
 		view.setFocusable(true);
@@ -181,7 +218,9 @@ public class ApplifierImpact implements IApplifierCacheListener {
 				closeImpactView(_vs, false);
 				_currentActivity.addContentView(_vp, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 				focusToView(_vp);
-				_vp.playVideo();
+				
+				if (_selectedCampaign != null)
+					_vp.playVideo(_selectedCampaign.getVideoFilename());
 				
 				if (_videoListener != null)
 					_videoListener.onVideoStarted();
@@ -194,9 +233,13 @@ public class ApplifierImpact implements IApplifierCacheListener {
 				if (_videoListener != null)
 					_videoListener.onVideoCompleted();
 				
+				_selectedCampaign.setCampaignStatus("viewed");
+				cachemanifest.writeCurrentCacheManifest();
+				_selectedCampaign = null;
+				
 				closeImpactView(_vp, false);
 				_currentActivity.addContentView(_vc, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-				focusToView(_vc);
+				focusToView(_vc);				
 			}
 		});
 		
