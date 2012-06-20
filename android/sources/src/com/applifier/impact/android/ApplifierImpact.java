@@ -34,6 +34,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	// Temporary data
 	private Activity _currentActivity = null;
 	private boolean _initialized = false;
+	private boolean _showingImpact = false;
 	
 	// Views
 	private ApplifierVideoSelectView _vs = null;
@@ -143,20 +144,21 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	public boolean showImpact () {
 		selectCampaign();
 		
-		if (_selectedCampaign != null) {
+		if (!_showingImpact && _selectedCampaign != null) {
 			_currentActivity.addContentView(_vs, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 			focusToView(_vs);
+			_showingImpact = true;	
 			
 			if (_impactListener != null)
 				_impactListener.onImpactOpen();
 			
-			return true;
+			return _showingImpact;
 		}
 		
 		return false;
 	}
 	
-	public void closeImpactView (View view, boolean reportClosed) {
+	public void closeImpactView (View view, boolean freeView) {
 		view.setFocusable(false);
 		view.setFocusableInTouchMode(false);
 		
@@ -164,14 +166,16 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 		if (vg != null)
 			vg.removeView(view);
 		
-		if (_impactListener != null && reportClosed)
+		if (_impactListener != null && freeView) {
+			_selectedCampaign = null;
+			_showingImpact = false;
 			_impactListener.onImpactClose();
+		}
 	}
 	
 	public boolean hasCampaigns () {
-		if (webdata != null && cachemanifest != null) {
-			if (webdata.getCampaignAmount() + cachemanifest.getCachedCampaignAmount() > 2)
-				return true;
+		if (cachemanifest != null) {
+			return cachemanifest.getCachedCampaignAmount() > 0;
 		}
 		
 		return false;
@@ -235,7 +239,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 				
 				_selectedCampaign.setCampaignStatus("viewed");
 				cachemanifest.writeCurrentCacheManifest();
-				_selectedCampaign = null;
+				
 				
 				closeImpactView(_vp, false);
 				_currentActivity.addContentView(_vc, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
