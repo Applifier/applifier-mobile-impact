@@ -114,21 +114,36 @@ public class ApplifierImpactCacheManifest {
 		if (getCachedCampaignById(campaign.getCampaignId()) == null) {
 			_cachedCampaigns.add(campaign);
 			writeCurrentCacheManifest();
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 	
 	public boolean updateCampaignInManifest (ApplifierImpactCampaign campaign) {
 		if (campaign == null || _cachedCampaigns == null) return false;
 		
+		/*
 		if (removeCampaignFromManifest(campaign.getCampaignId())) {
 			if (addCampaignToManifest(campaign)) {
 				writeCurrentCacheManifest();
 				return true;
 			}
-		}
+		}*/
 		
+		int updateIndex = -1;
+		ApplifierImpactCampaign cacheCampaign = getCachedCampaignById(campaign.getCampaignId());
+		if (cacheCampaign != null)
+			updateIndex = _cachedCampaigns.indexOf(cacheCampaign);
+		
+		if (updateIndex > -1) {
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Updating campaign: " + campaign.getCampaignId());
+			_cachedCampaigns.set(updateIndex, campaign);
+			writeCurrentCacheManifest();
+			
+			return true;
+		}
+			
 		return false;
 	}
 	

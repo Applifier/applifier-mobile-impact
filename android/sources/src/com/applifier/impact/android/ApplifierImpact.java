@@ -118,7 +118,8 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 				
 		// TODO: Campaign with only changed data won't get updated
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Got onCampaignReady: " + campaignHandler.getCampaign().toString());
-		cachemanifest.addCampaignToManifest(campaignHandler.getCampaign());
+		if (!cachemanifest.addCampaignToManifest(campaignHandler.getCampaign()))
+			cachemanifest.updateCampaignInManifest(campaignHandler.getCampaign());
 		
 		if (_campaignListener != null && cachemanifest.getCachedCampaignAmount() > 0) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Reporting cached campaigns available");
