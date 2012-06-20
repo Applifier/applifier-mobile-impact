@@ -33,6 +33,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	
 	// Temporary data
 	private Activity _currentActivity = null;
+	private boolean _initialized = false;
 	
 	// Views
 	private ApplifierVideoSelectView _vs = null;
@@ -45,9 +46,8 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	private IApplifierImpactVideoListener _videoListener = null;
 	
 	// Currently Selected Campaign (for view)
-	private ApplifierImpactCampaign _selectedCampaign = null;
+	private ApplifierImpactCampaign _selectedCampaign = null;	
 	
-	private boolean _initialized = false;
 	
 	public ApplifierImpact (Activity activity, String applifierId) {
 		instance = this;
@@ -116,7 +116,6 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	public void onCampaignReady (ApplifierImpactCampaignHandler campaignHandler) {
 		if (campaignHandler == null || campaignHandler.getCampaign() == null) return;
 				
-		// TODO: Campaign with only changed data won't get updated
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Got onCampaignReady: " + campaignHandler.getCampaign().toString());
 		if (!cachemanifest.addCampaignToManifest(campaignHandler.getCampaign()))
 			cachemanifest.updateCampaignInManifest(campaignHandler.getCampaign());
@@ -192,7 +191,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 		
 		if (viewableCampaigns != null && viewableCampaigns.size() > 0) {
 			int campaignIndex = (int)Math.round(Math.random() * (viewableCampaigns.size() - 1));
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Selected campaign index " + campaignIndex + ", out of " + viewableCampaigns.size());
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Selected campaign " + (campaignIndex + 1) + ", out of " + viewableCampaigns.size());
 			_selectedCampaign = viewableCampaigns.get(campaignIndex);		
 		}
 	}

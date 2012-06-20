@@ -49,6 +49,22 @@ public class ApplifierImpactWebData {
 	}
 	
 	public boolean initVideoPlan (ArrayList<String> cachedCampaignIds) {		
+		JSONObject data = getCachedCampaignIdsArray(cachedCampaignIds);
+		String cachedCampaignData = "";
+		
+		if (data != null)
+			cachedCampaignData = data.toString();
+					
+		_videoPlanLoader = new VideoPlanLoader();
+		_videoPlanLoader.execute(ApplifierImpactProperties.WEBDATA_URL + "?c=" + cachedCampaignData);
+		
+		return true;
+	}
+	
+	
+	/* INTERNAL METHODS */
+	
+	private JSONObject getCachedCampaignIdsArray (ArrayList<String> cachedCampaignIds) {
 		JSONObject data = new JSONObject();
 		JSONArray campaignIds = null;
 		
@@ -65,58 +81,10 @@ public class ApplifierImpactWebData {
 		}
 		catch (Exception e) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
-			return false;
+			return null;
 		}
 		
-		String cachedCampaignData = null;
-		
-		if (data != null && campaignIds != null && campaignIds.length() > 0) {
-			cachedCampaignData = data.toString();
-			Log.d(ApplifierImpactProperties.LOG_NAME, cachedCampaignData);
-		}
-					
-		// TODO: Send campaign ID's with the request
-		
-		_videoPlanLoader = new VideoPlanLoader();
-		_videoPlanLoader.execute(ApplifierImpactProperties.WEBDATA_URL);
-		
-		/*
-		JSONArray videos = new JSONArray();
-		JSONObject tmpvideo = null;
-		
-		try {
-			tmpvideo = new JSONObject();
-			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video5.mp4");
-			tmpvideo.put("s", "Ready");
-			tmpvideo.put("id", "a5");
-			videos.put(tmpvideo);
-			
-			tmpvideo = new JSONObject();
-			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video2.mp4");
-			tmpvideo.put("s", "blaa2");
-			tmpvideo.put("id", "a2");
-			videos.put(tmpvideo);
-	
-			
-			tmpvideo = new JSONObject();
-			tmpvideo.put("v", "http://quake.everyplay.fi/~bluesun/testvideos/video3.mp4");
-			tmpvideo.put("s", "blaa3");
-			tmpvideo.put("id", "a3");
-			videos.put(tmpvideo);			
-		
-			_videoPlan = new JSONObject();
-			_videoPlan.put("va", videos);
-			
-			Log.d(ApplifierImpactProperties.LOG_NAME, _videoPlan.toString(4));
-			
-			_videoPlanCampaigns = ApplifierImpactUtils.createCampaignsFromJson(_videoPlan);
-		}
-		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Great error!");
-			return false;
-		}*/
-		
-		return true;
+		return data;
 	}
 	
 	private void videoPlanReceived (String json) {
@@ -176,6 +144,7 @@ public class ApplifierImpactWebData {
 				int count = 0;
 				
 				try {
+					Log.d(ApplifierImpactProperties.LOG_NAME, "Reading data from: " + _videoPlanUrl.toString());
 					while ((count = _input.read(data)) != -1) {
 						total += count;
 						publishProgress((int)(total * 100 / _downloadLength));
