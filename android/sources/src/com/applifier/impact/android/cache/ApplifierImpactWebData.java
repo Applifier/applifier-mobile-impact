@@ -61,6 +61,10 @@ public class ApplifierImpactWebData {
 		return true;
 	}
 	
+	public void stopAllRequests () {
+		_videoPlanLoader.cancel(true);
+	}
+	
 	
 	/* INTERNAL METHODS */
 	

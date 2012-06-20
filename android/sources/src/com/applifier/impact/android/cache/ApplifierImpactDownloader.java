@@ -60,7 +60,7 @@ public class ApplifierImpactDownloader {
 	}
 	
 	
-	// INTERNAL METHODS
+	/* INTERNAL METHODS */
 	
 	private static void removeDownload (String downloadUrl) {
 		if (_downloadList == null) return;

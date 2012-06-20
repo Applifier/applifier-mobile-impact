@@ -10,6 +10,7 @@ import android.util.Log;
 import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 
 public class ApplifierImpactCacheManifest {
 	
@@ -59,7 +60,7 @@ public class ApplifierImpactCacheManifest {
 		
 		if (_cachedCampaigns != null) {
 			for (ApplifierImpactCampaign campaign : _cachedCampaigns) {
-				if (!campaign.getCampaignStatus().equals("viewed"))
+				if (campaign.getCampaignStatus() != ApplifierImpactCampaignStatus.VIEWED && campaign.getCampaignStatus() != ApplifierImpactCampaignStatus.PANIC)
 					retList.add(campaign);
 			}
 			

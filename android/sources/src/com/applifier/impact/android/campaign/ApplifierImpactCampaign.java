@@ -9,6 +9,24 @@ import com.applifier.impact.android.ApplifierImpactProperties;
 import android.util.Log;
 
 public class ApplifierImpactCampaign {
+	
+	public enum ApplifierImpactCampaignStatus { READY, VIEWED, PANIC;
+		@Override
+		public String toString () {
+			String output = name().toString().toLowerCase();
+			return output;
+		}
+		
+		public static ApplifierImpactCampaignStatus getValueOf (String status) {
+			if (ApplifierImpactCampaignStatus.READY.toString().equals(status.toLowerCase()))
+				return ApplifierImpactCampaignStatus.READY;
+			else if (ApplifierImpactCampaignStatus.VIEWED.toString().equals(status.toLowerCase()))
+				return ApplifierImpactCampaignStatus.VIEWED;
+			else
+				return ApplifierImpactCampaignStatus.PANIC;
+		}
+	};
+	
 	private JSONObject _campaignJson = null;
 	private String[] _requiredKeys = new String[]{"v", "s", "id"};
 	
@@ -21,7 +39,7 @@ public class ApplifierImpactCampaign {
 	
 	@Override
 	public String toString () {
-		return "(ID: " + getCampaignId() + ", STATUS: " + getCampaignStatus() + ", URL: " + getVideoUrl() + ")"; 
+		return "(ID: " + getCampaignId() + ", STATUS: " + getCampaignStatus().toString() + ", URL: " + getVideoUrl() + ")"; 
 	}
 	
 	public JSONObject toJson () {
@@ -29,7 +47,7 @@ public class ApplifierImpactCampaign {
 		
 		try {
 			retObject.put("v", getVideoUrl());
-			retObject.put("s", getCampaignStatus());
+			retObject.put("s", getCampaignStatus().toString());
 			retObject.put("id", getCampaignId());
 		}
 		catch (Exception e) {
@@ -53,10 +71,10 @@ public class ApplifierImpactCampaign {
 		return null;
 	}
 	
-	public String getCampaignStatus () {
+	public ApplifierImpactCampaignStatus getCampaignStatus () {
 		if (checkDataIntegrity()) {
 			try {
-				return _campaignJson.getString("s");
+				return ApplifierImpactCampaignStatus.getValueOf(_campaignJson.getString("s"));
 			}
 			catch (Exception e) {
 				Log.d(ApplifierImpactProperties.LOG_NAME, "getCampaignStatus: This should not happen!");
@@ -66,10 +84,10 @@ public class ApplifierImpactCampaign {
 		return null;
 	}
 	
-	public void setCampaignStatus (String status) {
+	public void setCampaignStatus (ApplifierImpactCampaignStatus status) {
 		if (checkDataIntegrity()) {
 			try {
-				_campaignJson.put("s", status);
+				_campaignJson.put("s", status.toString());
 			}
 			catch (Exception e) {
 				Log.d(ApplifierImpactProperties.LOG_NAME, "setCampaignStatus: This should not happen!");
@@ -121,5 +139,9 @@ public class ApplifierImpactCampaign {
 			return true;
 		}
 		return false;
+	}
+	
+	private ApplifierImpactCampaignStatus getCampaignStatusFromString (String status) {
+		return null;
 	}
 }
