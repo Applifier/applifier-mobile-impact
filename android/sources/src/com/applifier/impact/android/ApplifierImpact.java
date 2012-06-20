@@ -79,7 +79,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 		webdata = new ApplifierImpactWebData();
 		webdata.setWebDataListener(this);
 		
-		if (webdata.initVideoPlan(cachemanifest.getCachedCampaignIds())) {			
+		if (webdata.initVideoPlan(cachemanifest.getCachedCampaignIds())) {
 			_initialized = true;
 		}
 	}
@@ -234,7 +234,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 					_videoListener.onVideoStarted();
 			}
 		});
-		
+				
 		_vp = new ApplifierVideoPlayView(_currentActivity.getBaseContext(), new MediaPlayer.OnCompletionListener() {			
 			@Override
 			public void onCompletion(MediaPlayer mp) {				
@@ -249,12 +249,6 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 				_currentActivity.addContentView(_vc, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 				focusToView(_vc);				
 			}
-		});
-		
-		_vp.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-			}
-		});		
+		});	
 	}
 }
