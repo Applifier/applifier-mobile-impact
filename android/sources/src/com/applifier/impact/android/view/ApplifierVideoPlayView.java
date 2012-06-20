@@ -86,6 +86,13 @@ public class ApplifierVideoPlayView extends FrameLayout {
 				}
 			}
 		});
+		setOnFocusChangeListener(new View.OnFocusChangeListener() {			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus)
+					pauseVideo();
+			}
+		});
 	}
 	
 	
