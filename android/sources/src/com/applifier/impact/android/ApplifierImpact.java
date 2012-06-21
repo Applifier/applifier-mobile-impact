@@ -243,11 +243,10 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 				
 				_selectedCampaign.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 				cachemanifest.writeCurrentCacheManifest();
-				
-				
+				_vp.setKeepScreenOn(false);
 				closeImpactView(_vp, false);
 				_currentActivity.addContentView(_vc, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-				focusToView(_vc);				
+				focusToView(_vc);			
 			}
 		});	
 	}
