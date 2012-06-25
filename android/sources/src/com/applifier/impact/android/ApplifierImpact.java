@@ -167,13 +167,12 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	
 	@Override
 	public void onWebDataCompleted () {
-		// TODO: If webdata doesn't complete or fails, you can still check the cache for available campaigns
 		initCache();
 	}
 	
 	@Override
 	public void onWebDataFailed () {
-		// TODO: Zomg lol couldn't fetch webdata (videoPlan)
+		// TODO: ZOMG LOL couldn't fetch webdata (videoPlan) (Check cache if can show something)
 	}
 	
 	
