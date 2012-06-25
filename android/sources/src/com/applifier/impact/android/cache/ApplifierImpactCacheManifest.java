@@ -162,7 +162,7 @@ public class ApplifierImpactCacheManifest {
 	
 	private boolean readCacheManifest () {		
 		File manifest = getFileForManifest();
-		_manifestContent = ApplifierImpactUtils.readFile(manifest);
+		_manifestContent = ApplifierImpactUtils.readFile(manifest, false);
 		
 		if (_manifestContent != null) {
 			try {

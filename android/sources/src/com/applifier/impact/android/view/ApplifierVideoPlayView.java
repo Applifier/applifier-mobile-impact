@@ -7,6 +7,7 @@ import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.ApplifierImpactUtils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.PowerManager;
@@ -24,9 +25,11 @@ public class ApplifierVideoPlayView extends FrameLayout {
 
 	private MediaPlayer.OnCompletionListener _listener;
 	private Timer _videoPausedTimer = null;
+	private Activity _currentActivity = null;
 	
-	public ApplifierVideoPlayView(Context context, MediaPlayer.OnCompletionListener listener) {
+	public ApplifierVideoPlayView(Context context, MediaPlayer.OnCompletionListener listener, Activity activity) {
 		super(context);
+		_currentActivity = activity;
 		_listener = listener;
 		createView();
 	}
@@ -47,12 +50,23 @@ public class ApplifierVideoPlayView extends FrameLayout {
 		startVideo();
 	}
 	
+	public void setActivity (Activity activity) {
+		_currentActivity = activity;
+	}
+	
 	
 	/* INTERNAL METHODS */
 	
 	private void startVideo () {
-		((VideoView)findViewById(R.id.videoplayer)).start();
-		setKeepScreenOn(true);
+		if (_currentActivity != null) {
+			_currentActivity.runOnUiThread(new Runnable() {			
+				@Override
+				public void run() {
+					((VideoView)findViewById(R.id.videoplayer)).start();
+					setKeepScreenOn(true);
+				}
+			});
+		}
 		
 		if (_videoPausedTimer == null) {
 			_videoPausedTimer = new Timer();
@@ -62,8 +76,16 @@ public class ApplifierVideoPlayView extends FrameLayout {
 	
 	private void pauseVideo () {
 		purgeVideoPausedTimer();
-		((VideoView)findViewById(R.id.videoplayer)).pause();
-		setKeepScreenOn(false);
+		
+		if (_currentActivity != null) {
+			_currentActivity.runOnUiThread(new Runnable() {			
+				@Override
+				public void run() {
+					((VideoView)findViewById(R.id.videoplayer)).pause();
+					setKeepScreenOn(false);
+				}
+			});
+		}
 	}
 	
 	private void purgeVideoPausedTimer () {
@@ -115,8 +137,7 @@ public class ApplifierVideoPlayView extends FrameLayout {
 	private class VideoPausedTask extends TimerTask {
 		@Override
 		public void run () {
-			PowerManager pm = (PowerManager)getContext().getSystemService(Context.POWER_SERVICE);
-			
+			PowerManager pm = (PowerManager)getContext().getSystemService(Context.POWER_SERVICE);			
 			if (!pm.isScreenOn())
 				pauseVideo();
 		}

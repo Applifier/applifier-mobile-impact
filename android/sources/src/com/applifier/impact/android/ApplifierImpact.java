@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+// TODO: No native UI. Use webview for everything else than video.
 public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpactWebDataListener {
 	
 	// Impact components
@@ -86,6 +87,9 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 		
 	public void changeActivity (Activity activity) {
 		_currentActivity = activity;
+		
+		if (_vp != null)
+			_vp.setActivity(_currentActivity);
 	}
 	
 	public boolean showImpact () {
@@ -163,7 +167,13 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	
 	@Override
 	public void onWebDataCompleted () {
+		// TODO: If webdata doesn't complete or fails, you can still check the cache for available campaigns
 		initCache();
+	}
+	
+	@Override
+	public void onWebDataFailed () {
+		// TODO: Zomg lol couldn't fetch webdata (videoPlan)
 	}
 	
 	
@@ -243,11 +253,12 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 				
 				_selectedCampaign.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 				cachemanifest.writeCurrentCacheManifest();
+				webdata.sendCampaignViewed(_selectedCampaign);
 				_vp.setKeepScreenOn(false);
 				closeImpactView(_vp, false);
 				_currentActivity.addContentView(_vc, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-				focusToView(_vc);			
+				focusToView(_vc);	
 			}
-		});	
+		}, _currentActivity);	
 	}
 }

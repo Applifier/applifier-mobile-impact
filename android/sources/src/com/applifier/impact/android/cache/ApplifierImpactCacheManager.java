@@ -50,7 +50,9 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 			if (fileList != null) {
 				for (File currentFile : fileList) {
 					Log.d(ApplifierImpactProperties.LOG_NAME, "Checking file: " + currentFile.getName());
-					if (!currentFile.getName().equals(ApplifierImpactProperties.CACHE_MANIFEST_FILENAME) && !ApplifierImpactUtils.isFileRequiredByCampaigns(currentFile.getName(), activeList)) {
+					if (!currentFile.getName().equals(ApplifierImpactProperties.PENDING_REQUESTS_FILENAME) && 
+						!currentFile.getName().equals(ApplifierImpactProperties.CACHE_MANIFEST_FILENAME) && 
+						!ApplifierImpactUtils.isFileRequiredByCampaigns(currentFile.getName(), activeList)) {
 						ApplifierImpactUtils.removeFile(currentFile.getName());
 					}
 				}

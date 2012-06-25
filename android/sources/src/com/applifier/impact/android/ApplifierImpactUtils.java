@@ -45,7 +45,7 @@ public class ApplifierImpactUtils {
 		return null;
 	}
 	
-	public static String readFile (File fileToRead) {
+	public static String readFile (File fileToRead, boolean addLineBreaks) {
 		String fileContent = "";
 		BufferedReader br = null;
 		
@@ -56,6 +56,8 @@ public class ApplifierImpactUtils {
 				
 				while ((line = br.readLine()) != null) {
 					fileContent = fileContent.concat(line);
+					if (addLineBreaks)
+						fileContent = fileContent.concat("\n");
 				}
 			}
 			catch (Exception e) {
