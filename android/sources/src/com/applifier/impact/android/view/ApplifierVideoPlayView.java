@@ -20,7 +20,6 @@ import android.widget.VideoView;
 
 import com.applifier.impact.android.R;
 
-// TODO: Generally, force the user to actually watch the video.
 public class ApplifierVideoPlayView extends FrameLayout {
 
 	private MediaPlayer.OnCompletionListener _listener;

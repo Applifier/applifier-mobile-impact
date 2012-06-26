@@ -12,6 +12,7 @@ import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 
+// TODO: Ensure that no failures happen when 2 games are using the same data at the same time.
 public class ApplifierImpactCacheManifest {
 	
 	private JSONObject _manifestJson = null;
@@ -29,6 +30,11 @@ public class ApplifierImpactCacheManifest {
 			return 0;
 		else
 			return _cachedCampaigns.size();
+	}
+	
+	public int getViewableCachedCampaignAmount () {
+		if (getViewableCachedCampaigns() == null) return 0;
+		return getViewableCachedCampaigns().size();
 	}
 	
 	public ArrayList<String> getCachedCampaignIds () {
@@ -60,7 +66,7 @@ public class ApplifierImpactCacheManifest {
 		
 		if (_cachedCampaigns != null) {
 			for (ApplifierImpactCampaign campaign : _cachedCampaigns) {
-				if (campaign.getCampaignStatus() != ApplifierImpactCampaignStatus.VIEWED && campaign.getCampaignStatus() != ApplifierImpactCampaignStatus.PANIC)
+				if (campaign != null && campaign.getCampaignStatus() != ApplifierImpactCampaignStatus.VIEWED && campaign.getCampaignStatus() != ApplifierImpactCampaignStatus.PANIC)
 					retList.add(campaign);
 			}
 			

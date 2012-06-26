@@ -154,7 +154,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 		if (!cachemanifest.addCampaignToManifest(campaignHandler.getCampaign()))
 			cachemanifest.updateCampaignInManifest(campaignHandler.getCampaign());
 		
-		if (_campaignListener != null && cachemanifest.getCachedCampaignAmount() > 0) {
+		if (_campaignListener != null && cachemanifest.getViewableCachedCampaignAmount() > 0) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Reporting cached campaigns available");
 			_campaignListener.onCampaignsAvailable();
 		}
@@ -172,7 +172,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	
 	@Override
 	public void onWebDataFailed () {
-		// TODO: ZOMG LOL couldn't fetch webdata (videoPlan) (Check cache if can show something)
+		initCache();
 	}
 	
 	
@@ -188,6 +188,16 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 			// Campaigns that were in cache but were not returned in the videoPlan (old or not current)
 			ArrayList<ApplifierImpactCampaign> pruneList = ApplifierImpactUtils.substractFromCampaignList(cachedCampaigns, videoPlanCampaigns);
 			
+			// If campaigns from web-data is null something has probably gone wrong, try to maintain something viewable by setting
+			// the videoPlan campaigns from current cache and running them through.
+			if (videoPlanCampaigns == null) {
+				videoPlanCampaigns = cachemanifest.getCachedCampaigns();
+				pruneList = null;
+			}
+				
+			// If current videoPlan is still null (nothing in the cache either), just forget going any further.
+			if (videoPlanCampaigns == null || videoPlanCampaigns.size() == 0) return;
+			
 			if (cachedCampaigns != null)
 				Log.d(ApplifierImpactProperties.LOG_NAME, "Cached campaigns: " + cachedCampaigns.toString());
 			
@@ -197,7 +207,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 			if (pruneList != null)
 				Log.d(ApplifierImpactProperties.LOG_NAME, "Campaigns to prune: " + pruneList.toString());
 			
-			// Update cache WILL START DOWNLOADS if needed, after this method you can check getDownloadingCampaigns which ones started downloads.
+			// Update cache WILL START DOWNLOADS if needed, after this method you can check getDownloadingCampaigns which ones started downloading.
 			cachemanager.updateCache(videoPlanCampaigns, pruneList);			
 			setupViews();		
 		}

@@ -42,6 +42,8 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 		if (_downloadListener != null)
 			_downloadListener.onCampaignUpdateStarted();
 		
+		amountPrepared = 0;
+		
 		// Check cache directory and delete all files that don't match the current files in campaigns
 		if (ApplifierImpactUtils.getCacheDirectory() != null) {
 			File dir = new File(ApplifierImpactUtils.getCacheDirectory());
