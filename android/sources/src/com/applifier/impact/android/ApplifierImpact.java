@@ -13,9 +13,9 @@ import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierIm
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
 import com.applifier.impact.android.video.IApplifierImpactVideoListener;
-import com.applifier.impact.android.view.ApplifierVideoCompletedView;
+import com.applifier.impact.android.view.ApplifierImpactWebView;
 import com.applifier.impact.android.view.ApplifierVideoPlayView;
-import com.applifier.impact.android.view.ApplifierVideoSelectView;
+import com.applifier.impact.android.view.IApplifierImpactWebViewListener;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
@@ -24,8 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-// TODO: No native UI. Use webview for everything else than video.
-public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpactWebDataListener {
+public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpactWebDataListener, IApplifierImpactWebViewListener {
 	
 	// Impact components
 	public static ApplifierImpact instance = null;
@@ -39,9 +38,8 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	private boolean _showingImpact = false;
 	
 	// Views
-	private ApplifierVideoSelectView _vs = null;
 	private ApplifierVideoPlayView _vp = null;
-	private ApplifierVideoCompletedView _vc = null;
+	private ApplifierImpactWebView _webView = null;
 	
 	// Listeners
 	private IApplifierImpactListener _impactListener = null;
@@ -96,8 +94,9 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 		selectCampaign();
 		
 		if (!_showingImpact && _selectedCampaign != null) {
-			_currentActivity.addContentView(_vs, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-			focusToView(_vs);
+			_currentActivity.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+			focusToView(_webView);
+			_webView.loadUrl("javascript:setView('videoStart')");
 			_showingImpact = true;	
 			
 			if (_impactListener != null)
@@ -109,6 +108,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 		return false;
 	}
 	
+	// TODO: Make this a private method (requires creating a listener)
 	public void closeImpactView (View view, boolean freeView) {
 		view.setFocusable(false);
 		view.setFocusableInTouchMode(false);
@@ -118,7 +118,6 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 			vg.removeView(view);
 		
 		if (_impactListener != null && freeView) {
-			_selectedCampaign = null;
 			_showingImpact = false;
 			_impactListener.onImpactClose();
 		}
@@ -173,6 +172,38 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	@Override
 	public void onWebDataFailed () {
 		initCache();
+	}
+	
+	@Override
+	public void onCloseButtonClicked () {
+		closeImpactView(_webView, true);
+	}
+	
+	@Override
+	public void onPlayVideoClicked () {
+		closeImpactView(_webView, false);
+		_currentActivity.addContentView(_vp, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+		focusToView(_vp);
+		
+		if (_selectedCampaign != null) {
+			_vp.playVideo(_selectedCampaign.getVideoFilename());
+		}
+		else
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Campaign is null");
+			
+		
+		if (_videoListener != null)
+			_videoListener.onVideoStarted();
+	}
+	
+	@Override
+	public void onBackButtonClicked () {
+		closeImpactView(_webView, true);
+	}
+	
+	@Override
+	public void onVideoCompletedClicked () {
+		closeImpactView(_webView, true);
 	}
 	
 	
@@ -230,30 +261,8 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	}
 	
 	private void setupViews () {
-		_vc = new ApplifierVideoCompletedView(_currentActivity.getBaseContext());
-		_vc.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				closeImpactView(_vc, true);
-			}
-		});
-		
-		_vs = new ApplifierVideoSelectView(_currentActivity.getBaseContext());		
-		_vs.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				closeImpactView(_vs, false);
-				_currentActivity.addContentView(_vp, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-				focusToView(_vp);
-				
-				if (_selectedCampaign != null)
-					_vp.playVideo(_selectedCampaign.getVideoFilename());
-				
-				if (_videoListener != null)
-					_videoListener.onVideoStarted();
-			}
-		});
-				
+		_webView = new ApplifierImpactWebView(_currentActivity, null, this);
+	
 		_vp = new ApplifierVideoPlayView(_currentActivity.getBaseContext(), new MediaPlayer.OnCompletionListener() {			
 			@Override
 			public void onCompletion(MediaPlayer mp) {				
@@ -265,8 +274,10 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 				webdata.sendCampaignViewed(_selectedCampaign);
 				_vp.setKeepScreenOn(false);
 				closeImpactView(_vp, false);
-				_currentActivity.addContentView(_vc, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-				focusToView(_vc);	
+				
+				_webView.loadUrl("javascript:setView('videoCompleted')");
+				_currentActivity.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+				focusToView(_webView);
 			}
 		}, _currentActivity);	
 	}
