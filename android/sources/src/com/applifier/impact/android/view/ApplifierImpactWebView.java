@@ -2,9 +2,8 @@ package com.applifier.impact.android.view;
 
 import java.lang.reflect.Method;
 
-import org.json.JSONObject;
-
 import com.applifier.impact.android.ApplifierImpactProperties;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -21,9 +20,9 @@ import android.webkit.WebViewClient;
 public class ApplifierImpactWebView extends WebView {
 
 	private String _url = "http://quake.everyplay.fi/~bluesun/impact/webapp.html";	
-	private JSONObject _videoPlan = null;
-	private Activity _currentActivity = null;
 	private IApplifierImpactWebViewListener _listener = null;
+	private boolean _webAppLoaded = false;
+	private ApplifierImpactWebView _self = null;
 	
 	private static enum ApplifierImpactUrl { ApplifierImpact;
 		@Override		
@@ -40,24 +39,36 @@ public class ApplifierImpactWebView extends WebView {
 	}; 
 	
 	
-	public ApplifierImpactWebView(Activity activity, JSONObject videoPlan, IApplifierImpactWebViewListener listener) {
+	public ApplifierImpactWebView(Activity activity, IApplifierImpactWebViewListener listener) {
 		super(activity);
-		init(activity, _url, videoPlan, listener);
+		init(activity, _url, listener);
 	}
 
-	public ApplifierImpactWebView(Activity activity, String url, JSONObject videoPlan, IApplifierImpactWebViewListener listener) {
+	public ApplifierImpactWebView(Activity activity, String url, IApplifierImpactWebViewListener listener) {
 		super(activity);
-		init(activity, url, videoPlan, listener);
+		init(activity, url, listener);
 	}
 	
+	public boolean isWebAppLoaded () {
+		return _webAppLoaded;
+	}
+	
+	public void setView (String view) {
+		if (isWebAppLoaded())
+			loadUrl("javascript:setView('" + view + "');");
+	}
+	
+	public void setSelectedCampaign (ApplifierImpactCampaign campaign) {
+		if (isWebAppLoaded())
+			loadUrl("javascript:selectCampaign('" + campaign.toJson().toString() + "');");
+	}
 	
 	/* INTENRAL METHODS */
 	
-	private void init (Activity activity, String url, JSONObject videoPlan, IApplifierImpactWebViewListener listener) {
+	private void init (Activity activity, String url, IApplifierImpactWebViewListener listener) {
+		_self = this;
 		_listener = listener;
 		_url = url;
-		_videoPlan = videoPlan;
-		_currentActivity = activity;
 		setupApplifierView();
 		loadUrl(_url);
 	}
@@ -131,7 +142,7 @@ public class ApplifierImpactWebView extends WebView {
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BACK:
 		    	if (_listener != null)
-		    		_listener.onBackButtonClicked();
+		    		_listener.onBackButtonClicked(this);
 		    	return true;
 		}
     	
@@ -142,8 +153,7 @@ public class ApplifierImpactWebView extends WebView {
 	
 	private class ApplifierViewChromeClient extends WebChromeClient {
 		public void onConsoleMessage(String message, int lineNumber, String sourceID) {
-			//webapp.addLogMessage(message, lineNumber, sourceID);
-			// TODO: Log console messages
+			Log.d(ApplifierImpactProperties.LOG_NAME, "JAVASCRIPT(" + lineNumber + "): " + message);
 		}
 		
 		public void onReachedMaxAppCacheSize(long spaceNeeded, long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) {
@@ -156,14 +166,7 @@ public class ApplifierImpactWebView extends WebView {
 		public void onPageFinished (WebView webview, String url) {
 			super.onPageFinished(webview, url);
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Finished url: "  + url);
-			
-			// TODO: Webview ready, init
-			
-			/*
-			if (webapp.getWebState() != ApplifierWebState.Ready && webview != null) {
-				webapp.initWebApp((ApplifierView)webview);				
-				webapp.processJavascriptCommandLog();
-			}*/
+			_webAppLoaded = true;
 		}
 		
 		@Override
@@ -185,7 +188,7 @@ public class ApplifierImpactWebView extends WebView {
 				}
 				else if (url.endsWith("close")) {
 					if (_listener != null)
-						_listener.onCloseButtonClicked();
+						_listener.onCloseButtonClicked(_self);
 				}
 				
 				shouldOverride = true;

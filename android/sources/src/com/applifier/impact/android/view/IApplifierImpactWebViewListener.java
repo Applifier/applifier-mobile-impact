@@ -1,8 +1,7 @@
 package com.applifier.impact.android.view;
 
-public interface IApplifierImpactWebViewListener {
-	public void onCloseButtonClicked ();
+public interface IApplifierImpactWebViewListener extends IApplifierViewListener {
+	public void onWebAppLoaded ();
 	public void onPlayVideoClicked ();
-	public void onBackButtonClicked ();
 	public void onVideoCompletedClicked ();
 }

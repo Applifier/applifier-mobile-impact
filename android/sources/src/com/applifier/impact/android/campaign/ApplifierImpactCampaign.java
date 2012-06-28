@@ -140,8 +140,4 @@ public class ApplifierImpactCampaign {
 		}
 		return false;
 	}
-	
-	private ApplifierImpactCampaignStatus getCampaignStatusFromString (String status) {
-		return null;
-	}
 }

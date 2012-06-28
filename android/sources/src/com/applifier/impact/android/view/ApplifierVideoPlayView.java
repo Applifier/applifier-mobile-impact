@@ -3,13 +3,11 @@ package com.applifier.impact.android.view;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.ApplifierImpactUtils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.os.PowerManager;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -19,14 +17,16 @@ import android.widget.FrameLayout;
 import android.widget.VideoView;
 
 import com.applifier.impact.android.R;
+import com.applifier.impact.android.video.IApplifierVideoPlayerListener;
 
+// TODO: Do not use XML layout, generate it on the fly
 public class ApplifierVideoPlayView extends FrameLayout {
 
-	private MediaPlayer.OnCompletionListener _listener;
+	private IApplifierVideoPlayerListener _listener;
 	private Timer _videoPausedTimer = null;
 	private Activity _currentActivity = null;
 	
-	public ApplifierVideoPlayView(Context context, MediaPlayer.OnCompletionListener listener, Activity activity) {
+	public ApplifierVideoPlayView(Context context, IApplifierVideoPlayerListener listener, Activity activity) {
 		super(context);
 		_currentActivity = activity;
 		_listener = listener;
@@ -123,7 +123,10 @@ public class ApplifierVideoPlayView extends FrameLayout {
 			case KeyEvent.KEYCODE_BACK:
 		    	((VideoView)findViewById(R.id.videoplayer)).stopPlayback();
 				setKeepScreenOn(false);
-		    	ApplifierImpact.instance.closeImpactView(this, true);
+				
+				if (_listener != null)
+					_listener.onBackButtonClicked(this);
+				
 		    	return true;
 		}
     	
