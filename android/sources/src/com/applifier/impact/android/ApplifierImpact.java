@@ -163,6 +163,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	
 	@Override
 	public void onWebAppLoaded () {
+		
 	}
 	
 	@Override
