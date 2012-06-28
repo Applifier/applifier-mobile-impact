@@ -37,20 +37,20 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
     }
     
     public void onImpactClose () {
-    	Log.d(ApplifierImpactProperties.LOG_NAME, "Impact close");
+    	Log.d(ApplifierImpactProperties.LOG_NAME, "HOST: Impact close");
     }
     
     public void onImpactOpen () {   	
-    	Log.d(ApplifierImpactProperties.LOG_NAME, "Impact open");
+    	Log.d(ApplifierImpactProperties.LOG_NAME, "HOST: Impact open");
     }
     
 	public void onVideoStarted () {
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Video started!");
+		Log.d(ApplifierImpactProperties.LOG_NAME, "HOST: Video started!");
 	}
 	
 	public void onVideoCompleted () {
     	((ImageView)findViewById(R.id.plissken)).setAlpha(255);
     	((ImageView)findViewById(R.id.unlock)).setVisibility(View.INVISIBLE);
-    	Log.d(ApplifierImpactProperties.LOG_NAME, "Video completed!");
+    	Log.d(ApplifierImpactProperties.LOG_NAME, "HOST: Video completed!");
 	}
 }

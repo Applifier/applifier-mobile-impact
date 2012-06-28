@@ -17,7 +17,6 @@ import android.widget.FrameLayout;
 import android.widget.VideoView;
 
 import com.applifier.impact.android.R;
-import com.applifier.impact.android.video.IApplifierVideoPlayerListener;
 
 // TODO: Do not use XML layout, generate it on the fly
 public class ApplifierVideoPlayView extends FrameLayout {
