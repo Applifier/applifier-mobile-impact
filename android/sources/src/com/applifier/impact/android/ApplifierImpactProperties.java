@@ -9,6 +9,6 @@ public class ApplifierImpactProperties {
 	public static final String PENDING_REQUESTS_FILENAME = "pendingrequests.dat";
 	public static final String WEBDATA_URL = "http://quake.everyplay.fi/~bluesun/impact/manifest.json";
 	
+	public static Activity CURRENT_ACTIVITY = null;
 	public static String IMPACT_APP_ID = "";
-	public static Activity ROOT_ACTIVITY = null;
 }

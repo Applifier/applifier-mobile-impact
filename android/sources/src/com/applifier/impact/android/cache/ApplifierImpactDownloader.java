@@ -10,6 +10,8 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -107,10 +109,19 @@ public class ApplifierImpactDownloader {
 	}
 	
 	private static void cacheFile (String url) {
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Starting download for: " + url);
-		CacheDownload cd = new CacheDownload();
-		addToCacheDownloads(cd);
-		cd.execute(url);
+		if (ApplifierImpactProperties.CURRENT_ACTIVITY == null || ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext() == null) return;
+		
+		ConnectivityManager cm = (ConnectivityManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+	    
+		if (cm != null && cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Starting download for: " + url);
+			CacheDownload cd = new CacheDownload();
+			addToCacheDownloads(cd);
+			cd.execute(url);
+	    }
+		else {
+			Log.d(ApplifierImpactProperties.LOG_NAME, "No WIFI detected, not downloading: " + url);
+		}
 	}
 	
 	private static void cacheNextFile () {
