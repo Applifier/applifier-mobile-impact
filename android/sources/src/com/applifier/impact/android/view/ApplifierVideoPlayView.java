@@ -13,17 +13,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
-import com.applifier.impact.android.R;
-
-// TODO: Do not use XML layout, generate it on the fly
-public class ApplifierVideoPlayView extends FrameLayout {
+public class ApplifierVideoPlayView extends RelativeLayout {
 
 	private IApplifierVideoPlayerListener _listener;
 	private Timer _videoPausedTimer = null;
 	private Activity _currentActivity = null;
+	private VideoView _videoView = null;
 	
 	public ApplifierVideoPlayView(Context context, IApplifierVideoPlayerListener listener, Activity activity) {
 		super(context);
@@ -44,7 +42,7 @@ public class ApplifierVideoPlayView extends FrameLayout {
 	}
 	
 	public void playVideo (String fileName) {
-		((VideoView)findViewById(R.id.videoplayer)).setVideoPath(ApplifierImpactUtils.getCacheDirectory() + "/" + fileName);
+		_videoView.setVideoPath(ApplifierImpactUtils.getCacheDirectory() + "/" + fileName);
 		startVideo();
 	}
 	
@@ -60,7 +58,7 @@ public class ApplifierVideoPlayView extends FrameLayout {
 			_currentActivity.runOnUiThread(new Runnable() {			
 				@Override
 				public void run() {
-					((VideoView)findViewById(R.id.videoplayer)).start();
+					_videoView.start();
 					setKeepScreenOn(true);
 				}
 			});
@@ -79,7 +77,7 @@ public class ApplifierVideoPlayView extends FrameLayout {
 			_currentActivity.runOnUiThread(new Runnable() {			
 				@Override
 				public void run() {
-					((VideoView)findViewById(R.id.videoplayer)).pause();
+					_videoView.pause();
 					setKeepScreenOn(false);
 				}
 			});
@@ -95,7 +93,32 @@ public class ApplifierVideoPlayView extends FrameLayout {
 
 	private void createView () {
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Creating custom view");
-		setBackgroundColor(0xBA000000);
+		setBackgroundColor(0xFF000000);
+		_videoView = new VideoView(getContext());
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+		layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+		_videoView.setLayoutParams(layoutParams);		
+		addView(_videoView, layoutParams);
+		
+		_videoView.setClickable(true);
+		_videoView.setOnCompletionListener(_listener);
+		setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				if (!_videoView.isPlaying()) {
+					startVideo();
+				}
+			}
+		});
+		setOnFocusChangeListener(new View.OnFocusChangeListener() {			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus)
+					pauseVideo();
+			}
+		});
+		
+		/*
 		inflate(getContext(), R.layout.applifier_showvideo, this);
 		((VideoView)findViewById(R.id.videoplayer)).setClickable(true);
 		((VideoView)findViewById(R.id.videoplayer)).setOnCompletionListener(_listener);
@@ -113,14 +136,14 @@ public class ApplifierVideoPlayView extends FrameLayout {
 				if (!hasFocus)
 					pauseVideo();
 			}
-		});
+		});*/
 	}
 	
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BACK:
-		    	((VideoView)findViewById(R.id.videoplayer)).stopPlayback();
+				_videoView.stopPlayback();
 				setKeepScreenOn(false);
 				
 				if (_listener != null)

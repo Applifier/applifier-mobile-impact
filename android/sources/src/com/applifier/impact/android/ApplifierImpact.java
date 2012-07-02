@@ -25,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+
+// TODO: Streaming when nothing in cache?
 public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpactWebDataListener, IApplifierImpactWebViewListener, IApplifierVideoPlayerListener {
 	
 	// Impact components
@@ -34,7 +36,6 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	public static ApplifierImpactWebData webdata = null;
 	
 	// Temporary data
-	//private Activity _currentActivity = null;
 	private boolean _initialized = false;
 	private boolean _showingImpact = false;
 	private boolean _impactReadySent = false;

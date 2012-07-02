@@ -10,27 +10,8 @@ package com.applifier.impact.android;
 public final class R {
     public static final class attr {
     }
-    public static final class drawable {
-        public static int closebutton=0x7f020000;
-        public static int ia_proto_nobg_step1=0x7f020001;
-        public static int ia_proto_nobg_step2=0x7f020002;
-        public static int impct_end_nobg_prince=0x7f020003;
-        public static int impct_start_nobg_prince=0x7f020004;
-    }
-    public static final class id {
-        public static int closeb=0x7f050001;
-        public static int cont=0x7f050000;
-        public static int step1=0x7f050002;
-        public static int step2=0x7f050004;
-        public static int videoplayer=0x7f050003;
-    }
-    public static final class layout {
-        public static int applifier_selectvideo=0x7f030000;
-        public static int applifier_showvideo=0x7f030001;
-        public static int applifier_videoshown=0x7f030002;
-    }
     public static final class string {
-        public static int app_name=0x7f040001;
-        public static int hello=0x7f040000;
+        public static int app_name=0x7f020001;
+        public static int hello=0x7f020000;
     }
 }
