@@ -17,8 +17,8 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 	private IApplifierCacheListener _downloadListener = null;	
 	private ArrayList<ApplifierImpactCampaignHandler> _downloadingHandlers = null;
 	private ArrayList<ApplifierImpactCampaignHandler> _handlers = null;	
-	private int amountPrepared = 0;
-	private int totalCampaigns = 0;
+	private int _amountPrepared = 0;
+	private int _totalCampaigns = 0;
 	
 	
 	public ApplifierImpactCacheManager () {
@@ -42,7 +42,7 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 		if (_downloadListener != null)
 			_downloadListener.onCampaignUpdateStarted();
 		
-		amountPrepared = 0;
+		_amountPrepared = 0;
 		
 		// Check cache directory and delete all files that don't match the current files in campaigns
 		if (ApplifierImpactUtils.getCacheDirectory() != null) {
@@ -76,7 +76,7 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 		
 		// Active -list contains campaigns that came with the videoPlan
 		if (activeList != null) {
-			totalCampaigns = activeList.size();
+			_totalCampaigns = activeList.size();
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Updating cache: Going through active campaigns");			
 			for (ApplifierImpactCampaign campaign : activeList) {
 				ApplifierImpactCampaignHandler campaignHandler = new ApplifierImpactCampaignHandler(campaign, activeList);
@@ -96,12 +96,12 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 	
 	@Override
 	public void onCampaignHandled(ApplifierImpactCampaignHandler campaignHandler) {
-		amountPrepared++;
+		_amountPrepared++;
 		removeFromDownloadingHandlers(campaignHandler);
 		removeFromUpdatingHandlers(campaignHandler);
 		_downloadListener.onCampaignReady(campaignHandler);
 		
-		if (amountPrepared == totalCampaigns)
+		if (_amountPrepared == _totalCampaigns)
 			_downloadListener.onAllCampaignsReady();
 	}	
 	

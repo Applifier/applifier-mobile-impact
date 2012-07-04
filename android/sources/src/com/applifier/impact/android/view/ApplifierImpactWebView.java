@@ -117,7 +117,6 @@ public class ApplifierImpactWebView extends WebView {
   
 			if (Integer.parseInt(android.os.Build.VERSION.SDK) <= 7) {
 				appCache = false;
-				//webapp.addLogMessage("AppCache is set to: FALSE", -1, "internal");
 			}
   
 			getSettings().setAppCacheEnabled(appCache);

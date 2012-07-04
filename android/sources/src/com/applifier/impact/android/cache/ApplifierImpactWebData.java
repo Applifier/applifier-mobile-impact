@@ -56,6 +56,10 @@ public class ApplifierImpactWebData {
 	public ArrayList<ApplifierImpactCampaign> getVideoPlanCampaigns () {
 		return _videoPlanCampaigns;
 	}
+	
+	public ArrayList<ApplifierImpactCampaign> getViewableVideoPlanCampaigns () {
+		return ApplifierImpactUtils.getViewableCampaignsFromCampaignList(_videoPlanCampaigns);
+	}
 
 	public boolean initVideoPlan (ArrayList<String> cachedCampaignIds) {		
 		JSONObject data = getCachedCampaignIdsArray(cachedCampaignIds);

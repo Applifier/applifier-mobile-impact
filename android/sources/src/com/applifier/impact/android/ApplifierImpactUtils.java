@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 
 import android.os.Environment;
 import android.util.Log;
@@ -188,5 +189,26 @@ public class ApplifierImpactUtils {
 		}
 		
 		return false;
+	}
+	
+	public static ArrayList<ApplifierImpactCampaign> getViewableCampaignsFromCampaignList (ArrayList<ApplifierImpactCampaign> campaignList) {
+		ArrayList<ApplifierImpactCampaign> retList = new ArrayList<ApplifierImpactCampaign>();
+		
+		if (campaignList != null) {
+			for (ApplifierImpactCampaign campaign : campaignList) {
+				if (campaign != null && campaign.getCampaignStatus() != ApplifierImpactCampaignStatus.VIEWED && campaign.getCampaignStatus() != ApplifierImpactCampaignStatus.PANIC)
+					retList.add(campaign);
+			}
+			
+			return retList;
+		}
+		
+		return null;		
+	}
+	
+	public static boolean isFileInCache (String fileName) {
+		File targetFile = new File (fileName);
+		File testFile = new File(getCacheDirectory() + "/" + targetFile.getName());
+		return testFile.exists();
 	}
 }

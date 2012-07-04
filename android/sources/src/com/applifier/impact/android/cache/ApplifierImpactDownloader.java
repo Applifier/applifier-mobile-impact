@@ -121,6 +121,9 @@ public class ApplifierImpactDownloader {
 	    }
 		else {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "No WIFI detected, not downloading: " + url);
+			removeDownload(url.toString());
+			sendToListeners(ApplifierDownloadEventType.DownloadCancelled, url);
+			cacheNextFile(); 
 		}
 	}
 	

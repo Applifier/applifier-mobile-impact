@@ -1,6 +1,5 @@
 package com.applifier.impact.android.campaign;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import android.util.Log;
@@ -17,6 +16,7 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	private ApplifierImpactCampaign _campaign = null;
 	private ArrayList<ApplifierImpactCampaign> _activeCampaigns = null;
 	private IApplifierImpactCampaignHandlerListener _handlerListener = null;
+	private boolean _cancelledDownloads = false;
 	
 	
 	public ApplifierImpactCampaignHandler (ApplifierImpactCampaign campaign, ArrayList<ApplifierImpactCampaign> activeList) {
@@ -38,17 +38,17 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	
 	@Override
 	public void onFileDownloadCompleted (String downloadUrl) {
-		removeDownload(downloadUrl);
-		
-		if (_downloadList != null && _downloadList.size() == 0 && _handlerListener != null) {
+		if (finishDownload(downloadUrl))
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Reporting campaign download completion: " + _campaign.getCampaignId());
-			ApplifierImpactDownloader.removeListener(this);
-			_handlerListener.onCampaignHandled(this);
-		}
+		
 	}
 	
 	@Override
-	public void onFileDownloadCancelled (String downloadUrl) {		
+	public void onFileDownloadCancelled (String downloadUrl) {	
+		if (finishDownload(downloadUrl)) {
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Download cancelled: " + _campaign.getCampaignId());
+			_cancelledDownloads = true;
+		}
 	}
 	
 	public void initCampaign () {
@@ -62,15 +62,28 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 			ApplifierImpactUtils.removeFile(possiblyCachedCampaign.getVideoUrl());
 		
 		// No downloads, report campaign done
-		if (!hasDownloads() && _handlerListener != null)
+		if (!hasDownloads() && _handlerListener != null && !_cancelledDownloads) {
 			_handlerListener.onCampaignHandled(this);
+		}
 	}
 	
 	
 	/* INTERNAL METHODS */
 	
+	private boolean finishDownload (String downloadUrl) {
+		removeDownload(downloadUrl);
+		
+		if (_downloadList != null && _downloadList.size() == 0 && _handlerListener != null) {
+			ApplifierImpactDownloader.removeListener(this);
+			_handlerListener.onCampaignHandled(this);
+			return true;
+		}
+		
+		return false;
+	}
+	
 	private void checkFileAndDownloadIfNeeded (String fileUrl) {
-		if (!isFileCached(fileUrl)) {
+		if (!ApplifierImpactUtils.isFileInCache(fileUrl)) {
 			if (!hasDownloads())
 				ApplifierImpactDownloader.addListener(this);
 			
@@ -95,14 +108,7 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 		_downloadList.add(fileUrl);
 		ApplifierImpactDownloader.addDownload(fileUrl);
 	}
-	
-	private boolean isFileCached (String fileName) {
-		File targetFile = new File (fileName);
-		File cachedFile = new File (ApplifierImpactUtils.getCacheDirectory() + "/" + targetFile.getName());
-		
-		return cachedFile.exists();
-	}
-	
+
 	private void removeDownload (String downloadUrl) {
 		if (_downloadList == null) return;
 		

@@ -4,7 +4,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.applifier.impact.android.ApplifierImpactProperties;
-import com.applifier.impact.android.ApplifierImpactUtils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +15,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
+// TODO: Show buffering if possible
+// TODO: Show play icon after paused
 public class ApplifierVideoPlayView extends RelativeLayout {
 
 	private IApplifierVideoPlayerListener _listener;
@@ -42,7 +43,8 @@ public class ApplifierVideoPlayView extends RelativeLayout {
 	}
 	
 	public void playVideo (String fileName) {
-		_videoView.setVideoPath(ApplifierImpactUtils.getCacheDirectory() + "/" + fileName);
+		Log.d(ApplifierImpactProperties.LOG_NAME, "Playing video from: " + fileName);
+		_videoView.setVideoPath(fileName);
 		startVideo();
 	}
 	
@@ -117,26 +119,6 @@ public class ApplifierVideoPlayView extends RelativeLayout {
 					pauseVideo();
 			}
 		});
-		
-		/*
-		inflate(getContext(), R.layout.applifier_showvideo, this);
-		((VideoView)findViewById(R.id.videoplayer)).setClickable(true);
-		((VideoView)findViewById(R.id.videoplayer)).setOnCompletionListener(_listener);
-		setOnClickListener(new View.OnClickListener() {			
-			@Override
-			public void onClick(View v) {
-				if (!((VideoView)findViewById(R.id.videoplayer)).isPlaying()) {
-					startVideo();
-				}
-			}
-		});
-		setOnFocusChangeListener(new View.OnFocusChangeListener() {			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (!hasFocus)
-					pauseVideo();
-			}
-		});*/
 	}
 	
     @Override

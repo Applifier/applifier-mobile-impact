@@ -10,7 +10,6 @@ import android.util.Log;
 import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 
 // TODO: Ensure that no failures happen when 2 games are using the same data at the same time.
 public class ApplifierImpactCacheManifest {
@@ -26,15 +25,11 @@ public class ApplifierImpactCacheManifest {
 	}
 	
 	public int getCachedCampaignAmount () {
-		if (_cachedCampaigns == null) 
-			return 0;
-		else
-			return _cachedCampaigns.size();
+		return _cachedCampaigns == null ? 0 : _cachedCampaigns.size();
 	}
 	
 	public int getViewableCachedCampaignAmount () {
-		if (getViewableCachedCampaigns() == null) return 0;
-		return getViewableCachedCampaigns().size();
+		return getViewableCachedCampaigns() == null ? 0 : getViewableCachedCampaigns().size();
 	}
 	
 	public ArrayList<String> getCachedCampaignIds () {
@@ -62,18 +57,7 @@ public class ApplifierImpactCacheManifest {
 	}
 	
 	public ArrayList<ApplifierImpactCampaign> getViewableCachedCampaigns () {
-		ArrayList<ApplifierImpactCampaign> retList = new ArrayList<ApplifierImpactCampaign>();
-		
-		if (_cachedCampaigns != null) {
-			for (ApplifierImpactCampaign campaign : _cachedCampaigns) {
-				if (campaign != null && campaign.getCampaignStatus() != ApplifierImpactCampaignStatus.VIEWED && campaign.getCampaignStatus() != ApplifierImpactCampaignStatus.PANIC)
-					retList.add(campaign);
-			}
-			
-			return retList;
-		}
-		
-		return null;
+		return ApplifierImpactUtils.getViewableCampaignsFromCampaignList(_cachedCampaigns);
 	}
 	
 	public ApplifierImpactCampaign getCachedCampaignById (String id) {

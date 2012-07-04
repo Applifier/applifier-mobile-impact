@@ -25,8 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-
-// TODO: Streaming when nothing in cache?
 public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpactWebDataListener, IApplifierImpactWebViewListener, IApplifierVideoPlayerListener {
 	
 	// Impact components
@@ -190,8 +188,13 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 		ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_vp, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 		focusToView(_vp);
 		
-		if (_selectedCampaign != null)
-			_vp.playVideo(_selectedCampaign.getVideoFilename());
+		if (_selectedCampaign != null) {
+			String playUrl = ApplifierImpactUtils.getCacheDirectory() + "/" + _selectedCampaign.getVideoFilename();
+			if (!ApplifierImpactUtils.isFileInCache(_selectedCampaign.getVideoFilename()))
+				playUrl = _selectedCampaign.getVideoStreamUrl(); 
+
+			_vp.playVideo(playUrl);
+		}			
 		else
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Campaign is null");
 					
@@ -218,6 +221,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 		_webView.setView("videoCompleted");
 		ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 		focusToView(_webView);
+		_selectedCampaign = null;
 	}
 	
 	/* PRIVATE METHODS */
@@ -258,7 +262,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	
 	private void sendImpactReadyEvent () {
 		if (!_impactReadySent && _campaignListener != null) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Reporting cached campaigns available");
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Impact ready!");
 			_impactReadySent = true;
 			_campaignListener.onCampaignsAvailable();
 		}

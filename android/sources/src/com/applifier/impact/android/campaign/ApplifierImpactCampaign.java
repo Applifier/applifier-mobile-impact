@@ -28,7 +28,7 @@ public class ApplifierImpactCampaign {
 	};
 	
 	private JSONObject _campaignJson = null;
-	private String[] _requiredKeys = new String[]{"v", "s", "id"};
+	private String[] _requiredKeys = new String[]{"v", "s", "id", "rt"};
 	
 	public ApplifierImpactCampaign () {		
 	}
@@ -49,6 +49,7 @@ public class ApplifierImpactCampaign {
 			retObject.put("v", getVideoUrl());
 			retObject.put("s", getCampaignStatus().toString());
 			retObject.put("id", getCampaignId());
+			retObject.put("rt", getCampaignId());
 		}
 		catch (Exception e) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Error creating campaign JSON");
@@ -93,6 +94,19 @@ public class ApplifierImpactCampaign {
 				Log.d(ApplifierImpactProperties.LOG_NAME, "setCampaignStatus: This should not happen!");
 			}
 		}
+	}
+	
+	public String getVideoStreamUrl () {
+		if (checkDataIntegrity()) {
+			try {
+				return _campaignJson.getString("rt");
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactProperties.LOG_NAME, "getVideoStreamUrl: This should not happen!");
+			}
+		}
+		
+		return null;
 	}
 	
 	public String getVideoUrl () {

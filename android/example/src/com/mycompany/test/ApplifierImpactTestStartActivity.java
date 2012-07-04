@@ -19,7 +19,6 @@ import android.widget.ImageView;
 public class ApplifierImpactTestStartActivity extends Activity implements IApplifierImpactCampaignListener {
 	private ApplifierImpact ai = null;
 	
-	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
