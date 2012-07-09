@@ -17,6 +17,7 @@ import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 
+// TODO: Send deviceId (userId) in videoPlan request
 public class ApplifierImpactWebData {
 	
 	private JSONObject _videoPlan = null;
@@ -79,7 +80,6 @@ public class ApplifierImpactWebData {
 	public boolean sendCampaignViewed (ApplifierImpactCampaign campaign) {
 		if (campaign == null) return false;
 		
-		//ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader("http://quake.everyplay.fi/~bluesun/impact/mania?viewed=" + campaign.getCampaignId(), ApplifierImpactRequestType.VideoViewed);
 		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(ApplifierImpactProperties.WEBDATA_URL + "?viewed=" + campaign.getCampaignId(), ApplifierImpactRequestType.VideoViewed);
 		addLoader(loader);
 		startNextLoader();		
