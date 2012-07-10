@@ -17,7 +17,6 @@ import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 
-// TODO: Send deviceId (userId) in videoPlan request
 public class ApplifierImpactWebData {
 	
 	private JSONObject _videoPlan = null;
@@ -62,14 +61,23 @@ public class ApplifierImpactWebData {
 		return ApplifierImpactUtils.getViewableCampaignsFromCampaignList(_videoPlanCampaigns);
 	}
 
-	public boolean initVideoPlan (ArrayList<String> cachedCampaignIds) {		
-		JSONObject data = getCachedCampaignIdsArray(cachedCampaignIds);
-		String cachedCampaignData = "";
+	public boolean initVideoPlan (ArrayList<String> cachedCampaignIds) {
+		JSONObject json = new JSONObject();
+		JSONArray data = getCachedCampaignIdsArray(cachedCampaignIds);
+		
+		try {
+			json.put("c", data);
+			json.put("did", ApplifierImpactUtils.getDeviceId(ApplifierImpactProperties.CURRENT_ACTIVITY));
+		}
+		catch (Exception e) {
+		}
+		
+		String dataString = "";
 		
 		if (data != null)
-			cachedCampaignData = data.toString();
+			dataString = json.toString();
 			
-		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(ApplifierImpactProperties.WEBDATA_URL + "?c=" + cachedCampaignData, ApplifierImpactRequestType.VideoPlan);
+		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(ApplifierImpactProperties.WEBDATA_URL + "?d=" + dataString, ApplifierImpactRequestType.VideoPlan);
 		addLoader(loader);
 		startNextLoader();
 		checkFailedUrls();
@@ -111,8 +119,8 @@ public class ApplifierImpactWebData {
 		}			
 	}
 	
-	private JSONObject getCachedCampaignIdsArray (ArrayList<String> cachedCampaignIds) {
-		JSONObject data = new JSONObject();
+	private JSONArray getCachedCampaignIdsArray (ArrayList<String> cachedCampaignIds) {
+		//JSONObject data = new JSONObject();
 		JSONArray campaignIds = null;
 		
 		if (cachedCampaignIds != null && cachedCampaignIds.size() > 0) {
@@ -123,15 +131,16 @@ public class ApplifierImpactWebData {
 			}
 		}
 		
+		/*
 		try {
 			data.put("c", campaignIds);
 		}
 		catch (Exception e) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
 			return null;
-		}
+		}*/
 		
-		return data;
+		return campaignIds;
 	}
 	
 	private void urlLoadCompleted (ApplifierImpactUrlLoader loader) {

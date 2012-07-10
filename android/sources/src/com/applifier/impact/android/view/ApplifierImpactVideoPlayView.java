@@ -5,7 +5,6 @@ import java.util.TimerTask;
 
 import com.applifier.impact.android.ApplifierImpactProperties;
 
-import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.PowerManager;
@@ -16,31 +15,28 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
-// TODO: Show play icon after paused
-public class ApplifierVideoPlayView extends RelativeLayout {
+public class ApplifierImpactVideoPlayView extends RelativeLayout {
 
-	private IApplifierVideoPlayerListener _listener;
+	private IApplifierImapctVideoPlayerListener _listener;
 	private Timer _videoPausedTimer = null;
-	private Activity _currentActivity = null;
 	private VideoView _videoView = null;
 	private String _videoFileName = null;
 	private ApplifierImpactBufferingView _bufferingView = null;
 	private ApplifierImpactVideoPausedView _pausedView = null;
 	private boolean _videoPlayheadPrepared = false;
 	
-	public ApplifierVideoPlayView(Context context, IApplifierVideoPlayerListener listener, Activity activity) {
+	public ApplifierImpactVideoPlayView(Context context, IApplifierImapctVideoPlayerListener listener) {
 		super(context);
-		_currentActivity = activity;
 		_listener = listener;
 		createView();
 	}
 
-	public ApplifierVideoPlayView(Context context, AttributeSet attrs) {
+	public ApplifierImpactVideoPlayView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		createView();
 	}
 
-	public ApplifierVideoPlayView(Context context, AttributeSet attrs,
+	public ApplifierImpactVideoPlayView(Context context, AttributeSet attrs,
 			int defStyle) {
 		super(context, attrs, defStyle);
 		createView();
@@ -55,17 +51,13 @@ public class ApplifierVideoPlayView extends RelativeLayout {
 		_videoView.setVideoPath(_videoFileName);
 		startVideo();
 	}
-	
-	public void setActivity (Activity activity) {
-		_currentActivity = activity;
-	}
-	
+
 	
 	/* INTERNAL METHODS */
 	
 	private void startVideo () {
-		if (_currentActivity != null) {
-			_currentActivity.runOnUiThread(new Runnable() {			
+		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {			
 				@Override
 				public void run() {
 					_videoView.start();
@@ -83,8 +75,8 @@ public class ApplifierVideoPlayView extends RelativeLayout {
 	private void pauseVideo () {
 		purgeVideoPausedTimer();
 		
-		if (_currentActivity != null) {
-			_currentActivity.runOnUiThread(new Runnable() {			
+		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {			
 				@Override
 				public void run() {
 					_videoView.pause();
@@ -209,16 +201,16 @@ public class ApplifierVideoPlayView extends RelativeLayout {
 				pauseVideo();
 			}
 			
-			if (_currentActivity != null && _videoView != null && _videoView.getBufferPercentage() < 15 && _videoView.getParent() == null) {				
-				_currentActivity.runOnUiThread(new Runnable() {					
+			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && _videoView != null && _videoView.getBufferPercentage() < 15 && _videoView.getParent() == null) {				
+				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {					
 					@Override
 					public void run() {
 						createAndAddBufferingView();
 					}
 				});				
 			}
-			else if (_currentActivity != null && _videoPlayheadPrepared && _bufferingView != null && _bufferingView.getParent() != null) {
-				_currentActivity.runOnUiThread(new Runnable() {
+			else if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && _videoPlayheadPrepared && _bufferingView != null && _bufferingView.getParent() != null) {
+				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						hideBufferingView();

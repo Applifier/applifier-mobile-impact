@@ -3,6 +3,6 @@ package com.applifier.impact.android.view;
 import android.media.MediaPlayer.OnCompletionListener;
 
 
-public interface IApplifierVideoPlayerListener extends IApplifierViewListener,
+public interface IApplifierImapctVideoPlayerListener extends IApplifierImpactViewListener,
 		OnCompletionListener {
 }

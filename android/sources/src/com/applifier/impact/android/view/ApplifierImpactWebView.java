@@ -68,6 +68,11 @@ public class ApplifierImpactWebView extends WebView {
 			loadUrl("javascript:setAvailableCampaigns('" + videoPlan + "');");
 	}
 	
+	public void setDeviceId (String deviceId) {
+		if (isWebAppLoaded())
+			loadUrl("javascript:setDeviceId('" + deviceId +"');");
+	}
+	
 	/* INTENRAL METHODS */
 	
 	private void init (Activity activity, String url, IApplifierImpactWebViewListener listener) {

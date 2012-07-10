@@ -49,7 +49,7 @@ public class ApplifierImpactCampaign {
 			retObject.put("v", getVideoUrl());
 			retObject.put("s", getCampaignStatus().toString());
 			retObject.put("id", getCampaignId());
-			retObject.put("rt", getCampaignId());
+			retObject.put("rt", getVideoStreamUrl());
 		}
 		catch (Exception e) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Error creating campaign JSON");

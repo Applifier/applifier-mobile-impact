@@ -14,7 +14,7 @@ import android.util.Log;
 
 public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHandlerListener {
 	
-	private IApplifierCacheListener _downloadListener = null;	
+	private IApplifierImpactCacheListener _downloadListener = null;	
 	private ArrayList<ApplifierImpactCampaignHandler> _downloadingHandlers = null;
 	private ArrayList<ApplifierImpactCampaignHandler> _handlers = null;	
 	private int _amountPrepared = 0;
@@ -26,7 +26,7 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 		Log.d(ApplifierImpactProperties.LOG_NAME, "External storagedir: " + ApplifierImpactUtils.getCacheDirectory());
 	}
 	
-	public void setDownloadListener (IApplifierCacheListener listener) {
+	public void setDownloadListener (IApplifierImpactCacheListener listener) {
 		_downloadListener = listener;
 	}
 	

@@ -6,7 +6,7 @@ import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.cache.ApplifierImpactCacheManifest;
 import com.applifier.impact.android.cache.ApplifierImpactDownloader;
 import com.applifier.impact.android.cache.ApplifierImpactWebData;
-import com.applifier.impact.android.cache.IApplifierCacheListener;
+import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
 import com.applifier.impact.android.cache.IApplifierImpactWebDataListener;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
@@ -14,9 +14,9 @@ import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
 import com.applifier.impact.android.video.IApplifierImpactVideoListener;
 import com.applifier.impact.android.view.ApplifierImpactWebView;
-import com.applifier.impact.android.view.ApplifierVideoPlayView;
+import com.applifier.impact.android.view.ApplifierImpactVideoPlayView;
 import com.applifier.impact.android.view.IApplifierImpactWebViewListener;
-import com.applifier.impact.android.view.IApplifierVideoPlayerListener;
+import com.applifier.impact.android.view.IApplifierImapctVideoPlayerListener;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
@@ -25,7 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpactWebDataListener, IApplifierImpactWebViewListener, IApplifierVideoPlayerListener {
+public class ApplifierImpact implements IApplifierImpactCacheListener, IApplifierImpactWebDataListener, IApplifierImpactWebViewListener, IApplifierImapctVideoPlayerListener {
 	
 	// Impact components
 	public static ApplifierImpact instance = null;
@@ -39,7 +39,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	private boolean _impactReadySent = false;
 	
 	// Views
-	private ApplifierVideoPlayView _vp = null;
+	private ApplifierImpactVideoPlayView _vp = null;
 	private ApplifierImpactWebView _webView = null;
 	
 	// Listeners
@@ -85,11 +85,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 		
 	public void changeActivity (Activity activity) {
 		if (activity == null) return;
-		
 		ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
-		
-		if (_vp != null)
-			_vp.setActivity(ApplifierImpactProperties.CURRENT_ACTIVITY);
 	}
 	
 	public boolean showImpact () {
@@ -153,12 +149,12 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	
 	@Override
 	public void onWebDataCompleted () {
-		initCache();
+		setup();
 	}
 	
 	@Override
 	public void onWebDataFailed () {
-		initCache();
+		setup();
 	}
 	
 	@Override
@@ -167,6 +163,8 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 		
 		if (campaignList != null)
 			_webView.setAvailableCampaigns(ApplifierImpactUtils.createJsonFromCampaigns(campaignList).toString());
+		
+		_webView.setDeviceId(ApplifierImpactUtils.getDeviceId(ApplifierImpactProperties.CURRENT_ACTIVITY));
 		
 		if (canShowCampaigns())
 			sendImpactReadyEvent();
@@ -226,6 +224,11 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	
 	/* PRIVATE METHODS */
 	
+	private void setup () {
+		initCache();
+		setupViews();
+	}
+	
 	private void initCache () {
 		if (_initialized) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Init cache");
@@ -238,8 +241,7 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 			if (videoPlanCampaigns == null || videoPlanCampaigns.size() == 0) return;
 			
 			// Update cache WILL START DOWNLOADS if needed, after this method you can check getDownloadingCampaigns which ones started downloading.
-			cachemanager.updateCache(videoPlanCampaigns, pruneList);			
-			setupViews();		
+			cachemanager.updateCache(videoPlanCampaigns, pruneList);				
 		}
 	}
 	
@@ -300,6 +302,6 @@ public class ApplifierImpact implements IApplifierCacheListener, IApplifierImpac
 	
 	private void setupViews () {
 		_webView = new ApplifierImpactWebView(ApplifierImpactProperties.CURRENT_ACTIVITY, this);	
-		_vp = new ApplifierVideoPlayView(ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext(), this, ApplifierImpactProperties.CURRENT_ACTIVITY);	
+		_vp = new ApplifierImpactVideoPlayView(ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext(), this);	
 	}
 }
