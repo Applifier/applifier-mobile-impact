@@ -120,7 +120,6 @@ public class ApplifierImpactWebData {
 	}
 	
 	private JSONArray getCachedCampaignIdsArray (ArrayList<String> cachedCampaignIds) {
-		//JSONObject data = new JSONObject();
 		JSONArray campaignIds = null;
 		
 		if (cachedCampaignIds != null && cachedCampaignIds.size() > 0) {
@@ -130,15 +129,6 @@ public class ApplifierImpactWebData {
 				campaignIds.put(id);
 			}
 		}
-		
-		/*
-		try {
-			data.put("c", campaignIds);
-		}
-		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
-			return null;
-		}*/
 		
 		return campaignIds;
 	}
