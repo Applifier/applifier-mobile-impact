@@ -1,9 +1,10 @@
-package com.applifier.impact.android.view;
+package com.applifier.impact.android.video;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 import com.applifier.impact.android.ApplifierImpactProperties;
+import com.applifier.impact.android.view.ApplifierImpactBufferingView;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -17,7 +18,7 @@ import android.widget.VideoView;
 
 public class ApplifierImpactVideoPlayView extends RelativeLayout {
 
-	private IApplifierImapctVideoPlayerListener _listener;
+	private IApplifierImpactVideoPlayerListener _listener;
 	private Timer _videoPausedTimer = null;
 	private VideoView _videoView = null;
 	private String _videoFileName = null;
@@ -25,7 +26,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	private ApplifierImpactVideoPausedView _pausedView = null;
 	private boolean _videoPlayheadPrepared = false;
 	
-	public ApplifierImpactVideoPlayView(Context context, IApplifierImapctVideoPlayerListener listener) {
+	public ApplifierImpactVideoPlayView(Context context, IApplifierImpactVideoPlayerListener listener) {
 		super(context);
 		_listener = listener;
 		createView();

@@ -1,4 +1,4 @@
-package com.applifier.impact.android.view;
+package com.applifier.impact.android.video;
 
 import android.content.Context;
 import android.graphics.Bitmap;

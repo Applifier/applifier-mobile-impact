@@ -5,18 +5,21 @@ import java.util.ArrayList;
 import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.cache.ApplifierImpactCacheManifest;
 import com.applifier.impact.android.cache.ApplifierImpactDownloader;
-import com.applifier.impact.android.cache.ApplifierImpactWebData;
 import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
-import com.applifier.impact.android.cache.IApplifierImpactWebDataListener;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
+import com.applifier.impact.android.video.ApplifierImpactVideoPlayView;
 import com.applifier.impact.android.video.IApplifierImpactVideoListener;
-import com.applifier.impact.android.view.ApplifierImpactWebView;
-import com.applifier.impact.android.view.ApplifierImpactVideoPlayView;
-import com.applifier.impact.android.view.IApplifierImpactWebViewListener;
-import com.applifier.impact.android.view.IApplifierImapctVideoPlayerListener;
+import com.applifier.impact.android.video.IApplifierImpactVideoPlayerListener;
+import com.applifier.impact.android.view.IApplifierImpactViewListener;
+import com.applifier.impact.android.webapp.ApplifierImpactWebBridge;
+import com.applifier.impact.android.webapp.ApplifierImpactWebData;
+import com.applifier.impact.android.webapp.ApplifierImpactWebView;
+import com.applifier.impact.android.webapp.IApplifierImpactWebBrigeListener;
+import com.applifier.impact.android.webapp.IApplifierImpactWebDataListener;
+import com.applifier.impact.android.webapp.IApplifierImpactWebViewListener;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
@@ -25,7 +28,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-public class ApplifierImpact implements IApplifierImpactCacheListener, IApplifierImpactWebDataListener, IApplifierImpactWebViewListener, IApplifierImapctVideoPlayerListener {
+public class ApplifierImpact implements IApplifierImpactCacheListener, 
+										IApplifierImpactWebDataListener, 
+										IApplifierImpactWebViewListener, 
+										IApplifierImpactVideoPlayerListener,
+										IApplifierImpactWebBrigeListener,
+										IApplifierImpactViewListener {
 	
 	// Impact components
 	public static ApplifierImpact instance = null;
@@ -124,6 +132,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener, IApplifie
 	
 	/* LISTENER METHODS */
 	
+	// IApplifierImpactCacheListener
 	@Override
 	public void onCampaignUpdateStarted () {	
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Campaign updates started.");
@@ -147,6 +156,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener, IApplifie
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Listener got \"All campaigns ready.\"");
 	}
 	
+	// IApplifierImpactWebDataListener
 	@Override
 	public void onWebDataCompleted () {
 		setup();
@@ -157,6 +167,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener, IApplifie
 		setup();
 	}
 	
+	// IApplifierImpactWebViewListener
 	@Override
 	public void onWebAppLoaded () {
 		ArrayList<ApplifierImpactCampaign> campaignList = solveCurrentCampaigns();
@@ -170,6 +181,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener, IApplifie
 			sendImpactReadyEvent();
 	}
 	
+	// IApplifierImpactViewListener
 	@Override
 	public void onCloseButtonClicked (View view) {
 		closeView(view, true);
@@ -180,31 +192,29 @@ public class ApplifierImpact implements IApplifierImpactCacheListener, IApplifie
 		closeView(view, true);
 	}
 	
+	// IApplifierImpactWebBrigeListener
 	@Override
-	public void onPlayVideoClicked () {
-		closeView(_webView, false);
-		ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_vp, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-		focusToView(_vp);
-		
-		if (_selectedCampaign != null) {
-			String playUrl = ApplifierImpactUtils.getCacheDirectory() + "/" + _selectedCampaign.getVideoFilename();
-			if (!ApplifierImpactUtils.isFileInCache(_selectedCampaign.getVideoFilename()))
-				playUrl = _selectedCampaign.getVideoStreamUrl(); 
+	public void onPlayVideo(String data) {
+		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactPlayVideoRunner());
+	}
 
-			_vp.playVideo(playUrl);
-		}			
-		else
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Campaign is null");
-					
-		if (_videoListener != null)
-			_videoListener.onVideoStarted();
-	}
-		
 	@Override
-	public void onVideoCompletedClicked () {
-		closeView(_webView, true);
+	public void onPauseVideo(String data) {
 	}
-	
+
+	@Override
+	public void onVideoCompleted(String data) {
+		ApplifierImpactCloseViewRunner closeViewRunner = new ApplifierImpactCloseViewRunner(_webView, true);
+		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(closeViewRunner);
+	}
+
+	// IApplifierImpactVideoPlayerListener
+	@Override
+	public void onCloseView(String data) {
+		ApplifierImpactCloseViewRunner closeViewRunner = new ApplifierImpactCloseViewRunner(_webView, true);
+		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(closeViewRunner);
+	}	
+
 	@Override
 	public void onCompletion(MediaPlayer mp) {				
 		if (_videoListener != null)
@@ -221,6 +231,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener, IApplifie
 		focusToView(_webView);
 		_selectedCampaign = null;
 	}
+	
 	
 	/* PRIVATE METHODS */
 	
@@ -291,7 +302,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener, IApplifie
 		if (_impactListener != null && freeView) {
 			_showingImpact = false;
 			_impactListener.onImpactClose();
-		}
+		}		
 	}
 	
 	private void focusToView (View view) {
@@ -301,7 +312,47 @@ public class ApplifierImpact implements IApplifierImpactCacheListener, IApplifie
 	}
 	
 	private void setupViews () {
-		_webView = new ApplifierImpactWebView(ApplifierImpactProperties.CURRENT_ACTIVITY, this);	
+		_webView = new ApplifierImpactWebView(ApplifierImpactProperties.CURRENT_ACTIVITY, this, new ApplifierImpactWebBridge(this));	
 		_vp = new ApplifierImpactVideoPlayView(ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext(), this);	
+	}
+	
+	
+	/* INTERNAL CLASSES */
+	
+	private class ApplifierImpactCloseViewRunner implements Runnable {
+		private View _view = null;
+		private boolean _freeView = false;
+		
+		public ApplifierImpactCloseViewRunner (View view, boolean freeView) {
+			_view = view;
+			_freeView = freeView;
+		}
+		
+		@Override
+		public void run() {
+			closeView(_view, _freeView);
+		}
+	}
+	
+	private class ApplifierImpactPlayVideoRunner implements Runnable {
+		@Override
+		public void run() {
+			closeView(_webView, false);
+			ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_vp, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+			focusToView(_vp);
+			
+			if (_selectedCampaign != null) {
+				String playUrl = ApplifierImpactUtils.getCacheDirectory() + "/" + _selectedCampaign.getVideoFilename();
+				if (!ApplifierImpactUtils.isFileInCache(_selectedCampaign.getVideoFilename()))
+					playUrl = _selectedCampaign.getVideoStreamUrl(); 
+
+				_vp.playVideo(playUrl);
+			}			
+			else
+				Log.d(ApplifierImpactProperties.LOG_NAME, "Campaign is null");
+						
+			if (_videoListener != null)
+				_videoListener.onVideoStarted();
+		}		
 	}
 }

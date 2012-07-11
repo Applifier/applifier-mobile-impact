@@ -1,4 +1,4 @@
-package com.applifier.impact.android.view;
+package com.applifier.impact.android.webapp;
 
 import java.lang.reflect.Method;
 
@@ -22,31 +22,16 @@ public class ApplifierImpactWebView extends WebView {
 	private String _url = "http://quake.everyplay.fi/~bluesun/impact/webapp.html";	
 	private IApplifierImpactWebViewListener _listener = null;
 	private boolean _webAppLoaded = false;
-	private ApplifierImpactWebView _self = null;
+	private ApplifierImpactWebBridge _webBridge = null;
 	
-	private static enum ApplifierImpactUrl { ApplifierImpact;
-		@Override		
-		public String toString () {
-			String retVal = null;
-			
-			switch (this) {
-				case ApplifierImpact:
-					retVal = "applifierimpact://";
-			}
-			
-			return retVal;
-		}
-	}; 
-	
-	
-	public ApplifierImpactWebView(Activity activity, IApplifierImpactWebViewListener listener) {
+	public ApplifierImpactWebView(Activity activity, IApplifierImpactWebViewListener listener, ApplifierImpactWebBridge webBridge) {
 		super(activity);
-		init(activity, _url, listener);
+		init(activity, _url, listener, webBridge);
 	}
 
-	public ApplifierImpactWebView(Activity activity, String url, IApplifierImpactWebViewListener listener) {
+	public ApplifierImpactWebView(Activity activity, String url, IApplifierImpactWebViewListener listener, ApplifierImpactWebBridge webBridge) {
 		super(activity);
-		init(activity, url, listener);
+		init(activity, url, listener, webBridge);
 	}
 	
 	public boolean isWebAppLoaded () {
@@ -75,10 +60,10 @@ public class ApplifierImpactWebView extends WebView {
 	
 	/* INTENRAL METHODS */
 	
-	private void init (Activity activity, String url, IApplifierImpactWebViewListener listener) {
-		_self = this;
+	private void init (Activity activity, String url, IApplifierImpactWebViewListener listener, ApplifierImpactWebBridge webBridge) {
 		_listener = listener;
 		_url = url;
+		_webBridge = webBridge;
 		setupApplifierView();
 		loadUrl(_url);
 	}
@@ -141,6 +126,8 @@ public class ApplifierImpactWebView extends WebView {
 		catch (Exception e) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Could not invoke setLayerType");
 		}
+		
+		addJavascriptInterface(_webBridge, "ApplifierWebBridge");
 	}
 	
 	
@@ -157,6 +144,7 @@ public class ApplifierImpactWebView extends WebView {
     	
     	return false;
     } 
+	
 	
 	/* SUBCLASSES */
 	
@@ -183,28 +171,7 @@ public class ApplifierImpactWebView extends WebView {
 		
 		@Override
 		public boolean shouldOverrideUrlLoading (WebView view, String url) {
-			boolean shouldOverride = false;
-			
-			if (view == null || url == null) return true;
-			
-			if (url.startsWith(ApplifierImpactUrl.ApplifierImpact.toString())) {
-				if (url.endsWith("playVideo")) {
-					if (_listener != null)
-						_listener.onPlayVideoClicked();
-				}
-				else if (url.endsWith("videoCompleted")) {
-					if (_listener != null)
-						_listener.onVideoCompletedClicked();
-				}
-				else if (url.endsWith("close")) {
-					if (_listener != null)
-						_listener.onCloseButtonClicked(_self);
-				}
-				
-				shouldOverride = true;
-			}
-
-			return shouldOverride;
+			return false;
 		}
 		
 		@Override

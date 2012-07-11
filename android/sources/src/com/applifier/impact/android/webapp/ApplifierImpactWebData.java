@@ -1,4 +1,4 @@
-package com.applifier.impact.android.cache;
+package com.applifier.impact.android.webapp;
 
 import java.io.BufferedInputStream;
 import java.io.File;
