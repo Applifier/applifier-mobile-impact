@@ -34,6 +34,10 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
 		ApplifierImpact.instance.changeActivity(this);
 		ApplifierImpact.instance.setImpactListener(this);
 		ApplifierImpact.instance.setVideoListener(this);
+		
+		if (!ApplifierImpact.instance.hasCampaigns()) {
+			((ImageView)findViewById(R.id.unlock)).setVisibility(View.INVISIBLE);
+		}
     }
     
     public void onImpactClose () {
