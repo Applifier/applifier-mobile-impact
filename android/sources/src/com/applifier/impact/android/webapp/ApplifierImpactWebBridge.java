@@ -1,5 +1,11 @@
 package com.applifier.impact.android.webapp;
 
+import org.json.JSONObject;
+
+import android.util.Log;
+
+import com.applifier.impact.android.ApplifierImpactProperties;
+
 
 public class ApplifierImpactWebBridge {
 	private enum ApplifierImpactWebEvent { PlayVideo, PauseVideo, VideoCompleted, CloseView;
@@ -39,23 +45,36 @@ public class ApplifierImpactWebBridge {
 		_listener = listener;
 	}
 	
-	public void handleWebEvent (String event, String data) {
-		if (_listener == null) return;
+	public void handleWebEvent (String data) {
+		if (_listener == null || data == null) return;
+		
+		JSONObject paramObj = null;
+		String event = null;
+		
+		try {
+			paramObj = new JSONObject(data);
+			event = paramObj.getString("type");
+		}
+		catch (Exception e) {
+			Log.d(ApplifierImpactProperties.LOG_NAME, "Error while parsing parameters: " + e.getMessage());
+		}
+		
+		if (paramObj == null || event == null) return;
 		
 		ApplifierImpactWebEvent eventType = getEventType(event);
 		
 		switch (eventType) {
 			case PlayVideo:
-				_listener.onPlayVideo(data);
+				_listener.onPlayVideo(paramObj);
 				break;
 			case PauseVideo:
-				_listener.onPauseVideo(data);
+				_listener.onPauseVideo(paramObj);
 				break;
 			case CloseView:
-				_listener.onCloseView(data);
+				_listener.onCloseView(paramObj);
 				break;
 			case VideoCompleted:
-				_listener.onVideoCompleted(data);
+				_listener.onVideoCompleted(paramObj);
 				break;
 		}
 	}

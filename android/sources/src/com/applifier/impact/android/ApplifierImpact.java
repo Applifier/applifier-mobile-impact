@@ -2,6 +2,8 @@ package com.applifier.impact.android;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
 import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.cache.ApplifierImpactCacheManifest;
 import com.applifier.impact.android.cache.ApplifierImpactDownloader;
@@ -14,12 +16,7 @@ import com.applifier.impact.android.video.ApplifierImpactVideoPlayView;
 import com.applifier.impact.android.video.IApplifierImpactVideoListener;
 import com.applifier.impact.android.video.IApplifierImpactVideoPlayerListener;
 import com.applifier.impact.android.view.IApplifierImpactViewListener;
-import com.applifier.impact.android.webapp.ApplifierImpactWebBridge;
-import com.applifier.impact.android.webapp.ApplifierImpactWebData;
-import com.applifier.impact.android.webapp.ApplifierImpactWebView;
-import com.applifier.impact.android.webapp.IApplifierImpactWebBrigeListener;
-import com.applifier.impact.android.webapp.IApplifierImpactWebDataListener;
-import com.applifier.impact.android.webapp.IApplifierImpactWebViewListener;
+import com.applifier.impact.android.webapp.*;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
@@ -194,23 +191,25 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	// IApplifierImpactWebBrigeListener
 	@Override
-	public void onPlayVideo(String data) {
+	public void onPlayVideo(JSONObject data) {
 		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactPlayVideoRunner());
 	}
 
 	@Override
-	public void onPauseVideo(String data) {
+	public void onPauseVideo(JSONObject data) {
+		if (_vp != null)
+			_vp.pauseVideo();
 	}
 
 	@Override
-	public void onVideoCompleted(String data) {
+	public void onVideoCompleted(JSONObject data) {
 		ApplifierImpactCloseViewRunner closeViewRunner = new ApplifierImpactCloseViewRunner(_webView, true);
 		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(closeViewRunner);
 	}
 
 	// IApplifierImpactVideoPlayerListener
 	@Override
-	public void onCloseView(String data) {
+	public void onCloseView(JSONObject data) {
 		ApplifierImpactCloseViewRunner closeViewRunner = new ApplifierImpactCloseViewRunner(_webView, true);
 		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(closeViewRunner);
 	}	

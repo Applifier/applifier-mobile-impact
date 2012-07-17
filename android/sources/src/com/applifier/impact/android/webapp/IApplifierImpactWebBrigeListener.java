@@ -1,8 +1,10 @@
 package com.applifier.impact.android.webapp;
 
+import org.json.JSONObject;
+
 public interface IApplifierImpactWebBrigeListener {
-	public void onPlayVideo (String data);
-	public void onPauseVideo (String data);
-	public void onVideoCompleted (String data);
-	public void onCloseView (String data);
+	public void onPlayVideo (JSONObject data);
+	public void onPauseVideo (JSONObject data);
+	public void onVideoCompleted (JSONObject data);
+	public void onCloseView (JSONObject data);
 }
