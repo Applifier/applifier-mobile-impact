@@ -3,3 +3,5 @@ android/sources/bin
 android/example/bin
 android/sources/gen
 android/example/gen
+device/
+testvideos/
