@@ -21,6 +21,8 @@
 		78ED798B15C6B04D007C5BD5 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78ED798A15C6B04D007C5BD5 /* CoreMedia.framework */; };
 		78ED798E15C6B1EE007C5BD5 /* ios_impact_dowloadscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 78ED798D15C6B1EE007C5BD5 /* ios_impact_dowloadscreen.png */; };
 		78ED799215C6B2BB007C5BD5 /* jetiphone.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 78ED799115C6B2BB007C5BD5 /* jetiphone.mp4 */; };
+		78ED799415C6B891007C5BD5 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 78ED799315C6B891007C5BD5 /* icon.png */; };
+		78ED799615C6B8B7007C5BD5 /* icon_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 78ED799515C6B8B7007C5BD5 /* icon_large.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,8 @@
 		78ED798A15C6B04D007C5BD5 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		78ED798D15C6B1EE007C5BD5 /* ios_impact_dowloadscreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_impact_dowloadscreen.png; sourceTree = "<group>"; };
 		78ED799115C6B2BB007C5BD5 /* jetiphone.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = jetiphone.mp4; sourceTree = "<group>"; };
+		78ED799315C6B891007C5BD5 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		78ED799515C6B8B7007C5BD5 /* icon_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_large.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +68,8 @@
 		78ED793E15C66FC6007C5BD5 = {
 			isa = PBXGroup;
 			children = (
+				78ED799515C6B8B7007C5BD5 /* icon_large.png */,
+				78ED799315C6B891007C5BD5 /* icon.png */,
 				78ED798A15C6B04D007C5BD5 /* CoreMedia.framework */,
 				78ED798215C6962C007C5BD5 /* AVFoundation.framework */,
 				78ED797315C67398007C5BD5 /* Assets */,
@@ -184,6 +190,8 @@
 				78ED798915C6A906007C5BD5 /* ios_impact_startscreen.png in Resources */,
 				78ED798E15C6B1EE007C5BD5 /* ios_impact_dowloadscreen.png in Resources */,
 				78ED799215C6B2BB007C5BD5 /* jetiphone.mp4 in Resources */,
+				78ED799415C6B891007C5BD5 /* icon.png in Resources */,
+				78ED799615C6B8B7007C5BD5 /* icon_large.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,6 +299,40 @@
 			};
 			name = Release;
 		};
+		78ED799715C6B8F9007C5BD5 /* Ad Hoc Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Ad Hoc Distribution";
+		};
+		78ED799815C6B8F9007C5BD5 /* Ad Hoc Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Pekka Palmu (NK5C5QHXQ8)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ImpactProto/ImpactProto-Prefix.pch";
+				INFOPLIST_FILE = "ImpactProto/ImpactProto-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3DE7445F-26CC-458B-86CA-5A2BD7CEFD1D";
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Ad Hoc Distribution";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -299,6 +341,7 @@
 			buildConfigurations = (
 				78ED796515C66FC6007C5BD5 /* Debug */,
 				78ED796615C66FC6007C5BD5 /* Release */,
+				78ED799715C6B8F9007C5BD5 /* Ad Hoc Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -308,6 +351,7 @@
 			buildConfigurations = (
 				78ED796815C66FC6007C5BD5 /* Debug */,
 				78ED796915C66FC6007C5BD5 /* Release */,
+				78ED799815C6B8F9007C5BD5 /* Ad Hoc Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

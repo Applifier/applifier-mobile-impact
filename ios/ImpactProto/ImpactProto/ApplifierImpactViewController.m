@@ -77,6 +77,7 @@
             break;
         case 4:
             [buttonView setBackgroundImage:[UIImage imageNamed:@"ios_impact_dowloadscreen.png"] forState:UIControlStateNormal];
+            [buttonView addTarget:self action:@selector(nextPhase) forControlEvents:UIControlEventTouchUpInside];
             break;
         default:
             break;
@@ -99,6 +100,7 @@
 
 - (void)playVideo
 {
+    [buttonView removeTarget:self action:@selector(nextPhase) forControlEvents:UIControlEventTouchUpInside];
     [contentView.layer addSublayer:avPlayerLayer];
     [avPlayer seekToTime:CMTimeMake(0, 1)];
     [avPlayer play];
@@ -118,7 +120,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 
 @end
