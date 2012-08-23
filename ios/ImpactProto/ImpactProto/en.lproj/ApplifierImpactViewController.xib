@@ -37,7 +37,7 @@
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIButton" id="666764433">
 						<reference key="NSNextResponder" ref="774585933"/>
-						<int key="NSvFlags">310</int>
+						<int key="NSvFlags">274</int>
 						<string key="NSFrameSize">{460, 320}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -100,19 +100,19 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">buttonView</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="666764433"/>
-					</object>
-					<int key="connectionID">11</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">contentView</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="774585933"/>
 					</object>
 					<int key="connectionID">12</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">buttonView</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="666764433"/>
+					</object>
+					<int key="connectionID">11</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">

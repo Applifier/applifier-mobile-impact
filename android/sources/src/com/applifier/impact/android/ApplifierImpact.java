@@ -113,7 +113,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 		
 	public boolean hasCampaigns () {
-		if (cachemanifest != null) {
+		if (cachemanifest != null && canShowCampaigns()) {
 			return cachemanifest.getViewableCachedCampaigns().size() > 0;
 		}
 		
@@ -202,17 +202,12 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 
 	@Override
-	public void onVideoCompleted(JSONObject data) {
-		ApplifierImpactCloseViewRunner closeViewRunner = new ApplifierImpactCloseViewRunner(_webView, true);
-		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(closeViewRunner);
-	}
-
-	// IApplifierImpactVideoPlayerListener
-	@Override
 	public void onCloseView(JSONObject data) {
 		ApplifierImpactCloseViewRunner closeViewRunner = new ApplifierImpactCloseViewRunner(_webView, true);
 		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(closeViewRunner);
-	}	
+	}
+	
+	// IApplifierImpactVideoPlayerListener
 
 	@Override
 	public void onCompletion(MediaPlayer mp) {				

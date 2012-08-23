@@ -60,24 +60,27 @@
 {
     currentPhase = newPhase;
     
-    if (currentPhase > 4)
+    if (currentPhase > 5)
         currentPhase = 1;
     
     NSLog(@"change phase: %d", currentPhase);
     
     switch (currentPhase) {
         case 1:
-            [buttonView setBackgroundImage:[UIImage imageNamed:@"ios_impact_startscreen.png"] forState:UIControlStateNormal];
+            [buttonView setBackgroundImage:[UIImage imageNamed:@"hayday_start.png"] forState:UIControlStateNormal];
             break;
         case 2:
-            [buttonView setBackgroundImage:[UIImage imageNamed:@"ios_impact_playscreen.png"] forState:UIControlStateNormal];
+            [buttonView setBackgroundImage:[UIImage imageNamed:@"hayday_watchvideo.png"] forState:UIControlStateNormal];
             break;
         case 3:
             [self playVideo];
             break;
         case 4:
-            [buttonView setBackgroundImage:[UIImage imageNamed:@"ios_impact_dowloadscreen.png"] forState:UIControlStateNormal];
+            [buttonView setBackgroundImage:[UIImage imageNamed:@"hayday_watchedvideo.png"] forState:UIControlStateNormal];
             [buttonView addTarget:self action:@selector(nextPhase) forControlEvents:UIControlEventTouchUpInside];
+            break;
+        case 5:
+            [buttonView setBackgroundImage:[UIImage imageNamed:@"hayday_end.png"] forState:UIControlStateNormal];
             break;
         default:
             break;

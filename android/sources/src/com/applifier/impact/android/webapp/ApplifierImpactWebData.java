@@ -88,7 +88,20 @@ public class ApplifierImpactWebData {
 	public boolean sendCampaignViewed (ApplifierImpactCampaign campaign) {
 		if (campaign == null) return false;
 		
-		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(ApplifierImpactProperties.WEBDATA_URL + "?viewed=" + campaign.getCampaignId(), ApplifierImpactRequestType.VideoViewed);
+		JSONObject json = new JSONObject();
+		
+		try {
+			json.put("did", ApplifierImpactUtils.getDeviceId(ApplifierImpactProperties.CURRENT_ACTIVITY));
+			json.put("c", campaign.getCampaignId());
+			json.put("pos", "end");
+		}
+		catch (Exception e) {			
+		}
+		
+		String dataString = "";
+		dataString = json.toString();
+		
+		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(ApplifierImpactProperties.WEBDATA_URL + "?v=" + dataString, ApplifierImpactRequestType.VideoViewed);
 		addLoader(loader);
 		startNextLoader();		
 		

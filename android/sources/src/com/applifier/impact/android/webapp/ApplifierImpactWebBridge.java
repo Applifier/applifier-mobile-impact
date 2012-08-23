@@ -8,7 +8,7 @@ import com.applifier.impact.android.ApplifierImpactProperties;
 
 
 public class ApplifierImpactWebBridge {
-	private enum ApplifierImpactWebEvent { PlayVideo, PauseVideo, VideoCompleted, CloseView;
+	private enum ApplifierImpactWebEvent { PlayVideo, PauseVideo, CloseView;
 		@Override
 		public String toString () {
 			String retVal = null;
@@ -18,9 +18,6 @@ public class ApplifierImpactWebBridge {
 					break;
 				case PauseVideo:
 					retVal = "pauseVideo";
-					break;
-				case VideoCompleted:
-					retVal = "videoCompleted";
 					break;
 				case CloseView:
 					retVal = "close";
@@ -72,9 +69,6 @@ public class ApplifierImpactWebBridge {
 				break;
 			case CloseView:
 				_listener.onCloseView(paramObj);
-				break;
-			case VideoCompleted:
-				_listener.onVideoCompleted(paramObj);
 				break;
 		}
 	}
