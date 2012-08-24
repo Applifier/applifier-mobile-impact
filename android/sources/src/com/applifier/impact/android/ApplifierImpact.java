@@ -17,6 +17,7 @@ import com.applifier.impact.android.video.IApplifierImpactVideoListener;
 import com.applifier.impact.android.video.IApplifierImpactVideoPlayerListener;
 import com.applifier.impact.android.view.IApplifierImpactViewListener;
 import com.applifier.impact.android.webapp.*;
+import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
@@ -210,19 +211,24 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	// IApplifierImpactVideoPlayerListener
 
 	@Override
+	public void onEventPositionReached (ApplifierVideoPosition position) {
+		webdata.sendCampaignViewed(_selectedCampaign, position);
+	}
+	
+	@Override
 	public void onCompletion(MediaPlayer mp) {				
 		if (_videoListener != null)
 			_videoListener.onVideoCompleted();
 		
 		_selectedCampaign.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 		cachemanifest.writeCurrentCacheManifest();
-		webdata.sendCampaignViewed(_selectedCampaign);
-		_vp.setKeepScreenOn(false);
-		closeView(_vp, false);
 		
+		_vp.setKeepScreenOn(false);
+		closeView(_vp, false);	
 		_webView.setView("videoCompleted");
 		ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 		focusToView(_webView);
+		onEventPositionReached(ApplifierVideoPosition.End);
 		_selectedCampaign = null;
 	}
 	

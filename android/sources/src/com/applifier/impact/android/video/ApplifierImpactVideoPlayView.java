@@ -1,10 +1,13 @@
 package com.applifier.impact.android.video;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.view.ApplifierImpactBufferingView;
+import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -25,6 +28,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	private ApplifierImpactBufferingView _bufferingView = null;
 	private ApplifierImpactVideoPausedView _pausedView = null;
 	private boolean _videoPlayheadPrepared = false;
+	private Map<ApplifierVideoPosition, Boolean> _sentPositionEvents = new HashMap<ApplifierVideoPosition, Boolean>();
 	
 	public ApplifierImpactVideoPlayView(Context context, IApplifierImpactVideoPlayerListener listener) {
 		super(context);
@@ -50,6 +54,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_videoFileName = fileName;
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Playing video from: " + _videoFileName);
 		_videoView.setVideoPath(_videoFileName);
+		_listener.onEventPositionReached(ApplifierVideoPosition.Start);
+		_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
 		startVideo();
 	}
 
@@ -200,6 +206,22 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			PowerManager pm = (PowerManager)getContext().getSystemService(Context.POWER_SERVICE);			
 			if (!pm.isScreenOn()) {
 				pauseVideo();
+			}
+			
+			Float curPos = new Float(_videoView.getCurrentPosition());
+			Float position = curPos / _videoView.getDuration();
+			
+			if (position > 0.25 && !_sentPositionEvents.containsKey(ApplifierVideoPosition.FirstQuartile)) {
+				_listener.onEventPositionReached(ApplifierVideoPosition.FirstQuartile);
+				_sentPositionEvents.put(ApplifierVideoPosition.FirstQuartile, true);
+			}
+			if (position > 0.5 && !_sentPositionEvents.containsKey(ApplifierVideoPosition.MidPoint)) {
+				_listener.onEventPositionReached(ApplifierVideoPosition.MidPoint);
+				_sentPositionEvents.put(ApplifierVideoPosition.MidPoint, true);
+			}
+			if (position > 0.75 && !_sentPositionEvents.containsKey(ApplifierVideoPosition.ThirdQuartile)) {
+				_listener.onEventPositionReached(ApplifierVideoPosition.ThirdQuartile);
+				_sentPositionEvents.put(ApplifierVideoPosition.ThirdQuartile, true);
 			}
 			
 			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && _videoView != null && _videoView.getBufferPercentage() < 15 && _videoView.getParent() == null) {				

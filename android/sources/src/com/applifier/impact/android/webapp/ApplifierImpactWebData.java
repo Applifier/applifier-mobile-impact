@@ -27,6 +27,29 @@ public class ApplifierImpactWebData {
 	private ApplifierImpactUrlLoader _currentLoader = null;
 	private boolean _isLoading = false;
 	
+	public static enum ApplifierVideoPosition { Start, FirstQuartile, MidPoint, ThirdQuartile, End;
+		@Override
+		public String toString () {
+			String output = null;
+			switch (this) {
+				case FirstQuartile:
+					output = "first_quartile";
+					break;
+				case MidPoint:
+					output = "mid_point";
+					break;
+				case ThirdQuartile:
+					output = "third_quartile";
+					break;
+				default:
+					output = name().toString().toLowerCase();
+					break;					
+			}
+			
+			return output;
+		}
+	};
+	
 	private static enum ApplifierImpactRequestType { VideoPlan, VideoViewed, Unsent;
 		@Override
 		public String toString () {
@@ -85,7 +108,7 @@ public class ApplifierImpactWebData {
 		return true;
 	}
 	
-	public boolean sendCampaignViewed (ApplifierImpactCampaign campaign) {
+	public boolean sendCampaignViewed (ApplifierImpactCampaign campaign, ApplifierVideoPosition position) {
 		if (campaign == null) return false;
 		
 		JSONObject json = new JSONObject();
@@ -93,7 +116,7 @@ public class ApplifierImpactWebData {
 		try {
 			json.put("did", ApplifierImpactUtils.getDeviceId(ApplifierImpactProperties.CURRENT_ACTIVITY));
 			json.put("c", campaign.getCampaignId());
-			json.put("pos", "end");
+			json.put("pos", position.toString());
 		}
 		catch (Exception e) {			
 		}
