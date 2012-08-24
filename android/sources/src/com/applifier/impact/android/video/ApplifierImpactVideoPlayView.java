@@ -54,8 +54,6 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_videoFileName = fileName;
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Playing video from: " + _videoFileName);
 		_videoView.setVideoPath(_videoFileName);
-		_listener.onEventPositionReached(ApplifierVideoPosition.Start);
-		_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
 		startVideo();
 	}
 
@@ -83,6 +81,10 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				@Override
 				public void run() {
 					_videoView.start();
+					if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {
+						_listener.onEventPositionReached(ApplifierVideoPosition.Start);
+						_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
+					}
 					setKeepScreenOn(true);
 				}
 			});
