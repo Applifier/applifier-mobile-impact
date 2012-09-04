@@ -9,14 +9,44 @@
 #import "ApplifierImpactAppDelegate.h"
 
 #import "ApplifierImpactViewController.h"
+#import "ApplifierImpact.h"
+
+@interface ApplifierImpactAppDelegate () <ApplifierImpactDelegate>
+@end
 
 @implementation ApplifierImpactAppDelegate
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
 
+#pragma mark - ApplifierImpactDelegate
+
+- (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact
+{
+}
+
+- (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact
+{
+}
+
+- (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact
+{
+}
+
+- (void)applifierImpactVideoCompleted:(ApplifierImpact *)applifierImpact
+{
+}
+
+- (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact
+{
+}
+
+#pragma mark - UIApplicationDelegate
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	[[ApplifierImpact sharedInstance] startWithApplifierID:nil];
+	
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.viewController = [[ApplifierImpactViewController alloc] initWithNibName:@"ApplifierImpactViewController" bundle:nil];

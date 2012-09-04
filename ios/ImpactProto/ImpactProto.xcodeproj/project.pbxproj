@@ -24,6 +24,7 @@
 		78ED798315C6962C007C5BD5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78ED798215C6962C007C5BD5 /* AVFoundation.framework */; };
 		78ED798B15C6B04D007C5BD5 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78ED798A15C6B04D007C5BD5 /* CoreMedia.framework */; };
 		78ED799215C6B2BB007C5BD5 /* jetiphone.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 78ED799115C6B2BB007C5BD5 /* jetiphone.mp4 */; };
+		F67203E815F6142A00807527 /* ApplifierImpact.m in Sources */ = {isa = PBXBuildFile; fileRef = F67203E715F6142A00807527 /* ApplifierImpact.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,8 @@
 		78ED798215C6962C007C5BD5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		78ED798A15C6B04D007C5BD5 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		78ED799115C6B2BB007C5BD5 /* jetiphone.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = jetiphone.mp4; sourceTree = "<group>"; };
+		F67203E615F6142A00807527 /* ApplifierImpact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpact.h; sourceTree = "<group>"; };
+		F67203E715F6142A00807527 /* ApplifierImpact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpact.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +73,7 @@
 		78ED793E15C66FC6007C5BD5 = {
 			isa = PBXGroup;
 			children = (
+				F67203E515F6142A00807527 /* ApplifierImpact */,
 				78CC133915D3D85400972EA6 /* icon_114.png */,
 				78CC133715D3D84A00972EA6 /* icon_57.png */,
 				78ED798A15C6B04D007C5BD5 /* CoreMedia.framework */,
@@ -134,6 +138,16 @@
 			);
 			name = Assets;
 			path = ImpactProto;
+			sourceTree = "<group>";
+		};
+		F67203E515F6142A00807527 /* ApplifierImpact */ = {
+			isa = PBXGroup;
+			children = (
+				F67203E615F6142A00807527 /* ApplifierImpact.h */,
+				F67203E715F6142A00807527 /* ApplifierImpact.m */,
+			);
+			name = ApplifierImpact;
+			path = ../ApplifierImpact;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -210,6 +224,7 @@
 				78ED795A15C66FC6007C5BD5 /* main.m in Sources */,
 				78ED795E15C66FC6007C5BD5 /* ApplifierImpactAppDelegate.m in Sources */,
 				78ED796115C66FC6007C5BD5 /* ApplifierImpactViewController.m in Sources */,
+				F67203E815F6142A00807527 /* ApplifierImpact.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,15 +304,19 @@
 		78ED796815C66FC6007C5BD5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pekka Palmu (NK5C5QHXQ8)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Pekka Palmu (NK5C5QHXQ8)";
+				ARCHS = (
+					"$(ARCHS_STANDARD_32_BIT)",
+					armv6,
+				);
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ImpactProto/ImpactProto-Prefix.pch";
 				INFOPLIST_FILE = "ImpactProto/ImpactProto-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "07FC12B1-7985-486E-9319-46B61E3FC62D";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "07FC12B1-7985-486E-9319-46B61E3FC62D";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -305,13 +324,19 @@
 		78ED796915C66FC6007C5BD5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Pekka Palmu (NK5C5QHXQ8)";
+				ARCHS = (
+					"$(ARCHS_STANDARD_32_BIT)",
+					armv6,
+				);
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ImpactProto/ImpactProto-Prefix.pch";
 				INFOPLIST_FILE = "ImpactProto/ImpactProto-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "07FC12B1-7985-486E-9319-46B61E3FC62D";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -342,13 +367,19 @@
 		78ED799815C6B8F9007C5BD5 /* Ad Hoc Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Pekka Palmu (NK5C5QHXQ8)";
+				ARCHS = (
+					"$(ARCHS_STANDARD_32_BIT)",
+					armv6,
+				);
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ImpactProto/ImpactProto-Prefix.pch";
 				INFOPLIST_FILE = "ImpactProto/ImpactProto-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "07FC12B1-7985-486E-9319-46B61E3FC62D";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Ad Hoc Distribution";
