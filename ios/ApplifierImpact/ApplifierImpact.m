@@ -32,16 +32,34 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 @synthesize applifierID = _applifierID;
 @synthesize delegate = _delegate;
 
+#pragma mark - Private
+
+- (id)initApplifierInstance
+{
+	if ((self = [super init]))
+	{
+	}
+	
+	return self;
+}
+
 #pragma mark - Public
 
 static ApplifierImpact *sharedApplifierInstance = nil;
+
+- (id)init
+{
+	[self doesNotRecognizeSelector:_cmd];
+	
+	return nil;
+}
 
 + (id)sharedInstance
 {
 	@synchronized(self)
 	{
 		if (sharedApplifierInstance == nil)
-			sharedApplifierInstance = [[self alloc] init];
+			sharedApplifierInstance = [[self alloc] initApplifierInstance];
 	}
 	
 	return sharedApplifierInstance;
