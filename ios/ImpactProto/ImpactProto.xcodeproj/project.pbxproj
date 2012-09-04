@@ -164,6 +164,7 @@
 			attributes = {
 				CLASSPREFIX = ApplifierImpact;
 				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = Applifier;
 			};
 			buildConfigurationList = 78ED794315C66FC6007C5BD5 /* Build configuration list for PBXProject "ImpactProto" */;
 			compatibilityVersion = "Xcode 3.2";
