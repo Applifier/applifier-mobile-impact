@@ -7,35 +7,33 @@
 //
 
 #import "ApplifierImpactiOS4.h"
-
-NSString * const kApplifierImpactTestBackendURL = @"http://quake.everyplay.fi/~bluesun/impact/manifest.json";
-NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~bluesun/impact/webapp.html";
-
-/*
- VideoPlan (for dev / testing purposes)
- The data requested from backend that contains the campaigns that should be used at this time http://quake.everyplay.fi/~bluesun/impact/manifest.json? d={"did":"DEVICE_ID","c":["ARRAY", “OF”, “CACHED”, “CAMPAIGN”, “ID S”]}
- 
- ViewReport (for dev / testing purposes)
- Reporting the current position (view) of video, watch to the Backend
- http://quake.everyplay.fi/~bluesun/impact/manifest.json?
- v={"did":"DEVICE_ID","c":”VIEWED_CAMPAIGN_ID”, “pos”:”POSITION_ OPTION”}
- Position options are: start, first_quartile, mid_point, third_quartile,
- end
- */
+#import "ApplifierImpactCampaignManager.h"
 
 @interface ApplifierImpact ()
 @property (nonatomic, strong) NSString *applifierID;
+@property (nonatomic, strong) ApplifierImpactCampaignManager *campaignManager;
+@property (nonatomic, strong) UIWindow *applifierWindow;
+@property (nonatomic, strong) UIWebView *webView;
 @end
 
 @implementation ApplifierImpactiOS4
 
 @synthesize applifierID = _applifierID;
+@synthesize campaignManager = _campaignManager;
+@synthesize applifierWindow = _applifierWindow;
+@synthesize webView = _webView;
 
 #pragma mark - Public
 
 - (void)startWithApplifierID:(NSString *)applifierID
 {
+	if (self.campaignManager != nil)
+		return;
+	
 	self.applifierID = applifierID;
+	self.campaignManager = [[ApplifierImpactCampaignManager alloc] init];
+
+	[self.campaignManager updateCampaigns];
 }
 
 - (BOOL)showImpact
