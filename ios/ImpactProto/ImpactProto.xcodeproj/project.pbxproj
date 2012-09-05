@@ -25,6 +25,8 @@
 		78ED798B15C6B04D007C5BD5 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78ED798A15C6B04D007C5BD5 /* CoreMedia.framework */; };
 		78ED799215C6B2BB007C5BD5 /* jetiphone.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 78ED799115C6B2BB007C5BD5 /* jetiphone.mp4 */; };
 		9038E59415F73CC3009E17BB /* ApplifierImpactCampaignManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9038E59315F73CC3009E17BB /* ApplifierImpactCampaignManager.m */; };
+		9038E5B115F76EA3009E17BB /* ApplifierImpactSBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 9038E5AE15F76EA3009E17BB /* ApplifierImpactSBJsonBase.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		9038E5B215F76EA3009E17BB /* ApplifierImpactSBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 9038E5B015F76EA3009E17BB /* ApplifierImpactSBJsonParser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F67203E815F6142A00807527 /* ApplifierImpact.m in Sources */ = {isa = PBXBuildFile; fileRef = F67203E715F6142A00807527 /* ApplifierImpact.m */; };
 		F67A4F0815F62EA500653CF2 /* ApplifierImpactiOS4.m in Sources */ = {isa = PBXBuildFile; fileRef = F67A4F0715F62EA500653CF2 /* ApplifierImpactiOS4.m */; };
 /* End PBXBuildFile section */
@@ -54,6 +56,10 @@
 		78ED799115C6B2BB007C5BD5 /* jetiphone.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = jetiphone.mp4; sourceTree = "<group>"; };
 		9038E59215F73CC3009E17BB /* ApplifierImpactCampaignManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCampaignManager.h; sourceTree = "<group>"; };
 		9038E59315F73CC3009E17BB /* ApplifierImpactCampaignManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCampaignManager.m; sourceTree = "<group>"; };
+		9038E5AD15F76EA3009E17BB /* ApplifierImpactSBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonBase.h; sourceTree = "<group>"; };
+		9038E5AE15F76EA3009E17BB /* ApplifierImpactSBJsonBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonBase.m; sourceTree = "<group>"; };
+		9038E5AF15F76EA3009E17BB /* ApplifierImpactSBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonParser.h; sourceTree = "<group>"; };
+		9038E5B015F76EA3009E17BB /* ApplifierImpactSBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonParser.m; sourceTree = "<group>"; };
 		F67203E615F6142A00807527 /* ApplifierImpact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpact.h; sourceTree = "<group>"; };
 		F67203E715F6142A00807527 /* ApplifierImpact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpact.m; sourceTree = "<group>"; };
 		F67A4F0615F62EA500653CF2 /* ApplifierImpactiOS4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactiOS4.h; sourceTree = "<group>"; };
@@ -146,9 +152,21 @@
 			path = ImpactProto;
 			sourceTree = "<group>";
 		};
+		9038E5AC15F76EA3009E17BB /* SBJSON */ = {
+			isa = PBXGroup;
+			children = (
+				9038E5AD15F76EA3009E17BB /* ApplifierImpactSBJsonBase.h */,
+				9038E5AE15F76EA3009E17BB /* ApplifierImpactSBJsonBase.m */,
+				9038E5AF15F76EA3009E17BB /* ApplifierImpactSBJsonParser.h */,
+				9038E5B015F76EA3009E17BB /* ApplifierImpactSBJsonParser.m */,
+			);
+			path = SBJSON;
+			sourceTree = "<group>";
+		};
 		F67203E515F6142A00807527 /* ApplifierImpact */ = {
 			isa = PBXGroup;
 			children = (
+				9038E5AC15F76EA3009E17BB /* SBJSON */,
 				F67203E615F6142A00807527 /* ApplifierImpact.h */,
 				F67203E715F6142A00807527 /* ApplifierImpact.m */,
 				F67A4F0615F62EA500653CF2 /* ApplifierImpactiOS4.h */,
@@ -237,6 +255,8 @@
 				F67203E815F6142A00807527 /* ApplifierImpact.m in Sources */,
 				F67A4F0815F62EA500653CF2 /* ApplifierImpactiOS4.m in Sources */,
 				9038E59415F73CC3009E17BB /* ApplifierImpactCampaignManager.m in Sources */,
+				9038E5B115F76EA3009E17BB /* ApplifierImpactSBJsonBase.m in Sources */,
+				9038E5B215F76EA3009E17BB /* ApplifierImpactSBJsonParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
