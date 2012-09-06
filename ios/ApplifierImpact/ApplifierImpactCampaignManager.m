@@ -12,6 +12,19 @@
 NSString * const kApplifierImpactTestBackendURL = @"https://impact.applifier.com/campaigns/mobile";
 NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~bluesun/impact/webapp.html";
 
+NSString const * kCampaignAppIconKey = @"appIcon";
+NSString const * kCampaignClickURLKey = @"clickUrl";
+NSString const * kCampaignPictureKey = @"picture";
+NSString const * kCampaignTrailerDownloadableKey = @"trailerDownloadable";
+NSString const * kCampaignTrailerStreamingKey = @"trailerStreaming";
+NSString const * kCampaignGameIDKey = @"gameId";
+NSString const * kCampaignGameNameKey = @"gameName";
+NSString const * kCampaignIDKey = @"id";
+
+NSString const * kRewardItemKey = @"itemKey";
+NSString const * kRewardNameKey = @"name";
+NSString const * kRewardPictureKey = @"picture";
+
 /*
  VideoPlan (for dev / testing purposes)
  The data requested from backend that contains the campaigns that should be used at this time http://quake.everyplay.fi/~bluesun/impact/manifest.json? d={"did":"DEVICE_ID","c":["ARRAY", “OF”, “CACHED”, “CAMPAIGN”, “ID S”]}
@@ -83,7 +96,7 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 	return repr;
 }
 
-- (NSArray *)_parseCampaigns:(NSArray *)campaignArray
+- (NSArray *)_deserializeCampaigns:(NSArray *)campaignArray
 {
 	NSMutableArray *campaigns = [NSMutableArray array];
 	
@@ -92,20 +105,75 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 		if ([campaignDictionary isKindOfClass:[NSDictionary class]])
 		{
 			ApplifierImpactCampaign *campaign = [[ApplifierImpactCampaign alloc] init];
-			campaign.appIconURL = [NSURL URLWithString:[campaignDictionary objectForKey:@"appIcon"]];
-			campaign.clickURL = [NSURL URLWithString:[campaignDictionary objectForKey:@"clickUrl"]];
-			campaign.pictureURL = [NSURL URLWithString:[campaignDictionary objectForKey:@"picture"]];
-			campaign.trailerDownloadableURL = [NSURL URLWithString:[campaignDictionary objectForKey:@"trailerDownloadable"]];
-			campaign.trailerStreamingURL = [NSURL URLWithString:[campaignDictionary objectForKey:@"trailerStreaming"]];
-			campaign.gameID = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:@"gameId"]];
-			campaign.gameName = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:@"gameName"]];
-			campaign.id = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:@"id"]];
+			NSURL *appIconURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignAppIconKey]];
+			if (appIconURL == nil)
+			{
+				NSLog(@"Campaign app icon URL is empty or invalid. %@", campaignDictionary);
+				return nil;
+			}
+			campaign.appIconURL = appIconURL;
+			
+			NSURL *clickURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignClickURLKey]];
+			if (clickURL == nil)
+			{
+				NSLog(@"Campaign click URL is empty or invalid. %@", campaignDictionary);
+				return nil;
+			}
+			campaign.clickURL = clickURL;
+			
+			NSURL *pictureURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignPictureKey]];
+			if (pictureURL == nil)
+			{
+				NSLog(@"Campaign picture URL is empty or invalid. %@", campaignDictionary);
+				return nil;
+			}
+			campaign.pictureURL = pictureURL;
+			
+			NSURL *trailerDownloadableURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignTrailerDownloadableKey]];
+			if (trailerDownloadableURL == nil)
+			{
+				NSLog(@"Campaign downloadable trailer URL is empty or invalid. %@", campaignDictionary);
+				return nil;
+			}
+			campaign.trailerDownloadableURL = trailerDownloadableURL;
+			
+			NSURL *trailerStreamingURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignTrailerStreamingKey]];
+			if (trailerStreamingURL == nil)
+			{
+				NSLog(@"Campaign streaming trailer URL is empty or invalid. %@", campaignDictionary);
+				return nil;
+			}
+			campaign.trailerStreamingURL = trailerStreamingURL;
+			
+			NSString *gameID = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignGameIDKey]];
+			if (gameID == nil || [gameID length] == 0)
+			{
+				NSLog(@"Campaign game ID  is empty or invalid. %@", campaignDictionary);
+				return nil;
+			}
+			campaign.gameID = gameID;
+			
+			NSString *gameName = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignGameNameKey]];
+			if (gameName == nil || [gameName length] == 0)
+			{
+				NSLog(@"Campaign game name is empty or invalid. %@", campaignDictionary);
+				return nil;
+			}
+			campaign.gameName = gameName;
+			
+			NSString *id = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignIDKey]];
+			if (id == nil || [id length] == 0)
+			{
+				NSLog(@"Campaign ID is empty or invalid. %@", campaignDictionary);
+				return nil;
+			}
+			campaign.id = id;
 			
 			[campaigns addObject:campaign];
 		}
 		else
 		{
-			NSLog(@"Unexpected value in campaign list. %@, %@", [campaignDictionary class], campaignDictionary);
+			NSLog(@"Unexpected value in campaign dictionary list. %@, %@", [campaignDictionary class], campaignDictionary);
 			
 			continue;
 		}
@@ -114,14 +182,34 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 	return campaigns;
 }
 
-- (id)_parseItem:(NSDictionary *)itemDictionary
+- (id)_deserializeRewardItem:(NSDictionary *)itemDictionary
 {
 	if ([itemDictionary isKindOfClass:[NSDictionary class]])
 	{
 		ApplifierImpactRewardItem *item = [[ApplifierImpactRewardItem alloc] init];
-		item.key = [NSString stringWithFormat:@"%@", [itemDictionary objectForKey:@"itemKey"]];
-		item.name = [NSString stringWithFormat:@"%@", [itemDictionary objectForKey:@"name"]];
-		item.pictureURL = [NSURL URLWithString:[itemDictionary objectForKey:@"picture"]];
+		NSString *key = [NSString stringWithFormat:@"%@", [itemDictionary objectForKey:kRewardItemKey]];
+		if (key == nil || [key length] == 0)
+		{
+			NSLog(@"Item key is empty. %@", itemDictionary);
+			return nil;
+		}
+		item.key = key;
+		
+		NSString *name = [NSString stringWithFormat:@"%@", [itemDictionary objectForKey:kRewardNameKey]];
+		if (name == nil || [name length] == 0)
+		{
+			NSLog(@"Item name is empty. %@", itemDictionary);
+			return nil;
+		}
+		item.name = name;
+
+		NSURL *pictureURL = [NSURL URLWithString:[itemDictionary objectForKey:kRewardPictureKey]];
+		if (pictureURL == nil)
+		{
+			NSLog(@"Item picture URL is empty or invalid. %@", itemDictionary);
+			return nil;
+		}
+		item.pictureURL = pictureURL;
 		
 		return item;
 	}
@@ -133,16 +221,15 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 	}
 }
 
-- (void)_saveCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem
+- (NSString *)_dataFilePath
 {
-	if (campaigns == nil || rewardItem == nil)
-	{
-		NSLog(@"Both campaigns and reward items must be non-nil.");
-		
-		return;
-	}
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+	if (paths == nil || [paths count] == 0)
+		return nil;
 	
-	// TODO: save to disk
+	NSString *cachePath = [paths objectAtIndex:0];
+	
+	return [cachePath stringByAppendingString:@"/impact.plist"];
 }
 
 - (void)_processCampaignDownloadData
@@ -151,9 +238,8 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 	if ([json isKindOfClass:[NSDictionary class]])
 	{
 		NSDictionary *jsonDictionary = [(NSDictionary *)json objectForKey:@"data"];
-		NSArray *parsedCampaigns = [self _parseCampaigns:[jsonDictionary objectForKey:@"campaigns"]];
-		ApplifierImpactRewardItem *parsedItem = [self _parseItem:[jsonDictionary objectForKey:@"item"]];
-		[self _saveCampaigns:parsedCampaigns rewardItem:parsedItem];
+		NSArray *parsedCampaigns = [self _deserializeCampaigns:[jsonDictionary objectForKey:@"campaigns"]];
+		ApplifierImpactRewardItem *parsedItem = [self _deserializeRewardItem:[jsonDictionary objectForKey:@"item"]];
 	}
 	else
 		NSLog(@"Unknown data type for JSON: %@", [json class]);
