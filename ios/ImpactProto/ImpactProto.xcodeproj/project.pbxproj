@@ -337,7 +337,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
-					"$(ARCHS_STANDARD_32_BIT)",
+					armv7,
 					armv6,
 				);
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -346,6 +346,10 @@
 				GCC_PREFIX_HEADER = "ImpactProto/ImpactProto-Prefix.pch";
 				INFOPLIST_FILE = "ImpactProto/ImpactProto-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				OTHER_LDFLAGS = (
+					"-weak_library",
+					/usr/lib/libSystem.B.dylib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -357,7 +361,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
-					"$(ARCHS_STANDARD_32_BIT)",
+					armv7,
 					armv6,
 				);
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -366,6 +370,10 @@
 				GCC_PREFIX_HEADER = "ImpactProto/ImpactProto-Prefix.pch";
 				INFOPLIST_FILE = "ImpactProto/ImpactProto-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				OTHER_LDFLAGS = (
+					"-weak_library",
+					/usr/lib/libSystem.B.dylib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -400,7 +408,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
-					"$(ARCHS_STANDARD_32_BIT)",
+					armv7,
 					armv6,
 				);
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -409,6 +417,10 @@
 				GCC_PREFIX_HEADER = "ImpactProto/ImpactProto-Prefix.pch";
 				INFOPLIST_FILE = "ImpactProto/ImpactProto-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				OTHER_LDFLAGS = (
+					"-weak_library",
+					/usr/lib/libSystem.B.dylib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";

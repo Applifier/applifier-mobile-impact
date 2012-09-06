@@ -48,9 +48,19 @@
 	[[ApplifierImpact sharedInstance] startWithApplifierID:nil];
 	
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    self.viewController = [[ApplifierImpactViewController alloc] initWithNibName:@"ApplifierImpactViewController" bundle:nil];
-    self.window.rootViewController = self.viewController;
+
+	if ([self.window respondsToSelector:@selector(setRootViewController:)])
+	{
+		self.viewController = [[ApplifierImpactViewController alloc] initWithNibName:@"ApplifierImpactViewController" bundle:nil];
+		self.window.rootViewController = self.viewController;
+	}
+	else
+	{
+		UIView *view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
+		view.backgroundColor = [UIColor greenColor];
+		[self.window addSubview:view];
+	}
+	
     [self.window makeKeyAndVisible];
     return YES;
 }
