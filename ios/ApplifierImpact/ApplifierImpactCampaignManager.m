@@ -10,6 +10,7 @@
 #import "ApplifierImpactSBJSONParser.h"
 #import "ApplifierImpactCampaign.h"
 #import "ApplifierImpactRewardItem.h"
+#import "ApplifierImpactCache.h"
 
 NSString * const kApplifierImpactTestBackendURL = @"https://impact.applifier.com/campaigns/mobile";
 NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~bluesun/impact/webapp.html";
@@ -41,11 +42,13 @@ NSString const * kRewardPictureKey = @"picture";
 
 @interface ApplifierImpactCampaignManager () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSMutableData *campaignDownloadData;
+@property (nonatomic, strong) ApplifierImpactCache *cache;
 @end
 
 @implementation ApplifierImpactCampaignManager
 
 @synthesize campaignDownloadData = _campaignDownloadData;
+@synthesize cache = _cache;
 
 #pragma mark - Private
 
@@ -189,17 +192,6 @@ NSString const * kRewardPictureKey = @"picture";
 	}
 }
 
-- (NSString *)_dataFilePath
-{
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-	if (paths == nil || [paths count] == 0)
-		return nil;
-	
-	NSString *cachePath = [paths objectAtIndex:0];
-	
-	return [cachePath stringByAppendingString:@"/impact.plist"];
-}
-
 - (void)_processCampaignDownloadData
 {
 	id json = [self _JSONValueFromData:self.campaignDownloadData];
@@ -207,13 +199,28 @@ NSString const * kRewardPictureKey = @"picture";
 	{
 		NSDictionary *jsonDictionary = [(NSDictionary *)json objectForKey:@"data"];
 		NSArray *parsedCampaigns = [self _deserializeCampaigns:[jsonDictionary objectForKey:@"campaigns"]];
-		ApplifierImpactRewardItem *parsedItem = [self _deserializeRewardItem:[jsonDictionary objectForKey:@"item"]];
+//		ApplifierImpactRewardItem *parsedItem = [self _deserializeRewardItem:[jsonDictionary objectForKey:@"item"]];
+		
+		for (ApplifierImpactCampaign *campaign in parsedCampaigns)
+		{
+			[self.cache downloadURLToCache:campaign.trailerDownloadableURL];
+		}
 	}
 	else
 		NSLog(@"Unknown data type for JSON: %@", [json class]);
 }
 
 #pragma mark - Public
+
+- (id)init
+{
+	if ((self = [super init]))
+	{
+		_cache = [[ApplifierImpactCache alloc] init];
+	}
+	
+	return self;
+}
 
 - (void)updateCampaigns
 {

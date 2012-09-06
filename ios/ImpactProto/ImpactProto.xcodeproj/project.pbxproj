@@ -31,6 +31,7 @@
 		F67A4F0815F62EA500653CF2 /* ApplifierImpactiOS4.m in Sources */ = {isa = PBXBuildFile; fileRef = F67A4F0715F62EA500653CF2 /* ApplifierImpactiOS4.m */; };
 		F684EDF915F8CDC2004F1C78 /* ApplifierImpactCampaign.m in Sources */ = {isa = PBXBuildFile; fileRef = F684EDF815F8CDC2004F1C78 /* ApplifierImpactCampaign.m */; };
 		F684EDFC15F8CDFA004F1C78 /* ApplifierImpactRewardItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F684EDFB15F8CDFA004F1C78 /* ApplifierImpactRewardItem.m */; };
+		F684EE0315F8CFB7004F1C78 /* ApplifierImpactCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F684EE0215F8CFB7004F1C78 /* ApplifierImpactCache.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,8 @@
 		F684EDF815F8CDC2004F1C78 /* ApplifierImpactCampaign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCampaign.m; sourceTree = "<group>"; };
 		F684EDFA15F8CDFA004F1C78 /* ApplifierImpactRewardItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactRewardItem.h; sourceTree = "<group>"; };
 		F684EDFB15F8CDFA004F1C78 /* ApplifierImpactRewardItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactRewardItem.m; sourceTree = "<group>"; };
+		F684EE0115F8CFB7004F1C78 /* ApplifierImpactCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCache.h; sourceTree = "<group>"; };
+		F684EE0215F8CFB7004F1C78 /* ApplifierImpactCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCache.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +186,8 @@
 				F684EDF815F8CDC2004F1C78 /* ApplifierImpactCampaign.m */,
 				F684EDFA15F8CDFA004F1C78 /* ApplifierImpactRewardItem.h */,
 				F684EDFB15F8CDFA004F1C78 /* ApplifierImpactRewardItem.m */,
+				F684EE0115F8CFB7004F1C78 /* ApplifierImpactCache.h */,
+				F684EE0215F8CFB7004F1C78 /* ApplifierImpactCache.m */,
 			);
 			name = ApplifierImpact;
 			path = ../ApplifierImpact;
@@ -269,6 +274,7 @@
 				9038E5B215F76EA3009E17BB /* ApplifierImpactSBJsonParser.m in Sources */,
 				F684EDF915F8CDC2004F1C78 /* ApplifierImpactCampaign.m in Sources */,
 				F684EDFC15F8CDFA004F1C78 /* ApplifierImpactRewardItem.m in Sources */,
+				F684EE0315F8CFB7004F1C78 /* ApplifierImpactCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
