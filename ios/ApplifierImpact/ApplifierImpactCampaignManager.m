@@ -8,6 +8,8 @@
 
 #import "ApplifierImpactCampaignManager.h"
 #import "ApplifierImpactSBJSONParser.h"
+#import "ApplifierImpactCampaign.h"
+#import "ApplifierImpactRewardItem.h"
 
 NSString * const kApplifierImpactTestBackendURL = @"https://impact.applifier.com/campaigns/mobile";
 NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~bluesun/impact/webapp.html";
@@ -36,40 +38,6 @@ NSString const * kRewardPictureKey = @"picture";
  Position options are: start, first_quartile, mid_point, third_quartile,
  end
  */
-
-@interface ApplifierImpactCampaign : NSObject
-@property (nonatomic, strong) NSURL *appIconURL;
-@property (nonatomic, strong) NSURL *clickURL;
-@property (nonatomic, strong) NSURL *pictureURL;
-@property (nonatomic, strong) NSURL *trailerDownloadableURL;
-@property (nonatomic, strong) NSURL *trailerStreamingURL;
-@property (nonatomic, strong) NSString *gameID;
-@property (nonatomic, strong) NSString *gameName;
-@property (nonatomic, strong) NSString *id;
-@end
-
-@implementation ApplifierImpactCampaign
-@synthesize appIconURL = _appIconURL;
-@synthesize clickURL = _clickURL;
-@synthesize pictureURL = _pictureURL;
-@synthesize trailerDownloadableURL = _trailerDownloadableURL;
-@synthesize trailerStreamingURL = _trailerStreamingURL;
-@synthesize gameID = _gameID;
-@synthesize gameName = _gameName;
-@synthesize id = _id;
-@end
-
-@interface ApplifierImpactRewardItem : NSObject
-@property (nonatomic, strong) NSString *key;
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSURL *pictureURL;
-@end
-
-@implementation ApplifierImpactRewardItem
-@synthesize key = _key;
-@synthesize name = _name;
-@synthesize pictureURL = _pictureURL;
-@end
 
 @interface ApplifierImpactCampaignManager () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSMutableData *campaignDownloadData;
