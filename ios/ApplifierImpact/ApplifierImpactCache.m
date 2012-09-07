@@ -118,6 +118,42 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 	[self _startDownload];
 }
 
+- (void)_compareCampaigns:(NSArray *)campaigns
+{
+	if (campaigns == nil || [campaigns count] == 0)
+	{
+		NSLog(@"No new campaigns.");
+		return;
+	}
+	
+	NSString *cachePath = [self _cachePath];
+	NSString *campaignIndexPath = [cachePath stringByAppendingString:@"index.plist"];
+	NSArray *oldIndex = [NSArray arrayWithContentsOfFile:campaignIndexPath];
+	
+	NSMutableArray *index = [NSMutableArray array];
+	for (ApplifierImpactCampaign *campaign in campaigns)
+	{
+		if (campaign.id != nil)
+			[index addObject:[campaign.id stringByAppendingString:@".mp4"]];
+	}
+	
+	if ( ! [index writeToFile:campaignIndexPath atomically:YES])
+		NSLog(@"Saving campaign index failed.");
+	
+	for (NSString *oldFile in oldIndex)
+	{
+		if ( ! [index containsObject:oldFile])
+		{
+			NSString *filePath = [cachePath stringByAppendingString:oldFile];
+			NSError *error = nil;
+			if ( ! [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error])
+			{
+				NSLog(@"Unable to remove file. %@", error);
+			}
+		}
+	}
+}
+
 #pragma mark - Public
 
 - (id)init
@@ -133,7 +169,8 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 - (void)cacheCampaigns:(NSArray *)campaigns
 {
 	NSError *error = nil;
-	if ( ! [[NSFileManager defaultManager] createDirectoryAtPath:[self _cachePath] withIntermediateDirectories:YES attributes:nil error:&error])
+	NSString *cachePath = [self _cachePath];
+	if ( ! [[NSFileManager defaultManager] createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:nil error:&error])
 	{
 		NSLog(@"Couldn't create cache path. Error: %@", error);
 		return;
@@ -145,6 +182,8 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 	{
 		[self _queueCampaignDownload:campaign];
 	}
+	
+	[self _compareCampaigns:campaigns];
 }
 
 #pragma mark - NSURLConnectionDelegate
