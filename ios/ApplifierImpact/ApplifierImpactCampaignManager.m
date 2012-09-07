@@ -201,10 +201,7 @@ NSString const * kRewardPictureKey = @"picture";
 		NSArray *parsedCampaigns = [self _deserializeCampaigns:[jsonDictionary objectForKey:@"campaigns"]];
 //		ApplifierImpactRewardItem *parsedItem = [self _deserializeRewardItem:[jsonDictionary objectForKey:@"item"]];
 		
-		for (ApplifierImpactCampaign *campaign in parsedCampaigns)
-		{
-			[self.cache downloadURLToCache:campaign.trailerDownloadableURL];
-		}
+		[self.cache cacheCampaigns:parsedCampaigns];
 	}
 	else
 		NSLog(@"Unknown data type for JSON: %@", [json class]);
@@ -224,7 +221,6 @@ NSString const * kRewardPictureKey = @"picture";
 
 - (void)updateCampaigns
 {
-	self.campaignDownloadData = [NSMutableData data];
 	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:kApplifierImpactTestBackendURL]];
 	[NSURLConnection connectionWithRequest:request delegate:self];
 }
@@ -233,7 +229,10 @@ NSString const * kRewardPictureKey = @"picture";
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-	[self.campaignDownloadData appendData:data];
+	if (self.campaignDownloadData == nil)
+		self.campaignDownloadData = [NSMutableData dataWithData:data];
+	else
+		[self.campaignDownloadData appendData:data];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
