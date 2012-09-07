@@ -33,7 +33,7 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 	if (paths == nil || [paths count] == 0)
 		return nil;
 	
-	return [[paths objectAtIndex:0] stringByAppendingString:@"/"];
+	return [[paths objectAtIndex:0] stringByAppendingString:@"/applifier/"];
 }
 
 - (void)_queueCampaignDownload:(ApplifierImpactCampaign *)campaign;
@@ -117,6 +117,13 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 
 - (void)cacheCampaigns:(NSArray *)campaigns
 {
+	NSError *error = nil;
+	if ( ! [[NSFileManager defaultManager] createDirectoryAtPath:[self _cachePath] withIntermediateDirectories:YES attributes:nil error:&error])
+	{
+		NSLog(@"Couldn't create cache path. Error: %@", error);
+		return;
+	}
+	
 	// TODO: check queue for existing downloads that should be cancelled
 	
 	for (ApplifierImpactCampaign *campaign in campaigns)
