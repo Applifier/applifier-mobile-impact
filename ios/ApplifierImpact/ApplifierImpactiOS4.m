@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Applifier. All rights reserved.
 //
 
+#import <AVFoundation/AVFoundation.h>
 #import "ApplifierImpactiOS4.h"
 #import "ApplifierImpactCampaignManager.h"
 #import "ApplifierImpactCampaign.h"
@@ -21,6 +22,10 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
+@property (nonatomic, strong) UIView *adView;
+@property (nonatomic, strong) ApplifierImpactCampaign *selectedCampaign;
+@property (nonatomic, strong) AVPlayer *player;
+@property (nonatomic, strong) AVPlayerLayer *playerLayer;
 @end
 
 @implementation ApplifierImpactiOS4
@@ -30,6 +35,12 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 @synthesize campaignManager = _campaignManager;
 @synthesize applifierWindow = _applifierWindow;
 @synthesize webView = _webView;
+@synthesize campaigns = _campaigns;
+@synthesize rewardItem = _rewardItem;
+@synthesize adView = _adView;
+@synthesize selectedCampaign = _selectedCampaign;
+@synthesize player = _player;
+@synthesize playerLayer = _playerLayer;
 
 #pragma mark - Private
 
@@ -57,6 +68,68 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 	[self.campaignManager updateCampaigns];
 }
 
+- (void)_selectCampaign:(ApplifierImpactCampaign *)campaign
+{
+	if (campaign == nil)
+		return;
+	
+	self.selectedCampaign = campaign;
+	
+	NSString *js = [NSString stringWithFormat:@"selectCampaign(%@);", campaign.id];
+	
+	[self.webView stringByEvaluatingJavaScriptFromString:js];
+}
+
+- (void)_configureWebView
+{
+	self.applifierWindow = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	self.webView = [[UIWebView alloc] initWithFrame:self.applifierWindow.bounds];
+	self.webView.delegate = self;
+	self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kApplifierImpactTestWebViewURL]]];
+	[self.applifierWindow addSubview:self.webView];
+}
+
+- (UIView *)_adView
+{
+	if (self.adView == nil)
+	{
+		self.adView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+		self.webView.bounds = self.adView.bounds;
+		[self.adView addSubview:self.webView];
+	}
+	
+	return self.adView;
+}
+
+- (void)_playVideo
+{
+	NSURL *videoURL = [self.campaignManager videoURLForCampaign:self.selectedCampaign];
+	AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:[AVAsset assetWithURL:videoURL]];
+	self.player = [AVPlayer playerWithPlayerItem:item];
+	self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+	self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+	self.playerLayer.frame = self.adView.bounds;
+	[self.adView.layer addSublayer:self.playerLayer];
+	[self.player play];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:item];
+	
+	if ([self.delegate respondsToSelector:@selector(applifierImpactVideoStarted:)])
+		[self.delegate applifierImpactVideoStarted:self];
+}
+
+- (void)_videoPlaybackEnded:(NSNotification *)notification
+{
+	if ([self.delegate respondsToSelector:@selector(applifierImpactVideoCompleted:)])
+		[self.delegate applifierImpactVideoCompleted:self];
+	
+	[self.playerLayer removeFromSuperlayer];
+	// FIXME: use the actual API
+	[self.webView stringByEvaluatingJavaScriptFromString:@"document.getElementById('videoStart').style.display = 'none';"];
+	[self.webView stringByEvaluatingJavaScriptFromString:@"document.getElementById('videoCompleted').style.display = 'block';"];
+}
+
 #pragma mark - Public
 
 - (void)startWithApplifierID:(NSString *)applifierID
@@ -69,17 +142,27 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 	[self.backgroundThread start];
 	
 	[self performSelector:@selector(_startCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
-	
-	self.applifierWindow = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-	self.webView = [[UIWebView alloc] initWithFrame:self.applifierWindow.bounds];
-	self.webView.delegate = self;
-	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kApplifierImpactTestWebViewURL]]];
-	[self.applifierWindow addSubview:self.webView];
+
+	[self _configureWebView];
 }
 
 - (BOOL)showImpact
 {
-	return YES;
+	// FIXME: probably not the best way to accomplish this
+	
+	if ([self.campaigns count] > 0)
+	{
+		// merge the following two delegate methods?
+		if ([self.delegate respondsToSelector:@selector(applifierImpactWillOpen:)])
+			[self.delegate applifierImpactWillOpen:self];
+		
+		if ([self.delegate respondsToSelector:@selector(applifierImpact:wantsToShowAdView:)])
+			[self.delegate applifierImpact:self wantsToShowAdView:[self _adView]];
+		
+		return YES;
+	}
+	
+	return NO;
 }
 
 - (BOOL)hasCampaigns
@@ -106,16 +189,27 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 		return;
 	}
 	
-	NSLog(@"updatedWithCampaigns");
-	
 	self.campaigns = campaigns;
 	self.rewardItem = rewardItem;
+	
+	if ([self.delegate respondsToSelector:@selector(applifierImpactCampaignsAreAvailable:)])
+		[self.delegate applifierImpactCampaignsAreAvailable:self];
+	
+	[self _selectCampaign:[self.campaigns lastObject]];
 }
 
 #pragma mark - UIWebViewDelegate
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
+	// FIXME: this is test code
+	NSString *urlString = [[request URL] absoluteString];
+	if ([[urlString substringFromIndex:[urlString length] - 1] isEqualToString:@"#"])
+	{
+		[self _playVideo];
+		return NO;
+	}
+	
 	return YES;
 }
 

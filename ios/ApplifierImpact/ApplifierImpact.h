@@ -23,6 +23,7 @@
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactVideoCompleted:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact;
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact wantsToShowAdView:(UIView *)adView;
 
 @end
 
