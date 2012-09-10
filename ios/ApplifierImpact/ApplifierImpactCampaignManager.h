@@ -10,6 +10,7 @@
 
 @class ApplifierImpactCampaignManager;
 @class ApplifierImpactRewardItem;
+@class ApplifierImpactCampaign;
 
 @protocol ApplifierImpactCampaignManagerDelegate <NSObject>
 
@@ -22,5 +23,6 @@
 @property (nonatomic, assign) id<ApplifierImpactCampaignManagerDelegate> delegate;
 
 - (void)updateCampaigns;
+- (NSURL *)videoURLForCampaign:(ApplifierImpactCampaign *)campaign;
 
 @end

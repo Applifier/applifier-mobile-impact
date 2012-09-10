@@ -234,6 +234,16 @@ NSString const * kRewardPictureKey = @"picture";
 	[self.urlConnection start];
 }
 
+- (NSURL *)videoURLForCampaign:(ApplifierImpactCampaign *)campaign
+{
+	// we can provide either a remote or local video URL here
+	
+	@synchronized (self)
+	{
+		return [self.cache localVideoURLForCampaign:campaign];
+	}
+}
+
 - (void)dealloc
 {
 	self.cache.delegate = nil;

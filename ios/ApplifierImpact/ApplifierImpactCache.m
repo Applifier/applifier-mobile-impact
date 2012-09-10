@@ -37,6 +37,11 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 	return [[paths objectAtIndex:0] stringByAppendingString:@"/applifier/"];
 }
 
+- (NSString *)_videoPathForCampaign:(ApplifierImpactCampaign *)campaign
+{
+	return [[self _cachePath] stringByAppendingString:[NSString stringWithFormat:@"%@.mp4", campaign.id]];
+}
+
 - (void)_queueCampaignDownload:(ApplifierImpactCampaign *)campaign;
 {
 	if (campaign == nil)
@@ -47,7 +52,7 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 	
 	NSLog(@"Queueing %@, id %@", campaign.trailerDownloadableURL, campaign.id);
 	
-	NSString *filePath = [[self _cachePath] stringByAppendingString:[NSString stringWithFormat:@"%@.mp4", campaign.id]];		
+	NSString *filePath = [self _videoPathForCampaign:campaign];
 	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:campaign.trailerDownloadableURL];
 	NSURLConnection *urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 	NSDictionary *downloadDictionary = @{ kApplifierImpactCacheCampaignKey : campaign, kApplifierImpactCacheConnectionKey : urlConnection, kApplifierImpactCacheFilePathKey : filePath };
@@ -196,6 +201,13 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 	}
 	
 	[self _compareCampaigns:campaigns];
+}
+
+- (NSURL *)localVideoURLForCampaign:(ApplifierImpactCampaign *)campaign
+{
+	NSString *path = [self _videoPathForCampaign:campaign];
+	
+	return [NSURL fileURLWithPath:path];
 }
 
 #pragma mark - NSURLConnectionDelegate

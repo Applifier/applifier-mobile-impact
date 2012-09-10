@@ -23,5 +23,6 @@
 @property (nonatomic, assign) id<ApplifierImpactCacheDelegate> delegate;
 
 - (void)cacheCampaigns:(NSArray *)campaigns;
+- (NSURL *)localVideoURLForCampaign:(ApplifierImpactCampaign *)campaign;
 
 @end
