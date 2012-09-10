@@ -19,28 +19,6 @@
 @synthesize window = _window;
 @synthesize viewController = _viewController;
 
-#pragma mark - ApplifierImpactDelegate
-
-- (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact
-{
-}
-
-- (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact
-{
-}
-
-- (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact
-{
-}
-
-- (void)applifierImpactVideoCompleted:(ApplifierImpact *)applifierImpact
-{
-}
-
-- (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact
-{
-}
-
 #pragma mark - UIApplicationDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
