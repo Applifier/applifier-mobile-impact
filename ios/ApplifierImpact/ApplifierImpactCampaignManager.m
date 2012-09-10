@@ -40,7 +40,7 @@ NSString const * kRewardPictureKey = @"picture";
  end
  */
 
-@interface ApplifierImpactCampaignManager () <NSURLConnectionDelegate>
+@interface ApplifierImpactCampaignManager () <NSURLConnectionDelegate, ApplifierImpactCacheDelegate>
 @property (nonatomic, strong) NSURLConnection *urlConnection;
 @property (nonatomic, strong) NSMutableData *campaignDownloadData;
 @property (nonatomic, strong) ApplifierImpactCache *cache;
@@ -216,6 +216,7 @@ NSString const * kRewardPictureKey = @"picture";
 	if ((self = [super init]))
 	{
 		_cache = [[ApplifierImpactCache alloc] init];
+		_cache.delegate = self;
 	}
 	
 	return self;
@@ -225,6 +226,11 @@ NSString const * kRewardPictureKey = @"picture";
 {
 	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:kApplifierImpactTestBackendURL]];
 	self.urlConnection = [NSURLConnection connectionWithRequest:request delegate:self];
+}
+
+- (void)dealloc
+{
+	self.cache.delegate = nil;
 }
 
 #pragma mark - NSURLConnectionDelegate
@@ -245,6 +251,16 @@ NSString const * kRewardPictureKey = @"picture";
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
 	NSLog(@"didFailWithError: %@", error);
+}
+
+#pragma mark - ApplifierImpactCacheDelegate
+
+- (void)cache:(ApplifierImpactCache *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign
+{
+}
+
+- (void)cacheFinishedCachingCampaigns:(ApplifierImpactCache *)cache
+{
 }
 
 @end

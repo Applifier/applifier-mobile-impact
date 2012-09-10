@@ -21,6 +21,7 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 
 @implementation ApplifierImpactCache
 
+@synthesize delegate = _delegate;
 @synthesize fileHandle = _fileHandle;
 @synthesize downloadQueue = _downloadQueue;
 @synthesize currentDownload = _currentDownload;
@@ -112,8 +113,19 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 		ApplifierImpactCampaign *campaign = [self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey];
 		[self _queueCampaignDownload:campaign];
 	}
+	else
+	{
+		if ([self.delegate respondsToSelector:@selector(cache:finishedCachingCampaign:)])
+			[self.delegate cache:self finishedCachingCampaign:[self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey]];
+	}
 	
 	self.currentDownload = nil;
+	
+	if ([self.downloadQueue count] == 0)
+	{
+		if ([self.delegate respondsToSelector:@selector(cacheFinishedCachingCampaigns:)])
+			[self.delegate cacheFinishedCachingCampaigns:self];
+	}
 	
 	[self _startDownload];
 }
