@@ -228,8 +228,10 @@ NSString const * kRewardPictureKey = @"picture";
 
 - (void)updateCampaigns
 {
+	self.campaignDownloadData = [NSMutableData data];
 	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:kApplifierImpactTestBackendURL]];
-	self.urlConnection = [NSURLConnection connectionWithRequest:request delegate:self];
+	self.urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+	[self.urlConnection start];
 }
 
 - (void)dealloc
@@ -241,10 +243,7 @@ NSString const * kRewardPictureKey = @"picture";
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-	if (self.campaignDownloadData == nil)
-		self.campaignDownloadData = [NSMutableData dataWithData:data];
-	else
-		[self.campaignDownloadData appendData:data];
+	[self.campaignDownloadData appendData:data];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
