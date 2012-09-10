@@ -9,8 +9,9 @@
 #import "ApplifierImpactViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMedia/CoreMedia.h>
+#import "ApplifierImpact.h"
 
-@interface ApplifierImpactViewController ()
+@interface ApplifierImpactViewController () <ApplifierImpactDelegate>
 @end
 
 @implementation ApplifierImpactViewController
@@ -26,6 +27,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	
+	[[ApplifierImpact sharedInstance] setDelegate:self];
+	
     [self changePhase:1];
     [buttonView addTarget:self action:@selector(nextPhase) forControlEvents:UIControlEventTouchUpInside];
     [self initVideo];
@@ -52,6 +56,9 @@
 
 - (void)nextPhase
 {
+	[[ApplifierImpact sharedInstance] showImpact];
+	
+	return;
     NSLog(@"nextPhase");
     [self changePhase:currentPhase + 1];
 }
@@ -124,6 +131,35 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+}
+
+#pragma mark - ApplifierImpactDelegate
+
+- (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact
+{
+}
+
+- (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact
+{
+}
+
+- (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact
+{
+}
+
+- (void)applifierImpactVideoCompleted:(ApplifierImpact *)applifierImpact
+{
+}
+
+- (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact
+{
+}
+
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact wantsToShowAdView:(UIView *)adView
+{
+	adView.frame = self.view.bounds;
+	
+	[self.view addSubview:adView];
 }
 
 @end
