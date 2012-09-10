@@ -8,7 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
+@class ApplifierImpactCampaignManager;
+@class ApplifierImpactRewardItem;
+
+@protocol ApplifierImpactCampaignManagerDelegate <NSObject>
+
+- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem;
+
+@end
+
 @interface ApplifierImpactCampaignManager : NSObject
+
+@property (nonatomic, assign) id<ApplifierImpactCampaignManagerDelegate> delegate;
 
 - (void)updateCampaigns;
 

@@ -8,13 +8,19 @@
 
 #import "ApplifierImpactiOS4.h"
 #import "ApplifierImpactCampaignManager.h"
+#import "ApplifierImpactCampaign.h"
+#import "ApplifierImpactRewardItem.h"
 
-@interface ApplifierImpact ()
+NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~bluesun/impact/webapp.html";
+
+@interface ApplifierImpactiOS4 () <ApplifierImpactCampaignManagerDelegate, UIWebViewDelegate>
 @property (nonatomic, strong) NSString *applifierID;
 @property (nonatomic, strong) NSThread *backgroundThread;
 @property (nonatomic, strong) ApplifierImpactCampaignManager *campaignManager;
 @property (nonatomic, strong) UIWindow *applifierWindow;
 @property (nonatomic, strong) UIWebView *webView;
+@property (nonatomic, strong) NSArray *campaigns;
+@property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
 @end
 
 @implementation ApplifierImpactiOS4
@@ -47,6 +53,7 @@
 - (void)_startCampaignManager
 {
 	self.campaignManager = [[ApplifierImpactCampaignManager alloc] init];
+	self.campaignManager.delegate = self;
 	[self.campaignManager updateCampaigns];
 }
 
@@ -62,6 +69,12 @@
 	[self.backgroundThread start];
 	
 	[self performSelector:@selector(_startCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+	
+	self.applifierWindow = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	self.webView = [[UIWebView alloc] initWithFrame:self.applifierWindow.bounds];
+	self.webView.delegate = self;
+	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kApplifierImpactTestWebViewURL]]];
+	[self.applifierWindow addSubview:self.webView];
 }
 
 - (BOOL)showImpact
@@ -71,10 +84,50 @@
 
 - (BOOL)hasCampaigns
 {
-	return YES;
+	return ([self.campaigns count] > 0);
 }
 
 - (void)stopAll
+{
+}
+
+- (void)dealloc
+{
+	self.campaignManager.delegate = nil;
+}
+
+#pragma mark - ApplifierImpactCampaignManagerDelegate
+
+- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem
+{
+	if ( ! [NSThread isMainThread])
+	{
+		NSLog(@"Method must be run on main thread.");
+		return;
+	}
+	
+	NSLog(@"updatedWithCampaigns");
+	
+	self.campaigns = campaigns;
+	self.rewardItem = rewardItem;
+}
+
+#pragma mark - UIWebViewDelegate
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+	return YES;
+}
+
+- (void)webViewDidStartLoad:(UIWebView *)webView
+{
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
 }
 
