@@ -96,7 +96,7 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 - (void)_startDownload
 {
 	BOOL downloadStarted = [self _startNextDownloadInQueue];
-	if ( ! downloadStarted && self.currentDownload == nil)
+	if ( ! downloadStarted && self.currentDownload == nil && [self.downloadQueue count] > 0)
 		[self performSelector:@selector(_startDownload) withObject:self afterDelay:3.0];
 }
 
