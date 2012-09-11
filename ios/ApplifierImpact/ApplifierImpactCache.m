@@ -12,11 +12,12 @@
 NSString const * kApplifierImpactCacheCampaignKey = @"kApplifierImpactCacheCampaignKey";
 NSString const * kApplifierImpactCacheConnectionKey = @"kApplifierImpactCacheConnectionKey";
 NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFilePathKey";
+NSString const * kApplifierImpactCacheURLRequestKey = @"kApplifierImpactCacheURLRequestKey";
 
 @interface ApplifierImpactCache () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSFileHandle *fileHandle;
 @property (nonatomic, strong) NSMutableArray *downloadQueue;
-@property (nonatomic, strong) NSDictionary *currentDownload;
+@property (nonatomic, strong) NSMutableDictionary *currentDownload;
 @end
 
 @implementation ApplifierImpactCache
@@ -53,9 +54,11 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 	NSLog(@"Queueing %@, id %@", campaign.trailerDownloadableURL, campaign.id);
 	
 	NSString *filePath = [self _videoPathForCampaign:campaign];
-	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:campaign.trailerDownloadableURL];
-	NSURLConnection *urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
-	NSDictionary *downloadDictionary = @{ kApplifierImpactCacheCampaignKey : campaign, kApplifierImpactCacheConnectionKey : urlConnection, kApplifierImpactCacheFilePathKey : filePath };
+	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:campaign.trailerDownloadableURL];
+	NSMutableDictionary *downloadDictionary = [NSMutableDictionary dictionary];
+	[downloadDictionary setObject:request forKey:kApplifierImpactCacheURLRequestKey];
+	[downloadDictionary setObject:campaign forKey:kApplifierImpactCacheCampaignKey];
+	[downloadDictionary setObject:filePath forKey:kApplifierImpactCacheFilePathKey];
 	[self.downloadQueue addObject:downloadDictionary];
 	[self _startDownload];
 }
@@ -69,10 +72,14 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 	{
 		self.currentDownload = [self.downloadQueue objectAtIndex:0];
 		
+		NSMutableURLRequest *request = [self.currentDownload objectForKey:kApplifierImpactCacheURLRequestKey];
 		NSString *filePath = [self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey];
+		long long rangeStart = 0;
+		
 		if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
 		{
-			NSLog(@"TODO: file exists"); // e.g., resume or what
+			NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+			rangeStart = [attributes fileSize];
 		}
 		else
 		{
@@ -85,9 +92,15 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 		}
 		
 		self.fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
-
-		NSURLConnection *connection = [self.currentDownload objectForKey:kApplifierImpactCacheConnectionKey];
-		[connection start];
+		if (rangeStart > 0)
+		{
+			[self.fileHandle seekToEndOfFile];
+			[request setValue:[NSString stringWithFormat:@"bytes=%qi-", rangeStart] forHTTPHeaderField:@"Range"];
+		}
+		
+		NSURLConnection *urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+		[self.currentDownload setObject:urlConnection forKey:kApplifierImpactCacheConnectionKey];
+		[urlConnection start];
 
 		[self.downloadQueue removeObjectAtIndex:0];
 	}
