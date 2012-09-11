@@ -26,6 +26,8 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 @property (nonatomic, strong) ApplifierImpactCampaign *selectedCampaign;
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, strong) AVPlayerLayer *playerLayer;
+@property (nonatomic, strong) id timeObserver;
+@property (nonatomic, strong) UILabel *progressLabel;
 @end
 
 @implementation ApplifierImpactiOS4
@@ -41,6 +43,8 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 @synthesize selectedCampaign = _selectedCampaign;
 @synthesize player = _player;
 @synthesize playerLayer = _playerLayer;
+@synthesize timeObserver = _timeObserver;
+@synthesize progressLabel = _progressLabel;
 
 #pragma mark - Private
 
@@ -97,9 +101,38 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 		self.adView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 		self.webView.bounds = self.adView.bounds;
 		[self.adView addSubview:self.webView];
+
+		self.progressLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+		self.progressLabel.backgroundColor = [UIColor clearColor];
+		self.progressLabel.textColor = [UIColor whiteColor];
+		self.progressLabel.font = [UIFont systemFontOfSize:12.0];
+		self.progressLabel.textAlignment = UITextAlignmentRight;
+		self.progressLabel.shadowColor = [UIColor blackColor];
+		self.progressLabel.shadowOffset = CGSizeMake(0, 1.0);
+		self.progressLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
+		[self.adView addSubview:self.progressLabel];
 	}
 	
 	return self.adView;
+}
+
+- (void)_updateTimeRemainingLabelWithTime:(CMTime)currentTime
+{
+	CMTime durationTime = self.player.currentItem.asset.duration;
+	Float64 duration = CMTimeGetSeconds(durationTime);
+	Float64 current = CMTimeGetSeconds(currentTime);
+	NSString *descriptionText = [NSString stringWithFormat:NSLocalizedString(@"This video ends in %.0f seconds.", nil), duration - current];
+	self.progressLabel.text = descriptionText;
+}
+
+- (void)_displayProgressLabel
+{
+	CGFloat padding = 10.0;
+	CGFloat height = 30.0;
+	CGRect labelFrame = CGRectMake(padding, self.adView.frame.size.height - height, self.adView.frame.size.width - (padding * 2.0), height);
+	self.progressLabel.frame = labelFrame;
+	self.progressLabel.hidden = NO;
+	[self.adView bringSubviewToFront:self.progressLabel];
 }
 
 - (void)_playVideo
@@ -117,6 +150,14 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 	self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 	self.playerLayer.frame = self.adView.bounds;
 	[self.adView.layer addSublayer:self.playerLayer];
+	
+	[self _displayProgressLabel];
+	
+	__block ApplifierImpactiOS4 *blockSelf = self;
+	self.timeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
+		[blockSelf _updateTimeRemainingLabelWithTime:time];
+	}];
+	
 	[self.player play];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:item];
@@ -129,6 +170,11 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 {
 	if ([self.delegate respondsToSelector:@selector(applifierImpactVideoCompleted:)])
 		[self.delegate applifierImpactVideoCompleted:self];
+	
+	[self.player removeTimeObserver:self.timeObserver];
+	self.timeObserver = nil;
+	
+	self.progressLabel.hidden = YES;
 	
 	[self.playerLayer removeFromSuperlayer];
 	// FIXME: use the actual API
