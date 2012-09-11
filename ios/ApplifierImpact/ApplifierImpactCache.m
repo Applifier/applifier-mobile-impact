@@ -214,7 +214,26 @@ NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-	NSLog(@"didReceiveResponse: %@", response);
+	NSHTTPURLResponse *httpResponse = nil;
+	if ([response isKindOfClass:[NSHTTPURLResponse class]])
+		httpResponse = (NSHTTPURLResponse *)response;
+	
+	NSNumber *contentLength = [[httpResponse allHeaderFields] objectForKey:@"Content-Length"];
+	if (contentLength != nil)
+	{
+		long long size = [contentLength longLongValue];
+		NSDictionary *fsAttributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[self _cachePath] error:nil];
+		if (fsAttributes != nil)
+		{
+			long long freeSpace = [[fsAttributes objectForKey:NSFileSystemFreeSize] longLongValue];
+			if (size > freeSpace)
+			{
+				NSLog(@"Not enough space, canceling download. (%lld needed, %lld free)", size, freeSpace);
+				[connection cancel];
+				[self _downloadFinishedWithFailure:YES];
+			}
+		}
+	}
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
