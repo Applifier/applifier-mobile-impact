@@ -228,7 +228,6 @@ NSString const * kRewardPictureKey = @"picture";
 
 - (void)updateCampaigns
 {
-	self.campaignDownloadData = [NSMutableData data];
 	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:kApplifierImpactTestBackendURL]];
 	self.urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 	[self.urlConnection start];
@@ -250,6 +249,11 @@ NSString const * kRewardPictureKey = @"picture";
 }
 
 #pragma mark - NSURLConnectionDelegate
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+	self.campaignDownloadData = [NSMutableData data];
+}
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
