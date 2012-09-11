@@ -14,6 +14,15 @@
 
 NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~bluesun/impact/webapp.html";
 
+typedef enum
+{
+	kVideoAnalyticsPositionStart = 0,
+	kVideoAnalyticsPositionFirstQuartile,
+	kVideoAnalyticsPositionMidPoint,
+	kVideoAnalyticsPositionThirdQuartile,
+	kVideoAnalyticsPositionEnd,
+} VideoAnalyticsPosition;
+
 @interface ApplifierImpactiOS4 () <ApplifierImpactCampaignManagerDelegate, UIWebViewDelegate>
 @property (nonatomic, strong) NSString *applifierID;
 @property (nonatomic, strong) NSThread *backgroundThread;
@@ -27,7 +36,9 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, strong) AVPlayerLayer *playerLayer;
 @property (nonatomic, strong) id timeObserver;
+@property (nonatomic, strong) id analyticsTimeObserver;
 @property (nonatomic, strong) UILabel *progressLabel;
+@property (nonatomic, assign) VideoAnalyticsPosition videoPosition;
 @end
 
 @implementation ApplifierImpactiOS4
@@ -44,7 +55,9 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 @synthesize player = _player;
 @synthesize playerLayer = _playerLayer;
 @synthesize timeObserver = _timeObserver;
+@synthesize analyticsTimeObserver = _analyticsTimeObserver;
 @synthesize progressLabel = _progressLabel;
+@synthesize videoPosition = _videoPosition;
 
 #pragma mark - Private
 
@@ -116,10 +129,17 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 	return self.adView;
 }
 
-- (void)_updateTimeRemainingLabelWithTime:(CMTime)currentTime
+- (Float64)_currentVideoDuration
 {
 	CMTime durationTime = self.player.currentItem.asset.duration;
 	Float64 duration = CMTimeGetSeconds(durationTime);
+	
+	return duration;
+}
+
+- (void)_updateTimeRemainingLabelWithTime:(CMTime)currentTime
+{
+	Float64 duration = [self _currentVideoDuration];
 	Float64 current = CMTimeGetSeconds(currentTime);
 	NSString *descriptionText = [NSString stringWithFormat:NSLocalizedString(@"This video ends in %.0f seconds.", nil), duration - current];
 	self.progressLabel.text = descriptionText;
@@ -133,6 +153,28 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 	self.progressLabel.frame = labelFrame;
 	self.progressLabel.hidden = NO;
 	[self.adView bringSubviewToFront:self.progressLabel];
+}
+
+- (NSValue *)_valueWithDuration:(Float64)duration
+{
+	CMTime time = CMTimeMakeWithSeconds(duration, NSEC_PER_SEC);
+	return [NSValue valueWithCMTime:time];
+}
+
+- (void)_logVideoAnalytics
+{
+	self.videoPosition++;
+	NSString *positionString = nil;
+	if (self.videoPosition == kVideoAnalyticsPositionStart)
+		positionString = @"start";
+	else if (self.videoPosition == kVideoAnalyticsPositionFirstQuartile)
+		positionString = @"first_quartile";
+	else if (self.videoPosition == kVideoAnalyticsPositionMidPoint)
+		positionString = @"mid_point";
+	else if (self.videoPosition == kVideoAnalyticsPositionThirdQuartile)
+		positionString = @"third_quartile";
+	
+	NSLog(@"TODO ViewReport: %@", positionString);
 }
 
 - (void)_playVideo
@@ -158,7 +200,19 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 		[blockSelf _updateTimeRemainingLabelWithTime:time];
 	}];
 	
+	self.videoPosition = -1;
+	Float64 duration = [self _currentVideoDuration];
+	NSMutableArray *analyticsTimeValues = [NSMutableArray array];
+	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .25]];
+	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .5]];
+	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .75]];
+	self.analyticsTimeObserver = [self.player addBoundaryTimeObserverForTimes:analyticsTimeValues queue:nil usingBlock:^{
+		[blockSelf _logVideoAnalytics];
+	}];
+	
 	[self.player play];
+	
+	[self _logVideoAnalytics];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:item];
 	
@@ -173,6 +227,8 @@ NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~b
 	
 	[self.player removeTimeObserver:self.timeObserver];
 	self.timeObserver = nil;
+	[self.player removeTimeObserver:self.analyticsTimeObserver];
+	self.analyticsTimeObserver = nil;
 	
 	self.progressLabel.hidden = YES;
 	
