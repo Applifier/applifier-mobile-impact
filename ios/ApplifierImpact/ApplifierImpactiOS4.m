@@ -173,6 +173,8 @@ typedef enum
 		positionString = @"mid_point";
 	else if (self.videoPosition == kVideoAnalyticsPositionThirdQuartile)
 		positionString = @"third_quartile";
+	else if (self.videoPosition == kVideoAnalyticsPositionEnd)
+		positionString = @"end";
 	
 	NSLog(@"TODO ViewReport: %@", positionString);
 }
@@ -224,6 +226,8 @@ typedef enum
 {
 	if ([self.delegate respondsToSelector:@selector(applifierImpactVideoCompleted:)])
 		[self.delegate applifierImpactVideoCompleted:self];
+
+	[self _logVideoAnalytics];
 	
 	[self.player removeTimeObserver:self.timeObserver];
 	self.timeObserver = nil;
