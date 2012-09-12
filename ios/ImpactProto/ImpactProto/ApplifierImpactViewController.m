@@ -48,26 +48,33 @@
 
 - (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact
 {
+	NSLog(@"applifierImpactWillOpen");
 }
 
 - (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact
 {
+	NSLog(@"applifierImpactWillClose");
 }
 
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact
 {
+	NSLog(@"applifierImpactVideoStarted");
 }
 
 - (void)applifierImpactVideoCompleted:(ApplifierImpact *)applifierImpact
 {
+	NSLog(@"applifierImpactVideoCompleted");
 }
 
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact
 {
+	NSLog(@"applifierImpactCampaignsAreAvailable");
 }
 
 - (void)applifierImpact:(ApplifierImpact *)applifierImpact wantsToShowAdView:(UIView *)adView
 {
+	NSLog(@"wantsToShowAdView");
+	
 	adView.frame = self.view.bounds;
 	
 	[self.view addSubview:adView];
