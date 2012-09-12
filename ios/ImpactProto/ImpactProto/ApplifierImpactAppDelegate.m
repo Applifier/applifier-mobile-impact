@@ -11,7 +11,7 @@
 #import "ApplifierImpactViewController.h"
 #import "ApplifierImpact.h"
 
-@interface ApplifierImpactAppDelegate () <ApplifierImpactDelegate>
+@interface ApplifierImpactAppDelegate ()
 @end
 
 @implementation ApplifierImpactAppDelegate
