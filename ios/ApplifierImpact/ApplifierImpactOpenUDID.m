@@ -148,22 +148,19 @@ static int const kOpenUDIDRedundancySlots = 100;
 
 
 #if TARGET_OS_IPHONE
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0"))
+	// note from johan @ MK&C: replaced the original call with this to avoid a warning on Xcode 4.4
+	SEL advertisingSelector = NSSelectorFromString(@"identifierForAdvertising");
+	SEL uuidStringSelector = NSSelectorFromString(@"UUIDString");
+	if ([[UIDevice currentDevice] respondsToSelector:advertisingSelector])
 	{
-		// note from johan @ MK&C: replaced the original call with this to avoid a warning on Xcode 4.4
-		SEL advertisingSelector = NSSelectorFromString(@"identifierForAdvertising");
-		SEL uuidStringSelector = NSSelectorFromString(@"UUIDString");
-		if ([[UIDevice currentDevice] respondsToSelector:advertisingSelector])
+		id advertisingIdentifier = [[UIDevice currentDevice] performSelector:advertisingSelector];
+		if (advertisingIdentifier != nil && [advertisingIdentifier respondsToSelector:uuidStringSelector])
 		{
-			id advertisingIdentifier = [[UIDevice currentDevice] performSelector:advertisingSelector];
-			if (advertisingIdentifier != nil && [advertisingIdentifier respondsToSelector:uuidStringSelector])
-			{
-				id uuid = [advertisingIdentifier performSelector:uuidStringSelector];
-				if ([uuid isKindOfClass:[NSString class]])
-					_openUDID = uuid;
-			}
+			id uuid = [advertisingIdentifier performSelector:uuidStringSelector];
+			if ([uuid isKindOfClass:[NSString class]])
+				_openUDID = uuid;
 		}
-    }
+	}
 #endif
     
     
