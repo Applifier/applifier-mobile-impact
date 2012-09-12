@@ -238,6 +238,15 @@ typedef enum
 	[self.webView stringByEvaluatingJavaScriptFromString:@"document.getElementById('videoCompleted').style.display = 'block';"];
 }
 
+- (void)_closeAdView
+{
+	if ([self.delegate respondsToSelector:@selector(applifierImpactWillClose:)])
+		[self.delegate applifierImpactWillClose:self];
+
+	[self.applifierWindow addSubview:self.webView];
+	[self.adView removeFromSuperview];
+}
+
 #pragma mark - Public
 
 - (void)startWithApplifierID:(NSString *)applifierID
