@@ -243,6 +243,14 @@ NSString const * kRewardPictureKey = @"picture";
 	}
 }
 
+- (void)cancelAllDownloads
+{
+	[self.urlConnection cancel];
+	self.urlConnection = nil;
+	
+	[self.cache cancelAllDownloads];
+}
+
 - (void)dealloc
 {
 	self.cache.delegate = nil;

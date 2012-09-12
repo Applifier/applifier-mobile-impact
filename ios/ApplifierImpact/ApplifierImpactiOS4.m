@@ -289,6 +289,7 @@ typedef enum
 
 - (void)stopAll
 {
+	[self.campaignManager performSelector:@selector(cancelAllDownloads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 }
 
 - (void)dealloc

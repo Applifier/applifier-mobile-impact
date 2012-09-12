@@ -223,6 +223,20 @@ NSString const * kApplifierImpactCacheURLRequestKey = @"kApplifierImpactCacheURL
 	return [NSURL fileURLWithPath:path];
 }
 
+- (void)cancelAllDownloads
+{
+	if (self.currentDownload != nil)
+	{
+		NSURLConnection *connection = [self.currentDownload objectForKey:kApplifierImpactCacheConnectionKey];
+		[connection cancel];
+		[self.fileHandle closeFile];
+		self.fileHandle = nil;
+		self.currentDownload = nil;
+	}
+	
+	[self.downloadQueue removeAllObjects];
+}
+
 #pragma mark - NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response

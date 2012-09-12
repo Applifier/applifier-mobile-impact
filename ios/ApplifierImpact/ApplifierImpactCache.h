@@ -24,5 +24,6 @@
 
 - (void)cacheCampaigns:(NSArray *)campaigns;
 - (NSURL *)localVideoURLForCampaign:(ApplifierImpactCampaign *)campaign;
+- (void)cancelAllDownloads;
 
 @end
