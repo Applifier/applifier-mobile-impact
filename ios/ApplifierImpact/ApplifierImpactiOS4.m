@@ -212,12 +212,12 @@ typedef enum
 	
 	[self.player play];
 	
-	[self _logVideoAnalytics];
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:item];
 	
 	if ([self.delegate respondsToSelector:@selector(applifierImpactVideoStarted:)])
 		[self.delegate applifierImpactVideoStarted:self];
+
+	[self _logVideoAnalytics];
 }
 
 - (void)_videoPlaybackEnded:(NSNotification *)notification
