@@ -11,6 +11,10 @@
 #import "ApplifierImpactCampaignManager.h"
 #import "ApplifierImpactCampaign.h"
 #import "ApplifierImpactRewardItem.h"
+#include <sys/socket.h>
+#include <sys/sysctl.h>
+#include <net/if.h>
+#include <net/if_dl.h>
 
 NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~bluesun/impact/webapp.html";
 
@@ -60,6 +64,70 @@ typedef enum
 @synthesize videoPosition = _videoPosition;
 
 #pragma mark - Private
+
+- (NSString *)_macAddress
+{
+	NSString *interface = @"en0";
+	int mgmtInfoBase[6];
+	char *msgBuffer = NULL;
+	
+	// Setup the management Information Base (mib)
+	mgmtInfoBase[0] = CTL_NET; // Request network subsystem
+	mgmtInfoBase[1] = AF_ROUTE; // Routing table info
+	mgmtInfoBase[2] = 0;
+	mgmtInfoBase[3] = AF_LINK; // Request link layer information
+	mgmtInfoBase[4] = NET_RT_IFLIST; // Request all configured interfaces
+	
+	// With all configured interfaces requested, get handle index
+	if ((mgmtInfoBase[5] = if_nametoindex([interface UTF8String])) == 0)
+	{
+		NSLog(@"Couldn't get MAC address for interface '%@', if_nametoindex failed.", interface);
+		return nil;
+	}
+	
+	size_t length;
+	
+	// Get the size of the data available (store in len)
+	if (sysctl(mgmtInfoBase, 6, NULL, &length, NULL, 0) < 0)
+	{
+		NSLog(@"Couldn't get MAC address for interface '%@', sysctl for mgmtInfoBase length failed.", interface);
+		return nil;
+	}
+	
+	// Alloc memory based on above call
+	if ((msgBuffer = malloc(length)) == NULL)
+	{
+		NSLog(@"Couldn't get MAC address for interface '%@', malloc for %zd bytes failed.", interface, length);
+		return nil;
+	}
+	
+	// Get system information, store in buffer
+	if (sysctl(mgmtInfoBase, 6, msgBuffer, &length, NULL, 0) < 0)
+	{
+		free(msgBuffer);
+		
+		NSLog(@"Couldn't get MAC address for interface '%@', sysctl for mgmtInfoBase data failed.", interface);
+		return nil;
+	}
+	
+	// Map msgbuffer to interface message structure
+	struct if_msghdr *interfaceMsgStruct = (struct if_msghdr *) msgBuffer;
+	
+	// Map to link-level socket structure
+	struct sockaddr_dl *socketStruct = (struct sockaddr_dl *) (interfaceMsgStruct + 1);
+	
+	// Copy link layer address data in socket structure to an array
+	unsigned char macAddress[6];
+	memcpy(&macAddress, socketStruct->sdl_data + socketStruct->sdl_nlen, 6);
+	
+	// Read from char array into a string object, into MAC address format
+	NSString *macAddressString = [NSString stringWithFormat:@"%02X:%02X:%02X:%02X:%02X:%02X", macAddress[0], macAddress[1], macAddress[2], macAddress[3], macAddress[4], macAddress[5]];
+	
+	// Release the buffer memory
+	free(msgBuffer);
+	
+	return macAddressString;
+}
 
 - (void)_backgroundRunLoop:(id)dummy
 {
@@ -265,6 +333,8 @@ typedef enum
 	[self performSelector:@selector(_startCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 
 	[self _configureWebView];
+	
+	NSLog(@"%@", [self _macAddress]);
 }
 
 - (BOOL)showImpact
