@@ -248,7 +248,11 @@ NSString const * kRewardPictureKey = @"picture";
 	
 	@synchronized (self)
 	{
-		return [self.cache localVideoURLForCampaign:campaign];
+		NSURL *videoURL = [self.cache localVideoURLForCampaign:campaign];
+		if (videoURL == nil)
+			videoURL = campaign.trailerStreamingURL;
+
+		return videoURL;
 	}
 }
 
