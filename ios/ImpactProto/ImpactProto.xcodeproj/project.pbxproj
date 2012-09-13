@@ -28,6 +28,7 @@
 		9038E5B115F76EA3009E17BB /* ApplifierImpactSBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 9038E5AE15F76EA3009E17BB /* ApplifierImpactSBJsonBase.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9038E5B215F76EA3009E17BB /* ApplifierImpactSBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 9038E5B015F76EA3009E17BB /* ApplifierImpactSBJsonParser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		90A3797916009F5F00B4035F /* ApplifierImpactOpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = 90A3797816009F5F00B4035F /* ApplifierImpactOpenUDID.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		90B1F7DC1601AC900080A74C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 90B1F7DB1601AC900080A74C /* Default-568h@2x.png */; };
 		F67203E815F6142A00807527 /* ApplifierImpact.m in Sources */ = {isa = PBXBuildFile; fileRef = F67203E715F6142A00807527 /* ApplifierImpact.m */; };
 		F67A4F0815F62EA500653CF2 /* ApplifierImpactiOS4.m in Sources */ = {isa = PBXBuildFile; fileRef = F67A4F0715F62EA500653CF2 /* ApplifierImpactiOS4.m */; };
 		F684EDF915F8CDC2004F1C78 /* ApplifierImpactCampaign.m in Sources */ = {isa = PBXBuildFile; fileRef = F684EDF815F8CDC2004F1C78 /* ApplifierImpactCampaign.m */; };
@@ -66,6 +67,7 @@
 		9038E5B015F76EA3009E17BB /* ApplifierImpactSBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonParser.m; sourceTree = "<group>"; };
 		90A3797716009F5F00B4035F /* ApplifierImpactOpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactOpenUDID.h; sourceTree = "<group>"; };
 		90A3797816009F5F00B4035F /* ApplifierImpactOpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactOpenUDID.m; sourceTree = "<group>"; };
+		90B1F7DB1601AC900080A74C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		F67203E615F6142A00807527 /* ApplifierImpact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpact.h; sourceTree = "<group>"; };
 		F67203E715F6142A00807527 /* ApplifierImpact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpact.m; sourceTree = "<group>"; };
 		F67A4F0615F62EA500653CF2 /* ApplifierImpactiOS4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactiOS4.h; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 		78ED795415C66FC6007C5BD5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				90B1F7DB1601AC900080A74C /* Default-568h@2x.png */,
 				78ED795515C66FC6007C5BD5 /* ImpactProto-Info.plist */,
 				78ED795615C66FC6007C5BD5 /* InfoPlist.strings */,
 				78ED795915C66FC6007C5BD5 /* main.m */,
@@ -267,6 +270,7 @@
 				78CC133215D3BD4E00972EA6 /* hayday_watchvideo.png in Resources */,
 				78CC133815D3D84A00972EA6 /* icon_57.png in Resources */,
 				78CC133A15D3D85400972EA6 /* icon_114.png in Resources */,
+				90B1F7DC1601AC900080A74C /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
