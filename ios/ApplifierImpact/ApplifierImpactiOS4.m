@@ -20,7 +20,8 @@
 #import "ApplifierImpactOpenUDID.h"
 #import "ApplifierImpactAnalyticsUploader.h"
 
-NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~bluesun/impact/webapp.html";
+// FIXME: this is (obviously) NOT the final URL!
+NSString * const kApplifierImpactTestWebViewURL = @"https://dl.dropbox.com/u/16969980/protos/impact-mobile-proto/index.html";
 
 typedef enum
 {
