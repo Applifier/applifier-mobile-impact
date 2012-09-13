@@ -190,10 +190,6 @@ typedef enum
 		return;
 	
 	self.selectedCampaign = campaign;
-	
-	NSString *js = [NSString stringWithFormat:@"selectCampaign(%@);", campaign.id];
-	
-	[self.webView stringByEvaluatingJavaScriptFromString:js];
 }
 
 - (void)_configureWebView
@@ -429,8 +425,6 @@ typedef enum
 	
 	if ([self.delegate respondsToSelector:@selector(applifierImpactCampaignsAreAvailable:)])
 		[self.delegate applifierImpactCampaignsAreAvailable:self];
-	
-	[self _selectCampaign:[self.campaigns lastObject]];
 }
 
 #pragma mark - UIWebViewDelegate
