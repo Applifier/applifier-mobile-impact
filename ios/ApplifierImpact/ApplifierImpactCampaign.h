@@ -10,7 +10,7 @@
 
 @interface ApplifierImpactCampaign : NSObject
 
-@property (nonatomic, strong) NSURL *appIconURL;
+@property (nonatomic, strong) NSURL *endScreenURL;
 @property (nonatomic, strong) NSURL *clickURL;
 @property (nonatomic, strong) NSURL *pictureURL;
 @property (nonatomic, strong) NSURL *trailerDownloadableURL;
@@ -18,5 +18,6 @@
 @property (nonatomic, strong) NSString *gameID;
 @property (nonatomic, strong) NSString *gameName;
 @property (nonatomic, strong) NSString *id;
+@property (nonatomic, strong) NSString *tagline;
 
 @end

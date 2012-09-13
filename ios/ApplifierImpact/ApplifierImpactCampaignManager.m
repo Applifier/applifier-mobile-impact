@@ -14,7 +14,7 @@
 
 NSString * const kApplifierImpactTestBackendURL = @"https://impact.applifier.com/campaigns/mobile";
 
-NSString const * kCampaignAppIconKey = @"appIcon";
+NSString const * kCampaignEndScreenKey = @"endScreen";
 NSString const * kCampaignClickURLKey = @"clickUrl";
 NSString const * kCampaignPictureKey = @"picture";
 NSString const * kCampaignTrailerDownloadableKey = @"trailerDownloadable";
@@ -22,6 +22,7 @@ NSString const * kCampaignTrailerStreamingKey = @"trailerStreaming";
 NSString const * kCampaignGameIDKey = @"gameId";
 NSString const * kCampaignGameNameKey = @"gameName";
 NSString const * kCampaignIDKey = @"id";
+NSString const * kCampaignTaglineKey = @"tagline";
 
 NSString const * kRewardItemKey = @"itemKey";
 NSString const * kRewardNameKey = @"name";
@@ -82,13 +83,13 @@ NSString const * kRewardPictureKey = @"picture";
 		if ([campaignDictionary isKindOfClass:[NSDictionary class]])
 		{
 			ApplifierImpactCampaign *campaign = [[ApplifierImpactCampaign alloc] init];
-			NSURL *appIconURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignAppIconKey]];
-			if (appIconURL == nil)
+			NSURL *endScreenURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignEndScreenKey]];
+			if (endScreenURL == nil)
 			{
-				NSLog(@"Campaign app icon URL is empty or invalid. %@", campaignDictionary);
+				NSLog(@"Campaign end screen URL is empty or invalid. %@", campaignDictionary);
 				return nil;
 			}
-			campaign.appIconURL = appIconURL;
+			campaign.endScreenURL = endScreenURL;
 			
 			NSURL *clickURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignClickURLKey]];
 			if (clickURL == nil)
@@ -145,6 +146,14 @@ NSString const * kRewardPictureKey = @"picture";
 				return nil;
 			}
 			campaign.id = id;
+			
+			NSString *tagline = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignTaglineKey]];
+			if (tagline == nil || [tagline length] == 0)
+			{
+				NSLog(@"Campaign tagline is empty or invalid. %@", campaignDictionary);
+				return nil;
+			}
+			campaign.tagline = tagline;
 			
 			[campaigns addObject:campaign];
 		}
