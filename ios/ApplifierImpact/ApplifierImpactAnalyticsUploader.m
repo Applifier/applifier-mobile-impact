@@ -12,6 +12,7 @@
 NSString * const kApplifierImpactTestAnalyticsURL = @"http://quake.everyplay.fi/~bluesun/impact/manifest.json";
 NSString * const kApplifierImpactAnalyticsUploaderRequestKey = @"kApplifierImpactAnalyticsUploaderRequestKey";
 NSString * const kApplifierImpactAnalyticsUploaderConnectionKey = @"kApplifierImpactAnalyticsUploaderConnectionKey";
+NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAnalyticsSavedUploadsKey";
 
 @interface ApplifierImpactAnalyticsUploader () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSMutableArray *uploadQueue;
@@ -27,7 +28,17 @@ NSString * const kApplifierImpactAnalyticsUploaderConnectionKey = @"kApplifierIm
 
 - (void)_saveFailedUpload:(NSDictionary *)download
 {
-	NSLog(@"TODO");
+	NSMutableArray *existingFailedUploads = [[[NSUserDefaults standardUserDefaults] arrayForKey:kApplifierImpactAnalyticsSavedUploadsKey] mutableCopy];
+	
+	if (existingFailedUploads == nil)
+		existingFailedUploads = [NSMutableArray array];
+	
+	NSURLRequest *request = [download objectForKey:kApplifierImpactAnalyticsUploaderRequestKey];
+	NSString *urlString = [[request URL] absoluteString];
+	[existingFailedUploads addObject:urlString];
+	NSLog(@"%@", existingFailedUploads);
+	[[NSUserDefaults standardUserDefaults] setObject:existingFailedUploads forKey:kApplifierImpactAnalyticsSavedUploadsKey];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (BOOL)_startNextUpload
@@ -62,6 +73,25 @@ NSString * const kApplifierImpactAnalyticsUploaderConnectionKey = @"kApplifierIm
 	return self;
 }
 
+- (void)_queueURL:(NSURL *)url
+{
+	NSURLRequest *request = [NSURLRequest requestWithURL:url];
+	if (request == nil)
+	{
+		NSLog(@"Request could not be created.");
+		return;
+	}
+	
+	NSLog(@"queueing %@", url);
+	
+	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+	NSDictionary *uploadDictionary = @{ kApplifierImpactAnalyticsUploaderRequestKey : request, kApplifierImpactAnalyticsUploaderConnectionKey : connection };
+	[self.uploadQueue addObject:uploadDictionary];
+	
+	if ([self.uploadQueue count] == 1)
+		[self _startNextUpload];
+}
+
 - (void)sendViewReportForCampaign:(ApplifierImpactCampaign *)campaign positionString:(NSString *)positionString
 {
 	if ([NSThread isMainThread])
@@ -71,13 +101,7 @@ NSString * const kApplifierImpactAnalyticsUploaderConnectionKey = @"kApplifierIm
 	}
 	
 	NSString *urlString = [kApplifierImpactTestAnalyticsURL stringByAppendingFormat:@"?d={\"did\":\"%@\",\"c\":\"%@\",\"pos\":\"%@\"}", @"test", campaign.id, positionString];
-	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
-	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
-	NSDictionary *uploadDictionary = @{ kApplifierImpactAnalyticsUploaderRequestKey : request, kApplifierImpactAnalyticsUploaderConnectionKey : connection };
-	[self.uploadQueue addObject:uploadDictionary];
-	
-	if ([self.uploadQueue count] == 1)
-		[self _startNextUpload];
+	[self _queueURL:[NSURL URLWithString:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 }
 
 - (void)retryFailedUploads
@@ -88,7 +112,20 @@ NSString * const kApplifierImpactAnalyticsUploaderConnectionKey = @"kApplifierIm
 		return;
 	}
 
-	NSLog(@"TODO");
+	NSArray *uploads = [[NSUserDefaults standardUserDefaults] arrayForKey:kApplifierImpactAnalyticsSavedUploadsKey];
+	if (uploads != nil)
+	{
+		for (NSString *url in uploads)
+		{
+			if ([url isKindOfClass:[NSString class]])
+			{
+				[self _queueURL:[NSURL URLWithString:url]];
+			}
+		}
+		
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:kApplifierImpactAnalyticsSavedUploadsKey];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+	}
 }
 
 #pragma mark - NSURLConnectionDelegate
