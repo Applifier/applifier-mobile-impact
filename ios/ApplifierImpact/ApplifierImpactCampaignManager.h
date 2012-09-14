@@ -21,6 +21,7 @@
 @interface ApplifierImpactCampaignManager : NSObject
 
 @property (nonatomic, assign) id<ApplifierImpactCampaignManagerDelegate> delegate;
+@property (nonatomic, strong, readonly) NSString *campaignJSON;
 
 - (void)updateCampaigns;
 - (NSURL *)videoURLForCampaign:(ApplifierImpactCampaign *)campaign;

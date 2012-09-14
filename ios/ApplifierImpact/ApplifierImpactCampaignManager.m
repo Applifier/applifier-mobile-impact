@@ -46,6 +46,7 @@ NSString const * kRewardPictureKey = @"picture";
 @property (nonatomic, strong) ApplifierImpactCache *cache;
 @property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
+@property (nonatomic, strong) NSString *campaignJSON;
 @end
 
 @implementation ApplifierImpactCampaignManager
@@ -56,6 +57,7 @@ NSString const * kRewardPictureKey = @"picture";
 @synthesize cache = _cache;
 @synthesize campaigns = _campaigns;
 @synthesize rewardItem = _rewardItem;
+@synthesize campaignJSON = _campaignJSON;
 
 #pragma mark - Private
 
@@ -70,6 +72,8 @@ NSString const * kRewardPictureKey = @"picture";
 		NSLog(@"-JSONValue failed. Error is: %@", error);
 		NSLog(@"String value: %@", jsonString);
 	}
+	
+	self.campaignJSON = jsonString;
 	
 	return repr;
 }
@@ -262,6 +266,14 @@ NSString const * kRewardPictureKey = @"picture";
 	self.urlConnection = nil;
 	
 	[self.cache cancelAllDownloads];
+}
+
+- (NSString *)campaignJSON
+{
+	@synchronized (self)
+	{
+		return _campaignJSON;
+	}
 }
 
 - (void)dealloc
