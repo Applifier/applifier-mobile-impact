@@ -148,21 +148,23 @@ static int const kOpenUDIDRedundancySlots = 100;
 
 
 #if TARGET_OS_IPHONE
-	// note from johan @ MK&C: replaced the original call with this to avoid a warning on Xcode 4.4
-	SEL advertisingSelector = NSSelectorFromString(@"identifierForAdvertising");
-	SEL uuidStringSelector = NSSelectorFromString(@"UUIDString");
-	if ([[UIDevice currentDevice] respondsToSelector:advertisingSelector])
+	Class advertisingManagerClass = NSClassFromString(@"ASIdentifierManager");
+	if ([advertisingManagerClass respondsToSelector:@selector(sharedManager)])
 	{
-		id advertisingIdentifier = [[UIDevice currentDevice] performSelector:advertisingSelector];
-		if (advertisingIdentifier != nil && [advertisingIdentifier respondsToSelector:uuidStringSelector])
+		id advertisingManager = [[advertisingManagerClass class] performSelector:@selector(sharedManager)];
+		if ([advertisingManager respondsToSelector:@selector(advertisingIdentifier)])
 		{
-			id uuid = [advertisingIdentifier performSelector:uuidStringSelector];
-			if ([uuid isKindOfClass:[NSString class]])
-				_openUDID = uuid;
+			id advertisingIdentifier = [advertisingManager performSelector:@selector(advertisingIdentifier)];
+			SEL uuidStringSelector = NSSelectorFromString(@"UUIDString");
+			if (advertisingIdentifier != nil && [advertisingIdentifier respondsToSelector:uuidStringSelector])
+			{
+				id uuid = [advertisingIdentifier performSelector:uuidStringSelector];
+				if ([uuid isKindOfClass:[NSString class]])
+					_openUDID = uuid;
+			}
 		}
 	}
 #endif
-    
     
     // Next we generate a UUID.
     // UUIDs (Universally Unique Identifiers), also known as GUIDs (Globally Unique Identifiers) or IIDs
