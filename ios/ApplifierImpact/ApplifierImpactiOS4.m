@@ -354,9 +354,8 @@ typedef enum
 	self.progressLabel.hidden = YES;
 	
 	[self.playerLayer removeFromSuperlayer];
-	// FIXME: use the actual API
-	[self.webView stringByEvaluatingJavaScriptFromString:@"document.getElementById('videoStart').style.display = 'none';"];
-	[self.webView stringByEvaluatingJavaScriptFromString:@"document.getElementById('videoCompleted').style.display = 'block';"];
+
+	[self _webViewVideoComplete];
 }
 
 - (void)_closeAdView
@@ -372,6 +371,32 @@ typedef enum
 {
 	self.analyticsUploader = [[ApplifierImpactAnalyticsUploader alloc] init];
 	[self.analyticsUploader retryFailedUploads];
+}
+
+- (void)_webViewInit
+{
+	NSString *json = self.campaignManager.campaignJSON;
+	if (json == nil)
+	{
+		NSLog(@"JSON has not been loaded yet.");
+		return;
+	}
+	
+	NSString *js = [NSString stringWithFormat:@"impactInit(%@, %@, %@);", json, [self _md5OpenUDIDString], [self _md5MACAddressString]];
+	
+	[self.webView stringByEvaluatingJavaScriptFromString:js];
+}
+
+- (void)_webViewShow
+{
+	[self.webView stringByEvaluatingJavaScriptFromString:@"impactShow();"];
+}
+
+- (void)_webViewVideoComplete
+{
+	NSString *js = [NSString stringWithFormat:@"impactVideoComplete(%@);", self.selectedCampaign.id];
+	
+	[self.webView stringByEvaluatingJavaScriptFromString:js];
 }
 
 #pragma mark - Public
@@ -399,6 +424,8 @@ typedef enum
 	
 	if ([self.campaigns count] > 0 && self.webViewLoaded && self.webView.superview == self.applifierWindow)
 	{
+		[self _webViewShow];
+		
 		// merge the following two delegate methods?
 		if ([self.delegate respondsToSelector:@selector(applifierImpactWillOpen:)])
 			[self.delegate applifierImpactWillOpen:self];
@@ -442,8 +469,6 @@ typedef enum
 	
 	if ([self.delegate respondsToSelector:@selector(applifierImpactCampaignsAreAvailable:)])
 		[self.delegate applifierImpactCampaignsAreAvailable:self];
-	
-	[self _selectCampaign:[self.campaigns lastObject]];
 }
 
 #pragma mark - UIWebViewDelegate
@@ -470,6 +495,9 @@ typedef enum
 	NSLog(@"web view loaded");
 	
 	self.webViewLoaded = YES;
+	
+	// TODO: add delegate method to CampaignManager to inform that the JSON has finished downloading
+	[self _webViewInit];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
