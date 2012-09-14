@@ -46,7 +46,6 @@ NSString const * kRewardPictureKey = @"picture";
 @property (nonatomic, strong) ApplifierImpactCache *cache;
 @property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
-@property (nonatomic, strong) NSString *campaignJSON;
 @end
 
 @implementation ApplifierImpactCampaignManager
@@ -57,7 +56,6 @@ NSString const * kRewardPictureKey = @"picture";
 @synthesize cache = _cache;
 @synthesize campaigns = _campaigns;
 @synthesize rewardItem = _rewardItem;
-@synthesize campaignJSON = _campaignJSON;
 
 #pragma mark - Private
 
@@ -65,7 +63,7 @@ NSString const * kRewardPictureKey = @"picture";
 {
 	ApplifierImpactSBJsonParser *parser = [[ApplifierImpactSBJsonParser alloc] init];
 	NSError *error = nil;
-	NSString *jsonString = [[NSString alloc] initWithBytes:[data bytes] length:[data length] encoding:NSUTF8StringEncoding];
+	__block NSString *jsonString = [[NSString alloc] initWithBytes:[data bytes] length:[data length] encoding:NSUTF8StringEncoding];
 	id repr = [parser objectWithString:jsonString error:&error];
 	if (repr == nil)
 	{
@@ -73,7 +71,14 @@ NSString const * kRewardPictureKey = @"picture";
 		NSLog(@"String value: %@", jsonString);
 	}
 	
-	self.campaignJSON = jsonString;
+	if ([self.delegate respondsToSelector:@selector(campaignManager:downloadedJSON:)])
+	{
+		__block ApplifierImpactCampaignManager *blockSelf = self;
+		
+		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+			[blockSelf.delegate campaignManager:blockSelf downloadedJSON:jsonString];
+		}];
+	}
 	
 	return repr;
 }
@@ -266,14 +271,6 @@ NSString const * kRewardPictureKey = @"picture";
 	self.urlConnection = nil;
 	
 	[self.cache cancelAllDownloads];
-}
-
-- (NSString *)campaignJSON
-{
-	@synchronized (self)
-	{
-		return _campaignJSON;
-	}
 }
 
 - (void)dealloc

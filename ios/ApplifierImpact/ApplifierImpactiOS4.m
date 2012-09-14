@@ -23,6 +23,13 @@
 // FIXME: this is (obviously) NOT the final URL!
 NSString * const kApplifierImpactTestWebViewURL = @"https://dl.dropbox.com/u/16969980/protos/impact-mobile-proto/index.html";
 
+NSString * const kApplifierImpactWebViewAPINativeInit = @"impactInit";
+NSString * const kApplifierImpactWebViewAPINativeShow = @"impactShow";
+NSString * const kApplifierImpactWebViewAPINativeVideoComplete = @"impactVideoComplete";
+NSString * const kApplifierImpactWebViewAPIPlayVideo = @"playvideo";
+NSString * const kApplifierImpactWebViewAPIClose = @"close";
+NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateto";
+
 typedef enum
 {
 	kVideoAnalyticsPositionStart = 0,
@@ -51,6 +58,8 @@ typedef enum
 @property (nonatomic, assign) VideoAnalyticsPosition videoPosition;
 @property (nonatomic, strong) ApplifierImpactAnalyticsUploader *analyticsUploader;
 @property (nonatomic, assign) BOOL webViewLoaded;
+@property (nonatomic, assign) BOOL webViewInitialized;
+@property (nonatomic, strong) NSString *campaignJSON;
 @end
 
 @implementation ApplifierImpactiOS4
@@ -73,6 +82,8 @@ typedef enum
 @synthesize videoPosition = _videoPosition;
 @synthesize analyticsUploader = _analyticsUploader;
 @synthesize webViewLoaded = _webViewLoaded;
+@synthesize webViewInitialized = _webViewInitialized;
+@synthesize campaignJSON = _campaignJSON;
 
 #pragma mark - Private
 
@@ -186,12 +197,19 @@ typedef enum
 	[self.campaignManager updateCampaigns];
 }
 
-- (void)_selectCampaign:(ApplifierImpactCampaign *)campaign
+- (void)_selectCampaignWithID:(NSString *)campaignID
 {
-	if (campaign == nil)
-		return;
+	for (ApplifierImpactCampaign *campaign in self.campaigns)
+	{
+		if ([campaign.id isEqualToString:campaignID])
+		{
+			self.selectedCampaign = campaign;
+			break;
+		}
+	}
 	
-	self.selectedCampaign = campaign;
+	if (self.selectedCampaign != nil)
+		[self _playVideo];
 }
 
 - (void)_configureWebView
@@ -365,6 +383,8 @@ typedef enum
 
 	[self.applifierWindow addSubview:self.webView];
 	[self.adView removeFromSuperview];
+	
+	self.selectedCampaign = nil;
 }
 
 - (void)_startAnalyticsUploader
@@ -375,16 +395,19 @@ typedef enum
 
 - (void)_webViewInit
 {
-	NSString *json = self.campaignManager.campaignJSON;
-	if (json == nil)
+	if (self.campaignJSON == nil || !self.webViewLoaded)
 	{
-		NSLog(@"JSON has not been loaded yet.");
+		NSLog(@"JSON or web view has not been loaded yet.");
 		return;
 	}
 	
-	NSString *js = [NSString stringWithFormat:@"impactInit(%@, %@, %@);", json, [self _md5OpenUDIDString], [self _md5MACAddressString]];
+	NSLog(@"init");
+	
+	NSString *js = [NSString stringWithFormat:@"impactInit(%@, %@, %@);", self.campaignJSON, [self _md5OpenUDIDString], [self _md5MACAddressString]];
 	
 	[self.webView stringByEvaluatingJavaScriptFromString:js];
+	
+	self.webViewInitialized = YES;
 }
 
 - (void)_webViewShow
@@ -397,6 +420,52 @@ typedef enum
 	NSString *js = [NSString stringWithFormat:@"impactVideoComplete(%@);", self.selectedCampaign.id];
 	
 	[self.webView stringByEvaluatingJavaScriptFromString:js];
+}
+
+- (void)_processWebViewResponseWithHost:(NSString *)host query:(NSString *)query
+{
+	if (host == nil)
+		return;
+	
+	NSString *command = [host lowercaseString];
+	NSArray *queryComponents = nil;
+	if (query != nil)
+		queryComponents = [query componentsSeparatedByString:@"="];
+		
+	if ([command isEqualToString:kApplifierImpactWebViewAPIPlayVideo] || [command isEqualToString:kApplifierImpactWebViewAPINavigateTo])
+	{
+		if (queryComponents == nil)
+		{
+			NSLog(@"No parameters given.");
+			return;
+		}
+		
+		if ([queryComponents count] == 2)
+		{
+			NSString *parameter = [queryComponents objectAtIndex:0];
+			NSString *value = [queryComponents objectAtIndex:1];
+			
+			if ([command isEqualToString:kApplifierImpactWebViewAPIPlayVideo])
+			{
+				if ([parameter isEqualToString:@"campaignID"])
+					[self _selectCampaignWithID:value];
+			}
+			else if ([command isEqualToString:kApplifierImpactWebViewAPINavigateTo])
+			{
+				if ([parameter isEqualToString:@"url"])
+					[self _openURL:value];
+			}
+		}
+	}
+	else if ([command isEqualToString:kApplifierImpactWebViewAPIClose])
+	{
+		[self _closeAdView];
+	}
+}
+
+- (void)_openURL:(NSString *)urlString
+{
+	NSLog(@"_openURL: TODO");
 }
 
 #pragma mark - Public
@@ -471,15 +540,23 @@ typedef enum
 		[self.delegate applifierImpactCampaignsAreAvailable:self];
 }
 
+- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager downloadedJSON:(NSString *)json
+{
+	self.campaignJSON = json;
+	
+	if (self.webViewLoaded)
+		[self _webViewInit];
+}
+
 #pragma mark - UIWebViewDelegate
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-	// FIXME: this is test code
-	NSString *urlString = [[request URL] absoluteString];
-	if ([[urlString substringFromIndex:[urlString length] - 1] isEqualToString:@"#"])
+	NSURL *url = [request URL];
+	if ([[url scheme] isEqualToString:@"applifier-impact"])
 	{
-		[self _playVideo];
+		[self _processWebViewResponseWithHost:[url host] query:[url query]];
+		
 		return NO;
 	}
 	
@@ -492,12 +569,10 @@ typedef enum
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-	NSLog(@"web view loaded");
-	
 	self.webViewLoaded = YES;
 	
-	// TODO: add delegate method to CampaignManager to inform that the JSON has finished downloading
-	[self _webViewInit];
+	if ( ! self.webViewInitialized)
+		[self _webViewInit];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error

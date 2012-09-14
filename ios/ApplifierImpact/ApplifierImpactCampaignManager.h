@@ -15,13 +15,13 @@
 @protocol ApplifierImpactCampaignManagerDelegate <NSObject>
 
 - (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem;
+- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager downloadedJSON:(NSString *)json;
 
 @end
 
 @interface ApplifierImpactCampaignManager : NSObject
 
 @property (nonatomic, assign) id<ApplifierImpactCampaignManagerDelegate> delegate;
-@property (nonatomic, strong, readonly) NSString *campaignJSON;
 
 - (void)updateCampaigns;
 - (NSURL *)videoURLForCampaign:(ApplifierImpactCampaign *)campaign;
