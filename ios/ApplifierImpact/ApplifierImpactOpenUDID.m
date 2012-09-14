@@ -176,13 +176,14 @@ static int const kOpenUDIDRedundancySlots = 100;
     // Collision is possible of course, but unlikely and suitable for most industry needs (e.g. aggregate tracking)
     //
     if (_openUDID==nil) {
-        CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
+		CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
         CFStringRef cfstring = CFUUIDCreateString(kCFAllocatorDefault, uuid);
         const char *cStr = CFStringGetCStringPtr(cfstring,CFStringGetFastestEncoding(cfstring));
         unsigned char result[16];
         CC_MD5( cStr, strlen(cStr), result );
         CFRelease(uuid);
-
+		CFRelease(cfstring);
+		
         _openUDID = [NSString stringWithFormat:
                 @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%08x",
                 result[0], result[1], result[2], result[3], 
