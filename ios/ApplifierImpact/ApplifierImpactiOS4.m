@@ -88,6 +88,59 @@ typedef enum
 
 #pragma mark - Private
 
+- (NSString *)_machineName
+{
+	size_t size;
+    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+    char *answer = malloc(size);
+	sysctlbyname("hw.machine", answer, &size, NULL, 0);
+	NSString *result = [NSString stringWithCString:answer encoding: NSUTF8StringEncoding];
+	free(answer);
+	
+	return result;
+}
+
+- (NSString *)_substringOfString:(NSString *)string toIndex:(NSInteger)index
+{
+	if (index > [string length])
+		return nil;
+	
+	return [string substringToIndex:index];
+}
+
+- (NSString *)_analyticsMachineName
+{
+	NSString *machine = [self _machineName];
+	if ([machine isEqualToString:@"iPhone1,1"])
+		return @"iphone";
+	else if ([machine isEqualToString:@"iPhone1,2"])
+		return @"iphone3g";
+	else if ([machine isEqualToString:@"iPhone2,1"])
+		return @"iphone3gs";
+	else if ([[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone3"])
+		return @"iphone4";
+	else if ([[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone4"])
+		return @"iphone4s";
+	else if ([[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone5"])
+		return @"iphone5";
+	else if ([machine isEqualToString:@"iPod1,1"])
+		return @"ipodtouch1gen";
+	else if ([machine isEqualToString:@"iPod2,1"])
+		return @"ipodtouch2gen";
+	else if ([machine isEqualToString:@"iPod3,1"])
+		return @"ipodtouch3gen";
+	else if ([machine isEqualToString:@"iPod4,1"])
+		return @"ipodtouch4gen";
+	else if ([[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad1"])
+		return @"ipad1";
+	else if ([[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad2"])
+		return @"ipad2";
+	else if ([[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad3"])
+		return @"ipad3";
+    
+	return @"iosUnknown";
+}
+
 - (NSString *)_macAddress
 {
 	NSString *interface = @"en0";
