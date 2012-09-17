@@ -14,19 +14,19 @@
 
 NSString * const kApplifierImpactTestBackendURL = @"https://impact.applifier.com/campaigns/mobile";
 
-NSString const * kCampaignEndScreenKey = @"endScreen";
-NSString const * kCampaignClickURLKey = @"clickUrl";
-NSString const * kCampaignPictureKey = @"picture";
-NSString const * kCampaignTrailerDownloadableKey = @"trailerDownloadable";
-NSString const * kCampaignTrailerStreamingKey = @"trailerStreaming";
-NSString const * kCampaignGameIDKey = @"gameId";
-NSString const * kCampaignGameNameKey = @"gameName";
-NSString const * kCampaignIDKey = @"id";
-NSString const * kCampaignTaglineKey = @"tagline";
+NSString * const kCampaignEndScreenKey = @"endScreen";
+NSString * const kCampaignClickURLKey = @"clickUrl";
+NSString * const kCampaignPictureKey = @"picture";
+NSString * const kCampaignTrailerDownloadableKey = @"trailerDownloadable";
+NSString * const kCampaignTrailerStreamingKey = @"trailerStreaming";
+NSString * const kCampaignGameIDKey = @"gameId";
+NSString * const kCampaignGameNameKey = @"gameName";
+NSString * const kCampaignIDKey = @"id";
+NSString * const kCampaignTaglineKey = @"tagline";
 
-NSString const * kRewardItemKey = @"itemKey";
-NSString const * kRewardNameKey = @"name";
-NSString const * kRewardPictureKey = @"picture";
+NSString * const kRewardItemKey = @"itemKey";
+NSString * const kRewardNameKey = @"name";
+NSString * const kRewardPictureKey = @"picture";
 
 /*
  VideoPlan (for dev / testing purposes)

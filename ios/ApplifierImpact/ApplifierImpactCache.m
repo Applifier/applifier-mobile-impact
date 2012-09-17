@@ -9,10 +9,11 @@
 #import "ApplifierImpactCache.h"
 #import "ApplifierImpactCampaign.h"
 
-NSString const * kApplifierImpactCacheCampaignKey = @"kApplifierImpactCacheCampaignKey";
-NSString const * kApplifierImpactCacheConnectionKey = @"kApplifierImpactCacheConnectionKey";
-NSString const * kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFilePathKey";
-NSString const * kApplifierImpactCacheURLRequestKey = @"kApplifierImpactCacheURLRequestKey";
+NSString * const kApplifierImpactCacheCampaignKey = @"kApplifierImpactCacheCampaignKey";
+NSString * const kApplifierImpactCacheConnectionKey = @"kApplifierImpactCacheConnectionKey";
+NSString * const kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFilePathKey";
+NSString * const kApplifierImpactCacheURLRequestKey = @"kApplifierImpactCacheURLRequestKey";
+NSString * const kApplifierImpactCacheIndexKey = @"kApplifierImpactCacheIndexKey";
 
 @interface ApplifierImpactCache () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSFileHandle *fileHandle;
@@ -157,9 +158,8 @@ NSString const * kApplifierImpactCacheURLRequestKey = @"kApplifierImpactCacheURL
 	}
 	
 	NSString *cachePath = [self _cachePath];
-	NSString *campaignIndexPath = [cachePath stringByAppendingString:@"index.plist"];
-	NSArray *oldIndex = [NSArray arrayWithContentsOfFile:campaignIndexPath];
-	
+	NSArray *oldIndex = [[NSUserDefaults standardUserDefaults] arrayForKey:kApplifierImpactCacheIndexKey];
+
 	NSMutableArray *index = [NSMutableArray array];
 	for (ApplifierImpactCampaign *campaign in campaigns)
 	{
@@ -167,8 +167,8 @@ NSString const * kApplifierImpactCacheURLRequestKey = @"kApplifierImpactCacheURL
 			[index addObject:[campaign.id stringByAppendingString:@".mp4"]];
 	}
 	
-	if ( ! [index writeToFile:campaignIndexPath atomically:YES])
-		NSLog(@"Saving campaign index failed.");
+	[[NSUserDefaults standardUserDefaults] setObject:index forKey:kApplifierImpactCacheIndexKey];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 	for (NSString *oldFile in oldIndex)
 	{
