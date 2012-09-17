@@ -39,9 +39,14 @@ NSString * const kApplifierImpactCacheIndexKey = @"kApplifierImpactCacheIndexKey
 	return [[paths objectAtIndex:0] stringByAppendingString:@"/applifier/"];
 }
 
+- (NSString *)_videoFilenameForCampaign:(ApplifierImpactCampaign *)campaign
+{
+	return [NSString stringWithFormat:@"%@-%@", campaign.id, [campaign.trailerDownloadableURL lastPathComponent]];
+}
+
 - (NSString *)_videoPathForCampaign:(ApplifierImpactCampaign *)campaign
 {
-	return [[self _cachePath] stringByAppendingString:[NSString stringWithFormat:@"%@.mp4", campaign.id]];
+	return [[self _cachePath] stringByAppendingString:[self _videoFilenameForCampaign:campaign]];
 }
 
 - (void)_queueCampaignDownload:(ApplifierImpactCampaign *)campaign;
