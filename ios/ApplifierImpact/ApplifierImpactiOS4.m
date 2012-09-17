@@ -21,7 +21,7 @@
 #import "ApplifierImpactAnalyticsUploader.h"
 
 // FIXME: this is (obviously) NOT the final URL!
-NSString * const kApplifierImpactTestWebViewURL = @"https://dl.dropbox.com/u/16969980/protos/impact-mobile-proto/index.html";
+NSString * const kApplifierImpactTestWebViewURL = @"https://dl.dropbox.com/u/3542608/protos/impact-mobile-proto/index.html";
 
 NSString * const kApplifierImpactWebViewAPINativeInit = @"impactInit";
 NSString * const kApplifierImpactWebViewAPINativeShow = @"impactShow";
