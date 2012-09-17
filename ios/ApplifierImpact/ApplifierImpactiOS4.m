@@ -32,11 +32,12 @@ NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateto";
 
 typedef enum
 {
+	kVideoAnalyticsPositionUnplayed = -1,
 	kVideoAnalyticsPositionStart = 0,
-	kVideoAnalyticsPositionFirstQuartile,
-	kVideoAnalyticsPositionMidPoint,
-	kVideoAnalyticsPositionThirdQuartile,
-	kVideoAnalyticsPositionEnd,
+	kVideoAnalyticsPositionFirstQuartile = 1,
+	kVideoAnalyticsPositionMidPoint = 2,
+	kVideoAnalyticsPositionThirdQuartile = 3,
+	kVideoAnalyticsPositionEnd = 4,
 } VideoAnalyticsPosition;
 
 @interface ApplifierImpactiOS4 () <ApplifierImpactCampaignManagerDelegate, UIWebViewDelegate, UIScrollViewDelegate>
@@ -337,7 +338,7 @@ typedef enum
 		[blockSelf _updateTimeRemainingLabelWithTime:time];
 	}];
 	
-	self.videoPosition = -1;
+	self.videoPosition = kVideoAnalyticsPositionUnplayed;
 	Float64 duration = [self _currentVideoDuration];
 	NSMutableArray *analyticsTimeValues = [NSMutableArray array];
 	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .25]];
