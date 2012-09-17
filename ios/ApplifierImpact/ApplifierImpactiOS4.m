@@ -30,6 +30,8 @@ NSString * const kApplifierImpactWebViewAPIPlayVideo = @"playvideo";
 NSString * const kApplifierImpactWebViewAPIClose = @"close";
 NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateto";
 
+NSString * const kApplifierImpactVersion = @"1.0";
+
 typedef enum
 {
 	kVideoAnalyticsPositionUnplayed = -1,
@@ -225,6 +227,17 @@ typedef enum
 - (NSString *)_md5MACAddressString
 {
 	return [self _md5StringFromString:[self _macAddress]];
+}
+
+- (NSString *)_currentConnectionType
+{
+	// FIXME: find out where to get this
+	return @"TODO";
+}
+
+- (NSString *)_queryString
+{
+	return [NSString stringWithFormat:@"?openUdid=%@&macAddress=%@&iosVersion=%@&device=%@&sdkVersion=%@&gameId=%@&type=ios&connection=%@", [self _md5OpenUDIDString], [self _md5MACAddressString], [[UIDevice currentDevice] systemVersion], [self _analyticsMachineName], kApplifierImpactVersion, self.applifierID, [self _currentConnectionType]];
 }
 
 - (void)_backgroundRunLoop:(id)dummy
