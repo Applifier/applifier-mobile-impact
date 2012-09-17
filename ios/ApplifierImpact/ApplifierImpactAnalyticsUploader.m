@@ -9,7 +9,7 @@
 #import "ApplifierImpactAnalyticsUploader.h"
 #import "ApplifierImpactCampaign.h"
 
-NSString * const kApplifierImpactTestAnalyticsURL = @"http://quake.everyplay.fi/~bluesun/impact/manifest.json";
+NSString * const kApplifierImpactAnalyticsURL = @"http://log.applifier.com/videoads-tracking";
 NSString * const kApplifierImpactAnalyticsUploaderRequestKey = @"kApplifierImpactAnalyticsUploaderRequestKey";
 NSString * const kApplifierImpactAnalyticsUploaderConnectionKey = @"kApplifierImpactAnalyticsUploaderConnectionKey";
 NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAnalyticsSavedUploadsKey";
@@ -100,7 +100,7 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 		return;
 	}
 	
-	NSString *urlString = [kApplifierImpactTestAnalyticsURL stringByAppendingFormat:@"?d={\"did\":\"%@\",\"c\":\"%@\",\"pos\":\"%@\"}", @"test", campaign.id, positionString];
+	NSString *urlString = [kApplifierImpactAnalyticsURL stringByAppendingFormat:@"?d={\"did\":\"%@\",\"c\":\"%@\",\"pos\":\"%@\"}", @"test", campaign.id, positionString];
 	[self _queueURL:[NSURL URLWithString:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 }
 
