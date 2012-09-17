@@ -302,7 +302,7 @@ typedef enum
 	self.videoPosition++;
 	NSString *positionString = nil;
 	if (self.videoPosition == kVideoAnalyticsPositionStart)
-		positionString = @"start";
+		positionString = @"video_start";
 	else if (self.videoPosition == kVideoAnalyticsPositionFirstQuartile)
 		positionString = @"first_quartile";
 	else if (self.videoPosition == kVideoAnalyticsPositionMidPoint)
@@ -310,7 +310,7 @@ typedef enum
 	else if (self.videoPosition == kVideoAnalyticsPositionThirdQuartile)
 		positionString = @"third_quartile";
 	else if (self.videoPosition == kVideoAnalyticsPositionEnd)
-		positionString = @"end";
+		positionString = @"video_end";
 	
 	[self performSelector:@selector(_logPositionString:) onThread:self.analyticsThread withObject:positionString waitUntilDone:NO];
 }
