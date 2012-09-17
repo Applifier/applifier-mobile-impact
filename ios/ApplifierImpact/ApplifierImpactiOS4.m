@@ -474,6 +474,12 @@ typedef enum
 
 - (void)startWithApplifierID:(NSString *)applifierID
 {
+	if ( ! [NSThread isMainThread])
+	{
+		NSLog(@"-startWithApplifierID: must be run on main thread.");
+		return;
+	}
+	
 	if (self.campaignManager != nil)
 		return;
 	
@@ -491,6 +497,12 @@ typedef enum
 
 - (BOOL)showImpact
 {
+	if ( ! [NSThread isMainThread])
+	{
+		NSLog(@"-showImpact must be run on main thread.");
+		return NO;
+	}
+	
 	// FIXME: probably not the best way to accomplish this
 	
 	if ([self.campaigns count] > 0 && self.webViewLoaded && self.webView.superview == self.applifierWindow)
@@ -512,11 +524,23 @@ typedef enum
 
 - (BOOL)hasCampaigns
 {
+	if ( ! [NSThread isMainThread])
+	{
+		NSLog(@"-hasCampaigns must be run on main thread.");
+		return NO;
+	}
+
 	return ([self.campaigns count] > 0);
 }
 
 - (void)stopAll
 {
+	if ( ! [NSThread isMainThread])
+	{
+		NSLog(@"-stopAll must be run on main thread.");
+		return;
+	}
+	
 	[self.campaignManager performSelector:@selector(cancelAllDownloads) onThread:self.cacheThread withObject:nil waitUntilDone:NO];
 }
 

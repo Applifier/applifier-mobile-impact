@@ -235,6 +235,12 @@ NSString * const kRewardPictureKey = @"picture";
 
 - (id)init
 {
+	if ([NSThread isMainThread])
+	{
+		NSLog(@"-init cannot be called from main thread.");
+		return nil;
+	}
+	
 	if ((self = [super init]))
 	{
 		_cache = [[ApplifierImpactCache alloc] init];
@@ -246,6 +252,12 @@ NSString * const kRewardPictureKey = @"picture";
 
 - (void)updateCampaigns
 {
+	if ([NSThread isMainThread])
+	{
+		NSLog(@"-updateCampaigns cannot be called from main thread.");
+		return;
+	}
+	
 	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:kApplifierImpactTestBackendURL]];
 	self.urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 	[self.urlConnection start];
@@ -267,6 +279,12 @@ NSString * const kRewardPictureKey = @"picture";
 
 - (void)cancelAllDownloads
 {
+	if ([NSThread isMainThread])
+	{
+		NSLog(@"-cancelAllDownloads cannot be called from main thread.");
+		return;
+	}
+	
 	[self.urlConnection cancel];
 	self.urlConnection = nil;
 	
