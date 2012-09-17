@@ -63,7 +63,7 @@ NSString const * kRewardPictureKey = @"picture";
 {
 	ApplifierImpactSBJsonParser *parser = [[ApplifierImpactSBJsonParser alloc] init];
 	NSError *error = nil;
-	__block NSString *jsonString = [[NSString alloc] initWithBytes:[data bytes] length:[data length] encoding:NSUTF8StringEncoding];
+	__block NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	id repr = [parser objectWithString:jsonString error:&error];
 	if (repr == nil)
 	{
