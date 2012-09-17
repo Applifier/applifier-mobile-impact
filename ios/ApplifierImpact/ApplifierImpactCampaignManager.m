@@ -12,7 +12,7 @@
 #import "ApplifierImpactRewardItem.h"
 #import "ApplifierImpactCache.h"
 
-NSString * const kApplifierImpactTestBackendURL = @"https://impact.applifier.com/campaigns/mobile";
+NSString * const kApplifierImpactBackendURL = @"https://impact.applifier.com/mobile/campaigns";
 
 NSString * const kCampaignEndScreenKey = @"endScreen";
 NSString * const kCampaignClickURLKey = @"clickUrl";
@@ -258,7 +258,7 @@ NSString * const kRewardPictureKey = @"picture";
 		return;
 	}
 	
-	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:kApplifierImpactTestBackendURL]];
+	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:kApplifierImpactBackendURL]];
 	self.urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 	[self.urlConnection start];
 }
