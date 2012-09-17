@@ -19,5 +19,6 @@
 @synthesize gameName = _gameName;
 @synthesize id = _id;
 @synthesize tagline = _tagline;
+@synthesize viewed = _viewed;
 
 @end

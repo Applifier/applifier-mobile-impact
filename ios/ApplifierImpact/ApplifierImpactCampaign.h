@@ -19,5 +19,6 @@
 @property (nonatomic, strong) NSString *gameName;
 @property (nonatomic, strong) NSString *id;
 @property (nonatomic, strong) NSString *tagline;
+@property (nonatomic, assign) BOOL viewed;
 
 @end

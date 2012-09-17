@@ -375,6 +375,9 @@ typedef enum
 	[self.playerLayer removeFromSuperlayer];
 
 	[self _webViewVideoComplete];
+
+	self.selectedCampaign.viewed = YES;
+	self.selectedCampaign = nil;
 }
 
 - (void)_closeAdView
@@ -384,8 +387,6 @@ typedef enum
 
 	[self.applifierWindow addSubview:self.webView];
 	[self.adView removeFromSuperview];
-	
-	self.selectedCampaign = nil;
 }
 
 - (void)_startAnalyticsUploader
