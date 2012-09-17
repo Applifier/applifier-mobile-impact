@@ -15,6 +15,9 @@ NSString * const kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFileP
 NSString * const kApplifierImpactCacheURLRequestKey = @"kApplifierImpactCacheURLRequestKey";
 NSString * const kApplifierImpactCacheIndexKey = @"kApplifierImpactCacheIndexKey";
 
+NSString * const kApplifierImpactCacheEntryCampaignIDKey = @"kApplifierImpactCacheEntryCampaignIDKey";
+NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCacheEntryFilenameKey";
+
 @interface ApplifierImpactCache () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSFileHandle *fileHandle;
 @property (nonatomic, strong) NSMutableArray *downloadQueue;
@@ -168,18 +171,24 @@ NSString * const kApplifierImpactCacheIndexKey = @"kApplifierImpactCacheIndexKey
 	NSMutableArray *index = [NSMutableArray array];
 	for (ApplifierImpactCampaign *campaign in campaigns)
 	{
-		if (campaign.id != nil)
-			[index addObject:[campaign.id stringByAppendingString:@".mp4"]];
+		NSMutableDictionary *campaignIndexEntry = [NSMutableDictionary dictionary];
+		if (campaign.id != nil && campaign.trailerDownloadableURL != nil)
+		{
+			[campaignIndexEntry setObject:campaign.id forKey:kApplifierImpactCacheEntryCampaignIDKey];
+			[campaignIndexEntry setObject:[self _videoFilenameForCampaign:campaign] forKey:kApplifierImpactCacheEntryFilenameKey];
+			[index addObject:campaignIndexEntry];
+		}
 	}
 	
 	[[NSUserDefaults standardUserDefaults] setObject:index forKey:kApplifierImpactCacheIndexKey];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
-	for (NSString *oldFile in oldIndex)
+	for (NSDictionary *oldIndexEntry in oldIndex)
 	{
-		if ( ! [index containsObject:oldFile])
+		if ( ! [index containsObject:oldIndexEntry])
 		{
-			NSString *filePath = [cachePath stringByAppendingString:oldFile];
+			NSString *filename = [oldIndexEntry objectForKey:kApplifierImpactCacheEntryFilenameKey];
+			NSString *filePath = [cachePath stringByAppendingString:filename];
 			NSError *error = nil;
 			if ( ! [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error])
 			{
