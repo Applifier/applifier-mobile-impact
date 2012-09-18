@@ -474,11 +474,13 @@ typedef enum
 	
 	NSLog(@"init");
 	
-	NSString *js = [NSString stringWithFormat:@"%@(%@, %@, %@);", kApplifierImpactWebViewAPINativeInit, self.campaignJSON, [self _md5OpenUDIDString], [self _md5MACAddressString]];
+	NSString *js = [NSString stringWithFormat:@"%@(%@,%@,%@);", kApplifierImpactWebViewAPINativeInit, self.campaignJSON, [self _md5OpenUDIDString], [self _md5MACAddressString]];
 	
 	[self.webView stringByEvaluatingJavaScriptFromString:js];
 	
 	self.webViewInitialized = YES;
+	
+	[self _notifyDelegateOfCampaignAvailability];
 }
 
 - (void)_webViewShow
@@ -537,6 +539,15 @@ typedef enum
 - (void)_openURL:(NSString *)urlString
 {
 	NSLog(@"_openURL: TODO");
+}
+
+- (void)_notifyDelegateOfCampaignAvailability
+{
+	if (self.campaigns != nil && self.rewardItem != nil && self.webViewInitialized)
+	{
+		if ([self.delegate respondsToSelector:@selector(applifierImpactCampaignsAreAvailable:)])
+			[self.delegate applifierImpactCampaignsAreAvailable:self];
+	}
 }
 
 #pragma mark - Public
@@ -630,9 +641,8 @@ typedef enum
 	
 	self.campaigns = campaigns;
 	self.rewardItem = rewardItem;
-	
-	if ([self.delegate respondsToSelector:@selector(applifierImpactCampaignsAreAvailable:)])
-		[self.delegate applifierImpactCampaignsAreAvailable:self];
+
+	[self _notifyDelegateOfCampaignAvailability];
 }
 
 - (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager downloadedJSON:(NSString *)json
