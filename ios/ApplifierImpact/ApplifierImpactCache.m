@@ -245,15 +245,12 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 
 - (NSURL *)localVideoURLForCampaign:(ApplifierImpactCampaign *)campaign
 {
-	if ([NSThread isMainThread])
+	@synchronized (self)
 	{
-		AILOG_ERROR(@"-localVideoUrlForCampaign: cannot be called from main thread.");
-		return nil;
+		NSString *path = [self _videoPathForCampaign:campaign];
+		
+		return [NSURL fileURLWithPath:path];
 	}
-	
-	NSString *path = [self _videoPathForCampaign:campaign];
-	
-	return [NSURL fileURLWithPath:path];
 }
 
 - (void)cancelAllDownloads
