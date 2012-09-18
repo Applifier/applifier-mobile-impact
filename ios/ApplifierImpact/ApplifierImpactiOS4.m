@@ -622,7 +622,7 @@ typedef enum
 	
 	// FIXME: probably not the best way to accomplish this
 	
-	if ([self.campaigns count] > 0 && self.webViewLoaded && self.webView.superview == self.applifierWindow)
+	if ([self.campaigns count] > 0 && self.webViewInitialized && self.webView.superview == self.applifierWindow)
 	{
 		[self _webViewShow];
 		
