@@ -515,21 +515,24 @@ typedef enum
 			return;
 		}
 		
-		if ([queryComponents count] == 2)
+		NSString *parameter = [queryComponents objectAtIndex:0];
+		NSString *value = [queryComponents objectAtIndex:1];
+		
+		if ([queryComponents count] > 2)
 		{
-			NSString *parameter = [queryComponents objectAtIndex:0];
-			NSString *value = [queryComponents objectAtIndex:1];
-			
-			if ([command isEqualToString:kApplifierImpactWebViewAPIPlayVideo])
-			{
-				if ([parameter isEqualToString:@"campaignID"])
-					[self _selectCampaignWithID:value];
-			}
-			else if ([command isEqualToString:kApplifierImpactWebViewAPINavigateTo])
-			{
-				if ([parameter isEqualToString:@"url"])
-					[self _openURL:value];
-			}
+			for (NSInteger i = 2; i < [queryComponents count]; i++)
+				value = [value stringByAppendingFormat:@"=%@", [queryComponents objectAtIndex:i]];
+		}
+		
+		if ([command isEqualToString:kApplifierImpactWebViewAPIPlayVideo])
+		{
+			if ([parameter isEqualToString:@"campaignID"])
+				[self _selectCampaignWithID:value];
+		}
+		else if ([command isEqualToString:kApplifierImpactWebViewAPINavigateTo])
+		{
+			if ([parameter isEqualToString:@"url"])
+				[self _openURL:value];
 		}
 	}
 	else if ([command isEqualToString:kApplifierImpactWebViewAPIClose])
@@ -544,7 +547,7 @@ typedef enum
 
 - (void)_openURL:(NSString *)urlString
 {
-	AILOG_DEBUG(@"TODO");
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
 }
 
 - (void)_notifyDelegateOfCampaignAvailability
@@ -675,12 +678,12 @@ typedef enum
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
-	AILOG_DEBUG(@"did start load");
+	AILOG_DEBUG(@"");
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-	AILOG_DEBUG(@"did finish");
+	AILOG_DEBUG(@"");
 	
 	self.webViewLoaded = YES;
 	
@@ -690,7 +693,7 @@ typedef enum
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-	AILOG_DEBUG(@"webview didFail: %@", error);
+	AILOG_DEBUG(@"%@", error);
 }
 
 #pragma mark - UIScrollViewDelegate
