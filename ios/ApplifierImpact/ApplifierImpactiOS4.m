@@ -311,8 +311,6 @@ typedef enum
 	if (self.adView == nil)
 	{
 		self.adView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-		self.webView.bounds = self.adView.bounds;
-		[self.adView addSubview:self.webView];
 
 		self.progressLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 		self.progressLabel.backgroundColor = [UIColor clearColor];
@@ -323,6 +321,12 @@ typedef enum
 		self.progressLabel.shadowOffset = CGSizeMake(0, 1.0);
 		self.progressLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
 		[self.adView addSubview:self.progressLabel];
+	}
+	
+	if (self.webView.superview != self.adView)
+	{
+		self.webView.bounds = self.adView.bounds;
+		[self.adView addSubview:self.webView];
 	}
 	
 	return self.adView;
