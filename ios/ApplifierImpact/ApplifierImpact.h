@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <StoreKit/StoreKit.h>
 
 #define AILOG_DEBUG_LOGGING_ENABLED 1
 
@@ -26,6 +27,7 @@
 //
 
 @class ApplifierImpact;
+@class SKStoreProductViewController;
 
 @protocol ApplifierImpactDelegate <NSObject>
 
@@ -36,6 +38,9 @@
 - (void)applifierImpactVideoCompleted:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpact:(ApplifierImpact *)applifierImpact wantsToShowAdView:(UIView *)adView;
+
+// iOS 6 only! FIXME: requires documentation, since developers need to present this themselves.
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact wantsToPresentProductViewController:(SKStoreProductViewController *)productViewController;
 
 @end
 

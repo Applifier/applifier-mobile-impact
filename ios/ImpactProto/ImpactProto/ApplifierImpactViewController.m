@@ -11,7 +11,7 @@
 #import <CoreMedia/CoreMedia.h>
 #import "ApplifierImpact.h"
 
-@interface ApplifierImpactViewController () <ApplifierImpactDelegate>
+@interface ApplifierImpactViewController () <ApplifierImpactDelegate, SKStoreProductViewControllerDelegate>
 @end
 
 @implementation ApplifierImpactViewController
@@ -78,6 +78,19 @@
 	adView.frame = self.view.bounds;
 	
 	[self.view addSubview:adView];
+}
+
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact wantsToPresentProductViewController:(SKStoreProductViewController *)productViewController
+{
+	productViewController.delegate = self;
+	[self presentViewController:productViewController animated:YES completion:nil];
+}
+
+#pragma mark - SKStoreProductViewControllerDelegate
+
+- (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController
+{
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

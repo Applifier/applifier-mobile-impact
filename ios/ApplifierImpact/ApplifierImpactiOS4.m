@@ -499,6 +499,34 @@ typedef enum
 	[self _notifyDelegateOfCampaignAvailability];
 }
 
+- (void)_openStoreViewControllerWithGameID:(NSString *)gameID
+{
+	if (gameID == nil || [gameID length] == 0)
+	{
+		AILOG_DEBUG(@"Game ID not set or empty.");
+		return;
+	}
+
+	Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
+	if ([storeProductViewControllerClass instancesRespondToSelector:@selector(loadProductWithParameters:completionBlock:)])
+	{
+		__block ApplifierImpactiOS4 *blockSelf = self;
+		__block id storeController = [[[storeProductViewControllerClass class] alloc] init];
+		NSDictionary *productParameters = @{ SKStoreProductParameterITunesItemIdentifier : gameID };
+		[storeController loadProductWithParameters:productParameters completionBlock:^(BOOL result, NSError *error) {
+			if (result)
+			{
+				if ([blockSelf.delegate respondsToSelector:@selector(applifierImpact:wantsToPresentProductViewController:)])
+					[blockSelf.delegate applifierImpact:blockSelf wantsToPresentProductViewController:storeController];
+			}
+			else
+				AILOG_DEBUG(@"Loading product information failed: %@", error);
+		}];
+	}
+	else
+		AILOG_DEBUG(@"Not supported on older versions of iOS.");
+}
+
 - (void)_processWebViewResponseWithHost:(NSString *)host query:(NSString *)query
 {
 	if (host == nil)
