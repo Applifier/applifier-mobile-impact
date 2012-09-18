@@ -29,6 +29,7 @@ NSString * const kApplifierImpactWebViewAPINativeVideoComplete = @"impactVideoCo
 NSString * const kApplifierImpactWebViewAPIPlayVideo = @"playvideo";
 NSString * const kApplifierImpactWebViewAPIClose = @"close";
 NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateto";
+NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 
 NSString * const kApplifierImpactVersion = @"1.0";
 
@@ -477,10 +478,6 @@ typedef enum
 	NSString *js = [NSString stringWithFormat:@"%@(%@,%@,%@);", kApplifierImpactWebViewAPINativeInit, self.campaignJSON, [self _md5OpenUDIDString], [self _md5MACAddressString]];
 	
 	[self.webView stringByEvaluatingJavaScriptFromString:js];
-	
-	self.webViewInitialized = YES;
-	
-	[self _notifyDelegateOfCampaignAvailability];
 }
 
 - (void)_webViewShow
@@ -493,6 +490,13 @@ typedef enum
 	NSString *js = [NSString stringWithFormat:@"%@(%@);", kApplifierImpactWebViewAPINativeVideoComplete, self.selectedCampaign.id];
 	
 	[self.webView stringByEvaluatingJavaScriptFromString:js];
+}
+
+- (void)_webViewInitComplete
+{
+	self.webViewInitialized = YES;
+	
+	[self _notifyDelegateOfCampaignAvailability];
 }
 
 - (void)_processWebViewResponseWithHost:(NSString *)host query:(NSString *)query
@@ -533,6 +537,10 @@ typedef enum
 	else if ([command isEqualToString:kApplifierImpactWebViewAPIClose])
 	{
 		[self _closeAdView];
+	}
+	else if ([command isEqualToString:kApplifierImpactWebViewAPIInitComplete])
+	{
+		[self _webViewInitComplete];
 	}
 }
 
