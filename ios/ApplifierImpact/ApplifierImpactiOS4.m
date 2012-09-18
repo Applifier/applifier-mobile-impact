@@ -473,7 +473,9 @@ typedef enum
 	
 	AILOG_DEBUG(@"");
 	
-	NSString *js = [NSString stringWithFormat:@"%@(%@,\"%@\",\"%@\");", kApplifierImpactWebViewAPINativeInit, self.campaignJSON, [self _md5OpenUDIDString], [self _md5MACAddressString]];
+	NSString *escapedJSON = [self.campaignJSON stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+	escapedJSON = [escapedJSON stringByReplacingOccurrencesOfString:@"'" withString:@"\'"];
+	NSString *js = [NSString stringWithFormat:@"%@(\"%@\",\"%@\",\"%@\");", kApplifierImpactWebViewAPINativeInit, escapedJSON, [self _md5OpenUDIDString], [self _md5MACAddressString]];
 	
 	[self.webView stringByEvaluatingJavaScriptFromString:js];
 }
