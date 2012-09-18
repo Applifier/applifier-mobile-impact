@@ -616,38 +616,34 @@ typedef enum
 	[self _configureWebView];
 }
 
-- (BOOL)showImpact
+- (UIView *)impactAdView
 {
 	if ( ! [NSThread isMainThread])
 	{
-		AILOG_ERROR(@"-showImpact must be run on main thread.");
-		return NO;
+		AILOG_ERROR(@"Must be run on main thread.");
+		return nil;
 	}
 	
 	// FIXME: probably not the best way to accomplish this
 	
 	if ([self.campaigns count] > 0 && self.webViewInitialized && self.webView.superview == self.applifierWindow)
 	{
-		[self _webViewShow];
-		
-		// merge the following two delegate methods?
 		if ([self.delegate respondsToSelector:@selector(applifierImpactWillOpen:)])
 			[self.delegate applifierImpactWillOpen:self];
-		
-		if ([self.delegate respondsToSelector:@selector(applifierImpact:wantsToShowAdView:)])
-			[self.delegate applifierImpact:self wantsToShowAdView:[self _adView]];
-		
-		return YES;
+
+		[self _webViewShow];
+	
+		return [self _adView];
 	}
 	
-	return NO;
+	return nil;
 }
 
-- (BOOL)hasCampaigns
+- (BOOL)canShowImpact
 {
 	if ( ! [NSThread isMainThread])
 	{
-		AILOG_ERROR(@"-hasCampaigns must be run on main thread.");
+		AILOG_ERROR(@"Must be run on main thread.");
 		return NO;
 	}
 

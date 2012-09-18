@@ -37,7 +37,6 @@
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactVideoCompleted:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact;
-- (void)applifierImpact:(ApplifierImpact *)applifierImpact wantsToShowAdView:(UIView *)adView;
 
 // iOS 6 only! FIXME: requires documentation, since developers need to present this themselves.
 - (void)applifierImpact:(ApplifierImpact *)applifierImpact wantsToPresentProductViewController:(SKStoreProductViewController *)productViewController;
@@ -51,8 +50,8 @@
 + (id)sharedInstance;
 
 - (void)startWithApplifierID:(NSString *)applifierID;
-- (BOOL)showImpact;
-- (BOOL)hasCampaigns;
+- (UIView *)impactAdView;
+- (BOOL)canShowImpact;
 - (void)stopAll;
 
 @end

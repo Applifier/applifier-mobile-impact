@@ -56,12 +56,12 @@ static ApplifierImpact *sharedApplifierInstance = nil;
 	// do nothing
 }
 
-- (BOOL)showImpact
+- (UIView *)impactAdView
 {
-	return NO;
+	return nil;
 }
 
-- (BOOL)hasCampaigns
+- (BOOL)canShowImpact
 {
 	return NO;
 }

@@ -36,7 +36,15 @@
 
 - (void)nextPhase
 {
-	[[ApplifierImpact sharedInstance] showImpact];
+	if ([[ApplifierImpact sharedInstance] canShowImpact])
+	{
+		NSLog(@"Showing Impact.");
+		UIView *adView = [[ApplifierImpact sharedInstance] impactAdView];
+		adView.frame = self.view.bounds;
+		[self.view addSubview:adView];
+	}
+	else
+		NSLog(@"Impact cannot be shown.");
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -71,15 +79,6 @@
 	NSLog(@"applifierImpactCampaignsAreAvailable");
 
 	[self.buttonView setImage:[UIImage imageNamed:@"impact-ready"] forState:UIControlStateNormal];
-}
-
-- (void)applifierImpact:(ApplifierImpact *)applifierImpact wantsToShowAdView:(UIView *)adView
-{
-	NSLog(@"wantsToShowAdView %@ %@", adView, adView.subviews);
-	
-	adView.frame = self.view.bounds;
-	
-	[self.view addSubview:adView];
 }
 
 - (void)applifierImpact:(ApplifierImpact *)applifierImpact wantsToPresentProductViewController:(SKStoreProductViewController *)productViewController
