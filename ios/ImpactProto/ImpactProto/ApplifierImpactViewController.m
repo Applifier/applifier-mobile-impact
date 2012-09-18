@@ -30,8 +30,8 @@
 	
 	[[ApplifierImpact sharedInstance] setDelegate:self];
 	
-    [buttonView addTarget:self action:@selector(nextPhase) forControlEvents:UIControlEventTouchUpInside];
-	[buttonView setImage:[UIImage imageNamed:@"hayday_start"] forState:UIControlStateNormal];
+    [self.buttonView addTarget:self action:@selector(nextPhase) forControlEvents:UIControlEventTouchUpInside];
+	[self.buttonView setImage:[UIImage imageNamed:@"impact-waiting"] forState:UIControlStateNormal];
 }
 
 - (void)nextPhase
@@ -69,11 +69,13 @@
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact
 {
 	NSLog(@"applifierImpactCampaignsAreAvailable");
+
+	[self.buttonView setImage:[UIImage imageNamed:@"impact-ready"] forState:UIControlStateNormal];
 }
 
 - (void)applifierImpact:(ApplifierImpact *)applifierImpact wantsToShowAdView:(UIView *)adView
 {
-	NSLog(@"wantsToShowAdView");
+	NSLog(@"wantsToShowAdView %@ %@", adView, adView.subviews);
 	
 	adView.frame = self.view.bounds;
 	
