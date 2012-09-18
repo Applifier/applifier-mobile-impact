@@ -160,7 +160,7 @@ typedef enum
 	// With all configured interfaces requested, get handle index
 	if ((mgmtInfoBase[5] = if_nametoindex([interface UTF8String])) == 0)
 	{
-		NSLog(@"Couldn't get MAC address for interface '%@', if_nametoindex failed.", interface);
+		AILOG_DEBUG(@"Couldn't get MAC address for interface '%@', if_nametoindex failed.", interface);
 		return nil;
 	}
 	
@@ -169,14 +169,14 @@ typedef enum
 	// Get the size of the data available (store in len)
 	if (sysctl(mgmtInfoBase, 6, NULL, &length, NULL, 0) < 0)
 	{
-		NSLog(@"Couldn't get MAC address for interface '%@', sysctl for mgmtInfoBase length failed.", interface);
+		AILOG_DEBUG(@"Couldn't get MAC address for interface '%@', sysctl for mgmtInfoBase length failed.", interface);
 		return nil;
 	}
 	
 	// Alloc memory based on above call
 	if ((msgBuffer = malloc(length)) == NULL)
 	{
-		NSLog(@"Couldn't get MAC address for interface '%@', malloc for %zd bytes failed.", interface, length);
+		AILOG_DEBUG(@"Couldn't get MAC address for interface '%@', malloc for %zd bytes failed.", interface, length);
 		return nil;
 	}
 	
@@ -185,7 +185,7 @@ typedef enum
 	{
 		free(msgBuffer);
 		
-		NSLog(@"Couldn't get MAC address for interface '%@', sysctl for mgmtInfoBase data failed.", interface);
+		AILOG_DEBUG(@"Couldn't get MAC address for interface '%@', sysctl for mgmtInfoBase data failed.", interface);
 		return nil;
 	}
 	
@@ -390,7 +390,7 @@ typedef enum
 	NSURL *videoURL = [self.campaignManager videoURLForCampaign:self.selectedCampaign];
 	if (videoURL == nil)
 	{
-		NSLog(@"Video not found!");
+		AILOG_DEBUG(@"Video not found!");
 		return;
 	}
 	
@@ -469,13 +469,13 @@ typedef enum
 {
 	if (self.campaignJSON == nil || !self.webViewLoaded)
 	{
-		NSLog(@"JSON or web view has not been loaded yet.");
+		AILOG_DEBUG(@"JSON or web view has not been loaded yet.");
 		return;
 	}
 	
-	NSLog(@"init");
+	AILOG_DEBUG(@"");
 	
-	NSString *js = [NSString stringWithFormat:@"%@(%@,%@,%@);", kApplifierImpactWebViewAPINativeInit, self.campaignJSON, [self _md5OpenUDIDString], [self _md5MACAddressString]];
+	NSString *js = [NSString stringWithFormat:@"%@(%@,\"%@\",\"%@\");", kApplifierImpactWebViewAPINativeInit, self.campaignJSON, [self _md5OpenUDIDString], [self _md5MACAddressString]];
 	
 	[self.webView stringByEvaluatingJavaScriptFromString:js];
 }
@@ -513,7 +513,7 @@ typedef enum
 	{
 		if (queryComponents == nil)
 		{
-			NSLog(@"No parameters given.");
+			AILOG_DEBUG(@"No parameters given.");
 			return;
 		}
 		
@@ -546,7 +546,7 @@ typedef enum
 
 - (void)_openURL:(NSString *)urlString
 {
-	NSLog(@"_openURL: TODO");
+	AILOG_DEBUG(@"TODO");
 }
 
 - (void)_notifyDelegateOfCampaignAvailability
@@ -564,7 +564,7 @@ typedef enum
 {
 	if ( ! [NSThread isMainThread])
 	{
-		NSLog(@"-startWithApplifierID: must be run on main thread.");
+		AILOG_ERROR(@"-startWithApplifierID: must be run on main thread.");
 		return;
 	}
 	
@@ -587,7 +587,7 @@ typedef enum
 {
 	if ( ! [NSThread isMainThread])
 	{
-		NSLog(@"-showImpact must be run on main thread.");
+		AILOG_ERROR(@"-showImpact must be run on main thread.");
 		return NO;
 	}
 	
@@ -614,18 +614,18 @@ typedef enum
 {
 	if ( ! [NSThread isMainThread])
 	{
-		NSLog(@"-hasCampaigns must be run on main thread.");
+		AILOG_ERROR(@"-hasCampaigns must be run on main thread.");
 		return NO;
 	}
 
-	return ([self.campaigns count] > 0);
+	return ([self.campaigns count] > 0 && self.webViewInitialized);
 }
 
 - (void)stopAll
 {
 	if ( ! [NSThread isMainThread])
 	{
-		NSLog(@"-stopAll must be run on main thread.");
+		AILOG_ERROR(@"-stopAll must be run on main thread.");
 		return;
 	}
 	
@@ -643,7 +643,7 @@ typedef enum
 {
 	if ( ! [NSThread isMainThread])
 	{
-		NSLog(@"Method must be run on main thread.");
+		AILOG_ERROR(@"Method must be run on main thread.");
 		return;
 	}
 	
@@ -666,6 +666,7 @@ typedef enum
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
 	NSURL *url = [request URL];
+	AILOG_DEBUG(@"url %@", url);
 	if ([[url scheme] isEqualToString:@"applifier-impact"])
 	{
 		[self _processWebViewResponseWithHost:[url host] query:[url query]];
@@ -678,10 +679,13 @@ typedef enum
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
+	AILOG_DEBUG(@"did start load");
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
+	AILOG_DEBUG(@"did finish");
+	
 	self.webViewLoaded = YES;
 	
 	if ( ! self.webViewInitialized)
@@ -690,6 +694,7 @@ typedef enum
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
+	AILOG_DEBUG(@"webview didFail: %@", error);
 }
 
 #pragma mark - UIScrollViewDelegate

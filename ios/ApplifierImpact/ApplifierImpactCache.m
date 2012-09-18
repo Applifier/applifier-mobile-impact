@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Applifier. All rights reserved.
 //
 
+#import "ApplifierImpact.h"
 #import "ApplifierImpactCache.h"
 #import "ApplifierImpactCampaign.h"
 
@@ -56,11 +57,11 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 {
 	if (campaign == nil)
 	{
-		NSLog(@"Campaign cannot be nil.");
+		AILOG_DEBUG(@"Campaign cannot be nil.");
 		return;
 	}
 	
-	NSLog(@"Queueing %@, id %@", campaign.trailerDownloadableURL, campaign.id);
+	AILOG_DEBUG(@"Queueing %@, id %@", campaign.trailerDownloadableURL, campaign.id);
 	
 	NSString *filePath = [self _videoPathForCampaign:campaign];
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:campaign.trailerDownloadableURL];
@@ -94,7 +95,7 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 		{
 			if ( ! [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil])
 			{
-				NSLog(@"Unable to create file at %@", filePath);
+				AILOG_DEBUG(@"Unable to create file at %@", filePath);
 				self.currentDownload = nil;
 				return NO;
 			}
@@ -116,7 +117,7 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 	else
 		return NO;
 	
-	NSLog(@"starting download %@", self.currentDownload);
+	AILOG_DEBUG(@"starting download %@", self.currentDownload);
 
 	return YES;
 }
@@ -130,7 +131,7 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 
 - (void)_downloadFinishedWithFailure:(BOOL)failure
 {
-	NSLog(@"download finished with failure: %@", failure ? @"yes" : @"no");
+	AILOG_DEBUG(@"download finished with failure: %@", failure ? @"yes" : @"no");
 	
 	[self.fileHandle closeFile];
 	self.fileHandle = nil;
@@ -161,7 +162,7 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 {
 	if (campaigns == nil || [campaigns count] == 0)
 	{
-		NSLog(@"No new campaigns.");
+		AILOG_DEBUG(@"No new campaigns.");
 		return;
 	}
 	
@@ -192,7 +193,7 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 			NSError *error = nil;
 			if ( ! [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error])
 			{
-				NSLog(@"Unable to remove file. %@", error);
+				AILOG_DEBUG(@"Unable to remove file. %@", error);
 			}
 		}
 	}
@@ -204,7 +205,7 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 {
 	if ([NSThread isMainThread])
 	{
-		NSLog(@"-init cannot be called from main thread.");
+		AILOG_ERROR(@"-init cannot be called from main thread.");
 		return nil;
 	}
 	
@@ -220,7 +221,7 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 {
 	if ([NSThread isMainThread])
 	{
-		NSLog(@"-cacheCampaigns: cannot be called from main thread.");
+		AILOG_ERROR(@"-cacheCampaigns: cannot be called from main thread.");
 		return;
 	}
 	
@@ -228,7 +229,7 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 	NSString *cachePath = [self _cachePath];
 	if ( ! [[NSFileManager defaultManager] createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:nil error:&error])
 	{
-		NSLog(@"Couldn't create cache path. Error: %@", error);
+		AILOG_DEBUG(@"Couldn't create cache path. Error: %@", error);
 		return;
 	}
 	
@@ -246,7 +247,7 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 {
 	if ([NSThread isMainThread])
 	{
-		NSLog(@"-localVideoUrlForCampaign: cannot be called from main thread.");
+		AILOG_ERROR(@"-localVideoUrlForCampaign: cannot be called from main thread.");
 		return nil;
 	}
 	
@@ -259,7 +260,7 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 {
 	if ([NSThread isMainThread])
 	{
-		NSLog(@"-cancelAllDownloads cannot be called from main thread.");
+		AILOG_ERROR(@"-cancelAllDownloads cannot be called from main thread.");
 		return;
 	}
 	
@@ -293,7 +294,7 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 			long long freeSpace = [[fsAttributes objectForKey:NSFileSystemFreeSize] longLongValue];
 			if (size > freeSpace)
 			{
-				NSLog(@"Not enough space, canceling download. (%lld needed, %lld free)", size, freeSpace);
+				AILOG_DEBUG(@"Not enough space, canceling download. (%lld needed, %lld free)", size, freeSpace);
 				[connection cancel];
 				[self _downloadFinishedWithFailure:YES];
 			}
@@ -313,7 +314,7 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-	NSLog(@"didFailWithError: %@", error);
+	AILOG_DEBUG(@"%@", error);
 	
 	[self _downloadFinishedWithFailure:YES];
 }

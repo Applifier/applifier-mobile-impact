@@ -11,6 +11,7 @@
 #import "ApplifierImpactCampaign.h"
 #import "ApplifierImpactRewardItem.h"
 #import "ApplifierImpactCache.h"
+#import "ApplifierImpact.h"
 
 NSString * const kApplifierImpactBackendURL = @"https://impact.applifier.com/mobile/campaigns";
 
@@ -67,8 +68,8 @@ NSString * const kRewardPictureKey = @"picture";
 	id repr = [parser objectWithString:jsonString error:&error];
 	if (repr == nil)
 	{
-		NSLog(@"-JSONValue failed. Error is: %@", error);
-		NSLog(@"String value: %@", jsonString);
+		AILOG_DEBUG(@"-JSONValue failed. Error is: %@", error);
+		AILOG_DEBUG(@"String value: %@", jsonString);
 	}
 	
 	if ([self.delegate respondsToSelector:@selector(campaignManager:downloadedJSON:)])
@@ -95,7 +96,7 @@ NSString * const kRewardPictureKey = @"picture";
 			NSURL *endScreenURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignEndScreenKey]];
 			if (endScreenURL == nil)
 			{
-				NSLog(@"Campaign end screen URL is empty or invalid. %@", campaignDictionary);
+				AILOG_DEBUG(@"Campaign end screen URL is empty or invalid. %@", campaignDictionary);
 				return nil;
 			}
 			campaign.endScreenURL = endScreenURL;
@@ -103,7 +104,7 @@ NSString * const kRewardPictureKey = @"picture";
 			NSURL *clickURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignClickURLKey]];
 			if (clickURL == nil)
 			{
-				NSLog(@"Campaign click URL is empty or invalid. %@", campaignDictionary);
+				AILOG_DEBUG(@"Campaign click URL is empty or invalid. %@", campaignDictionary);
 				return nil;
 			}
 			campaign.clickURL = clickURL;
@@ -111,7 +112,7 @@ NSString * const kRewardPictureKey = @"picture";
 			NSURL *pictureURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignPictureKey]];
 			if (pictureURL == nil)
 			{
-				NSLog(@"Campaign picture URL is empty or invalid. %@", campaignDictionary);
+				AILOG_DEBUG(@"Campaign picture URL is empty or invalid. %@", campaignDictionary);
 				return nil;
 			}
 			campaign.pictureURL = pictureURL;
@@ -119,7 +120,7 @@ NSString * const kRewardPictureKey = @"picture";
 			NSURL *trailerDownloadableURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignTrailerDownloadableKey]];
 			if (trailerDownloadableURL == nil)
 			{
-				NSLog(@"Campaign downloadable trailer URL is empty or invalid. %@", campaignDictionary);
+				AILOG_DEBUG(@"Campaign downloadable trailer URL is empty or invalid. %@", campaignDictionary);
 				return nil;
 			}
 			campaign.trailerDownloadableURL = trailerDownloadableURL;
@@ -127,7 +128,7 @@ NSString * const kRewardPictureKey = @"picture";
 			NSURL *trailerStreamingURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignTrailerStreamingKey]];
 			if (trailerStreamingURL == nil)
 			{
-				NSLog(@"Campaign streaming trailer URL is empty or invalid. %@", campaignDictionary);
+				AILOG_DEBUG(@"Campaign streaming trailer URL is empty or invalid. %@", campaignDictionary);
 				return nil;
 			}
 			campaign.trailerStreamingURL = trailerStreamingURL;
@@ -135,7 +136,7 @@ NSString * const kRewardPictureKey = @"picture";
 			NSString *gameID = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignGameIDKey]];
 			if (gameID == nil || [gameID length] == 0)
 			{
-				NSLog(@"Campaign game ID  is empty or invalid. %@", campaignDictionary);
+				AILOG_DEBUG(@"Campaign game ID  is empty or invalid. %@", campaignDictionary);
 				return nil;
 			}
 			campaign.gameID = gameID;
@@ -143,7 +144,7 @@ NSString * const kRewardPictureKey = @"picture";
 			NSString *gameName = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignGameNameKey]];
 			if (gameName == nil || [gameName length] == 0)
 			{
-				NSLog(@"Campaign game name is empty or invalid. %@", campaignDictionary);
+				AILOG_DEBUG(@"Campaign game name is empty or invalid. %@", campaignDictionary);
 				return nil;
 			}
 			campaign.gameName = gameName;
@@ -151,7 +152,7 @@ NSString * const kRewardPictureKey = @"picture";
 			NSString *id = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignIDKey]];
 			if (id == nil || [id length] == 0)
 			{
-				NSLog(@"Campaign ID is empty or invalid. %@", campaignDictionary);
+				AILOG_DEBUG(@"Campaign ID is empty or invalid. %@", campaignDictionary);
 				return nil;
 			}
 			campaign.id = id;
@@ -159,7 +160,7 @@ NSString * const kRewardPictureKey = @"picture";
 			NSString *tagline = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignTaglineKey]];
 			if (tagline == nil || [tagline length] == 0)
 			{
-				NSLog(@"Campaign tagline is empty or invalid. %@", campaignDictionary);
+				AILOG_DEBUG(@"Campaign tagline is empty or invalid. %@", campaignDictionary);
 				return nil;
 			}
 			campaign.tagline = tagline;
@@ -168,7 +169,7 @@ NSString * const kRewardPictureKey = @"picture";
 		}
 		else
 		{
-			NSLog(@"Unexpected value in campaign dictionary list. %@, %@", [campaignDictionary class], campaignDictionary);
+			AILOG_DEBUG(@"Unexpected value in campaign dictionary list. %@, %@", [campaignDictionary class], campaignDictionary);
 			
 			continue;
 		}
@@ -185,7 +186,7 @@ NSString * const kRewardPictureKey = @"picture";
 		NSString *key = [NSString stringWithFormat:@"%@", [itemDictionary objectForKey:kRewardItemKey]];
 		if (key == nil || [key length] == 0)
 		{
-			NSLog(@"Item key is empty. %@", itemDictionary);
+			AILOG_DEBUG(@"Item key is empty. %@", itemDictionary);
 			return nil;
 		}
 		item.key = key;
@@ -193,7 +194,7 @@ NSString * const kRewardPictureKey = @"picture";
 		NSString *name = [NSString stringWithFormat:@"%@", [itemDictionary objectForKey:kRewardNameKey]];
 		if (name == nil || [name length] == 0)
 		{
-			NSLog(@"Item name is empty. %@", itemDictionary);
+			AILOG_DEBUG(@"Item name is empty. %@", itemDictionary);
 			return nil;
 		}
 		item.name = name;
@@ -201,7 +202,7 @@ NSString * const kRewardPictureKey = @"picture";
 		NSURL *pictureURL = [NSURL URLWithString:[itemDictionary objectForKey:kRewardPictureKey]];
 		if (pictureURL == nil)
 		{
-			NSLog(@"Item picture URL is empty or invalid. %@", itemDictionary);
+			AILOG_DEBUG(@"Item picture URL is empty or invalid. %@", itemDictionary);
 			return nil;
 		}
 		item.pictureURL = pictureURL;
@@ -210,7 +211,7 @@ NSString * const kRewardPictureKey = @"picture";
 	}
 	else
 	{
-		NSLog(@"Unknown data type for reward item dictionary: %@", [itemDictionary class]);
+		AILOG_DEBUG(@"Unknown data type for reward item dictionary: %@", [itemDictionary class]);
 		
 		return nil;
 	}
@@ -228,7 +229,7 @@ NSString * const kRewardPictureKey = @"picture";
 		[self.cache cacheCampaigns:self.campaigns];
 	}
 	else
-		NSLog(@"Unknown data type for JSON: %@", [json class]);
+		AILOG_DEBUG(@"Unknown data type for JSON: %@", [json class]);
 }
 
 #pragma mark - Public
@@ -237,7 +238,7 @@ NSString * const kRewardPictureKey = @"picture";
 {
 	if ([NSThread isMainThread])
 	{
-		NSLog(@"-init cannot be called from main thread.");
+		AILOG_ERROR(@"-init cannot be called from main thread.");
 		return nil;
 	}
 	
@@ -254,7 +255,7 @@ NSString * const kRewardPictureKey = @"picture";
 {
 	if ([NSThread isMainThread])
 	{
-		NSLog(@"-updateCampaigns cannot be called from main thread.");
+		AILOG_ERROR(@"-updateCampaigns cannot be called from main thread.");
 		return;
 	}
 	
@@ -281,7 +282,7 @@ NSString * const kRewardPictureKey = @"picture";
 {
 	if ([NSThread isMainThread])
 	{
-		NSLog(@"-cancelAllDownloads cannot be called from main thread.");
+		AILOG_ERROR(@"-cancelAllDownloads cannot be called from main thread.");
 		return;
 	}
 	
@@ -315,7 +316,7 @@ NSString * const kRewardPictureKey = @"picture";
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-	NSLog(@"didFailWithError: %@", error);
+	AILOG_DEBUG(@"didFailWithError: %@", error);
 }
 
 #pragma mark - ApplifierImpactCacheDelegate

@@ -8,6 +8,7 @@
 
 #import "ApplifierImpactAnalyticsUploader.h"
 #import "ApplifierImpactCampaign.h"
+#import "ApplifierImpact.h"
 
 NSString * const kApplifierImpactAnalyticsURL = @"http://log.applifier.com/videoads-tracking";
 NSString * const kApplifierImpactAnalyticsUploaderRequestKey = @"kApplifierImpactAnalyticsUploaderRequestKey";
@@ -36,7 +37,7 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 	NSURLRequest *request = [download objectForKey:kApplifierImpactAnalyticsUploaderRequestKey];
 	NSString *urlString = [[request URL] absoluteString];
 	[existingFailedUploads addObject:urlString];
-	NSLog(@"%@", existingFailedUploads);
+	AILOG_DEBUG(@"%@", existingFailedUploads);
 	[[NSUserDefaults standardUserDefaults] setObject:existingFailedUploads forKey:kApplifierImpactAnalyticsSavedUploadsKey];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
@@ -66,11 +67,11 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 	NSURLRequest *request = [NSURLRequest requestWithURL:url];
 	if (request == nil)
 	{
-		NSLog(@"Request could not be created.");
+		AILOG_DEBUG(@"Request could not be created.");
 		return;
 	}
 	
-	NSLog(@"queueing %@", url);
+	AILOG_DEBUG(@"queueing %@", url);
 	
 	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 	NSDictionary *uploadDictionary = @{ kApplifierImpactAnalyticsUploaderRequestKey : request, kApplifierImpactAnalyticsUploaderConnectionKey : connection };
@@ -96,7 +97,7 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 {
 	if ([NSThread isMainThread])
 	{
-		NSLog(@"Cannot be run on main thread.");
+		AILOG_ERROR(@"Cannot be run on main thread.");
 		return;
 	}
 	
@@ -108,7 +109,7 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 {
 	if ([NSThread isMainThread])
 	{
-		NSLog(@"Cannot be run on main thread.");
+		AILOG_ERROR(@"Cannot be run on main thread.");
 		return;
 	}
 
@@ -140,7 +141,7 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-	NSLog(@"analytics upload finished");
+	AILOG_DEBUG(@"analytics upload finished");
 	
 	self.currentUpload = nil;
 	
@@ -149,7 +150,7 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-	NSLog(@"didFailWithError: %@", error);
+	AILOG_DEBUG(@"%@", error);
 	
 	[self _saveFailedUpload:self.currentUpload];
 
