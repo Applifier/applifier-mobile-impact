@@ -57,6 +57,7 @@ NSString * const kRewardPictureKey = @"picture";
 @synthesize cache = _cache;
 @synthesize campaigns = _campaigns;
 @synthesize rewardItem = _rewardItem;
+@synthesize queryString = _queryString;
 
 #pragma mark - Private
 
@@ -259,7 +260,11 @@ NSString * const kRewardPictureKey = @"picture";
 		return;
 	}
 	
-	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:kApplifierImpactBackendURL]];
+	NSString *urlString = kApplifierImpactBackendURL;
+	if (self.queryString != nil)
+		urlString = [urlString stringByAppendingString:self.queryString];
+	
+	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlString]];
 	self.urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 	[self.urlConnection start];
 }

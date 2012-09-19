@@ -67,6 +67,7 @@ typedef enum
 @property (nonatomic, strong) NSString *md5AdvertisingIdentifier;
 @property (nonatomic, strong) NSString *md5MACAddress;
 @property (nonatomic, strong) NSString *md5OpenUDID;
+@property (nonatomic, strong) NSString *campaignQueryString;
 @end
 
 @implementation ApplifierImpactiOS4
@@ -94,6 +95,7 @@ typedef enum
 @synthesize md5AdvertisingIdentifier = _md5AdvertisingIdentifier;
 @synthesize md5MACAddress = _md5MACAddress;
 @synthesize md5OpenUDID = _md5OpenUDID;
+@synthesize campaignQueryString = _campaignQueryString;
 
 #pragma mark - Private
 
@@ -285,7 +287,9 @@ typedef enum
 
 - (NSString *)_queryString
 {
-	return [NSString stringWithFormat:@"?openUdid=%@&macAddress=%@&iosVersion=%@&device=%@&sdkVersion=%@&gameId=%@&type=ios&connection=%@", self.md5OpenUDID, self.md5MACAddress, [[UIDevice currentDevice] systemVersion], self.machineName, kApplifierImpactVersion, self.applifierID, [self _currentConnectionType]];
+	NSString *advertisingIdentifier = self.md5AdvertisingIdentifier != nil ? [NSString stringWithFormat:@"&advertisingTrackingId=%@", self.md5AdvertisingIdentifier] : @"";
+	
+	return [NSString stringWithFormat:@"?openUdid=%@&macAddress=%@%@&iosVersion=%@&device=%@&sdkVersion=%@&gameId=%@&type=ios&connection=%@", self.md5OpenUDID, self.md5MACAddress, advertisingIdentifier, [[UIDevice currentDevice] systemVersion], self.machineName, kApplifierImpactVersion, self.applifierID, [self _currentConnectionType]];
 }
 
 - (void)_backgroundRunLoop:(id)dummy
@@ -309,6 +313,7 @@ typedef enum
 {
 	self.campaignManager = [[ApplifierImpactCampaignManager alloc] init];
 	self.campaignManager.delegate = self;
+	self.campaignManager.queryString = self.campaignQueryString;
 	[self.campaignManager updateCampaigns];
 }
 
@@ -678,13 +683,14 @@ typedef enum
 	self.backgroundThread = [[NSThread alloc] initWithTarget:self selector:@selector(_backgroundRunLoop:) object:nil];
 	[self.backgroundThread start];
 	
-	[self performSelector:@selector(_startCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
-	[self performSelector:@selector(_startAnalyticsUploader) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
-	
 	self.machineName = [self _analyticsMachineName];
 	self.md5AdvertisingIdentifier = [self _md5AdvertisingIdentifierString];
 	self.md5MACAddress = [self _md5MACAddressString];
 	self.md5OpenUDID = [self _md5OpenUDIDString];
+	self.campaignQueryString = [self _queryString];
+	
+	[self performSelector:@selector(_startCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+	[self performSelector:@selector(_startAnalyticsUploader) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 	
 	[self _configureWebView];
 }

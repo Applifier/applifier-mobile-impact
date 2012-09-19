@@ -22,6 +22,7 @@
 @interface ApplifierImpactCampaignManager : NSObject
 
 @property (nonatomic, assign) id<ApplifierImpactCampaignManagerDelegate> delegate;
+@property (nonatomic, strong) NSString *queryString;
 
 - (void)updateCampaigns;
 - (NSURL *)videoURLForCampaign:(ApplifierImpactCampaign *)campaign;
