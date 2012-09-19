@@ -603,6 +603,12 @@ typedef enum
 		return;
 	}
 	
+	if (applifierID == nil || [applifierID length] == 0)
+	{
+		AILOG_ERROR(@"Applifier ID empty or not set.");
+		return;
+	}
+	
 	if (self.applifierID != nil)
 		return;
 	
