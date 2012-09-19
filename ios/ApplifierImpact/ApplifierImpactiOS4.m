@@ -63,6 +63,10 @@ typedef enum
 @property (nonatomic, assign) BOOL webViewLoaded;
 @property (nonatomic, assign) BOOL webViewInitialized;
 @property (nonatomic, strong) NSString *campaignJSON;
+@property (nonatomic, strong) NSString *machineName;
+@property (nonatomic, strong) NSString *md5AdvertisingIdentifier;
+@property (nonatomic, strong) NSString *md5MACAddress;
+@property (nonatomic, strong) NSString *md5OpenUDID;
 @end
 
 @implementation ApplifierImpactiOS4
@@ -86,6 +90,10 @@ typedef enum
 @synthesize webViewLoaded = _webViewLoaded;
 @synthesize webViewInitialized = _webViewInitialized;
 @synthesize campaignJSON = _campaignJSON;
+@synthesize machineName = _machineName;
+@synthesize md5AdvertisingIdentifier = _md5AdvertisingIdentifier;
+@synthesize md5MACAddress = _md5MACAddress;
+@synthesize md5OpenUDID = _md5OpenUDID;
 
 #pragma mark - Private
 
@@ -264,6 +272,11 @@ typedef enum
 	return [self _md5StringFromString:[self _macAddress]];
 }
 
+- (NSString *)_md5AdvertisingIdentifierString
+{
+	return [self _md5StringFromString:[self _advertisingIdentifier]];
+}
+
 - (NSString *)_currentConnectionType
 {
 	// FIXME: find out where to get this
@@ -272,7 +285,7 @@ typedef enum
 
 - (NSString *)_queryString
 {
-	return [NSString stringWithFormat:@"?openUdid=%@&macAddress=%@&iosVersion=%@&device=%@&sdkVersion=%@&gameId=%@&type=ios&connection=%@", [self _md5OpenUDIDString], [self _md5MACAddressString], [[UIDevice currentDevice] systemVersion], [self _analyticsMachineName], kApplifierImpactVersion, self.applifierID, [self _currentConnectionType]];
+	return [NSString stringWithFormat:@"?openUdid=%@&macAddress=%@&iosVersion=%@&device=%@&sdkVersion=%@&gameId=%@&type=ios&connection=%@", self.md5OpenUDID, self.md5MACAddress, [[UIDevice currentDevice] systemVersion], self.machineName, kApplifierImpactVersion, self.applifierID, [self _currentConnectionType]];
 }
 
 - (void)_backgroundRunLoop:(id)dummy
@@ -523,11 +536,10 @@ typedef enum
 	
 	NSString *escapedJSON = [self _escapedStringFromString:self.campaignJSON];
 	NSString *deviceInformation = nil;
-	NSString *adId = [self _advertisingIdentifier];
-	if (adId != nil)
-		deviceInformation = [NSString stringWithFormat:@"{\"advertisingTrackingID\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}", adId, [[UIDevice currentDevice] systemVersion], [self _analyticsMachineName]];
+	if (self.md5AdvertisingIdentifier != nil)
+		deviceInformation = [NSString stringWithFormat:@"{\"advertisingTrackingID\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}", self.md5AdvertisingIdentifier, [[UIDevice currentDevice] systemVersion], self.machineName];
 	else
-		deviceInformation = [NSString stringWithFormat:@"{\"openUdid\":\"%@\",\"macAddress\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}", [self _md5OpenUDIDString], [self _md5MACAddressString], [[UIDevice currentDevice] systemVersion], [self _analyticsMachineName]];
+		deviceInformation = [NSString stringWithFormat:@"{\"openUdid\":\"%@\",\"macAddress\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}", self.md5OpenUDID, self.md5MACAddress, [[UIDevice currentDevice] systemVersion], self.machineName];
 	
 	NSString *js = [NSString stringWithFormat:@"%@(\"%@\",\"%@\");", kApplifierImpactWebViewAPINativeInit, escapedJSON, [self _escapedStringFromString:deviceInformation]];
 	
@@ -668,6 +680,11 @@ typedef enum
 	
 	[self performSelector:@selector(_startCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 	[self performSelector:@selector(_startAnalyticsUploader) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+	
+	self.machineName = [self _analyticsMachineName];
+	self.md5AdvertisingIdentifier = [self _md5AdvertisingIdentifierString];
+	self.md5MACAddress = [self _md5MACAddressString];
+	self.md5OpenUDID = [self _md5OpenUDIDString];
 	
 	[self _configureWebView];
 }
