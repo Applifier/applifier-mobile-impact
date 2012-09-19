@@ -146,25 +146,7 @@ static int const kOpenUDIDRedundancySlots = 100;
     // new users in iOS 5 and before. For new users on iOS 6 and after, the new official public APIs will take over.
     // OpenUDID will therefore be obsoleted when iOS reaches significant adoption, anticipated around mid-2013.
 
-
-#if TARGET_OS_IPHONE
-	Class advertisingManagerClass = NSClassFromString(@"ASIdentifierManager");
-	if ([advertisingManagerClass respondsToSelector:@selector(sharedManager)])
-	{
-		id advertisingManager = [[advertisingManagerClass class] performSelector:@selector(sharedManager)];
-		if ([advertisingManager respondsToSelector:@selector(advertisingIdentifier)])
-		{
-			id advertisingIdentifier = [advertisingManager performSelector:@selector(advertisingIdentifier)];
-			SEL uuidStringSelector = NSSelectorFromString(@"UUIDString");
-			if (advertisingIdentifier != nil && [advertisingIdentifier respondsToSelector:uuidStringSelector])
-			{
-				id uuid = [advertisingIdentifier performSelector:uuidStringSelector];
-				if ([uuid isKindOfClass:[NSString class]])
-					_openUDID = uuid;
-			}
-		}
-	}
-#endif
+	// [[ this block of code has been removed, it's now handled by Impact itself ]]
     
     // Next we generate a UUID.
     // UUIDs (Universally Unique Identifiers), also known as GUIDs (Globally Unique Identifiers) or IIDs

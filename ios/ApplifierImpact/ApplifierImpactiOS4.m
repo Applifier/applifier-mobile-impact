@@ -89,6 +89,42 @@ typedef enum
 
 #pragma mark - Private
 
+- (NSString *)_advertisingIdentifier
+{
+	NSString *identifier = nil;
+	
+	Class advertisingManagerClass = NSClassFromString(@"ASIdentifierManager");
+	if ([advertisingManagerClass respondsToSelector:@selector(sharedManager)])
+	{
+		id advertisingManager = [[advertisingManagerClass class] performSelector:@selector(sharedManager)];
+		BOOL enabled = YES; // Not sure what to do with this value.
+
+		if ([advertisingManager respondsToSelector:@selector(isAdvertisingTrackingEnabled)])
+		{
+			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[advertisingManagerClass instanceMethodSignatureForSelector:@selector(isAdvertisingTrackingEnabled)]];
+			[invocation setSelector:@selector(isAdvertisingTrackingEnabled)];
+			[invocation setTarget:advertisingManager];
+			[invocation invoke];
+			[invocation getReturnValue:&enabled];
+		}
+		
+		AILOG_DEBUG(@"Ad tracking %@.", enabled ? @"enabled" : @"disabled");
+
+		if ([advertisingManager respondsToSelector:@selector(advertisingIdentifier)])
+		{
+			id advertisingIdentifier = [advertisingManager performSelector:@selector(advertisingIdentifier)];
+			if (advertisingIdentifier != nil && [advertisingIdentifier respondsToSelector:@selector(UUIDString)])
+			{
+				id uuid = [advertisingIdentifier performSelector:@selector(UUIDString)];
+				if ([uuid isKindOfClass:[NSString class]])
+					identifier = uuid;
+			}
+		}
+	}
+	
+	return identifier;
+}
+
 - (NSString *)_machineName
 {
 	size_t size;
@@ -467,6 +503,14 @@ typedef enum
 	[self.analyticsUploader retryFailedUploads];
 }
 
+- (NSString *)_escapedStringFromString:(NSString *)string
+{
+	NSString *escapedString = [string stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+	escapedString = [escapedString stringByReplacingOccurrencesOfString:@"'" withString:@"\'"];
+	
+	return escapedString;
+}
+
 - (void)_webViewInit
 {
 	if (self.campaignJSON == nil || !self.webViewLoaded)
@@ -477,9 +521,15 @@ typedef enum
 	
 	AILOG_DEBUG(@"");
 	
-	NSString *escapedJSON = [self.campaignJSON stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-	escapedJSON = [escapedJSON stringByReplacingOccurrencesOfString:@"'" withString:@"\'"];
-	NSString *js = [NSString stringWithFormat:@"%@(\"%@\",\"%@\",\"%@\");", kApplifierImpactWebViewAPINativeInit, escapedJSON, [self _md5OpenUDIDString], [self _md5MACAddressString]];
+	NSString *escapedJSON = [self _escapedStringFromString:self.campaignJSON];
+	NSString *deviceInformation = nil;
+	NSString *adId = [self _advertisingIdentifier];
+	if (adId != nil)
+		deviceInformation = [NSString stringWithFormat:@"{\"advertisingTrackingID\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}", adId, [[UIDevice currentDevice] systemVersion], [self _analyticsMachineName]];
+	else
+		deviceInformation = [NSString stringWithFormat:@"{\"openUdid\":\"%@\",\"macAddress\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}", [self _md5OpenUDIDString], [self _md5MACAddressString], [[UIDevice currentDevice] systemVersion], [self _analyticsMachineName]];
+	
+	NSString *js = [NSString stringWithFormat:@"%@(\"%@\",\"%@\");", kApplifierImpactWebViewAPINativeInit, escapedJSON, [self _escapedStringFromString:deviceInformation]];
 	
 	[self.webView stringByEvaluatingJavaScriptFromString:js];
 }
