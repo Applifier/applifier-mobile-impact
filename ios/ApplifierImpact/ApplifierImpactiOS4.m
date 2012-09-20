@@ -254,6 +254,12 @@ typedef enum
 
 - (NSString *)_md5StringFromString:(NSString *)string
 {
+	if (string == nil)
+	{
+		AILOG_DEBUG(@"Input is nil.");
+		return nil;
+	}
+	
 	const char *ptr = [string UTF8String];
 	unsigned char md5Buffer[CC_MD5_DIGEST_LENGTH];
 	CC_MD5(ptr, strlen(ptr), md5Buffer);
