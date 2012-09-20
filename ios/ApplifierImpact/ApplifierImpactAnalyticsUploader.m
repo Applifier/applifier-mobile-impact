@@ -14,6 +14,8 @@ NSString * const kApplifierImpactAnalyticsURL = @"http://log.applifier.com/video
 NSString * const kApplifierImpactAnalyticsUploaderRequestKey = @"kApplifierImpactAnalyticsUploaderRequestKey";
 NSString * const kApplifierImpactAnalyticsUploaderConnectionKey = @"kApplifierImpactAnalyticsUploaderConnectionKey";
 NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAnalyticsSavedUploadsKey";
+NSString * const kApplifierImpactAnalyticsSavedUploadURLKey = @"kApplifierImpactAnalyticsSavedUploadURLKey";
+NSString * const kApplifierImpactAnalyticsSavedUploadBodyKey = @"kApplifierImpactAnalyticsSavedUploadBodyKey";
 
 @interface ApplifierImpactAnalyticsUploader () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSMutableArray *uploadQueue;
@@ -24,9 +26,9 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 
 #pragma mark - Private
 
-- (void)_saveFailedUpload:(NSDictionary *)download
+- (void)_saveFailedUpload:(NSDictionary *)upload
 {
-	if (download == nil)
+	if (upload == nil)
 	{
 		AILOG_DEBUG(@"Input is nil.");
 		return;
@@ -37,12 +39,19 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 	if (existingFailedUploads == nil)
 		existingFailedUploads = [NSMutableArray array];
 	
-	NSURLRequest *request = [download objectForKey:kApplifierImpactAnalyticsUploaderRequestKey];
-	NSString *urlString = [[request URL] absoluteString];
-	[existingFailedUploads addObject:urlString];
-	AILOG_DEBUG(@"%@", existingFailedUploads);
-	[[NSUserDefaults standardUserDefaults] setObject:existingFailedUploads forKey:kApplifierImpactAnalyticsSavedUploadsKey];
-	[[NSUserDefaults standardUserDefaults] synchronize];
+	NSURLRequest *request = [upload objectForKey:kApplifierImpactAnalyticsUploaderRequestKey];
+	NSMutableDictionary *failedUpload = [NSMutableDictionary dictionary];
+	if ([request URL] != nil && [request HTTPBody] != nil)
+	{
+		[failedUpload setObject:[[request URL] absoluteString] forKey:kApplifierImpactAnalyticsSavedUploadURLKey];
+		NSString *bodyString = [[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding];
+		[failedUpload setObject:bodyString forKey:kApplifierImpactAnalyticsSavedUploadBodyKey];
+		[existingFailedUploads addObject:failedUpload];
+		
+		AILOG_DEBUG(@"%@", existingFailedUploads);
+		[[NSUserDefaults standardUserDefaults] setObject:existingFailedUploads forKey:kApplifierImpactAnalyticsSavedUploadsKey];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+	}
 }
 
 - (BOOL)_startNextUpload
@@ -65,22 +74,26 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 	return YES;
 }
 
-- (void)_queueURL:(NSURL *)url
+- (void)_queueURL:(NSURL *)url body:(NSData *)body
 {
-	if (url == nil)
+	if (url == nil || body == nil)
 	{
-		AILOG_DEBUG(@"Input is nil.");
+		AILOG_DEBUG(@"Invalid input.");
 		return;
 	}
 	
-	NSURLRequest *request = [NSURLRequest requestWithURL:url];
+	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+
 	if (request == nil)
 	{
-		AILOG_DEBUG(@"Request could not be created.");
+		AILOG_DEBUG(@"Could not create request.");
 		return;
 	}
 	
-	AILOG_DEBUG(@"queueing %@", url);
+	[request setHTTPMethod:@"POST"];
+	[request setHTTPBody:body];
+	
+	AILOG_DEBUG(@"queueing %@", [request URL]);
 	
 	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 	NSDictionary *uploadDictionary = @{ kApplifierImpactAnalyticsUploaderRequestKey : request, kApplifierImpactAnalyticsUploaderConnectionKey : connection };
@@ -102,7 +115,7 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 	return self;
 }
 
-- (void)sendViewReportForCampaign:(ApplifierImpactCampaign *)campaign positionString:(NSString *)positionString
+- (void)sendViewReportWithQueryString:(NSString *)queryString
 {
 	if ([NSThread isMainThread])
 	{
@@ -110,14 +123,14 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 		return;
 	}
 	
-	if (campaign == nil || positionString == nil || [positionString length] == 0)
+	if (queryString == nil || [queryString length] == 0)
 	{
 		AILOG_DEBUG(@"Invalid input.");
 		return;
 	}
 	
-	NSString *urlString = [kApplifierImpactAnalyticsURL stringByAppendingFormat:@"?d={\"did\":\"%@\",\"c\":\"%@\",\"pos\":\"%@\"}", @"test", campaign.id, positionString];
-	[self _queueURL:[NSURL URLWithString:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+	NSURL *url = [NSURL URLWithString:kApplifierImpactAnalyticsURL];
+	[self _queueURL:url body:[queryString dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 - (void)retryFailedUploads
@@ -131,12 +144,11 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 	NSArray *uploads = [[NSUserDefaults standardUserDefaults] arrayForKey:kApplifierImpactAnalyticsSavedUploadsKey];
 	if (uploads != nil)
 	{
-		for (NSString *url in uploads)
+		for (NSDictionary *upload in uploads)
 		{
-			if ([url isKindOfClass:[NSString class]])
-			{
-				[self _queueURL:[NSURL URLWithString:url]];
-			}
+			NSString *url = [upload objectForKey:kApplifierImpactAnalyticsSavedUploadURLKey];
+			NSString *body = [upload objectForKey:kApplifierImpactAnalyticsSavedUploadBodyKey];
+			[self _queueURL:[NSURL URLWithString:url] body:[body dataUsingEncoding:NSUTF8StringEncoding]];
 		}
 		
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:kApplifierImpactAnalyticsSavedUploadsKey];

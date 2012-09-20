@@ -12,7 +12,7 @@
 
 @interface ApplifierImpactAnalyticsUploader : NSObject
 
-- (void)sendViewReportForCampaign:(ApplifierImpactCampaign *)campaign positionString:(NSString *)positionString;
+- (void)sendViewReportWithQueryString:(NSString *)queryString;
 - (void)retryFailedUploads;
 
 @end
