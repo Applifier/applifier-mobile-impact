@@ -51,14 +51,6 @@ NSString * const kRewardPictureKey = @"picture";
 
 @implementation ApplifierImpactCampaignManager
 
-@synthesize delegate = _delegate;
-@synthesize urlConnection = _urlConnection;
-@synthesize campaignDownloadData = _campaignDownloadData;
-@synthesize cache = _cache;
-@synthesize campaigns = _campaigns;
-@synthesize rewardItem = _rewardItem;
-@synthesize queryString = _queryString;
-
 #pragma mark - Private
 
 - (id)_JSONValueFromData:(NSData *)data

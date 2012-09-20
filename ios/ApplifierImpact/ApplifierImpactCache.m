@@ -27,11 +27,6 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 
 @implementation ApplifierImpactCache
 
-@synthesize delegate = _delegate;
-@synthesize fileHandle = _fileHandle;
-@synthesize downloadQueue = _downloadQueue;
-@synthesize currentDownload = _currentDownload;
-
 #pragma mark - Private
 
 - (NSString *)_cachePath

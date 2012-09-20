@@ -22,9 +22,6 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 
 @implementation ApplifierImpactAnalyticsUploader
 
-@synthesize uploadQueue = _uploadQueue;
-@synthesize currentUpload = _currentUpload;
-
 #pragma mark - Private
 
 - (void)_saveFailedUpload:(NSDictionary *)download

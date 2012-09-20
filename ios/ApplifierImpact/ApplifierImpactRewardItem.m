@@ -10,8 +10,4 @@
 
 @implementation ApplifierImpactRewardItem
 
-@synthesize key = _key;
-@synthesize name = _name;
-@synthesize pictureURL = _pictureURL;
-
 @end

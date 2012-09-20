@@ -72,31 +72,6 @@ typedef enum
 
 @implementation ApplifierImpactiOS4
 
-@synthesize applifierID = _applifierID;
-@synthesize backgroundThread = _backgroundThread;
-@synthesize campaignManager = _campaignManager;
-@synthesize applifierWindow = _applifierWindow;
-@synthesize webView = _webView;
-@synthesize campaigns = _campaigns;
-@synthesize rewardItem = _rewardItem;
-@synthesize adView = _adView;
-@synthesize selectedCampaign = _selectedCampaign;
-@synthesize player = _player;
-@synthesize playerLayer = _playerLayer;
-@synthesize timeObserver = _timeObserver;
-@synthesize analyticsTimeObserver = _analyticsTimeObserver;
-@synthesize progressLabel = _progressLabel;
-@synthesize videoPosition = _videoPosition;
-@synthesize analyticsUploader = _analyticsUploader;
-@synthesize webViewLoaded = _webViewLoaded;
-@synthesize webViewInitialized = _webViewInitialized;
-@synthesize campaignJSON = _campaignJSON;
-@synthesize machineName = _machineName;
-@synthesize md5AdvertisingIdentifier = _md5AdvertisingIdentifier;
-@synthesize md5MACAddress = _md5MACAddress;
-@synthesize md5OpenUDID = _md5OpenUDID;
-@synthesize campaignQueryString = _campaignQueryString;
-
 #pragma mark - Private
 
 - (NSString *)_advertisingIdentifier

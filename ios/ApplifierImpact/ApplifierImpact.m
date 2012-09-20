@@ -11,8 +11,6 @@
 
 @implementation ApplifierImpact
 
-@synthesize delegate = _delegate;
-
 #pragma mark - Private
 
 - (id)initApplifierInstance
