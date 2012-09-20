@@ -225,6 +225,12 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 		return;
 	}
 	
+	if (campaigns == nil)
+	{
+		AILOG_DEBUG(@"Input is nil.");
+		return;
+	}
+	
 	NSError *error = nil;
 	NSString *cachePath = [self _cachePath];
 	if ( ! [[NSFileManager defaultManager] createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:nil error:&error])
@@ -247,6 +253,12 @@ NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCache
 {
 	@synchronized (self)
 	{
+		if (campaign == nil)
+		{
+			AILOG_DEBUG(@"Input is nil.");
+			return nil;
+		}
+		
 		NSString *path = [self _videoPathForCampaign:campaign];
 		
 		return [NSURL fileURLWithPath:path];

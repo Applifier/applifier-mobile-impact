@@ -29,6 +29,12 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 
 - (void)_saveFailedUpload:(NSDictionary *)download
 {
+	if (download == nil)
+	{
+		AILOG_DEBUG(@"Input is nil.");
+		return;
+	}
+	
 	NSMutableArray *existingFailedUploads = [[[NSUserDefaults standardUserDefaults] arrayForKey:kApplifierImpactAnalyticsSavedUploadsKey] mutableCopy];
 	
 	if (existingFailedUploads == nil)
@@ -64,6 +70,12 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 
 - (void)_queueURL:(NSURL *)url
 {
+	if (url == nil)
+	{
+		AILOG_DEBUG(@"Input is nil.");
+		return;
+	}
+	
 	NSURLRequest *request = [NSURLRequest requestWithURL:url];
 	if (request == nil)
 	{
@@ -98,6 +110,12 @@ NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAn
 	if ([NSThread isMainThread])
 	{
 		AILOG_ERROR(@"Cannot be run on main thread.");
+		return;
+	}
+	
+	if (campaign == nil || positionString == nil || [positionString length] == 0)
+	{
+		AILOG_DEBUG(@"Invalid input.");
 		return;
 	}
 	

@@ -63,6 +63,12 @@ NSString * const kRewardPictureKey = @"picture";
 
 - (id)_JSONValueFromData:(NSData *)data
 {
+	if (data == nil)
+	{
+		AILOG_DEBUG(@"Input is nil.");
+		return nil;
+	}
+	
 	ApplifierImpactSBJsonParser *parser = [[ApplifierImpactSBJsonParser alloc] init];
 	NSError *error = nil;
 	__block NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -87,6 +93,12 @@ NSString * const kRewardPictureKey = @"picture";
 
 - (NSArray *)_deserializeCampaigns:(NSArray *)campaignArray
 {
+	if (campaignArray == nil || [campaignArray count] == 0)
+	{
+		AILOG_DEBUG(@"Input empty or nil.");
+		return nil;
+	}
+	
 	NSMutableArray *campaigns = [NSMutableArray array];
 	
 	for (id campaignDictionary in campaignArray)
@@ -271,10 +283,14 @@ NSString * const kRewardPictureKey = @"picture";
 
 - (NSURL *)videoURLForCampaign:(ApplifierImpactCampaign *)campaign
 {
-	// we can provide either a remote or local video URL here
-	
 	@synchronized (self)
 	{
+		if (campaign == nil)
+		{
+			AILOG_DEBUG(@"Input is nil.");
+			return nil;
+		}
+		
 		NSURL *videoURL = [self.cache localVideoURLForCampaign:campaign];
 		if (videoURL == nil)
 			videoURL = campaign.trailerStreamingURL;
