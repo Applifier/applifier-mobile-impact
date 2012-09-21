@@ -10,7 +10,7 @@
 #import "ApplifierImpactCampaign.h"
 #import "ApplifierImpact.h"
 
-NSString * const kApplifierImpactAnalyticsURL = @"http://log.applifier.com/videoads-tracking";
+NSString * const kApplifierImpactAnalyticsURL = @"https://log.applifier.com/videoads-tracking";
 NSString * const kApplifierImpactTrackingURL = @"https://impact.applifier.com/gamers/";
 NSString * const kApplifierImpactInstallTrackingURL = @"https://impact.applifier.com/games/";
 NSString * const kApplifierImpactAnalyticsUploaderRequestKey = @"kApplifierImpactAnalyticsUploaderRequestKey";
