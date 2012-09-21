@@ -230,16 +230,15 @@ NSString * const kGamerIDKey = @"gamerId";
 	id json = [self _JSONValueFromData:self.campaignDownloadData];
 	if ([json isKindOfClass:[NSDictionary class]])
 	{
-		NSDictionary *jsonDictionary = (NSDictionary *)json;
-		self.campaigns = [self _deserializeCampaigns:[[jsonDictionary objectForKey:@"data"] objectForKey:@"campaigns"]];
-		self.rewardItem = [self _deserializeRewardItem:[[jsonDictionary objectForKey:@"data"] objectForKey:@"item"]];
+		NSDictionary *jsonDictionary = [(NSDictionary *)json objectForKey:@"data"];
+		self.campaigns = [self _deserializeCampaigns:[jsonDictionary objectForKey:@"campaigns"]];
+		self.rewardItem = [self _deserializeRewardItem:[jsonDictionary objectForKey:@"item"]];
 		
 		NSString *gamerID = [jsonDictionary objectForKey:kGamerIDKey];
 		if (gamerID == nil)
 		{
 			AILOG_DEBUG(@"Gamer ID is nil.");
-			// FIXME
-//			return;
+			return;
 		}
 		self.gamerID = gamerID;
 				
