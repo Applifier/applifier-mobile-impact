@@ -29,6 +29,8 @@ NSString * const kRewardItemKey = @"itemKey";
 NSString * const kRewardNameKey = @"name";
 NSString * const kRewardPictureKey = @"picture";
 
+NSString * const kGamerIDKey = @"gamerId";
+
 /*
  VideoPlan (for dev / testing purposes)
  The data requested from backend that contains the campaigns that should be used at this time http://quake.everyplay.fi/~bluesun/impact/manifest.json? d={"did":"DEVICE_ID","c":["ARRAY", “OF”, “CACHED”, “CAMPAIGN”, “ID S”]}
@@ -47,6 +49,7 @@ NSString * const kRewardPictureKey = @"picture";
 @property (nonatomic, strong) ApplifierImpactCache *cache;
 @property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
+@property (nonatomic, strong) NSString *gamerID;
 @end
 
 @implementation ApplifierImpactCampaignManager
@@ -227,10 +230,19 @@ NSString * const kRewardPictureKey = @"picture";
 	id json = [self _JSONValueFromData:self.campaignDownloadData];
 	if ([json isKindOfClass:[NSDictionary class]])
 	{
-		NSDictionary *jsonDictionary = [(NSDictionary *)json objectForKey:@"data"];
-		self.campaigns = [self _deserializeCampaigns:[jsonDictionary objectForKey:@"campaigns"]];
-		self.rewardItem = [self _deserializeRewardItem:[jsonDictionary objectForKey:@"item"]];
+		NSDictionary *jsonDictionary = (NSDictionary *)json;
+		self.campaigns = [self _deserializeCampaigns:[[jsonDictionary objectForKey:@"data"] objectForKey:@"campaigns"]];
+		self.rewardItem = [self _deserializeRewardItem:[[jsonDictionary objectForKey:@"data"] objectForKey:@"item"]];
 		
+		NSString *gamerID = [jsonDictionary objectForKey:kGamerIDKey];
+		if (gamerID == nil)
+		{
+			AILOG_DEBUG(@"Gamer ID is nil.");
+			// FIXME
+//			return;
+		}
+		self.gamerID = gamerID;
+				
 		[self.cache cacheCampaigns:self.campaigns];
 	}
 	else
@@ -340,12 +352,12 @@ NSString * const kRewardPictureKey = @"picture";
 
 - (void)cacheFinishedCachingCampaigns:(ApplifierImpactCache *)cache
 {
-	if ([self.delegate respondsToSelector:@selector(campaignManager:updatedWithCampaigns:rewardItem:)])
+	if ([self.delegate respondsToSelector:@selector(campaignManager:updatedWithCampaigns:rewardItem:gamerID:)])
 	{
 		__block ApplifierImpactCampaignManager *blockSelf = self;
 		
 		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-			[blockSelf.delegate campaignManager:blockSelf updatedWithCampaigns:blockSelf.campaigns rewardItem:blockSelf.rewardItem];
+			[blockSelf.delegate campaignManager:blockSelf updatedWithCampaigns:blockSelf.campaigns rewardItem:blockSelf.rewardItem gamerID:blockSelf.gamerID];
 		}];
 	}
 }

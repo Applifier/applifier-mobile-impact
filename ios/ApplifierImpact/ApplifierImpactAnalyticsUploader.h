@@ -13,6 +13,7 @@
 @interface ApplifierImpactAnalyticsUploader : NSObject
 
 - (void)sendViewReportWithQueryString:(NSString *)queryString;
+- (void)sendTrackingCallWithQueryString:(NSString *)queryString;
 - (void)retryFailedUploads;
 
 @end

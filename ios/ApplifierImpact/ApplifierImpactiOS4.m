@@ -34,6 +34,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 @property (nonatomic, strong) NSString *md5MACAddress;
 @property (nonatomic, strong) NSString *md5OpenUDID;
 @property (nonatomic, strong) NSString *campaignQueryString;
+@property (nonatomic, strong) NSString *gamerID;
 @property (nonatomic, strong) NSThread *backgroundThread;
 @property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, assign) BOOL webViewInitialized;
@@ -267,18 +268,6 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	[self.campaignManager updateCampaigns];
 }
 
-- (void)_logPositionString:(NSString *)string
-{
-	if (string == nil)
-	{
-		AILOG_DEBUG(@"Input is nil.");
-		return;
-	}
-	
-	// FIXME
-//	[self.analyticsUploader sendViewReportForCampaign:self.selectedCampaign positionString:string];
-}
-
 - (void)_logVideoAnalyticsWithPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign
 {
 	if (campaign == nil)
@@ -288,8 +277,12 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	}
 	
 	NSString *positionString = nil;
+	NSString *trackingString = nil;
 	if (videoPosition == kVideoAnalyticsPositionStart)
+	{
 		positionString = @"video_start";
+		trackingString = @"start";
+	}
 	else if (videoPosition == kVideoAnalyticsPositionFirstQuartile)
 		positionString = @"first_quartile";
 	else if (videoPosition == kVideoAnalyticsPositionMidPoint)
@@ -297,12 +290,21 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	else if (videoPosition == kVideoAnalyticsPositionThirdQuartile)
 		positionString = @"third_quartile";
 	else if (videoPosition == kVideoAnalyticsPositionEnd)
+	{
 		positionString = @"video_end";
+		trackingString = @"view";
+	}
 	
 	NSString *trackingId = self.md5AdvertisingIdentifier != nil ? self.md5AdvertisingIdentifier : self.md5OpenUDID;
 	NSString *query = [NSString stringWithFormat:@"applicationId=%@&type=%@&trackingId=%@&providerId=%@", self.applifierID, positionString, trackingId, campaign.id];
 
 	[self.analyticsUploader performSelector:@selector(sendViewReportWithQueryString:) onThread:self.backgroundThread withObject:query waitUntilDone:NO];
+	
+	if (trackingString != nil)
+	{
+		NSString *trackingQuery = [NSString stringWithFormat:@"%@/%@/%@?gameId=%@", self.gamerID, trackingString, campaign.id, self.applifierID];
+		[self.analyticsUploader performSelector:@selector(sendTrackingCallWithQueryString:) onThread:self.backgroundThread withObject:trackingQuery waitUntilDone:NO];
+	}
 }
 
 - (void)_startAnalyticsUploader
@@ -410,7 +412,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 #pragma mark - ApplifierImpactCampaignManagerDelegate
 
-- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem
+- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID
 {
 	if ( ! [NSThread isMainThread])
 	{
@@ -420,7 +422,8 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	
 	self.campaigns = campaigns;
 	self.rewardItem = rewardItem;
-
+	self.gamerID = gamerID;
+	
 	[self _notifyDelegateOfCampaignAvailability];
 }
 

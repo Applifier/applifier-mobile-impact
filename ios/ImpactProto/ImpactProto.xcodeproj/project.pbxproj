@@ -105,7 +105,6 @@
 		78ED793E15C66FC6007C5BD5 = {
 			isa = PBXGroup;
 			children = (
-				907454411609C20C00454427 /* AdSupport.framework */,
 				F67203E515F6142A00807527 /* ApplifierImpact */,
 				78CC133915D3D85400972EA6 /* icon_114.png */,
 				78CC133715D3D84A00972EA6 /* icon_57.png */,
@@ -127,6 +126,7 @@
 		78ED794C15C66FC6007C5BD5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				907454411609C20C00454427 /* AdSupport.framework */,
 				F642682E16088B7C0005B83A /* StoreKit.framework */,
 				78ED798A15C6B04D007C5BD5 /* CoreMedia.framework */,
 				78ED798215C6962C007C5BD5 /* AVFoundation.framework */,
