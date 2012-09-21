@@ -13,6 +13,7 @@
 
 @protocol ApplifierImpactCacheDelegate <NSObject>
 
+@required
 - (void)cache:(ApplifierImpactCache *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign;
 - (void)cacheFinishedCachingCampaigns:(ApplifierImpactCache *)cache;
 
