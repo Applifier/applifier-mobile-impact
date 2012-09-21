@@ -322,6 +322,21 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	}
 }
 
+- (void)_trackInstall
+{
+	if (self.applifierID == nil)
+	{
+		AILOG_ERROR(@"Applifier Impact has not been started properly. Launch with -startWithApplifierID: first.");
+		return;
+	}
+	
+	NSString *queryString = [NSString stringWithFormat:@"%@/install", self.applifierID];
+	NSString *bodyString = [NSString stringWithFormat:@"openUdid=%@&macAddress=%@", self.md5OpenUDID, self.md5MACAddress];
+	NSDictionary *queryDictionary = @{ kApplifierImpactQueryDictionaryQueryKey : queryString, kApplifierImpactQueryDictionaryBodyKey : bodyString };
+	
+	[self.analyticsUploader performSelector:@selector(sendInstallTrackingCallWithQueryDictionary:) onThread:self.backgroundThread withObject:queryDictionary waitUntilDone:NO];
+}
+
 #pragma mark - Public
 
 - (void)startWithApplifierID:(NSString *)applifierID
@@ -397,11 +412,22 @@ NSString * const kApplifierImpactVersion = @"1.0";
 {
 	if ( ! [NSThread isMainThread])
 	{
-		AILOG_ERROR(@"-stopAll must be run on main thread.");
+		AILOG_ERROR(@"Must be run on main thread.");
 		return;
 	}
 	
 	[self.campaignManager performSelector:@selector(cancelAllDownloads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+}
+
+- (void)trackInstall
+{
+	if ( ! [NSThread isMainThread])
+	{
+		AILOG_ERROR(@"Must be run on main thread.");
+		return;
+	}
+	
+	[self _trackInstall];
 }
 
 - (void)dealloc

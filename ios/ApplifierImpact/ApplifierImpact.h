@@ -53,5 +53,6 @@
 - (UIView *)impactAdView;
 - (BOOL)canShowImpact;
 - (void)stopAll;
+- (void)trackInstall;
 
 @end

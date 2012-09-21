@@ -12,12 +12,15 @@
 
 NSString * const kApplifierImpactAnalyticsURL = @"http://log.applifier.com/videoads-tracking";
 NSString * const kApplifierImpactTrackingURL = @"https://impact.applifier.com/gamers/";
+NSString * const kApplifierImpactInstallTrackingURL = @"https://impact.applifier.com/games/";
 NSString * const kApplifierImpactAnalyticsUploaderRequestKey = @"kApplifierImpactAnalyticsUploaderRequestKey";
 NSString * const kApplifierImpactAnalyticsUploaderConnectionKey = @"kApplifierImpactAnalyticsUploaderConnectionKey";
 NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAnalyticsSavedUploadsKey";
 NSString * const kApplifierImpactAnalyticsSavedUploadURLKey = @"kApplifierImpactAnalyticsSavedUploadURLKey";
 NSString * const kApplifierImpactAnalyticsSavedUploadBodyKey = @"kApplifierImpactAnalyticsSavedUploadBodyKey";
 NSString * const kApplifierImpactAnalyticsSavedUploadHTTPMethodKey = @"kApplifierImpactAnalyticsSavedUploadHTTPMethodKey";
+NSString * const kApplifierImpactQueryDictionaryQueryKey = @"kApplifierImpactQueryDictionaryQueryKey";
+NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQueryDictionaryBodyKey";
 
 @interface ApplifierImpactAnalyticsUploader () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSMutableArray *uploadQueue;
@@ -166,6 +169,32 @@ NSString * const kApplifierImpactAnalyticsSavedUploadHTTPMethodKey = @"kApplifie
 	}
 	
 	[self _queueWithURLString:[kApplifierImpactTrackingURL stringByAppendingString:queryString] queryString:nil httpMethod:@"GET"];
+}
+
+- (void)sendInstallTrackingCallWithQueryDictionary:(NSDictionary *)queryDictionary
+{
+	if ([NSThread isMainThread])
+	{
+		AILOG_ERROR(@"Cannot be run on main thread.");
+		return;
+	}
+	
+	if (queryDictionary == nil)
+	{
+		AILOG_DEBUG(@"Invalid input.");
+		return;
+	}
+	
+	NSString *query = [queryDictionary objectForKey:kApplifierImpactQueryDictionaryQueryKey];
+	NSString *body = [queryDictionary objectForKey:kApplifierImpactQueryDictionaryBodyKey];
+	
+	if (query == nil || [query length] == 0 || body == nil || [body length] == 0)
+	{
+		AILOG_DEBUG(@"Invalid parameters in query dictionary.");
+		return;
+	}
+	
+	[self _queueWithURLString:[kApplifierImpactInstallTrackingURL stringByAppendingString:query] queryString:body httpMethod:@"POST"];
 }
 
 - (void)retryFailedUploads

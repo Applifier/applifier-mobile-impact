@@ -69,4 +69,9 @@ static ApplifierImpact *sharedApplifierInstance = nil;
 	// do nothing
 }
 
+- (void)trackInstall
+{
+	// do nothing
+}
+
 @end

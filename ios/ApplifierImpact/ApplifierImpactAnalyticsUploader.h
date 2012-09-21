@@ -8,12 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * const kApplifierImpactQueryDictionaryQueryKey;
+extern NSString * const kApplifierImpactQueryDictionaryBodyKey;
+
 @class ApplifierImpactCampaign;
 
 @interface ApplifierImpactAnalyticsUploader : NSObject
 
 - (void)sendViewReportWithQueryString:(NSString *)queryString;
 - (void)sendTrackingCallWithQueryString:(NSString *)queryString;
+- (void)sendInstallTrackingCallWithQueryDictionary:(NSDictionary *)queryDictionary;
 - (void)retryFailedUploads;
 
 @end
