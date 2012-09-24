@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
-#import "ApplifierImpactRewardItem.h"
 
 #define AILOG_DEBUG_LOGGING_ENABLED 1
 
@@ -36,7 +35,7 @@
 - (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact;
-- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItem:(ApplifierImpactRewardItem *)rewardItem;
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey;
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact;
 
 // iOS 6 only! FIXME: requires documentation, since developers need to present this themselves.
