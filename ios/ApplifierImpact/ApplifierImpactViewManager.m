@@ -315,6 +315,12 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 
 - (id)init
 {
+	if ( ! [NSThread isMainThread])
+	{
+		AILOG_DEBUG(@"Must be run in main thread.");
+		return nil;
+	}
+	
 	if ((self = [super init]))
 	{
 		_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -346,11 +352,23 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 
 - (void)start
 {
+	if ( ! [NSThread isMainThread])
+	{
+		AILOG_DEBUG(@"Must be run in main thread.");
+		return;
+	}
+	
 	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kApplifierImpactTestWebViewURL]]];
 }
 
 - (UIView *)adView
 {
+	if ( ! [NSThread isMainThread])
+	{
+		AILOG_DEBUG(@"Must be run in main thread.");
+		return nil;
+	}
+	
 	if (self.webViewInitialized)
 	{
 		[self _webViewShow];
@@ -387,6 +405,12 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 
 - (void)setCampaignJSON:(NSString *)campaignJSON
 {
+	if ( ! [NSThread isMainThread])
+	{
+		AILOG_DEBUG(@"Must be run in main thread.");
+		return;
+	}
+	
 	_campaignJSON = campaignJSON;
 	
 	if (self.webViewLoaded)
