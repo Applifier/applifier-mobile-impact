@@ -69,9 +69,9 @@
 	NSLog(@"applifierImpactVideoStarted");
 }
 
-- (void)applifierImpactVideoCompleted:(ApplifierImpact *)applifierImpact
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItem:(ApplifierImpactRewardItem *)rewardItem
 {
-	NSLog(@"applifierImpactVideoCompleted");
+	NSLog(@"applifierImpact:completedVideoWithRewardItem:");
 }
 
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact

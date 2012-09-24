@@ -494,8 +494,8 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (void)viewManagerVideoEnded:(ApplifierImpactViewManager *)viewManager
 {
-	if ([self.delegate respondsToSelector:@selector(applifierImpactVideoCompleted:)])
-		[self.delegate applifierImpactVideoCompleted:self];
+	if ([self.delegate respondsToSelector:@selector(applifierImpact:completedVideoWithRewardItem:)])
+		[self.delegate applifierImpact:self completedVideoWithRewardItem:self.rewardItem];
 }
 
 - (void)viewManager:(ApplifierImpactViewManager *)viewManager loggedVideoPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign
