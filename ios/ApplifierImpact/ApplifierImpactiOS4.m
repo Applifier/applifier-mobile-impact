@@ -12,6 +12,8 @@
 #include <net/if_dl.h>
 #include <CommonCrypto/CommonDigest.h>
 
+#import <SystemConfiguration/SystemConfiguration.h>
+
 #import "ApplifierImpactiOS4.h"
 #import "ApplifierImpactCampaignManager.h"
 #import "ApplifierImpactCampaign.h"
@@ -35,6 +37,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 @property (nonatomic, strong) NSString *md5OpenUDID;
 @property (nonatomic, strong) NSString *campaignQueryString;
 @property (nonatomic, strong) NSString *gamerID;
+@property (nonatomic, strong) NSString *connectionType;
 @property (nonatomic, strong) NSThread *backgroundThread;
 @property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, assign) BOOL webViewInitialized;
@@ -233,15 +236,60 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (NSString *)_currentConnectionType
 {
-	// FIXME: find out where to get this
-	return @"TODO";
+	NSString *wifiString = @"wifi";
+	NSString *cellularString = @"cellular";
+	NSString *connectionString = nil;
+	
+	SCNetworkReachabilityRef reachabilityRef = SCNetworkReachabilityCreateWithName(NULL, "applifier.com");
+	if (reachabilityRef != NULL)
+	{
+		SCNetworkReachabilityFlags flags;
+		if (SCNetworkReachabilityGetFlags(reachabilityRef, &flags))
+		{
+			if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0)
+			{
+				// if target host is reachable and no connection is required
+				//  then we'll assume (for now) that you're on Wi-Fi
+				connectionString = wifiString;
+			}
+			
+			if ((flags & kSCNetworkReachabilityFlagsConnectionOnDemand) != 0 || (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0)
+			{
+				// ... and the connection is on-demand (or on-traffic) if the
+				//     calling application is using the CFSocketStream or higher APIs
+				
+				if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0)
+				{
+					// ... and no [user] intervention is needed
+					connectionString = wifiString;
+				}
+			}
+			
+			if ((flags & kSCNetworkReachabilityFlagsIsWWAN) != 0)
+			{
+				// ... but WWAN connections are OK if the calling application
+				//     is using the CFNetwork (CFSocketStream?) APIs.
+				connectionString = cellularString;
+			}
+
+			if ((flags & kSCNetworkReachabilityFlagsReachable) == 0)
+			{
+				// if target host is not reachable
+				connectionString = nil;
+			}
+		}
+	}
+	
+	CFRelease(reachabilityRef);
+	
+	return connectionString;
 }
 
 - (NSString *)_queryString
 {
 	NSString *advertisingIdentifier = self.md5AdvertisingIdentifier != nil ? [NSString stringWithFormat:@"&advertisingTrackingId=%@", self.md5AdvertisingIdentifier] : @"";
 	
-	return [NSString stringWithFormat:@"?openUdid=%@&macAddress=%@%@&iosVersion=%@&device=%@&sdkVersion=%@&gameId=%@&type=ios&connection=%@", self.md5OpenUDID, self.md5MACAddress, advertisingIdentifier, [[UIDevice currentDevice] systemVersion], self.machineName, kApplifierImpactVersion, self.applifierID, [self _currentConnectionType]];
+	return [NSString stringWithFormat:@"?openUdid=%@&macAddress=%@%@&iosVersion=%@&device=%@&sdkVersion=%@&gameId=%@&type=ios&connection=%@", self.md5OpenUDID, self.md5MACAddress, advertisingIdentifier, [[UIDevice currentDevice] systemVersion], self.machineName, kApplifierImpactVersion, self.applifierID, self.connectionType];
 }
 
 - (void)_backgroundRunLoop:(id)dummy
@@ -368,6 +416,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		self.md5AdvertisingIdentifier = [self _md5AdvertisingIdentifierString];
 		self.md5MACAddress = [self _md5MACAddressString];
 		self.md5OpenUDID = [self _md5OpenUDIDString];
+		self.connectionType = [self _currentConnectionType];
 		self.campaignQueryString = [self _queryString];
 		
 		self.backgroundThread = [[NSThread alloc] initWithTarget:self selector:@selector(_backgroundRunLoop:) object:nil];

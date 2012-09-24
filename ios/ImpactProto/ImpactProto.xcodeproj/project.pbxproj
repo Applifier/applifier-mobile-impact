@@ -19,6 +19,7 @@
 		78ED796415C66FC6007C5BD5 /* ApplifierImpactViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78ED796215C66FC6007C5BD5 /* ApplifierImpactViewController.xib */; };
 		78ED798315C6962C007C5BD5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78ED798215C6962C007C5BD5 /* AVFoundation.framework */; };
 		78ED798B15C6B04D007C5BD5 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78ED798A15C6B04D007C5BD5 /* CoreMedia.framework */; };
+		9017B0AB161086A600ACFC04 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9017B0AA161086A600ACFC04 /* SystemConfiguration.framework */; };
 		9038E59415F73CC3009E17BB /* ApplifierImpactCampaignManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9038E59315F73CC3009E17BB /* ApplifierImpactCampaignManager.m */; };
 		9038E5B115F76EA3009E17BB /* ApplifierImpactSBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 9038E5AE15F76EA3009E17BB /* ApplifierImpactSBJsonBase.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9038E5B215F76EA3009E17BB /* ApplifierImpactSBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 9038E5B015F76EA3009E17BB /* ApplifierImpactSBJsonParser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -55,6 +56,7 @@
 		78ED796315C66FC6007C5BD5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ApplifierImpactViewController.xib; sourceTree = "<group>"; };
 		78ED798215C6962C007C5BD5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		78ED798A15C6B04D007C5BD5 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		9017B0AA161086A600ACFC04 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9038E59215F73CC3009E17BB /* ApplifierImpactCampaignManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCampaignManager.h; sourceTree = "<group>"; };
 		9038E59315F73CC3009E17BB /* ApplifierImpactCampaignManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCampaignManager.m; sourceTree = "<group>"; };
 		9038E5AD15F76EA3009E17BB /* ApplifierImpactSBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonBase.h; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9017B0AB161086A600ACFC04 /* SystemConfiguration.framework in Frameworks */,
 				907454421609C20C00454427 /* AdSupport.framework in Frameworks */,
 				F642682F16088B7C0005B83A /* StoreKit.framework in Frameworks */,
 				78ED798B15C6B04D007C5BD5 /* CoreMedia.framework in Frameworks */,
@@ -126,6 +129,7 @@
 		78ED794C15C66FC6007C5BD5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9017B0AA161086A600ACFC04 /* SystemConfiguration.framework */,
 				907454411609C20C00454427 /* AdSupport.framework */,
 				F642682E16088B7C0005B83A /* StoreKit.framework */,
 				78ED798A15C6B04D007C5BD5 /* CoreMedia.framework */,
