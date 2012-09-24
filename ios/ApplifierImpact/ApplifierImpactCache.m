@@ -331,7 +331,10 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	}
 	
 	if ( ! downloadsQueued)
+	{
+		AILOG_DEBUG(@"No new or partial videos to download.");
 		[self.delegate cacheFinishedCachingCampaigns:self];
+	}
 }
 
 - (NSURL *)localVideoURLForCampaign:(ApplifierImpactCampaign *)campaign
