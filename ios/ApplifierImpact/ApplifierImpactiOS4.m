@@ -38,6 +38,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 @property (nonatomic, strong) NSThread *backgroundThread;
 @property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, assign) BOOL webViewInitialized;
+@property (nonatomic, assign) dispatch_queue_t queue;
 @end
 
 @implementation ApplifierImpactiOS4
@@ -276,34 +277,36 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		return;
 	}
 	
-	NSString *positionString = nil;
-	NSString *trackingString = nil;
-	if (videoPosition == kVideoAnalyticsPositionStart)
-	{
-		positionString = @"video_start";
-		trackingString = @"start";
-	}
-	else if (videoPosition == kVideoAnalyticsPositionFirstQuartile)
-		positionString = @"first_quartile";
-	else if (videoPosition == kVideoAnalyticsPositionMidPoint)
-		positionString = @"mid_point";
-	else if (videoPosition == kVideoAnalyticsPositionThirdQuartile)
-		positionString = @"third_quartile";
-	else if (videoPosition == kVideoAnalyticsPositionEnd)
-	{
-		positionString = @"video_end";
-		trackingString = @"view";
-	}
-	
-	NSString *query = [NSString stringWithFormat:@"applicationId=%@&type=%@&trackingId=%@&providerId=%@", self.applifierID, positionString, self.gamerID, campaign.id];
-
-	[self.analyticsUploader performSelector:@selector(sendViewReportWithQueryString:) onThread:self.backgroundThread withObject:query waitUntilDone:NO];
-	
-	if (trackingString != nil)
-	{
-		NSString *trackingQuery = [NSString stringWithFormat:@"%@/%@/%@?gameId=%@", self.gamerID, trackingString, campaign.id, self.applifierID];
-		[self.analyticsUploader performSelector:@selector(sendTrackingCallWithQueryString:) onThread:self.backgroundThread withObject:trackingQuery waitUntilDone:NO];
-	}
+	dispatch_async(self.queue, ^{
+		NSString *positionString = nil;
+		NSString *trackingString = nil;
+		if (videoPosition == kVideoAnalyticsPositionStart)
+		{
+			positionString = @"video_start";
+			trackingString = @"start";
+		}
+		else if (videoPosition == kVideoAnalyticsPositionFirstQuartile)
+			positionString = @"first_quartile";
+		else if (videoPosition == kVideoAnalyticsPositionMidPoint)
+			positionString = @"mid_point";
+		else if (videoPosition == kVideoAnalyticsPositionThirdQuartile)
+			positionString = @"third_quartile";
+		else if (videoPosition == kVideoAnalyticsPositionEnd)
+		{
+			positionString = @"video_end";
+			trackingString = @"view";
+		}
+		
+		NSString *query = [NSString stringWithFormat:@"applicationId=%@&type=%@&trackingId=%@&providerId=%@", self.applifierID, positionString, self.gamerID, campaign.id];
+		
+		[self.analyticsUploader performSelector:@selector(sendViewReportWithQueryString:) onThread:self.backgroundThread withObject:query waitUntilDone:NO];
+		
+		if (trackingString != nil)
+		{
+			NSString *trackingQuery = [NSString stringWithFormat:@"%@/%@/%@?gameId=%@", self.gamerID, trackingString, campaign.id, self.applifierID];
+			[self.analyticsUploader performSelector:@selector(sendTrackingCallWithQueryString:) onThread:self.backgroundThread withObject:trackingQuery waitUntilDone:NO];
+		}
+	});
 }
 
 - (void)_startAnalyticsUploader
@@ -329,11 +332,13 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		return;
 	}
 	
-	NSString *queryString = [NSString stringWithFormat:@"%@/install", self.applifierID];
-	NSString *bodyString = [NSString stringWithFormat:@"openUdid=%@&macAddress=%@", self.md5OpenUDID, self.md5MACAddress];
-	NSDictionary *queryDictionary = @{ kApplifierImpactQueryDictionaryQueryKey : queryString, kApplifierImpactQueryDictionaryBodyKey : bodyString };
-	
-	[self.analyticsUploader performSelector:@selector(sendInstallTrackingCallWithQueryDictionary:) onThread:self.backgroundThread withObject:queryDictionary waitUntilDone:NO];
+	dispatch_async(self.queue, ^{
+		NSString *queryString = [NSString stringWithFormat:@"%@/install", self.applifierID];
+		NSString *bodyString = [NSString stringWithFormat:@"openUdid=%@&macAddress=%@", self.md5OpenUDID, self.md5MACAddress];
+		NSDictionary *queryDictionary = @{ kApplifierImpactQueryDictionaryQueryKey : queryString, kApplifierImpactQueryDictionaryBodyKey : bodyString };
+		
+		[self.analyticsUploader performSelector:@selector(sendInstallTrackingCallWithQueryDictionary:) onThread:self.backgroundThread withObject:queryDictionary waitUntilDone:NO];
+	});
 }
 
 #pragma mark - Public
@@ -342,7 +347,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 {
 	if ( ! [NSThread isMainThread])
 	{
-		AILOG_ERROR(@"-startWithApplifierID: must be run on main thread.");
+		AILOG_ERROR(@"Impact must be run on main thread.");
 		return;
 	}
 	
@@ -356,21 +361,27 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		return;
 	
 	self.applifierID = applifierID;
-	self.backgroundThread = [[NSThread alloc] initWithTarget:self selector:@selector(_backgroundRunLoop:) object:nil];
-	[self.backgroundThread start];
+	self.queue = dispatch_queue_create("com.applifier.impact", NULL);
 	
-	self.machineName = [self _analyticsMachineName];
-	self.md5AdvertisingIdentifier = [self _md5AdvertisingIdentifierString];
-	self.md5MACAddress = [self _md5MACAddressString];
-	self.md5OpenUDID = [self _md5OpenUDIDString];
-	self.campaignQueryString = [self _queryString];
-	
-	self.viewManager = [[ApplifierImpactViewManager alloc] init];
-	self.viewManager.delegate = self;
-	[self.viewManager start];
-	
-	[self performSelector:@selector(_startCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
-	[self performSelector:@selector(_startAnalyticsUploader) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+	dispatch_async(self.queue, ^{
+		self.machineName = [self _analyticsMachineName];
+		self.md5AdvertisingIdentifier = [self _md5AdvertisingIdentifierString];
+		self.md5MACAddress = [self _md5MACAddressString];
+		self.md5OpenUDID = [self _md5OpenUDIDString];
+		self.campaignQueryString = [self _queryString];
+		
+		self.backgroundThread = [[NSThread alloc] initWithTarget:self selector:@selector(_backgroundRunLoop:) object:nil];
+		[self.backgroundThread start];
+
+		[self performSelector:@selector(_startCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+		[self performSelector:@selector(_startAnalyticsUploader) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+		
+		dispatch_sync(dispatch_get_main_queue(), ^{
+			self.viewManager = [[ApplifierImpactViewManager alloc] init];
+			self.viewManager.delegate = self;
+			[self.viewManager start];
+		});
+	});
 }
 
 - (UIView *)impactAdView
