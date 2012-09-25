@@ -630,8 +630,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 {
 	AILOG_DEBUG(@"");
 	
-	if ([self.delegate respondsToSelector:@selector(applifierImpact:completedVideoWithRewardItemKey:)])
-		[self.delegate applifierImpact:self completedVideoWithRewardItemKey:self.rewardItem.key];
+	[self.delegate applifierImpact:self completedVideoWithRewardItemKey:self.rewardItem.key];
 }
 
 - (void)viewManager:(ApplifierImpactViewManager *)viewManager loggedVideoPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign

@@ -31,11 +31,13 @@
 
 @protocol ApplifierImpactDelegate <NSObject>
 
+@required
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey;
+
 @optional
 - (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact;
-- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey;
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact;
 
 // iOS 6 only! FIXME: requires documentation, since developers need to present this themselves.

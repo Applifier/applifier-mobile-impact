@@ -54,6 +54,11 @@
 
 #pragma mark - ApplifierImpactDelegate
 
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey
+{
+	NSLog(@"applifierImpact:completedVideoWithRewardItem: -- key: %@", rewardItemKey);
+}
+
 - (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact
 {
 	NSLog(@"applifierImpactWillOpen");
@@ -67,11 +72,6 @@
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact
 {
 	NSLog(@"applifierImpactVideoStarted");
-}
-
-- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey
-{
-	NSLog(@"applifierImpact:completedVideoWithRewardItem: -- key: %@", rewardItemKey);
 }
 
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact
