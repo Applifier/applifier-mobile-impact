@@ -231,7 +231,14 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (NSString *)_md5AdvertisingIdentifierString
 {
-	return [self _md5StringFromString:[self _advertisingIdentifier]];
+	NSString *adId = [self _advertisingIdentifier];
+	if (adId == nil)
+	{
+		AILOG_DEBUG(@"Advertising identifier not available.");
+		return nil;
+	}
+	
+	return [self _md5StringFromString:adId];
 }
 
 - (NSString *)_currentConnectionType
