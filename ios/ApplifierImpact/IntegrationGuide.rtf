@@ -22,13 +22,17 @@
 3) In your app delegate, perform the following steps:\
 \
 - Import ApplifierImpact.h.\
-- In -application:didFinishLaunchingWithOptions:, start Impact like this:\
+- In 
+\f1 -application:didFinishLaunchingWithOptions:
+\f0 , start Impact like this:\
 	\
 
 \f1 	[[ApplifierImpact sharedInstance] startWithApplifierID:YOUR_GAME_ID_HERE];\
 
 \f0 \
-- Optionally, add the following to -applicationWillEnterForeground: to refresh available campaigns when the user returns to the app from the background:\
+- Optionally, add the following to 
+\f1 -applicationWillEnterForeground:
+\f0  to refresh available campaigns when the user returns to the app from the background:\
 \
 
 \f1 	[[ApplifierImpact sharedInstance] refresh];\
@@ -40,9 +44,18 @@
 \f1 	[[ApplifierImpact sharedInstance] setDelegate:self];\
 
 \f0 \
-The only required delegate method is -applifierImpact:completedVideoWithRewardItemKey:, but it is strongly recommended that you implement the other methods too.\
+There are two required delegate methods:\
+
+\f1 \
+	-applifierImpact:completedVideoWithRewardItemKey:\
+	-viewControllerForPresentingViewControllersForImpact:\
+
+\f0 \
+More on those in step 6.\
 \
-5) When you want to present Impact, check that it is possible first with -canShowImpact. E.g. like this:\
+5) When you want to present Impact, check that it is possible first with 
+\f1 -canShowImpact
+\f0 . E.g. like this:\
 \
 
 \f1 	if ([[ApplifierImpact sharedInstance] canShowImpact])\
@@ -55,4 +68,12 @@ The only required delegate method is -applifierImpact:completedVideoWithRewardIt
 \f0 \
 As you can see from the example, Impact does not present the ad view itself. It is the responsibility of the view controller to present the view. Impact will remove the view from its superview when the ad view is closed.\
 \
- }
+6) When a video has finished playing, the delegate method 
+\f1 -applifierImpact:completedVideoWithRewardItemKey:
+\f0  is called. <<insert longer, better explanation here>>\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f1 \cf0 -viewControllerForPresentingViewControllersForImpact:
+\f0  is called when Impact needs a view controller so that it can present another view controller itself. Currently, this happens when SKStoreProductViewController is shown on iOS 6.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0  }
