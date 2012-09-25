@@ -481,7 +481,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 			self.viewManager.md5AdvertisingIdentifier = self.md5AdvertisingIdentifier;
 			self.viewManager.md5MACAddress = self.md5MACAddress;
 			self.viewManager.md5OpenUDID = self.md5OpenUDID;
-			[self.viewManager start];
+			[self.viewManager loadWebView];
 		});
 	});
 }
@@ -575,7 +575,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	if (self.campaigns != nil)
 	{
 		self.webViewInitialized = NO;
-		[self.viewManager start];
+		[self.viewManager loadWebView];
 	}
 	
 	self.campaigns = campaigns;

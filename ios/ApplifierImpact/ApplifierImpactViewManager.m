@@ -355,7 +355,7 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 	return self;
 }
 
-- (void)start
+- (void)loadWebView
 {
 	if ( ! [NSThread isMainThread])
 	{

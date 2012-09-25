@@ -46,7 +46,7 @@ typedef enum
 @property (nonatomic, strong) NSString *campaignJSON;
 @property (nonatomic, strong) ApplifierImpactCampaign *selectedCampaign;
 
-- (void)start;
+- (void)loadWebView;
 - (UIView *)adView;
 
 @end
