@@ -118,11 +118,23 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 	}
 }
 
+- (BOOL)_canOpenStoreProductViewController
+{
+	Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
+	return [storeProductViewControllerClass instancesRespondToSelector:@selector(loadProductWithParameters:completionBlock:)];
+}
+
 - (void)_openURL:(NSString *)urlString
 {
 	if (urlString == nil)
 	{
 		AILOG_DEBUG(@"No URL set.");
+		return;
+	}
+	
+	if ([self _canOpenStoreProductViewController])
+	{
+		[self _openStoreViewControllerWithGameID:self.selectedCampaign.itunesID];
 		return;
 	}
 	
@@ -254,25 +266,26 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 		return;
 	}
 	
-	Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
-	if ([storeProductViewControllerClass instancesRespondToSelector:@selector(loadProductWithParameters:completionBlock:)])
+	if ( ! [self _canOpenStoreProductViewController])
 	{
-		__block ApplifierImpactViewManager *blockSelf = self;
-		__block id storeController = [[[storeProductViewControllerClass class] alloc] init];
-		[storeController setDelegate:self];
-		NSDictionary *productParameters = @{ SKStoreProductParameterITunesItemIdentifier : gameID };
-		[storeController loadProductWithParameters:productParameters completionBlock:^(BOOL result, NSError *error) {
-			if (result)
-			{
-				blockSelf.storePresentingViewController = [self.delegate viewControllerForPresentingViewControllersForViewManager:blockSelf];
-				[blockSelf.storePresentingViewController presentModalViewController:storeController animated:YES];
-			}
-			else
-				AILOG_DEBUG(@"Loading product information failed: %@", error);
-		}];
-	}
-	else
 		AILOG_DEBUG(@"Not supported on older versions of iOS.");
+		return;
+	}
+	
+	Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
+	__block ApplifierImpactViewManager *blockSelf = self;
+	__block id storeController = [[[storeProductViewControllerClass class] alloc] init];
+	[storeController setDelegate:self];
+	NSDictionary *productParameters = @{ SKStoreProductParameterITunesItemIdentifier : gameID };
+	[storeController loadProductWithParameters:productParameters completionBlock:^(BOOL result, NSError *error) {
+		if (result)
+		{
+			blockSelf.storePresentingViewController = [self.delegate viewControllerForPresentingViewControllersForViewManager:blockSelf];
+			[blockSelf.storePresentingViewController presentModalViewController:storeController animated:YES];
+		}
+		else
+			AILOG_DEBUG(@"Loading product information failed: %@", error);
+	}];
 }
 
 - (void)_webViewInitComplete

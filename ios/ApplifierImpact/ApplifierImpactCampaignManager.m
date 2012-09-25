@@ -24,6 +24,7 @@ NSString * const kCampaignGameIDKey = @"gameId";
 NSString * const kCampaignGameNameKey = @"gameName";
 NSString * const kCampaignIDKey = @"id";
 NSString * const kCampaignTaglineKey = @"tagline";
+NSString * const kCampaignStoreIDKey = @"itunesID";
 
 NSString * const kRewardItemKey = @"itemKey";
 NSString * const kRewardNameKey = @"name";
@@ -171,6 +172,14 @@ NSString * const kGamerIDKey = @"gamerId";
 				return nil;
 			}
 			campaign.tagline = tagline;
+			
+			NSString *itunesID = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignStoreIDKey]];
+			if (itunesID == nil || [itunesID length] == 0)
+			{
+				AILOG_DEBUG(@"iTunes ID is empty or invalid. %@", campaignDictionary);
+				return nil;
+			}
+			campaign.itunesID = itunesID;
 			
 			[campaigns addObject:campaign];
 		}
