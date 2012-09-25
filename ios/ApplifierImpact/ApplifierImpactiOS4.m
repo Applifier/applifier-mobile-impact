@@ -550,7 +550,10 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		return;
 	}
 	
-	[self _refresh];
+	if ([self.viewManager adViewVisible])
+		AILOG_DEBUG(@"Ad view visible, not refreshing.");
+	else
+		[self _refresh];
 }
 
 - (void)dealloc

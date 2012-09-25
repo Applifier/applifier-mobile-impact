@@ -45,6 +45,7 @@ typedef enum
 @property (nonatomic, strong) NSString *md5OpenUDID;
 @property (nonatomic, strong) NSString *campaignJSON;
 @property (nonatomic, strong) ApplifierImpactCampaign *selectedCampaign;
+@property (nonatomic, assign, readonly) BOOL adViewVisible;
 
 - (void)loadWebView;
 - (UIView *)adView;

@@ -438,6 +438,14 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 		[self _webViewInit];
 }
 
+- (BOOL)adViewVisible
+{
+	if (self.webView.superview == self.window)
+		return NO;
+	else
+		return YES;
+}
+
 #pragma mark - UIWebViewDelegate
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
