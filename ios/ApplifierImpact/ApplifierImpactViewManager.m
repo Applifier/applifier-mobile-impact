@@ -363,6 +363,9 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 		return;
 	}
 	
+	self.webViewLoaded = NO;
+	self.webViewInitialized = NO;
+	
 	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kApplifierImpactTestWebViewURL]]];
 }
 

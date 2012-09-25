@@ -427,9 +427,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		return;
 	}
 	
-	self.campaigns = nil;
-	self.rewardItem = nil;
-	self.campaignJSON = nil;
+	AILOG_DEBUG(@"");
 	
 	dispatch_async(self.queue, ^{
 		self.connectionType = [self _currentConnectionType];
@@ -437,8 +435,6 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		
 		[self performSelector:@selector(_refreshCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 		[self.analyticsUploader performSelector:@selector(retryFailedUploads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
-		
-		// FIXME: refresh web view?
 	});
 }
 
@@ -481,6 +477,10 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		dispatch_sync(dispatch_get_main_queue(), ^{
 			self.viewManager = [[ApplifierImpactViewManager alloc] init];
 			self.viewManager.delegate = self;
+			self.viewManager.machineName = self.machineName;
+			self.viewManager.md5AdvertisingIdentifier = self.md5AdvertisingIdentifier;
+			self.viewManager.md5MACAddress = self.md5MACAddress;
+			self.viewManager.md5OpenUDID = self.md5OpenUDID;
 			[self.viewManager start];
 		});
 	});
@@ -561,7 +561,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 #pragma mark - ApplifierImpactCampaignManagerDelegate
 
-- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID
+- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID json:(NSString *)json
 {
 	if ( ! [NSThread isMainThread])
 	{
@@ -570,25 +570,20 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	}
 
 	AILOG_DEBUG(@"");
+	
+	// If campaigns already exist, it means that campaigns were updated, and we might want to update the webapp.
+	if (self.campaigns != nil)
+	{
+		self.webViewInitialized = NO;
+		[self.viewManager start];
+	}
 	
 	self.campaigns = campaigns;
 	self.rewardItem = rewardItem;
 	self.gamerID = gamerID;
+	self.viewManager.campaignJSON = json;
 	
 	[self _notifyDelegateOfCampaignAvailability];
-}
-
-- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager downloadedJSON:(NSString *)json
-{
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_ERROR(@"Method must be run on main thread.");
-		return;
-	}
-	
-	AILOG_DEBUG(@"");
-	
-	self.viewManager.campaignJSON = json;
 }
 
 #pragma mark - ApplifierImpactViewManagerDelegate

@@ -50,6 +50,7 @@ NSString * const kGamerIDKey = @"gamerId";
 @property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
 @property (nonatomic, strong) NSString *gamerID;
+@property (nonatomic, strong) NSString *campaignJSON;
 @end
 
 @implementation ApplifierImpactCampaignManager
@@ -66,22 +67,20 @@ NSString * const kGamerIDKey = @"gamerId";
 	
 	ApplifierImpactSBJsonParser *parser = [[ApplifierImpactSBJsonParser alloc] init];
 	NSError *error = nil;
-	__block NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	if ([jsonString isEqualToString:self.campaignJSON])
+		return nil;
+	
 	id repr = [parser objectWithString:jsonString error:&error];
 	if (repr == nil)
 	{
 		AILOG_DEBUG(@"-JSONValue failed. Error is: %@", error);
 		AILOG_DEBUG(@"String value: %@", jsonString);
+
+		return nil;
 	}
 	
-	if ([self.delegate respondsToSelector:@selector(campaignManager:downloadedJSON:)])
-	{
-		__block ApplifierImpactCampaignManager *blockSelf = self;
-		
-		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-			[blockSelf.delegate campaignManager:blockSelf downloadedJSON:jsonString];
-		}];
-	}
+	self.campaignJSON = jsonString;
 	
 	return repr;
 }
@@ -245,7 +244,7 @@ NSString * const kGamerIDKey = @"gamerId";
 		[self.cache cacheCampaigns:self.campaigns];
 	}
 	else
-		AILOG_DEBUG(@"Unknown data type for JSON: %@", [json class]);
+		AILOG_DEBUG(@"JSON not changed or unknown data type for JSON: %@", [json class]);
 }
 
 #pragma mark - Public
@@ -351,14 +350,11 @@ NSString * const kGamerIDKey = @"gamerId";
 
 - (void)cacheFinishedCachingCampaigns:(ApplifierImpactCache *)cache
 {
-	if ([self.delegate respondsToSelector:@selector(campaignManager:updatedWithCampaigns:rewardItem:gamerID:)])
-	{
-		__block ApplifierImpactCampaignManager *blockSelf = self;
-		
-		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-			[blockSelf.delegate campaignManager:blockSelf updatedWithCampaigns:blockSelf.campaigns rewardItem:blockSelf.rewardItem gamerID:blockSelf.gamerID];
-		}];
-	}
+	__block ApplifierImpactCampaignManager *blockSelf = self;
+	
+	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+		[blockSelf.delegate campaignManager:blockSelf updatedWithCampaigns:blockSelf.campaigns rewardItem:blockSelf.rewardItem gamerID:blockSelf.gamerID json:self.campaignJSON];
+	}];
 }
 
 @end
