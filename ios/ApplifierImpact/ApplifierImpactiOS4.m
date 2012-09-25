@@ -511,6 +511,8 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		AILOG_ERROR(@"Method must be run on main thread.");
 		return;
 	}
+
+	AILOG_DEBUG(@"");
 	
 	self.campaigns = campaigns;
 	self.rewardItem = rewardItem;
@@ -526,6 +528,8 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		AILOG_ERROR(@"Method must be run on main thread.");
 		return;
 	}
+	
+	AILOG_DEBUG(@"");
 	
 	self.viewManager.campaignJSON = json;
 }
@@ -545,45 +549,61 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		}
 	}
 	
+	AILOG_DEBUG(@"");
+	
 	return foundCampaign;
 }
 
 -(NSURL *)viewManager:(ApplifierImpactViewManager *)viewManager videoURLForCampaign:(ApplifierImpactCampaign *)campaign
 {
+	AILOG_DEBUG(@"");
+	
 	return [self.campaignManager videoURLForCampaign:campaign];
 }
 
 - (void)viewManagerStartedPlayingVideo:(ApplifierImpactViewManager *)viewManager
 {
+	AILOG_DEBUG(@"");
+	
 	if ([self.delegate respondsToSelector:@selector(applifierImpactVideoStarted:)])
 		[self.delegate applifierImpactVideoStarted:self];
 }
 
 - (void)viewManagerVideoEnded:(ApplifierImpactViewManager *)viewManager
 {
+	AILOG_DEBUG(@"");
+	
 	if ([self.delegate respondsToSelector:@selector(applifierImpact:completedVideoWithRewardItemKey:)])
 		[self.delegate applifierImpact:self completedVideoWithRewardItemKey:self.rewardItem.key];
 }
 
 - (void)viewManager:(ApplifierImpactViewManager *)viewManager loggedVideoPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign
 {
+	AILOG_DEBUG(@"");
+	
 	[self _logVideoAnalyticsWithPosition:videoPosition campaign:campaign];
 }
 
 - (void)viewManager:(ApplifierImpactViewManager *)viewManager wantsToPresentProductViewController:(SKStoreProductViewController *)productViewController
 {
+	AILOG_DEBUG(@"");
+	
 	if ([self.delegate respondsToSelector:@selector(applifierImpact:wantsToPresentProductViewController:)])
 		[self.delegate applifierImpact:self wantsToPresentProductViewController:productViewController];
 }
 
 - (void)viewManagerWillCloseAdView:(ApplifierImpactViewManager *)viewManager
 {
+	AILOG_DEBUG(@"");
+	
 	if ([self.delegate respondsToSelector:@selector(applifierImpactWillClose:)])
 		[self.delegate applifierImpactWillClose:self];
 }
 
 - (void)viewManagerWebViewInitialized:(ApplifierImpactViewManager *)viewManager
 {
+	AILOG_DEBUG(@"");
+	
 	self.webViewInitialized = YES;
 	
 	[self _notifyDelegateOfCampaignAvailability];
