@@ -30,7 +30,7 @@ typedef enum
 - (void)viewManagerStartedPlayingVideo:(ApplifierImpactViewManager *)viewManager;
 - (void)viewManagerVideoEnded:(ApplifierImpactViewManager *)viewManager;
 - (void)viewManager:(ApplifierImpactViewManager *)viewManager loggedVideoPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign;
-- (void)viewManager:(ApplifierImpactViewManager *)viewManager wantsToPresentProductViewController:(SKStoreProductViewController *)productViewController;
+- (UIViewController *)viewControllerForPresentingViewControllersForViewManager:(ApplifierImpactViewManager *)viewManager;
 - (void)viewManagerWillCloseAdView:(ApplifierImpactViewManager *)viewManager;
 - (void)viewManagerWebViewInitialized:(ApplifierImpactViewManager *)viewManager;
 

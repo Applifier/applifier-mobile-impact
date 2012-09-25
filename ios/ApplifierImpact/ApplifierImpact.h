@@ -33,15 +33,13 @@
 
 @required
 - (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey;
+- (UIViewController *)viewControllerForPresentingViewControllersForImpact:(ApplifierImpact *)applifierImpact;
 
 @optional
 - (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact;
-
-// iOS 6 only! FIXME: requires documentation, since developers need to present this themselves.
-- (void)applifierImpact:(ApplifierImpact *)applifierImpact wantsToPresentProductViewController:(SKStoreProductViewController *)productViewController;
 
 @end
 

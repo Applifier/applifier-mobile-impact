@@ -81,17 +81,11 @@
 	[self.buttonView setImage:[UIImage imageNamed:@"impact-ready"] forState:UIControlStateNormal];
 }
 
-- (void)applifierImpact:(ApplifierImpact *)applifierImpact wantsToPresentProductViewController:(SKStoreProductViewController *)productViewController
+- (UIViewController *)viewControllerForPresentingViewControllersForImpact:(ApplifierImpact *)applifierImpact
 {
-	productViewController.delegate = self;
-	[self presentViewController:productViewController animated:YES completion:nil];
-}
-
-#pragma mark - SKStoreProductViewControllerDelegate
-
-- (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController
-{
-	[self dismissViewControllerAnimated:YES completion:nil];
+	NSLog(@"viewControllerForPresentingViewControllersForImpact");
+	
+	return self;
 }
 
 @end

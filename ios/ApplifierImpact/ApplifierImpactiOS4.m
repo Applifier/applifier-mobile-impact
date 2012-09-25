@@ -640,12 +640,11 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	[self _logVideoAnalyticsWithPosition:videoPosition campaign:campaign];
 }
 
-- (void)viewManager:(ApplifierImpactViewManager *)viewManager wantsToPresentProductViewController:(SKStoreProductViewController *)productViewController
+- (UIViewController *)viewControllerForPresentingViewControllersForViewManager:(ApplifierImpactViewManager *)viewManager
 {
 	AILOG_DEBUG(@"");
 	
-	if ([self.delegate respondsToSelector:@selector(applifierImpact:wantsToPresentProductViewController:)])
-		[self.delegate applifierImpact:self wantsToPresentProductViewController:productViewController];
+	return [self.delegate viewControllerForPresentingViewControllersForImpact:self];
 }
 
 - (void)viewManagerWillCloseAdView:(ApplifierImpactViewManager *)viewManager
