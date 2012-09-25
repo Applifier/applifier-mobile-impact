@@ -316,12 +316,41 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	}
 }
 
-- (void)_startCampaignManager
+- (void)_refreshCampaignManager
 {
-	self.campaignManager = [[ApplifierImpactCampaignManager alloc] init];
-	self.campaignManager.delegate = self;
+	if ([NSThread isMainThread])
+	{
+		AILOG_DEBUG(@"Cannot be run on main thread.");
+		return;
+	}
+
 	self.campaignManager.queryString = self.campaignQueryString;
 	[self.campaignManager updateCampaigns];
+}
+
+- (void)_startCampaignManager
+{
+	if ([NSThread isMainThread])
+	{
+		AILOG_DEBUG(@"Cannot be run on main thread.");
+		return;
+	}
+	
+	self.campaignManager = [[ApplifierImpactCampaignManager alloc] init];
+	self.campaignManager.delegate = self;
+	[self _refreshCampaignManager];
+}
+
+- (void)_startAnalyticsUploader
+{
+	if ([NSThread isMainThread])
+	{
+		AILOG_DEBUG(@"Cannot be run on main thread.");
+		return;
+	}
+	
+	self.analyticsUploader = [[ApplifierImpactAnalyticsUploader alloc] init];
+	[self.analyticsUploader retryFailedUploads];
 }
 
 - (void)_logVideoAnalyticsWithPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign
@@ -364,12 +393,6 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	});
 }
 
-- (void)_startAnalyticsUploader
-{
-	self.analyticsUploader = [[ApplifierImpactAnalyticsUploader alloc] init];
-	[self.analyticsUploader retryFailedUploads];
-}
-
 - (void)_notifyDelegateOfCampaignAvailability
 {
 	if (self.campaigns != nil && self.rewardItem != nil && self.webViewInitialized)
@@ -393,6 +416,29 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		NSDictionary *queryDictionary = @{ kApplifierImpactQueryDictionaryQueryKey : queryString, kApplifierImpactQueryDictionaryBodyKey : bodyString };
 		
 		[self.analyticsUploader performSelector:@selector(sendInstallTrackingCallWithQueryDictionary:) onThread:self.backgroundThread withObject:queryDictionary waitUntilDone:NO];
+	});
+}
+
+- (void)_refresh
+{
+	if (self.applifierID == nil)
+	{
+		AILOG_ERROR(@"Applifier Impact has not been started properly. Launch with -startWithApplifierID: first.");
+		return;
+	}
+	
+	self.campaigns = nil;
+	self.rewardItem = nil;
+	self.campaignJSON = nil;
+	
+	dispatch_async(self.queue, ^{
+		self.connectionType = [self _currentConnectionType];
+		self.campaignQueryString = [self _queryString];
+		
+		[self performSelector:@selector(_refreshCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+		[self.analyticsUploader performSelector:@selector(retryFailedUploads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+		
+		// FIXME: refresh web view?
 	});
 }
 
@@ -494,6 +540,17 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	}
 	
 	[self _trackInstall];
+}
+
+- (void)refresh
+{
+	if ( ! [NSThread isMainThread])
+	{
+		AILOG_ERROR(@"Must be run on main thread.");
+		return;
+	}
+	
+	[self _refresh];
 }
 
 - (void)dealloc

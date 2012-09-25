@@ -51,27 +51,36 @@ static ApplifierImpact *sharedApplifierInstance = nil;
 
 - (void)startWithApplifierID:(NSString *)applifierID
 {
-	// do nothing
+	AILOG_DEBUG(@"Disabled on older versions of iOS.");
 }
 
 - (UIView *)impactAdView
 {
+	AILOG_DEBUG(@"Disabled on older versions of iOS.");
+
 	return nil;
 }
 
 - (BOOL)canShowImpact
 {
+	AILOG_DEBUG(@"Disabled on older versions of iOS.");
+
 	return NO;
 }
 
 - (void)stopAll
 {
-	// do nothing
+	AILOG_DEBUG(@"Disabled on older versions of iOS.");
 }
 
 - (void)trackInstall
 {
-	// do nothing
+	AILOG_DEBUG(@"Disabled on older versions of iOS.");
+}
+
+- (void)refresh
+{
+	AILOG_DEBUG(@"Disabled on older versions of iOS.");
 }
 
 @end
