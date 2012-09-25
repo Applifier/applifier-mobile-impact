@@ -428,12 +428,6 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 {
 	NSURL *url = [request URL];
 	AILOG_DEBUG(@"url %@", url);
-	if ([[url host] isEqualToString:@"close"])
-	{
-		[self _openStoreViewControllerWithGameID:@"523405247"];
-		return NO;
-	}
-	
 	if ([[url scheme] isEqualToString:@"applifier-impact"])
 	{
 		[self _processWebViewResponseWithHost:[url host] query:[url query]];
