@@ -186,8 +186,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	[self _startDownload];
 }
 
-// FIXME: Rename this method.
-- (void)_compareCampaigns:(NSArray *)campaigns
+- (void)_cleanUpIndexWithCampaigns:(NSArray *)campaigns
 {
 	// FIXME: what to do with old campaigns?
 	if (campaigns == nil || [campaigns count] == 0)
@@ -362,7 +361,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	}
 	
 	[self _removeInvalidDownloadsWithCampaigns:campaigns];
-	[self _compareCampaigns:campaigns];
+	[self _cleanUpIndexWithCampaigns:campaigns];
 	
 	BOOL downloadsQueued = NO;
 	for (ApplifierImpactCampaign *campaign in campaigns)
