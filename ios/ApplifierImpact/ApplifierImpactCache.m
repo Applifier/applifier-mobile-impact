@@ -81,6 +81,8 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	
 	if (existingFilesize < filesize || filesize == 0)
 	{
+		// TODO: Check if download already exists in queue.
+		
 		AILOG_DEBUG(@"Queueing %@, id %@", campaign.trailerDownloadableURL, campaign.id);
 		
 		NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:campaign.trailerDownloadableURL];
@@ -184,6 +186,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	[self _startDownload];
 }
 
+// FIXME: Rename this method.
 - (void)_compareCampaigns:(NSArray *)campaigns
 {
 	// FIXME: what to do with old campaigns?
@@ -281,6 +284,43 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	}
 }
 
+- (void)_removeInvalidDownloadsWithCampaigns:(NSArray *)campaigns
+{
+	if ([self.downloadQueue count] == 0)
+	{
+		AILOG_DEBUG(@"No downloads queued.");
+		return;
+	}
+	
+	NSMutableArray *downloadsToRemove = [NSMutableArray array];
+	
+	for (NSDictionary *downloadDictionary in self.downloadQueue)
+	{
+		ApplifierImpactCampaign *downloadCampaign = [downloadDictionary objectForKey:kApplifierImpactCacheCampaignKey];
+		BOOL found = NO;
+		
+		for (ApplifierImpactCampaign *campaign in campaigns)
+		{
+			if ([campaign.id isEqualToString:downloadCampaign.id] && [campaign.trailerDownloadableURL isEqual:downloadCampaign.trailerDownloadableURL])
+			{
+				found = YES;
+				break;
+			}
+		}
+		
+		if ( ! found)
+			[downloadsToRemove addObject:downloadDictionary];
+	}
+	
+	if ([downloadsToRemove count] > 0)
+	{
+		AILOG_DEBUG(@"Removing downloads from queue: %@", downloadsToRemove);
+		[self.downloadQueue removeObjectsInArray:downloadsToRemove];
+	}
+	else
+		AILOG_DEBUG(@"Not removing any downloads from the queue.");
+}
+
 #pragma mark - Public
 
 - (id)init
@@ -320,7 +360,8 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 		AILOG_DEBUG(@"Couldn't create cache path. Error: %@", error);
 		return;
 	}
-		
+	
+	[self _removeInvalidDownloadsWithCampaigns:campaigns];
 	[self _compareCampaigns:campaigns];
 	
 	BOOL downloadsQueued = NO;
