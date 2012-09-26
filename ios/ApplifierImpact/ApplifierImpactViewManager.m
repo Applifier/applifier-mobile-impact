@@ -21,6 +21,7 @@ NSString * const kApplifierImpactWebViewAPIPlayVideo = @"playvideo";
 NSString * const kApplifierImpactWebViewAPIClose = @"close";
 NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateto";
 NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
+NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 
 @interface ApplifierImpactViewManager () <UIWebViewDelegate, UIScrollViewDelegate, SKStoreProductViewControllerDelegate>
 @property (nonatomic, strong) UIWindow *window;
@@ -80,7 +81,7 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 	if (query != nil)
 		queryComponents = [query componentsSeparatedByString:@"="];
 	
-	if ([command isEqualToString:kApplifierImpactWebViewAPIPlayVideo] || [command isEqualToString:kApplifierImpactWebViewAPINavigateTo])
+	if ([command isEqualToString:kApplifierImpactWebViewAPIPlayVideo] || [command isEqualToString:kApplifierImpactWebViewAPINavigateTo] || [command isEqualToString:kApplifierImpactWebViewAPIAppStore])
 	{
 		if (queryComponents == nil)
 		{
@@ -107,6 +108,11 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 			if ([parameter isEqualToString:@"url"])
 				[self _openURL:value];
 		}
+		else if ([command isEqualToString:kApplifierImpactWebViewAPIAppStore])
+		{
+			if ([parameter isEqualToString:@"id"])
+				[self _openStoreViewControllerWithGameID:value];
+		}
 	}
 	else if ([command isEqualToString:kApplifierImpactWebViewAPIClose])
 	{
@@ -129,12 +135,6 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 	if (urlString == nil)
 	{
 		AILOG_DEBUG(@"No URL set.");
-		return;
-	}
-	
-	if ([self _canOpenStoreProductViewController])
-	{
-		[self _openStoreViewControllerWithGameID:self.selectedCampaign.itunesID];
 		return;
 	}
 	
@@ -268,7 +268,8 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 	
 	if ( ! [self _canOpenStoreProductViewController])
 	{
-		AILOG_DEBUG(@"Not supported on older versions of iOS.");
+		AILOG_DEBUG(@"Cannot open store product view controller, falling back to click URL.");
+		[self _openURL:[self.selectedCampaign.clickURL absoluteString]];
 		return;
 	}
 	
