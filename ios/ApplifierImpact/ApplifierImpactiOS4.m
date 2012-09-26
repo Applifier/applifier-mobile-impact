@@ -393,9 +393,17 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	});
 }
 
+- (BOOL)_adViewCanBeShown
+{
+	if (self.campaigns != nil && [self.campaigns count] > 0 && self.rewardItem != nil && self.webViewInitialized)
+		return YES;
+	else
+		return NO;
+}
+
 - (void)_notifyDelegateOfCampaignAvailability
 {
-	if (self.campaigns != nil && self.rewardItem != nil && self.webViewInitialized)
+	if ([self _adViewCanBeShown])
 	{
 		if ([self.delegate respondsToSelector:@selector(applifierImpactCampaignsAreAvailable:)])
 			[self.delegate applifierImpactCampaignsAreAvailable:self];
@@ -494,7 +502,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		return nil;
 	}
 	
-	if ([self.campaigns count] > 0)
+	if ([self _adViewCanBeShown])
 	{
 		UIView *adView = [self.viewManager adView];
 		if (adView != nil)
@@ -517,7 +525,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		return NO;
 	}
 
-	return ([self.campaigns count] > 0 && self.webViewInitialized);
+	return [self _adViewCanBeShown];
 }
 
 - (void)stopAll
