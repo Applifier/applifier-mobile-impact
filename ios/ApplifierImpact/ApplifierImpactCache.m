@@ -67,6 +67,24 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	return size;
 }
 
+- (BOOL)_campaignExistsInQueue:(ApplifierImpactCampaign *)campaign
+{
+	BOOL exists = NO;
+	
+	for (NSDictionary *downloadDictionary in self.downloadQueue)
+	{
+		ApplifierImpactCampaign *downloadCampaign = [downloadDictionary objectForKey:kApplifierImpactCacheCampaignKey];
+		
+		if ([downloadCampaign.id isEqualToString:campaign.id] && [downloadCampaign.trailerDownloadableURL isEqual:campaign.trailerDownloadableURL])
+		{
+			AILOG_DEBUG(@"Campaign '%@' exists in queue.", campaign.id);
+			exists = YES;
+		}
+	}
+	
+	return exists;
+}
+
 - (BOOL)_queueCampaignDownload:(ApplifierImpactCampaign *)campaign
 {
 	if (campaign == nil)
@@ -79,10 +97,8 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	long long existingFilesize = [self _filesizeForPath:filePath];
 	long long filesize = [self _cachedFilesizeForVideoFilename:[self _videoFilenameForCampaign:campaign]];
 	
-	if (existingFilesize < filesize || filesize == 0)
+	if ( ! [self _campaignExistsInQueue:campaign] && (existingFilesize < filesize || filesize == 0))
 	{
-		// TODO: Check if download already exists in queue.
-		
 		AILOG_DEBUG(@"Queueing %@, id %@", campaign.trailerDownloadableURL, campaign.id);
 		
 		NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:campaign.trailerDownloadableURL];
