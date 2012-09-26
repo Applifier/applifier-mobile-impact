@@ -90,7 +90,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
     sysctlbyname("hw.machine", NULL, &size, NULL, 0);
     char *answer = malloc(size);
 	sysctlbyname("hw.machine", answer, &size, NULL, 0);
-	NSString *result = [NSString stringWithCString:answer encoding: NSUTF8StringEncoding];
+	NSString *result = [NSString stringWithCString:answer encoding:NSUTF8StringEncoding];
 	free(answer);
 	
 	return result;
