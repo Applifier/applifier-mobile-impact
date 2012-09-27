@@ -340,11 +340,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 
 - (id)init
 {
-	if ([NSThread isMainThread])
-	{
-		AILOG_ERROR(@"-init cannot be called from main thread.");
-		return nil;
-	}
+	AIAssertV( ! [NSThread isMainThread], nil);
 	
 	if ((self = [super init]))
 	{
@@ -356,11 +352,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 
 - (void)cacheCampaigns:(NSArray *)campaigns
 {
-	if ([NSThread isMainThread])
-	{
-		AILOG_ERROR(@"-cacheCampaigns: cannot be called from main thread.");
-		return;
-	}
+	AIAssert( ! [NSThread isMainThread]);
 	
 	if (campaigns == nil)
 	{
@@ -411,11 +403,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 
 - (void)cancelAllDownloads
 {
-	if ([NSThread isMainThread])
-	{
-		AILOG_ERROR(@"-cancelAllDownloads cannot be called from main thread.");
-		return;
-	}
+	AIAssert( ! [NSThread isMainThread]);
 	
 	if (self.currentDownload != nil)
 	{

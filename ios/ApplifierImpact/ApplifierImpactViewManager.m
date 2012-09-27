@@ -334,11 +334,7 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 
 - (id)init
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_DEBUG(@"Must be run in main thread.");
-		return nil;
-	}
+	AIAssertV([NSThread isMainThread], nil);
 	
 	if ((self = [super init]))
 	{
@@ -371,11 +367,7 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 
 - (void)loadWebView
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_DEBUG(@"Must be run in main thread.");
-		return;
-	}
+	AIAssert([NSThread isMainThread]);
 	
 	self.webViewLoaded = NO;
 	self.webViewInitialized = NO;
@@ -385,11 +377,7 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 
 - (UIView *)adView
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_DEBUG(@"Must be run in main thread.");
-		return nil;
-	}
+	AIAssertV([NSThread isMainThread], nil);
 	
 	if (self.webViewInitialized)
 	{
@@ -427,11 +415,7 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 
 - (void)setCampaignJSON:(NSString *)campaignJSON
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_DEBUG(@"Must be run in main thread.");
-		return;
-	}
+	AIAssert([NSThread isMainThread]);
 	
 	_campaignJSON = campaignJSON;
 	
@@ -441,6 +425,8 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 
 - (BOOL)adViewVisible
 {
+	AIAssertV([NSThread isMainThread], NO);
+	
 	if (self.webView.superview == self.window)
 		return NO;
 	else

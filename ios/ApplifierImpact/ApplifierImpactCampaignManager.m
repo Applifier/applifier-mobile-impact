@@ -264,11 +264,7 @@ NSString * const kGamerIDKey = @"gamerId";
 
 - (id)init
 {
-	if ([NSThread isMainThread])
-	{
-		AILOG_ERROR(@"-init cannot be called from main thread.");
-		return nil;
-	}
+	AIAssertV( ! [NSThread isMainThread], nil);
 	
 	if ((self = [super init]))
 	{
@@ -281,11 +277,7 @@ NSString * const kGamerIDKey = @"gamerId";
 
 - (void)updateCampaigns
 {
-	if ([NSThread isMainThread])
-	{
-		AILOG_ERROR(@"-updateCampaigns cannot be called from main thread.");
-		return;
-	}
+	AIAssert( ! [NSThread isMainThread]);
 	
 	NSString *urlString = kApplifierImpactBackendURL;
 	if (self.queryString != nil)
@@ -316,11 +308,7 @@ NSString * const kGamerIDKey = @"gamerId";
 
 - (void)cancelAllDownloads
 {
-	if ([NSThread isMainThread])
-	{
-		AILOG_ERROR(@"-cancelAllDownloads cannot be called from main thread.");
-		return;
-	}
+	AIAssert( ! [NSThread isMainThread]);
 	
 	[self.urlConnection cancel];
 	self.urlConnection = nil;

@@ -139,11 +139,7 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 
 - (void)sendViewReportWithQueryString:(NSString *)queryString
 {
-	if ([NSThread isMainThread])
-	{
-		AILOG_ERROR(@"Cannot be run on main thread.");
-		return;
-	}
+	AIAssert( ! [NSThread isMainThread]);
 	
 	if (queryString == nil || [queryString length] == 0)
 	{
@@ -156,11 +152,7 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 
 - (void)sendTrackingCallWithQueryString:(NSString *)queryString
 {
-	if ([NSThread isMainThread])
-	{
-		AILOG_ERROR(@"Cannot be run on main thread.");
-		return;
-	}
+	AIAssert( ! [NSThread isMainThread]);
 	
 	if (queryString == nil || [queryString length] == 0)
 	{
@@ -173,11 +165,7 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 
 - (void)sendInstallTrackingCallWithQueryDictionary:(NSDictionary *)queryDictionary
 {
-	if ([NSThread isMainThread])
-	{
-		AILOG_ERROR(@"Cannot be run on main thread.");
-		return;
-	}
+	AIAssert( ! [NSThread isMainThread]);
 	
 	if (queryDictionary == nil)
 	{
@@ -199,12 +187,8 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 
 - (void)retryFailedUploads
 {
-	if ([NSThread isMainThread])
-	{
-		AILOG_ERROR(@"Cannot be run on main thread.");
-		return;
-	}
-
+	AIAssert( ! [NSThread isMainThread]);
+	
 	NSArray *uploads = [[NSUserDefaults standardUserDefaults] arrayForKey:kApplifierImpactAnalyticsSavedUploadsKey];
 	if (uploads != nil)
 	{
