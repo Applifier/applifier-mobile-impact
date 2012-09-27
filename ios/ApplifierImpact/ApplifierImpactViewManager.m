@@ -105,7 +105,7 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 		}
 		else if ([command isEqualToString:kApplifierImpactWebViewAPINavigateTo])
 		{
-			if ([parameter isEqualToString:@"url"])
+			if ([parameter isEqualToString:@"clickUrl"])
 				[self _openURL:value];
 		}
 		else if ([command isEqualToString:kApplifierImpactWebViewAPIAppStore])
