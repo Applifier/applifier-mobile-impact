@@ -151,6 +151,8 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 	
 	NSString *escapedString = [string stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
 	escapedString = [escapedString stringByReplacingOccurrencesOfString:@"'" withString:@"\'"];
+	NSArray *components = [escapedString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+	escapedString = [components componentsJoinedByString:@""];
 	
 	return escapedString;
 }
