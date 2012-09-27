@@ -196,6 +196,8 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 
 - (void)_playVideo
 {
+	AILOG_DEBUG(@"");
+	
 	NSURL *videoURL = [self.delegate viewManager:self videoURLForCampaign:self.selectedCampaign];
 	if (videoURL == nil)
 	{
@@ -209,8 +211,6 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 	self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 	self.playerLayer.frame = self.adContainerView.bounds;
 	[self.adContainerView.layer addSublayer:self.playerLayer];
-	
-	[self _displayProgressLabel];
 	
 	__block ApplifierImpactViewManager *blockSelf = self;
 	self.timeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
@@ -229,7 +229,9 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 	
 	[self.player play];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:item];
+	[self _displayProgressLabel];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
 	
 	[self.delegate viewManagerStartedPlayingVideo:self];
 	
@@ -238,6 +240,10 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 
 - (void)_videoPlaybackEnded:(NSNotification *)notification
 {
+	AILOG_DEBUG(@"");
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+	
 	[self.delegate viewManagerVideoEnded:self];
 	
 	[self _logVideoAnalytics];
@@ -431,6 +437,11 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 		return NO;
 	else
 		return YES;
+}
+
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - UIWebViewDelegate
