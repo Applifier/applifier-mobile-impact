@@ -154,13 +154,11 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 			}
 		}
 		
-		long long rangeStart = [self _filesizeForPath:filePath];
 		self.fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
+		[self.fileHandle seekToEndOfFile];
+		long long rangeStart = [self.fileHandle offsetInFile];
 		if (rangeStart > 0)
-		{
-			[self.fileHandle seekToEndOfFile];
 			[request setValue:[NSString stringWithFormat:@"bytes=%qi-", rangeStart] forHTTPHeaderField:@"Range"];
-		}
 		
 		NSURLConnection *urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 		[self.currentDownload setObject:urlConnection forKey:kApplifierImpactCacheConnectionKey];
