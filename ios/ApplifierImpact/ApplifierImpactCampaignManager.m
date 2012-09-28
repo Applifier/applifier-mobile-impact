@@ -24,7 +24,7 @@ NSString * const kCampaignGameIDKey = @"gameId";
 NSString * const kCampaignGameNameKey = @"gameName";
 NSString * const kCampaignIDKey = @"id";
 NSString * const kCampaignTaglineKey = @"tagline";
-NSString * const kCampaignStoreIDKey = @"itunesID";
+NSString * const kCampaignStoreIDKey = @"iTunesId";
 
 NSString * const kRewardItemKey = @"itemKey";
 NSString * const kRewardNameKey = @"name";
@@ -90,43 +90,63 @@ NSString * const kGamerIDKey = @"gamerId";
 		{
 			ApplifierImpactCampaign *campaign = [[ApplifierImpactCampaign alloc] init];
 			
-			NSURL *endScreenURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignEndScreenKey]];
+			NSString *endScreenURLString = [campaignDictionary objectForKey:kCampaignEndScreenKey];
+			AIAssertV([endScreenURLString isKindOfClass:[NSString class]], nil);
+			NSURL *endScreenURL = [NSURL URLWithString:endScreenURLString];
 			AIAssertV(endScreenURL != nil, nil);
 			campaign.endScreenURL = endScreenURL;
 			
-			NSURL *clickURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignClickURLKey]];
+			NSString *clickURLString = [campaignDictionary objectForKey:kCampaignClickURLKey];
+			AIAssertV([clickURLString isKindOfClass:[NSString class]], nil);
+			NSURL *clickURL = [NSURL URLWithString:clickURLString];
 			AIAssertV(clickURL != nil, nil);
 			campaign.clickURL = clickURL;
 			
-			NSURL *pictureURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignPictureKey]];
+			NSString *pictureURLString = [campaignDictionary objectForKey:kCampaignPictureKey];
+			AIAssertV([pictureURLString isKindOfClass:[NSString class]], nil);
+			NSURL *pictureURL = [NSURL URLWithString:pictureURLString];
 			AIAssertV(pictureURL != nil, nil);
 			campaign.pictureURL = pictureURL;
 			
-			NSURL *trailerDownloadableURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignTrailerDownloadableKey]];
+			NSString *trailerDownloadableURLString = [campaignDictionary objectForKey:kCampaignTrailerDownloadableKey];
+			AIAssertV([trailerDownloadableURLString isKindOfClass:[NSString class]], nil);
+			NSURL *trailerDownloadableURL = [NSURL URLWithString:trailerDownloadableURLString];
 			AIAssertV(trailerDownloadableURL != nil, nil);
 			campaign.trailerDownloadableURL = trailerDownloadableURL;
 			
-			NSURL *trailerStreamingURL = [NSURL URLWithString:[campaignDictionary objectForKey:kCampaignTrailerStreamingKey]];
+			NSString *trailerStreamingURLString = [campaignDictionary objectForKey:kCampaignTrailerStreamingKey];
+			AIAssertV([trailerStreamingURLString isKindOfClass:[NSString class]], nil);
+			NSURL *trailerStreamingURL = [NSURL URLWithString:trailerStreamingURLString];
 			AIAssertV(trailerStreamingURL != nil, nil);
 			campaign.trailerStreamingURL = trailerStreamingURL;
 			
-			NSString *gameID = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignGameIDKey]];
+			id gameIDValue = [campaignDictionary objectForKey:kCampaignGameIDKey];
+			AIAssertV(gameIDValue != nil && ([gameIDValue isKindOfClass:[NSString class]] || [gameIDValue isKindOfClass:[NSNumber class]]), nil);
+			NSString *gameID = [gameIDValue isKindOfClass:[NSNumber class]] ? [gameIDValue stringValue] : gameIDValue;
 			AIAssertV(gameID != nil && [gameID length] > 0, nil);
 			campaign.gameID = gameID;
 			
-			NSString *gameName = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignGameNameKey]];
+			id gameNameValue = [campaignDictionary objectForKey:kCampaignGameNameKey];
+			AIAssertV(gameNameValue != nil && ([gameNameValue isKindOfClass:[NSString class]] || [gameNameValue isKindOfClass:[NSNumber class]]), nil);
+			NSString *gameName = [gameNameValue isKindOfClass:[NSNumber class]] ? [gameNameValue stringValue] : gameNameValue;
 			AIAssertV(gameName != nil && [gameName length] > 0, nil);
 			campaign.gameName = gameName;
 			
-			NSString *id = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignIDKey]];
-			AIAssertV(id != nil && [id length] > 0, nil);
-			campaign.id = id;
+			id idValue = [campaignDictionary objectForKey:kCampaignIDKey];
+			AIAssertV(idValue != nil && ([idValue isKindOfClass:[NSString class]] || [idValue isKindOfClass:[NSNumber class]]), nil);
+			NSString *idString = [idValue isKindOfClass:[NSNumber class]] ? [idValue stringValue] : idValue;
+			AIAssertV(idString != nil && [idString length] > 0, nil);
+			campaign.id = idString;
 			
-			NSString *tagline = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignTaglineKey]];
+			id taglineValue = [campaignDictionary objectForKey:kCampaignTaglineKey];
+			AIAssertV(taglineValue != nil && ([taglineValue isKindOfClass:[NSString class]] || [taglineValue isKindOfClass:[NSNumber class]]), nil);
+			NSString *tagline = [taglineValue isKindOfClass:[NSNumber class]] ? [taglineValue stringValue] : taglineValue;
 			AIAssertV(tagline != nil && [tagline length] > 0, nil);
 			campaign.tagline = tagline;
 			
-			NSString *itunesID = [NSString stringWithFormat:@"%@", [campaignDictionary objectForKey:kCampaignStoreIDKey]];
+			id itunesIDValue = [campaignDictionary objectForKey:kCampaignStoreIDKey];
+			AIAssertV(itunesIDValue != nil && ([itunesIDValue isKindOfClass:[NSString class]] || [itunesIDValue isKindOfClass:[NSNumber class]]), nil);
+			NSString *itunesID = [itunesIDValue isKindOfClass:[NSNumber class]] ? [itunesIDValue stringValue] : itunesIDValue;
 			AIAssertV(itunesID != nil && [itunesID length] > 0, nil);
 			campaign.itunesID = itunesID;
 			
@@ -148,15 +168,22 @@ NSString * const kGamerIDKey = @"gamerId";
 	AIAssertV([itemDictionary isKindOfClass:[NSDictionary class]], nil);
 	
 	ApplifierImpactRewardItem *item = [[ApplifierImpactRewardItem alloc] init];
-	NSString *key = [NSString stringWithFormat:@"%@", [itemDictionary objectForKey:kRewardItemKey]];
+
+	id keyValue = [itemDictionary objectForKey:kRewardItemKey];
+	AIAssertV(keyValue != nil && ([keyValue isKindOfClass:[NSString class]] || [keyValue isKindOfClass:[NSNumber class]]), nil);
+	NSString *key = [keyValue isKindOfClass:[NSNumber class]] ? [keyValue stringValue] : keyValue;
 	AIAssertV(key != nil && [key length] > 0, nil);
 	item.key = key;
 	
-	NSString *name = [NSString stringWithFormat:@"%@", [itemDictionary objectForKey:kRewardNameKey]];
+	id nameValue = [itemDictionary objectForKey:kRewardNameKey];
+	AIAssertV(nameValue != nil && ([nameValue isKindOfClass:[NSString class]] || [nameValue isKindOfClass:[NSNumber class]]), nil);
+	NSString *name = [nameValue isKindOfClass:[NSNumber class]] ? [nameValue stringValue] : nameValue;
 	AIAssertV(name != nil && [name length] > 0, nil);
 	item.name = name;
 	
-	NSURL *pictureURL = [NSURL URLWithString:[itemDictionary objectForKey:kRewardPictureKey]];
+	NSString *pictureURLString = [itemDictionary objectForKey:kRewardPictureKey];
+	AIAssertV([pictureURLString isKindOfClass:[NSString class]], nil);
+	NSURL *pictureURL = [NSURL URLWithString:pictureURLString];
 	AIAssertV(pictureURL != nil, nil);
 	item.pictureURL = pictureURL;
 	
