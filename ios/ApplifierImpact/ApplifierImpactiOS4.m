@@ -100,7 +100,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 {
 	if (index > [string length])
 	{
-		AILOG_DEBUG(@"Index %d out of bounds for length %d.", index, [string length]);
+		AILOG_DEBUG(@"Index %d out of bounds for string '%@', length %d.", index, string, [string length]);
 		return nil;
 	}
 	
