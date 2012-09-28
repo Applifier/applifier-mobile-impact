@@ -536,6 +536,8 @@ NSString * const kApplifierImpactVersion = @"1.0";
 {
 	self.campaignManager.delegate = nil;
 	self.viewManager.delegate = nil;
+	
+	dispatch_release(self.queue);
 }
 
 #pragma mark - ApplifierImpactCampaignManagerDelegate
