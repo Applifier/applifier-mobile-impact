@@ -282,15 +282,14 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 	}
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_5_1
-	__block SKStoreProductViewController *storeController = [[SKStoreProductViewController alloc] init];
-	__block ApplifierImpactViewManager *blockSelf = self;
+	SKStoreProductViewController *storeController = [[SKStoreProductViewController alloc] init];
 	storeController.delegate = (id)self;
 	NSDictionary *productParameters = @{ SKStoreProductParameterITunesItemIdentifier : gameID };
 	[storeController loadProductWithParameters:productParameters completionBlock:^(BOOL result, NSError *error) {
 		if (result)
 		{
-			blockSelf.storePresentingViewController = [blockSelf.delegate viewControllerForPresentingViewControllersForViewManager:blockSelf];
-			[blockSelf.storePresentingViewController presentModalViewController:storeController animated:YES];
+			self.storePresentingViewController = [self.delegate viewControllerForPresentingViewControllersForViewManager:self];
+			[self.storePresentingViewController presentModalViewController:storeController animated:YES];
 		}
 		else
 			AILOG_DEBUG(@"Loading product information failed: %@", error);
