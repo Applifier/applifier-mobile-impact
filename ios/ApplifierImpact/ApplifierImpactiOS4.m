@@ -322,6 +322,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 - (void)_refreshCampaignManager
 {
 	AIAssert( ! [NSThread isMainThread]);
+	AIAssert(self.campaignManager != nil);
 	
 	self.campaignManager.queryString = self.campaignQueryString;
 	[self.campaignManager updateCampaigns];
