@@ -71,9 +71,9 @@ NSString * const kGamerIDKey = @"gamerId";
 	
 	self.campaignJSON = jsonString;
 	
-	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+	dispatch_async(dispatch_get_main_queue(), ^{
 		[self.delegate campaignManager:self updatedJSON:jsonString];
-	}];
+	});
 	
 	return repr;
 }
@@ -339,11 +339,9 @@ NSString * const kGamerIDKey = @"gamerId";
 
 - (void)cacheFinishedCachingCampaigns:(ApplifierImpactCache *)cache
 {
-	__block ApplifierImpactCampaignManager *blockSelf = self;
-	
-	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-		[blockSelf.delegate campaignManager:blockSelf updatedWithCampaigns:blockSelf.campaigns rewardItem:blockSelf.rewardItem gamerID:blockSelf.gamerID];
-	}];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.delegate campaignManager:self updatedWithCampaigns:self.campaigns rewardItem:self.rewardItem gamerID:self.gamerID];
+	});
 }
 
 @end
