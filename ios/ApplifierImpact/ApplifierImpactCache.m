@@ -15,6 +15,10 @@ NSString * const kApplifierImpactCacheConnectionKey = @"kApplifierImpactCacheCon
 NSString * const kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFilePathKey";
 NSString * const kApplifierImpactCacheURLRequestKey = @"kApplifierImpactCacheURLRequestKey";
 NSString * const kApplifierImpactCacheIndexKey = @"kApplifierImpactCacheIndexKey";
+NSString * const kApplifierImpactCacheResumeKey = @"kApplifierImpactCacheResumeKey";
+
+NSString * const kApplifierImpactCacheDownloadResumeExpected = @"kApplifierImpactCacheDownloadResumeExpected";
+NSString * const kApplifierImpactCacheDownloadNewDownload = @"kApplifierImpactCacheDownloadNewDownload";
 
 NSString * const kApplifierImpactCacheEntryCampaignIDKey = @"kApplifierImpactCacheEntryCampaignIDKey";
 NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCacheEntryFilenameKey";
@@ -105,6 +109,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 		[downloadDictionary setObject:request forKey:kApplifierImpactCacheURLRequestKey];
 		[downloadDictionary setObject:campaign forKey:kApplifierImpactCacheCampaignKey];
 		[downloadDictionary setObject:filePath forKey:kApplifierImpactCacheFilePathKey];
+		[downloadDictionary setObject:(existingFilesize > 0 ? kApplifierImpactCacheDownloadResumeExpected : kApplifierImpactCacheDownloadNewDownload) forKey:kApplifierImpactCacheResumeKey];
 		[self.downloadQueue addObject:downloadDictionary];
 		[self _startDownload];
 		
@@ -423,6 +428,19 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	NSHTTPURLResponse *httpResponse = nil;
 	if ([response isKindOfClass:[NSHTTPURLResponse class]])
 		httpResponse = (NSHTTPURLResponse *)response;
+	
+	NSString *resumeStatus = [self.currentDownload objectForKey:kApplifierImpactCacheResumeKey];
+	BOOL resumeExpected = [resumeStatus isEqualToString:kApplifierImpactCacheDownloadResumeExpected];
+	if (resumeExpected && [httpResponse statusCode] == 200)
+	{
+		AILOG_DEBUG(@"Resume expected but got status code 200, restarting download.");
+		
+		[self.fileHandle truncateFileAtOffset:0];
+	}
+	else if ([httpResponse statusCode] == 206)
+	{
+		AILOG_DEBUG(@"Resuming download.");
+	}
 	
 	NSNumber *contentLength = [[httpResponse allHeaderFields] objectForKey:@"Content-Length"];
 	if (contentLength != nil)
