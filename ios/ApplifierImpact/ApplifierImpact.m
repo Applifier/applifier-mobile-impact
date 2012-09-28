@@ -28,6 +28,8 @@ static ApplifierImpact *sharedApplifierInstance = nil;
 
 - (id)init
 {
+	AILOG_ERROR(@"Use the +sharedInstance singleton instead of initializing this class directly.");
+	
 	[self doesNotRecognizeSelector:_cmd];
 	
 	return nil;
