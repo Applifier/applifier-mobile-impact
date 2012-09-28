@@ -34,9 +34,12 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 {
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
 	if (paths == nil || [paths count] == 0)
+	{
+		AILOG_ERROR(@"No cache path found.");
 		return nil;
+	}
 	
-	return [[paths objectAtIndex:0] stringByAppendingString:@"/applifier/"];
+	return [[paths objectAtIndex:0] stringByAppendingPathComponent:@"applifier"];
 }
 
 - (NSString *)_videoFilenameForCampaign:(ApplifierImpactCampaign *)campaign
@@ -46,7 +49,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 
 - (NSString *)_videoPathForCampaign:(ApplifierImpactCampaign *)campaign
 {
-	return [[self _cachePath] stringByAppendingString:[self _videoFilenameForCampaign:campaign]];
+	return [[self _cachePath] stringByAppendingPathComponent:[self _videoFilenameForCampaign:campaign]];
 }
 
 - (long long)_cachedFilesizeForVideoFilename:(NSString *)filename
@@ -233,7 +236,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 		
 		if ( ! found)
 		{
-			NSString *filePath = [cachePath stringByAppendingString:oldFilename];
+			NSString *filePath = [cachePath stringByAppendingPathComponent:oldFilename];
 			NSError *error = nil;
 			if ([[NSFileManager defaultManager] removeItemAtPath:filePath error:&error])
 			{
