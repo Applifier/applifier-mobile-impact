@@ -134,40 +134,35 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 
 - (BOOL)_startNextDownloadInQueue
 {
-	if (self.currentDownload != nil)
+	if (self.currentDownload != nil || [self.downloadQueue count] == 0)
 		return NO;
 	
-	if ([self.downloadQueue count] > 0)
+	self.currentDownload = [self.downloadQueue objectAtIndex:0];
+	
+	NSMutableURLRequest *request = [self.currentDownload objectForKey:kApplifierImpactCacheURLRequestKey];
+	NSString *filePath = [self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey];
+	
+	if ( ! [[NSFileManager defaultManager] fileExistsAtPath:filePath])
 	{
-		self.currentDownload = [self.downloadQueue objectAtIndex:0];
-		
-		NSMutableURLRequest *request = [self.currentDownload objectForKey:kApplifierImpactCacheURLRequestKey];
-		NSString *filePath = [self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey];
-		
-		if ( ! [[NSFileManager defaultManager] fileExistsAtPath:filePath])
+		if ( ! [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil])
 		{
-			if ( ! [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil])
-			{
-				AILOG_DEBUG(@"Unable to create file at %@", filePath);
-				self.currentDownload = nil;
-				return NO;
-			}
+			AILOG_DEBUG(@"Unable to create file at %@", filePath);
+			self.currentDownload = nil;
+			return NO;
 		}
-		
-		self.fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
-		[self.fileHandle seekToEndOfFile];
-		long long rangeStart = [self.fileHandle offsetInFile];
-		if (rangeStart > 0)
-			[request setValue:[NSString stringWithFormat:@"bytes=%qi-", rangeStart] forHTTPHeaderField:@"Range"];
-		
-		NSURLConnection *urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
-		[self.currentDownload setObject:urlConnection forKey:kApplifierImpactCacheConnectionKey];
-		[urlConnection start];
-
-		[self.downloadQueue removeObjectAtIndex:0];
 	}
-	else
-		return NO;
+	
+	self.fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
+	[self.fileHandle seekToEndOfFile];
+	long long rangeStart = [self.fileHandle offsetInFile];
+	if (rangeStart > 0)
+		[request setValue:[NSString stringWithFormat:@"bytes=%qi-", rangeStart] forHTTPHeaderField:@"Range"];
+	
+	NSURLConnection *urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+	[self.currentDownload setObject:urlConnection forKey:kApplifierImpactCacheConnectionKey];
+	[urlConnection start];
+	
+	[self.downloadQueue removeObjectAtIndex:0];
 	
 	AILOG_DEBUG(@"starting download %@", self.currentDownload);
 

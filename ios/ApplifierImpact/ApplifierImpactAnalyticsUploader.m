@@ -67,20 +67,15 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 
 - (BOOL)_startNextUpload
 {
-	if (self.currentUpload != nil)
+	if (self.currentUpload != nil || [self.uploadQueue count] == 0)
 		return NO;
 	
-	if ([self.uploadQueue count] > 0)
-	{
-		self.currentUpload = [self.uploadQueue objectAtIndex:0];
-		
-		NSURLConnection *connection = [self.currentUpload objectForKey:kApplifierImpactAnalyticsUploaderConnectionKey];
-		[connection start];
-		
-		[self.uploadQueue removeObjectAtIndex:0];
-	}
-	else
-		return NO;
+	self.currentUpload = [self.uploadQueue objectAtIndex:0];
+	
+	NSURLConnection *connection = [self.currentUpload objectForKey:kApplifierImpactAnalyticsUploaderConnectionKey];
+	[connection start];
+	
+	[self.uploadQueue removeObjectAtIndex:0];
 	
 	return YES;
 }
