@@ -33,11 +33,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 - (NSString *)_cachePath
 {
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-	if (paths == nil || [paths count] == 0)
-	{
-		AILOG_ERROR(@"No cache path found.");
-		return nil;
-	}
+	AIAssertV(paths != nil && [paths count] > 0, nil);
 	
 	return [[paths objectAtIndex:0] stringByAppendingPathComponent:@"applifier"];
 }
