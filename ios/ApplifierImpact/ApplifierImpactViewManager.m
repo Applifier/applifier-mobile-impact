@@ -23,7 +23,7 @@ NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateto";
 NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 
-@interface ApplifierImpactViewManager () <UIWebViewDelegate, UIScrollViewDelegate, SKStoreProductViewControllerDelegate>
+@interface ApplifierImpactViewManager () <UIWebViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong) UIView *adContainerView;
@@ -280,11 +280,11 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 		[self _openURL:[self.selectedCampaign.clickURL absoluteString]];
 		return;
 	}
-	
-	Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_5_1
+	__block SKStoreProductViewController *storeController = [[SKStoreProductViewController alloc] init];
 	__block ApplifierImpactViewManager *blockSelf = self;
-	__block id storeController = [[[storeProductViewControllerClass class] alloc] init];
-	[storeController setDelegate:self];
+	storeController.delegate = (id)self;
 	NSDictionary *productParameters = @{ SKStoreProductParameterITunesItemIdentifier : gameID };
 	[storeController loadProductWithParameters:productParameters completionBlock:^(BOOL result, NSError *error) {
 		if (result)
@@ -295,6 +295,7 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 		else
 			AILOG_DEBUG(@"Loading product information failed: %@", error);
 	}];
+#endif
 }
 
 - (void)_webViewInitComplete
