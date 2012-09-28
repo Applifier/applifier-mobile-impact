@@ -97,7 +97,7 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 
 	if (request == nil)
 	{
-		AILOG_DEBUG(@"Could not create request.");
+		AILOG_ERROR(@"Could not create request with url '%@'.", url);
 		return;
 	}
 	
