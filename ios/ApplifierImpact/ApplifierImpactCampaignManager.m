@@ -23,7 +23,7 @@ NSString * const kCampaignTrailerStreamingKey = @"trailerStreaming";
 NSString * const kCampaignGameIDKey = @"gameId";
 NSString * const kCampaignGameNameKey = @"gameName";
 NSString * const kCampaignIDKey = @"id";
-NSString * const kCampaignTaglineKey = @"tagline";
+NSString * const kCampaignTaglineKey = @"tagLine";
 NSString * const kCampaignStoreIDKey = @"iTunesId";
 
 NSString * const kRewardItemKey = @"itemKey";
@@ -138,11 +138,11 @@ NSString * const kGamerIDKey = @"gamerId";
 			AIAssertV(idString != nil && [idString length] > 0, nil);
 			campaign.id = idString;
 			
-			id taglineValue = [campaignDictionary objectForKey:kCampaignTaglineKey];
-			AIAssertV(taglineValue != nil && ([taglineValue isKindOfClass:[NSString class]] || [taglineValue isKindOfClass:[NSNumber class]]), nil);
-			NSString *tagline = [taglineValue isKindOfClass:[NSNumber class]] ? [taglineValue stringValue] : taglineValue;
+			id tagLineValue = [campaignDictionary objectForKey:kCampaignTaglineKey];
+			AIAssertV(tagLineValue != nil && ([tagLineValue isKindOfClass:[NSString class]] || [tagLineValue isKindOfClass:[NSNumber class]]), nil);
+			NSString *tagline = [tagLineValue isKindOfClass:[NSNumber class]] ? [tagLineValue stringValue] : tagLineValue;
 			AIAssertV(tagline != nil && [tagline length] > 0, nil);
-			campaign.tagline = tagline;
+			campaign.tagLine = tagline;
 			
 			id itunesIDValue = [campaignDictionary objectForKey:kCampaignStoreIDKey];
 			AIAssertV(itunesIDValue != nil && ([itunesIDValue isKindOfClass:[NSString class]] || [itunesIDValue isKindOfClass:[NSNumber class]]), nil);
@@ -230,6 +230,7 @@ NSString * const kGamerIDKey = @"gamerId";
 	if (self.queryString != nil)
 		urlString = [urlString stringByAppendingString:self.queryString];
 	
+    AILOG_DEBUG(@"UrlString %@", urlString);
 	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlString]];
 	self.urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 	[self.urlConnection start];
