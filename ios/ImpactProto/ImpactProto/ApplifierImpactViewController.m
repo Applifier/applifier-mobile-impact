@@ -11,7 +11,7 @@
 #import <CoreMedia/CoreMedia.h>
 #import "ApplifierImpact.h"
 
-@interface ApplifierImpactViewController () <ApplifierImpactDelegate, SKStoreProductViewControllerDelegate>
+@interface ApplifierImpactViewController () <ApplifierImpactDelegate>
 @end
 
 @implementation ApplifierImpactViewController

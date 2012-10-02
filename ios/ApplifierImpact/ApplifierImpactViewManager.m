@@ -21,8 +21,9 @@ NSString * const kApplifierImpactWebViewAPIPlayVideo = @"playvideo";
 NSString * const kApplifierImpactWebViewAPIClose = @"close";
 NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateto";
 NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
+NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 
-@interface ApplifierImpactViewManager () <UIWebViewDelegate, UIScrollViewDelegate, SKStoreProductViewControllerDelegate>
+@interface ApplifierImpactViewManager () <UIWebViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong) UIView *adContainerView;
@@ -80,7 +81,7 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 	if (query != nil)
 		queryComponents = [query componentsSeparatedByString:@"="];
 	
-	if ([command isEqualToString:kApplifierImpactWebViewAPIPlayVideo] || [command isEqualToString:kApplifierImpactWebViewAPINavigateTo])
+	if ([command isEqualToString:kApplifierImpactWebViewAPIPlayVideo] || [command isEqualToString:kApplifierImpactWebViewAPINavigateTo] || [command isEqualToString:kApplifierImpactWebViewAPIAppStore])
 	{
 		if (queryComponents == nil)
 		{
@@ -104,8 +105,13 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 		}
 		else if ([command isEqualToString:kApplifierImpactWebViewAPINavigateTo])
 		{
-			if ([parameter isEqualToString:@"url"])
+			if ([parameter isEqualToString:@"clickUrl"])
 				[self _openURL:value];
+		}
+		else if ([command isEqualToString:kApplifierImpactWebViewAPIAppStore])
+		{
+			if ([parameter isEqualToString:@"id"])
+				[self _openStoreViewControllerWithGameID:value];
 		}
 	}
 	else if ([command isEqualToString:kApplifierImpactWebViewAPIClose])
@@ -132,12 +138,6 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 		return;
 	}
 	
-	if ([self _canOpenStoreProductViewController])
-	{
-		[self _openStoreViewControllerWithGameID:self.selectedCampaign.itunesID];
-		return;
-	}
-	
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
 }
 
@@ -151,6 +151,8 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 	
 	NSString *escapedString = [string stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
 	escapedString = [escapedString stringByReplacingOccurrencesOfString:@"'" withString:@"\'"];
+	NSArray *components = [escapedString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+	escapedString = [components componentsJoinedByString:@""];
 	
 	return escapedString;
 }
@@ -196,6 +198,8 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 
 - (void)_playVideo
 {
+	AILOG_DEBUG(@"");
+	
 	NSURL *videoURL = [self.delegate viewManager:self videoURLForCampaign:self.selectedCampaign];
 	if (videoURL == nil)
 	{
@@ -209,8 +213,6 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 	self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 	self.playerLayer.frame = self.adContainerView.bounds;
 	[self.adContainerView.layer addSublayer:self.playerLayer];
-	
-	[self _displayProgressLabel];
 	
 	__block ApplifierImpactViewManager *blockSelf = self;
 	self.timeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
@@ -229,7 +231,9 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 	
 	[self.player play];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:item];
+	[self _displayProgressLabel];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
 	
 	[self.delegate viewManagerStartedPlayingVideo:self];
 	
@@ -238,6 +242,10 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 
 - (void)_videoPlaybackEnded:(NSNotification *)notification
 {
+	AILOG_DEBUG(@"");
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+	
 	[self.delegate viewManagerVideoEnded:self];
 	
 	[self _logVideoAnalytics];
@@ -268,24 +276,25 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 	
 	if ( ! [self _canOpenStoreProductViewController])
 	{
-		AILOG_DEBUG(@"Not supported on older versions of iOS.");
+		AILOG_DEBUG(@"Cannot open store product view controller, falling back to click URL.");
+		[self _openURL:[self.selectedCampaign.clickURL absoluteString]];
 		return;
 	}
-	
-	Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
-	__block ApplifierImpactViewManager *blockSelf = self;
-	__block id storeController = [[[storeProductViewControllerClass class] alloc] init];
-	[storeController setDelegate:self];
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_5_1
+	SKStoreProductViewController *storeController = [[SKStoreProductViewController alloc] init];
+	storeController.delegate = (id)self;
 	NSDictionary *productParameters = @{ SKStoreProductParameterITunesItemIdentifier : gameID };
 	[storeController loadProductWithParameters:productParameters completionBlock:^(BOOL result, NSError *error) {
 		if (result)
 		{
-			blockSelf.storePresentingViewController = [self.delegate viewControllerForPresentingViewControllersForViewManager:blockSelf];
-			[blockSelf.storePresentingViewController presentModalViewController:storeController animated:YES];
+			self.storePresentingViewController = [self.delegate viewControllerForPresentingViewControllersForViewManager:self];
+			[self.storePresentingViewController presentModalViewController:storeController animated:YES];
 		}
 		else
 			AILOG_DEBUG(@"Loading product information failed: %@", error);
 	}];
+#endif
 }
 
 - (void)_webViewInitComplete
@@ -333,11 +342,7 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 
 - (id)init
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_DEBUG(@"Must be run in main thread.");
-		return nil;
-	}
+	AIAssertV([NSThread isMainThread], nil);
 	
 	if ((self = [super init]))
 	{
@@ -370,11 +375,7 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 
 - (void)loadWebView
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_DEBUG(@"Must be run in main thread.");
-		return;
-	}
+	AIAssert([NSThread isMainThread]);
 	
 	self.webViewLoaded = NO;
 	self.webViewInitialized = NO;
@@ -384,11 +385,7 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 
 - (UIView *)adView
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_DEBUG(@"Must be run in main thread.");
-		return nil;
-	}
+	AIAssertV([NSThread isMainThread], nil);
 	
 	if (self.webViewInitialized)
 	{
@@ -426,11 +423,7 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 
 - (void)setCampaignJSON:(NSString *)campaignJSON
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_DEBUG(@"Must be run in main thread.");
-		return;
-	}
+	AIAssert([NSThread isMainThread]);
 	
 	_campaignJSON = campaignJSON;
 	
@@ -440,10 +433,17 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 
 - (BOOL)adViewVisible
 {
+	AIAssertV([NSThread isMainThread], NO);
+	
 	if (self.webView.superview == self.window)
 		return NO;
 	else
 		return YES;
+}
+
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - UIWebViewDelegate
@@ -456,6 +456,10 @@ NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
 	{
 		[self _processWebViewResponseWithHost:[url host] query:[url query]];
 		
+		return NO;
+	}
+	else if ([[url scheme] isEqualToString:@"itms-apps"])
+	{
 		return NO;
 	}
 	

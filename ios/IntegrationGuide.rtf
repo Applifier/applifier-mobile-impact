@@ -3,9 +3,10 @@
 {\colortbl;\red255\green255\blue255;}
 {\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid1\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
 {\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid101\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid2}
-{\list\listtemplateid3\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid201\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid3}}
-{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}}
-\paperw11900\paperh16840\margl1440\margr1440\vieww12620\viewh16800\viewkind0
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid201\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid3}
+{\list\listtemplateid4\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid301\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid4}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}{\listoverride\listid4\listoverridecount0\ls4}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww12620\viewh16600\viewkind0
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
 \f0\b\fs36 \cf0 Applifier Impact iOS Integration Guide
@@ -31,48 +32,58 @@
 \f0 , start Impact like this:\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 \cf0 	\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\f1 	[[ApplifierImpact sharedInstance] startWithApplifierID:YOUR_GAME_ID_HERE];\
+\f1 \cf0 	[[ApplifierImpact sharedInstance] startWithApplifierID:YOUR_GAME_ID_HERE];\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\f0 \
+\f0 \cf0 \
 \pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural
 \ls3\ilvl0\cf0 {\listtext	\uc0\u8259 	}Optionally, add the following to 
 \f1 -applicationWillEnterForeground:
 \f0  to refresh available campaigns when the user returns to the app from the background:\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\f1 	[[ApplifierImpact sharedInstance] refresh];\
+\f1 \cf0 	[[ApplifierImpact sharedInstance] refresh];\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\f0 \
+\f0 \cf0 \
 4) Set your view controller as the delegate for Impact:\
 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\f1 	[[ApplifierImpact sharedInstance] setDelegate:self];\
+\f1 \cf0 	[[ApplifierImpact sharedInstance] setDelegate:self];\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\f0 \
+\f0 \cf0 \
 There are two required delegate methods:\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\f1 \
+\f1 \cf0 \
 	-applifierImpact:completedVideoWithRewardItemKey:\
 	-viewControllerForPresentingViewControllersForImpact:\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\f0 \
+\f0 \cf0 \
 More on those in step 6.\
 \
 5) When you want to present Impact, check that it is possible first with 
 \f1 -canShowImpact
 \f0 . E.g. like this:\
 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\f1 	if ([[ApplifierImpact sharedInstance] canShowImpact])\
+\f1 \cf0 	if ([[ApplifierImpact sharedInstance] canShowImpact])\
 	\{\
 		UIView *adView = [[ApplifierImpact sharedInstance] impactAdView];\
 		adView.frame = self.view.bounds;\
 		[self.view addSubview:adView];\
 	\}\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\f0 \
+\f0 \cf0 \
 As you can see from the example, Impact does not present the ad view itself. It is the responsibility of the view controller to present the view. Impact will remove the view from its superview when the ad view is closed.\
 \
 6) When a video has finished playing, the delegate method 
@@ -109,4 +120,81 @@ Other delegate methods:\
 \f0 . Note, however, that 
 \f1 -refresh
 \f0  will call this again if there is something to refresh.\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b\fs36 \cf0 Public Methods\
+
+\b0\fs24 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f1 \cf0 	+ (id)sharedInstance;\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0 \cf0 		The Impact singleton instance.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f1 \cf0 	- (void)startWithApplifierID:(NSString *)applifierID;\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0 \cf0 		This initializes Impact, and starts refreshing campaigns and downloading videos.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f1 \cf0 	- (UIView *)impactAdView;\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0 \cf0 		Returns the ad view if the ad view has finished loading and videos have been cached, or 
+\f1 nil
+\f0  if either of the conditions are false.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f1 \cf0 	- (BOOL)canShowImpact;\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0 \cf0 		Use this method to check if Impact has finished loading. Always check this before running 
+\f1 -impactAdView
+\f0 .\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f1 \cf0 	- (void)stopAll;\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0 \cf0 		Cancels all downloads and removes remaining downloads from the queue.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f1 \cf0 	- (void)trackInstall;\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0 \cf0 		Description TK\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f1 \cf0 	- (void)refresh;\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0 \cf0 		Refreshes campaigns and downloads new videos if there are any available. Use this when returning to the app from the background, e.g. in 
+\f1 -applicationWillEnterForeground:
+\f0  in your app delegate.\
+\
+
+\b\fs36 Notes on Threading
+\b0\fs24 \
+\
+All public Impact methods are expected to be run on the main thread. Impact creates its own thread for networking and caching, and performs as many duties as possible in its own queue. All activities that are directly connected to the ad view itself is performed on the main thread.\
+\
+
+\b\fs36 Other Notes\
+
+\b0\fs24 \
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural
+\ls4\ilvl0\cf0 {\listtext	\uc0\u8259 	}ApplifierImpact.h has a macro called 
+\f1 IMPACT_DEBUG_MODE_ENABLED
+\f0 . This should 
+\i always
+\i0  be set to 
+\f1 0
+\f0  in production builds. Enabling debug mode will enable tons of log output, and causes exceptions on assertion failures. (which are hopefully extremely rare)\
+{\listtext	\uc0\u8259 	}Playing videos in Impact does not work in the iPhone Simulator. This is a bug in the simulator, and is known by Apple.\
+{\listtext	\uc0\u8259 	}The example project doesn't compile on Xcode 4.4 without modifications. Remove AdSupport.framework and it should work.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \
 }

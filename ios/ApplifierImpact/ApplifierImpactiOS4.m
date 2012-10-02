@@ -90,7 +90,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
     sysctlbyname("hw.machine", NULL, &size, NULL, 0);
     char *answer = malloc(size);
 	sysctlbyname("hw.machine", answer, &size, NULL, 0);
-	NSString *result = [NSString stringWithCString:answer encoding: NSUTF8StringEncoding];
+	NSString *result = [NSString stringWithCString:answer encoding:NSUTF8StringEncoding];
 	free(answer);
 	
 	return result;
@@ -99,7 +99,10 @@ NSString * const kApplifierImpactVersion = @"1.0";
 - (NSString *)_substringOfString:(NSString *)string toIndex:(NSInteger)index
 {
 	if (index > [string length])
+	{
+		AILOG_DEBUG(@"Index %d out of bounds for string '%@', length %d.", index, string, [string length]);
 		return nil;
+	}
 	
 	return [string substringToIndex:index];
 }
@@ -318,23 +321,16 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (void)_refreshCampaignManager
 {
-	if ([NSThread isMainThread])
-	{
-		AILOG_DEBUG(@"Cannot be run on main thread.");
-		return;
-	}
-
+	AIAssert( ! [NSThread isMainThread]);
+	AIAssert(self.campaignManager != nil);
+	
 	self.campaignManager.queryString = self.campaignQueryString;
 	[self.campaignManager updateCampaigns];
 }
 
 - (void)_startCampaignManager
 {
-	if ([NSThread isMainThread])
-	{
-		AILOG_DEBUG(@"Cannot be run on main thread.");
-		return;
-	}
+	AIAssert( ! [NSThread isMainThread]);
 	
 	self.campaignManager = [[ApplifierImpactCampaignManager alloc] init];
 	self.campaignManager.delegate = self;
@@ -343,11 +339,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (void)_startAnalyticsUploader
 {
-	if ([NSThread isMainThread])
-	{
-		AILOG_DEBUG(@"Cannot be run on main thread.");
-		return;
-	}
+	AIAssert( ! [NSThread isMainThread]);
 	
 	self.analyticsUploader = [[ApplifierImpactAnalyticsUploader alloc] init];
 	[self.analyticsUploader retryFailedUploads];
@@ -393,9 +385,17 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	});
 }
 
+- (BOOL)_adViewCanBeShown
+{
+	if (self.campaigns != nil && [self.campaigns count] > 0 && self.rewardItem != nil && self.webViewInitialized)
+		return YES;
+	else
+		return NO;
+}
+
 - (void)_notifyDelegateOfCampaignAvailability
 {
-	if (self.campaigns != nil && self.rewardItem != nil && self.webViewInitialized)
+	if ([self _adViewCanBeShown])
 	{
 		if ([self.delegate respondsToSelector:@selector(applifierImpactCampaignsAreAvailable:)])
 			[self.delegate applifierImpactCampaignsAreAvailable:self];
@@ -442,11 +442,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (void)startWithApplifierID:(NSString *)applifierID
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_ERROR(@"Impact must be run on main thread.");
-		return;
-	}
+	AIAssert([NSThread isMainThread]);
 	
 	if (applifierID == nil || [applifierID length] == 0)
 	{
@@ -488,13 +484,9 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (UIView *)impactAdView
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_ERROR(@"Must be run on main thread.");
-		return nil;
-	}
+	AIAssertV([NSThread mainThread], nil);
 	
-	if ([self.campaigns count] > 0)
+	if ([self _adViewCanBeShown])
 	{
 		UIView *adView = [self.viewManager adView];
 		if (adView != nil)
@@ -511,44 +503,28 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (BOOL)canShowImpact
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_ERROR(@"Must be run on main thread.");
-		return NO;
-	}
-
-	return ([self.campaigns count] > 0 && self.webViewInitialized);
+	AIAssertV([NSThread mainThread], NO);
+	
+	return [self _adViewCanBeShown];
 }
 
 - (void)stopAll
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_ERROR(@"Must be run on main thread.");
-		return;
-	}
+	AIAssert([NSThread isMainThread]);
 	
 	[self.campaignManager performSelector:@selector(cancelAllDownloads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 }
 
 - (void)trackInstall
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_ERROR(@"Must be run on main thread.");
-		return;
-	}
+	AIAssert([NSThread isMainThread]);
 	
 	[self _trackInstall];
 }
 
 - (void)refresh
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_ERROR(@"Must be run on main thread.");
-		return;
-	}
+	AIAssert([NSThread isMainThread]);
 	
 	if ([self.viewManager adViewVisible])
 		AILOG_DEBUG(@"Ad view visible, not refreshing.");
@@ -560,39 +536,46 @@ NSString * const kApplifierImpactVersion = @"1.0";
 {
 	self.campaignManager.delegate = nil;
 	self.viewManager.delegate = nil;
+	
+	dispatch_release(self.queue);
 }
 
 #pragma mark - ApplifierImpactCampaignManagerDelegate
 
-- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID json:(NSString *)json
+- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID
 {
-	if ( ! [NSThread isMainThread])
-	{
-		AILOG_ERROR(@"Method must be run on main thread.");
-		return;
-	}
-
+	AIAssert([NSThread isMainThread]);
+	
 	AILOG_DEBUG(@"");
 	
-	// If campaigns already exist, it means that campaigns were updated, and we might want to update the webapp.
-	if (self.campaigns != nil)
+	self.campaigns = campaigns;
+	self.rewardItem = rewardItem;
+	self.gamerID = gamerID;
+	
+	[self _notifyDelegateOfCampaignAvailability];
+}
+
+- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedJSON:(NSString *)json
+{
+	AIAssert([NSThread isMainThread]);
+	
+	// If the view manager already has campaign JSON data, it means that
+	// campaigns were updated, and we might want to update the webapp.
+	if (self.viewManager.campaignJSON != nil)
 	{
 		self.webViewInitialized = NO;
 		[self.viewManager loadWebView];
 	}
 	
-	self.campaigns = campaigns;
-	self.rewardItem = rewardItem;
-	self.gamerID = gamerID;
 	self.viewManager.campaignJSON = json;
-	
-	[self _notifyDelegateOfCampaignAvailability];
 }
 
 #pragma mark - ApplifierImpactViewManagerDelegate
 
 -(ApplifierImpactCampaign *)viewManager:(ApplifierImpactViewManager *)viewManager campaignWithID:(NSString *)campaignID
 {
+	AIAssertV([NSThread isMainThread], nil);
+	
 	ApplifierImpactCampaign *foundCampaign = nil;
 	
 	for (ApplifierImpactCampaign *campaign in self.campaigns)
@@ -611,6 +594,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 -(NSURL *)viewManager:(ApplifierImpactViewManager *)viewManager videoURLForCampaign:(ApplifierImpactCampaign *)campaign
 {
+	AIAssertV([NSThread isMainThread], nil);
 	AILOG_DEBUG(@"");
 	
 	return [self.campaignManager videoURLForCampaign:campaign];
@@ -618,6 +602,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (void)viewManagerStartedPlayingVideo:(ApplifierImpactViewManager *)viewManager
 {
+	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
 	if ([self.delegate respondsToSelector:@selector(applifierImpactVideoStarted:)])
@@ -626,6 +611,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (void)viewManagerVideoEnded:(ApplifierImpactViewManager *)viewManager
 {
+	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
 	[self.delegate applifierImpact:self completedVideoWithRewardItemKey:self.rewardItem.key];
@@ -633,6 +619,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (void)viewManager:(ApplifierImpactViewManager *)viewManager loggedVideoPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign
 {
+	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
 	[self _logVideoAnalyticsWithPosition:videoPosition campaign:campaign];
@@ -640,6 +627,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (UIViewController *)viewControllerForPresentingViewControllersForViewManager:(ApplifierImpactViewManager *)viewManager
 {
+	AIAssertV([NSThread isMainThread], nil);
 	AILOG_DEBUG(@"");
 	
 	return [self.delegate viewControllerForPresentingViewControllersForImpact:self];
@@ -647,6 +635,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (void)viewManagerWillCloseAdView:(ApplifierImpactViewManager *)viewManager
 {
+	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
 	if ([self.delegate respondsToSelector:@selector(applifierImpactWillClose:)])
@@ -655,6 +644,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (void)viewManagerWebViewInitialized:(ApplifierImpactViewManager *)viewManager
 {
+	AIAssert([NSThread isMainThread]);	
 	AILOG_DEBUG(@"");
 	
 	self.webViewInitialized = YES;
