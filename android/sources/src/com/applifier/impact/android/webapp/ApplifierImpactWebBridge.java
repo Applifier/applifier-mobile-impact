@@ -8,7 +8,7 @@ import com.applifier.impact.android.ApplifierImpactProperties;
 
 
 public class ApplifierImpactWebBridge {
-	private enum ApplifierImpactWebEvent { PlayVideo, PauseVideo, CloseView;
+	private enum ApplifierImpactWebEvent { PlayVideo, PauseVideo, CloseView, InitComplete;
 		@Override
 		public String toString () {
 			String retVal = null;
@@ -21,6 +21,9 @@ public class ApplifierImpactWebBridge {
 					break;
 				case CloseView:
 					retVal = "close";
+					break;
+				case InitComplete:
+					retVal = "initComplete";
 					break;
 			}
 			return retVal;
@@ -56,9 +59,13 @@ public class ApplifierImpactWebBridge {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Error while parsing parameters: " + e.getMessage());
 		}
 		
+		//Log.d(ApplifierImpactProperties.LOG_NAME, "GOT WEBEVENT: " + event + ", " + data);
+		
 		if (paramObj == null || event == null) return;
 		
 		ApplifierImpactWebEvent eventType = getEventType(event);
+		
+		if (eventType == null) return;
 		
 		switch (eventType) {
 			case PlayVideo:
@@ -69,6 +76,9 @@ public class ApplifierImpactWebBridge {
 				break;
 			case CloseView:
 				_listener.onCloseView(paramObj);
+				break;
+			case InitComplete:
+				_listener.onWebAppInitComplete(paramObj);
 				break;
 		}
 	}

@@ -25,7 +25,7 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
         setContentView(R.layout.main);
         ((ImageView)findViewById(R.id.playbtn)).setAlpha(80);
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Init impact");
-		ai = new ApplifierImpact(this, "892347239");
+		ai = new ApplifierImpact(this, "16");
 		ai.setCampaignListener(this);
 		ai.init();
     }

@@ -80,27 +80,32 @@ public class ApplifierImpactWebData {
 		return _videoPlanCampaigns;
 	}
 	
+	
+	public ApplifierImpactCampaign getCampaignById (String campaignId) {
+		if (campaignId != null) {
+			for (int i = 0; i < _videoPlanCampaigns.size(); i++) {
+				if (_videoPlanCampaigns.get(i).getCampaignId().equals(campaignId))
+					return _videoPlanCampaigns.get(i);
+			}
+		}
+		
+		return null;
+	}
+	
 	public ArrayList<ApplifierImpactCampaign> getViewableVideoPlanCampaigns () {
-		return ApplifierImpactUtils.getViewableCampaignsFromCampaignList(_videoPlanCampaigns);
+		return _videoPlanCampaigns;
 	}
 
 	public boolean initVideoPlan (ArrayList<String> cachedCampaignIds) {
 		JSONObject json = new JSONObject();
 		JSONArray data = getCachedCampaignIdsArray(cachedCampaignIds);
+		String dataString = "gameId=" + ApplifierImpactProperties.IMPACT_APP_ID + "&openUdid=someudid&device=iphone&iosVersion=6.0";
 		
-		try {
-			json.put("c", data);
-			json.put("did", ApplifierImpactUtils.getDeviceId(ApplifierImpactProperties.CURRENT_ACTIVITY));
-		}
-		catch (Exception e) {
-		}
-		
-		String dataString = "";
 		
 		if (data != null)
 			dataString = json.toString();
 			
-		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(ApplifierImpactProperties.WEBDATA_URL + "?d=" + dataString, ApplifierImpactRequestType.VideoPlan);
+		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(ApplifierImpactProperties.WEBDATA_URL + "?" + dataString, ApplifierImpactRequestType.VideoPlan);
 		addLoader(loader);
 		startNextLoader();
 		checkFailedUrls();
@@ -136,6 +141,10 @@ public class ApplifierImpactWebData {
 		
 		if (_currentLoader != null)
 			_currentLoader.cancel(true);
+	}
+	
+	public String getVideoPlan () {
+		return _videoPlan.toString();
 	}
 	
 	
@@ -241,7 +250,18 @@ public class ApplifierImpactWebData {
 	private void videoPlanReceived (String json) {
 		try {
 			_videoPlan = new JSONObject(json);
-			_videoPlanCampaigns = ApplifierImpactUtils.createCampaignsFromJson(_videoPlan);
+			JSONObject data = null;
+			
+			if (_videoPlan.has("data")) {
+				try {
+					data = _videoPlan.getJSONObject("data");
+				}
+				catch (Exception e) {
+					Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed data JSON");
+				}
+				
+				_videoPlanCampaigns = ApplifierImpactUtils.createCampaignsFromJson(data);
+			}	
 		}
 		catch (Exception e) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON!");
@@ -249,6 +269,8 @@ public class ApplifierImpactWebData {
 		
 		if (_listener != null)
 			_listener.onWebDataCompleted();
+		
+		Log.d(ApplifierImpactProperties.LOG_NAME, _videoPlanCampaigns.toString());
 	}
 	
 	private void videoPlanFailed () {

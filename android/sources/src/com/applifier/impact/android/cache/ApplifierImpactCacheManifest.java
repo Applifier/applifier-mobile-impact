@@ -20,16 +20,12 @@ public class ApplifierImpactCacheManifest {
 	
 	
 	public ApplifierImpactCacheManifest () {
-		readCacheManifest();
-		createCampaignsFromManifest();
+		//readCacheManifest();
+		//createCampaignsFromManifest();
 	}
 	
 	public int getCachedCampaignAmount () {
 		return _cachedCampaigns == null ? 0 : _cachedCampaigns.size();
-	}
-	
-	public int getViewableCachedCampaignAmount () {
-		return getViewableCachedCampaigns() == null ? 0 : getViewableCachedCampaigns().size();
 	}
 	
 	public ArrayList<String> getCachedCampaignIds () {
@@ -49,17 +45,13 @@ public class ApplifierImpactCacheManifest {
 	
 	public void setCachedCampaigns (ArrayList<ApplifierImpactCampaign> campaigns) {
 		_cachedCampaigns = campaigns;
-		writeCurrentCacheManifest();
+		//writeCurrentCacheManifest();
 	}
 	
 	public ArrayList<ApplifierImpactCampaign> getCachedCampaigns () {
 		return _cachedCampaigns;
 	}
-	
-	public ArrayList<ApplifierImpactCampaign> getViewableCachedCampaigns () {
-		return ApplifierImpactUtils.getViewableCampaignsFromCampaignList(_cachedCampaigns);
-	}
-	
+
 	public ApplifierImpactCampaign getCachedCampaignById (String id) {
 		if (id == null || _cachedCampaigns == null) 
 			return null;
@@ -90,7 +82,7 @@ public class ApplifierImpactCacheManifest {
 		
 		if (indexOfCampaignToRemove > -1) {
 			_cachedCampaigns.remove(indexOfCampaignToRemove);
-			writeCurrentCacheManifest();
+			//writeCurrentCacheManifest();
 			return true;
 		}
 		
@@ -104,13 +96,14 @@ public class ApplifierImpactCacheManifest {
 		
 		if (getCachedCampaignById(campaign.getCampaignId()) == null) {
 			_cachedCampaigns.add(campaign);
-			writeCurrentCacheManifest();
+			//writeCurrentCacheManifest();
 			return true;
 		}
 		
 		return false;
 	}
 	
+	/*
 	public boolean updateCampaignInManifest (ApplifierImpactCampaign campaign) {
 		if (campaign == null || _cachedCampaigns == null) return false;
 
@@ -122,14 +115,15 @@ public class ApplifierImpactCacheManifest {
 		if (updateIndex > -1) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Updating campaign: " + campaign.getCampaignId());
 			_cachedCampaigns.set(updateIndex, campaign);
-			writeCurrentCacheManifest();
+			//writeCurrentCacheManifest();
 			
 			return true;
 		}
 			
 		return false;
-	}
+	}*/
 	
+	/*
 	public boolean writeCurrentCacheManifest () {
 		JSONObject manifestToWrite = ApplifierImpactUtils.createJsonFromCampaigns(_cachedCampaigns);
 		
@@ -139,7 +133,7 @@ public class ApplifierImpactCacheManifest {
 		else {
 			return ApplifierImpactUtils.writeFile(getFileForManifest(), "");
 		}
-	}
+	}*/
 	
 	
 	/* INTERNAL METHODS */

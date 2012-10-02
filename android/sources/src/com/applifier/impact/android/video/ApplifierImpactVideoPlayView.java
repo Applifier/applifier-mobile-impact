@@ -10,13 +10,18 @@ import com.applifier.impact.android.view.ApplifierImpactBufferingView;
 import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.PowerManager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 public class ApplifierImpactVideoPlayView extends RelativeLayout {
@@ -29,6 +34,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	private ApplifierImpactVideoPausedView _pausedView = null;
 	private boolean _videoPlayheadPrepared = false;
 	private Map<ApplifierVideoPosition, Boolean> _sentPositionEvents = new HashMap<ApplifierVideoPosition, Boolean>();
+	private RelativeLayout _countDownText = null;
+	private TextView _timeLeftInSecondsText = null;
 	
 	public ApplifierImpactVideoPlayView(Context context, IApplifierImpactVideoPlayerListener listener) {
 		super(context);
@@ -54,6 +61,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_videoFileName = fileName;
 		Log.d(ApplifierImpactProperties.LOG_NAME, "Playing video from: " + _videoFileName);
 		_videoView.setVideoPath(_videoFileName);
+		_timeLeftInSecondsText.setText("" + Math.round(Math.ceil(_videoView.getDuration() / 1000)));
 		startVideo();
 	}
 
@@ -121,6 +129,42 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				hideBufferingView();
 			}
 		});
+		
+		_countDownText = new RelativeLayout(getContext());
+		RelativeLayout.LayoutParams countDownParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		countDownParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		countDownParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		countDownParams.bottomMargin = 3;
+		countDownParams.rightMargin = 3;
+		_countDownText.setLayoutParams(countDownParams);
+		
+		TextView tv = new TextView(getContext());
+		tv.setTextColor(Color.WHITE);
+		tv.setText("This video ends in ");
+		tv.setId(10001);
+		
+		_timeLeftInSecondsText = new TextView(getContext());
+		_timeLeftInSecondsText.setTextColor(Color.WHITE);
+		_timeLeftInSecondsText.setText("00");
+		_timeLeftInSecondsText.setId(10002);
+		RelativeLayout.LayoutParams tv2params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		tv2params.addRule(RelativeLayout.RIGHT_OF, 10001);
+		tv2params.leftMargin = 1;
+		_timeLeftInSecondsText.setLayoutParams(tv2params);
+		
+		TextView tv3 = new TextView(getContext());
+		tv3.setTextColor(Color.WHITE);
+		tv3.setText("seconds.");
+		RelativeLayout.LayoutParams tv3params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		tv3params.addRule(RelativeLayout.RIGHT_OF, 10002);
+		tv3params.leftMargin = 4;
+		tv3.setLayoutParams(tv3params);
+		
+		_countDownText.addView(tv);
+		_countDownText.addView(_timeLeftInSecondsText);
+		_countDownText.addView(tv3);
+		
+		addView(_countDownText);
 		
 		setOnClickListener(new View.OnClickListener() {			
 			@Override
@@ -203,6 +247,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
     /* INTERNAL CLASSES */
     
 	private class VideoStateChecker extends TimerTask {
+		private Float _curPos = 0f;
+		
 		@Override
 		public void run () {
 			PowerManager pm = (PowerManager)getContext().getSystemService(Context.POWER_SERVICE);			
@@ -210,8 +256,15 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				pauseVideo();
 			}
 			
-			Float curPos = new Float(_videoView.getCurrentPosition());
-			Float position = curPos / _videoView.getDuration();
+			_curPos = new Float(_videoView.getCurrentPosition());
+			Float position = _curPos / _videoView.getDuration();
+			
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
+				@Override
+				public void run() {
+					_timeLeftInSecondsText.setText("" + Math.round(Math.ceil((_videoView.getDuration() - _curPos) / 1000)));
+				}
+			});
 			
 			if (position > 0.25 && !_sentPositionEvents.containsKey(ApplifierVideoPosition.FirstQuartile)) {
 				_listener.onEventPositionReached(ApplifierVideoPosition.FirstQuartile);

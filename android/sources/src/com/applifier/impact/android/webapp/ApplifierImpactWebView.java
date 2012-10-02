@@ -2,6 +2,8 @@ package com.applifier.impact.android.webapp;
 
 import java.lang.reflect.Method;
 
+import org.json.JSONObject;
+
 import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 
@@ -19,7 +21,10 @@ import android.webkit.WebViewClient;
 
 public class ApplifierImpactWebView extends WebView {
 
-	private String _url = "http://quake.everyplay.fi/~bluesun/impact/webapp.html";	
+//	private String _url = "http://quake.everyplay.fi/~bluesun/impact/webapp.html";	
+	//private String _url = "http://dl.dropbox.com/u/3542608/protos/impact-mobile-proto/index.html";	
+	private String _url = "http://quake.everyplay.fi/~bluesun/impact/newproto/index.html";	
+	
 	private IApplifierImpactWebViewListener _listener = null;
 	private boolean _webAppLoaded = false;
 	private ApplifierImpactWebBridge _webBridge = null;
@@ -39,19 +44,63 @@ public class ApplifierImpactWebView extends WebView {
 	}
 	
 	public void setView (String view) {
-		if (isWebAppLoaded())
-			loadUrl("javascript:setView('" + view + "');");
+		setView(view, null);
 	}
 	
+	public void setView (String view, JSONObject data) {		
+		String jsonString = "";
+		
+		if (data != null)
+			jsonString = data.toString();
+		
+		if (isWebAppLoaded()) {
+			String jsCommand = "javascript:";
+			
+			if (view.equals("videoStart"))
+				jsCommand = jsCommand + "impactShow();";
+			else if (view.equals("videoCompleted")) {
+				String campaignId = "";
+				try {
+					campaignId = data.getString("campaignId");
+				}
+				catch (Exception e) {
+					Log.d(ApplifierImpactProperties.LOG_NAME, "Could not get campaignId");
+				}
+				
+				jsCommand = jsCommand + "impactVideoComplete(\"" + campaignId + "\");";
+			}
+				
+			
+			loadUrl(jsCommand);
+		}
+
+		//loadUrl("javascript:setView('" + view + "','" + jsonString + "');");
+	}
+	
+	/*
 	public void setSelectedCampaign (ApplifierImpactCampaign campaign) {
 		if (isWebAppLoaded())
 			loadUrl("javascript:selectCampaign('" + campaign.getCampaignId() + "');");
-	}
+	}*/
 	
 	public void setAvailableCampaigns (String videoPlan) {
-		if (isWebAppLoaded())
-			loadUrl("javascript:setAvailableCampaigns('" + videoPlan + "');");
+		if (isWebAppLoaded()) {
+			videoPlan = videoPlan.replace("\"", "\\\"");
+			JSONObject params = new JSONObject();
+			try {
+				params.put("platform", "android");
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactProperties.LOG_NAME, "JSON Error");
+			}
+			String paramStr = "";
+			paramStr = params.toString();
+			paramStr = paramStr.replace("\"", "\\\"");
+			loadUrl("javascript:impactInit(\"" + videoPlan + "\", \"" + paramStr + "\");");
+		}
+		//loadUrl("javascript:setAvailableCampaigns('" + videoPlan + "');");
 	}
+	
 	
 	public void setDeviceId (String deviceId) {
 		if (isWebAppLoaded())

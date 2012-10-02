@@ -23,6 +23,7 @@ import android.util.Log;
 
 public class ApplifierImpactUtils {
 	
+	/*
 	public static ArrayList<ApplifierImpactCampaign> createCampaignsFromJson (JSONObject json) {
 		if (json != null && json.has("va")) {
 			ArrayList<ApplifierImpactCampaign> campaignData = new ArrayList<ApplifierImpactCampaign>();
@@ -44,6 +45,35 @@ public class ApplifierImpactUtils {
 				catch (Exception e) {
 					Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
 				}				
+			}
+			
+			return campaignData;
+		}
+		
+		return null;
+	}*/
+	
+	public static ArrayList<ApplifierImpactCampaign> createCampaignsFromJson (JSONObject json) {
+		if (json != null && json.has("campaigns")) {
+			ArrayList<ApplifierImpactCampaign> campaignData = new ArrayList<ApplifierImpactCampaign>();
+			JSONArray receivedCampaigns = null;
+			JSONObject currentCampaign = null;
+			
+			try {
+				receivedCampaigns = json.getJSONArray("campaigns");
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
+			}
+			
+			for (int i = 0; i < receivedCampaigns.length(); i++) {
+				try {
+					currentCampaign = receivedCampaigns.getJSONObject(i);
+					campaignData.add(new ApplifierImpactCampaign(currentCampaign));
+				}
+				catch (Exception e) {
+					Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
+				}
 			}
 			
 			return campaignData;
@@ -122,6 +152,7 @@ public class ApplifierImpactUtils {
 		}
 	}
 		
+	/*
 	public static JSONObject createJsonFromCampaigns (ArrayList<ApplifierImpactCampaign> campaignList) {
 		JSONObject retJson = new JSONObject();
 		JSONArray campaigns = new JSONArray();
@@ -134,8 +165,9 @@ public class ApplifierImpactUtils {
 				if (currentCampaign != null)
 					campaigns.put(currentCampaign);
 			}
-			
-			retJson.put("va", campaigns);
+			JSONObject obj = new JSONObject();
+			obj.put("campaigns", campaigns);
+			retJson.put("data", obj);
 		}
 		catch (Exception e) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Error while creating JSON from Campaigns");
@@ -143,7 +175,7 @@ public class ApplifierImpactUtils {
 		}
 		
 		return retJson;
-	}
+	}*/
 		
 	public static ArrayList<ApplifierImpactCampaign> substractFromCampaignList (ArrayList<ApplifierImpactCampaign> fromList, ArrayList<ApplifierImpactCampaign> substractionList) {
 		if (fromList == null) return null;
@@ -197,6 +229,7 @@ public class ApplifierImpactUtils {
 		return false;
 	}
 	
+	/*
 	public static ArrayList<ApplifierImpactCampaign> getViewableCampaignsFromCampaignList (ArrayList<ApplifierImpactCampaign> campaignList) {
 		ArrayList<ApplifierImpactCampaign> retList = new ArrayList<ApplifierImpactCampaign>();
 		
@@ -210,7 +243,7 @@ public class ApplifierImpactUtils {
 		}
 		
 		return null;		
-	}
+	}*/
 	
 	public static boolean isFileInCache (String fileName) {
 		File targetFile = new File (fileName);
