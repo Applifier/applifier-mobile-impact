@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import org.json.JSONObject;
 
 import com.applifier.impact.android.ApplifierImpactProperties;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -21,10 +20,7 @@ import android.webkit.WebViewClient;
 
 public class ApplifierImpactWebView extends WebView {
 
-//	private String _url = "http://quake.everyplay.fi/~bluesun/impact/webapp.html";	
-	//private String _url = "http://dl.dropbox.com/u/3542608/protos/impact-mobile-proto/index.html";	
 	private String _url = "http://quake.everyplay.fi/~bluesun/impact/newproto/index.html";	
-	
 	private IApplifierImpactWebViewListener _listener = null;
 	private boolean _webAppLoaded = false;
 	private ApplifierImpactWebBridge _webBridge = null;
@@ -48,11 +44,6 @@ public class ApplifierImpactWebView extends WebView {
 	}
 	
 	public void setView (String view, JSONObject data) {		
-		String jsonString = "";
-		
-		if (data != null)
-			jsonString = data.toString();
-		
 		if (isWebAppLoaded()) {
 			String jsCommand = "javascript:";
 			
@@ -60,6 +51,7 @@ public class ApplifierImpactWebView extends WebView {
 				jsCommand = jsCommand + "impactShow();";
 			else if (view.equals("videoCompleted")) {
 				String campaignId = "";
+				
 				try {
 					campaignId = data.getString("campaignId");
 				}
@@ -69,19 +61,10 @@ public class ApplifierImpactWebView extends WebView {
 				
 				jsCommand = jsCommand + "impactVideoComplete(\"" + campaignId + "\");";
 			}
-				
 			
 			loadUrl(jsCommand);
 		}
-
-		//loadUrl("javascript:setView('" + view + "','" + jsonString + "');");
 	}
-	
-	/*
-	public void setSelectedCampaign (ApplifierImpactCampaign campaign) {
-		if (isWebAppLoaded())
-			loadUrl("javascript:selectCampaign('" + campaign.getCampaignId() + "');");
-	}*/
 	
 	public void setAvailableCampaigns (String videoPlan) {
 		if (isWebAppLoaded()) {
@@ -98,7 +81,6 @@ public class ApplifierImpactWebView extends WebView {
 			paramStr = paramStr.replace("\"", "\\\"");
 			loadUrl("javascript:impactInit(\"" + videoPlan + "\", \"" + paramStr + "\");");
 		}
-		//loadUrl("javascript:setAvailableCampaigns('" + videoPlan + "');");
 	}
 	
 	

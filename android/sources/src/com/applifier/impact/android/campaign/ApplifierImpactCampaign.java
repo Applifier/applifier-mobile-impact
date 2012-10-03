@@ -29,6 +29,7 @@ public class ApplifierImpactCampaign {
 	
 	private JSONObject _campaignJson = null;
 	private String[] _requiredKeys = new String[]{"id", "gameId", "trailerDownloadable", "trailerStreaming", "clickUrl"};
+	private ApplifierImpactCampaignStatus _campaignStatus = ApplifierImpactCampaignStatus.READY;
 	
 	public ApplifierImpactCampaign () {		
 	}
@@ -83,27 +84,11 @@ public class ApplifierImpactCampaign {
 	}
 	
 	public ApplifierImpactCampaignStatus getCampaignStatus () {
-		/*
-		if (checkDataIntegrity()) {
-			try {
-				return ApplifierImpactCampaignStatus.getValueOf(_campaignJson.getString("status"));
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "getCampaignStatus: This should not happen!");
-			}
-		}*/
-		return ApplifierImpactCampaignStatus.getValueOf("ready");
+		return _campaignStatus;
 	}
 	
 	public void setCampaignStatus (ApplifierImpactCampaignStatus status) {
-		if (checkDataIntegrity()) {
-			try {
-				_campaignJson.put("status", status.toString());
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "setCampaignStatus: This should not happen!");
-			}
-		}
+		_campaignStatus = status;
 	}
 	
 	public String getVideoStreamUrl () {

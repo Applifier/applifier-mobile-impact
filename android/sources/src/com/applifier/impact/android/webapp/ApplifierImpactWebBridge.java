@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.applifier.impact.android.ApplifierImpactProperties;
 
-
 public class ApplifierImpactWebBridge {
 	private enum ApplifierImpactWebEvent { PlayVideo, PauseVideo, CloseView, InitComplete;
 		@Override
@@ -58,8 +57,6 @@ public class ApplifierImpactWebBridge {
 		catch (Exception e) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Error while parsing parameters: " + e.getMessage());
 		}
-		
-		//Log.d(ApplifierImpactProperties.LOG_NAME, "GOT WEBEVENT: " + event + ", " + data);
 		
 		if (paramObj == null || event == null) return;
 		

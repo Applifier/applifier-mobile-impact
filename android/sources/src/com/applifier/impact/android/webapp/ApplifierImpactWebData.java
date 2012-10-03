@@ -7,7 +7,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
@@ -16,6 +15,7 @@ import android.util.Log;
 import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 
 public class ApplifierImpactWebData {
 	
@@ -40,6 +40,9 @@ public class ApplifierImpactWebData {
 					break;
 				case ThirdQuartile:
 					output = "third_quartile";
+					break;
+				case End:
+					output = "view";
 					break;
 				default:
 					output = name().toString().toLowerCase();
@@ -80,7 +83,6 @@ public class ApplifierImpactWebData {
 		return _videoPlanCampaigns;
 	}
 	
-	
 	public ApplifierImpactCampaign getCampaignById (String campaignId) {
 		if (campaignId != null) {
 			for (int i = 0; i < _videoPlanCampaigns.size(); i++) {
@@ -93,19 +95,26 @@ public class ApplifierImpactWebData {
 	}
 	
 	public ArrayList<ApplifierImpactCampaign> getViewableVideoPlanCampaigns () {
-		return _videoPlanCampaigns;
+		ArrayList<ApplifierImpactCampaign> viewableCampaigns = null;
+		ApplifierImpactCampaign currentCampaign = null; 
+		
+		if (_videoPlanCampaigns != null) {
+			viewableCampaigns = new ArrayList<ApplifierImpactCampaign>();
+			for (int i = 0; i < _videoPlanCampaigns.size(); i++) {
+				currentCampaign = _videoPlanCampaigns.get(i);
+				if (currentCampaign != null && !currentCampaign.getCampaignStatus().equals(ApplifierImpactCampaignStatus.VIEWED))
+					viewableCampaigns.add(currentCampaign);
+			}
+		}
+		
+		return viewableCampaigns;
 	}
 
-	public boolean initVideoPlan (ArrayList<String> cachedCampaignIds) {
-		JSONObject json = new JSONObject();
-		JSONArray data = getCachedCampaignIdsArray(cachedCampaignIds);
-		String dataString = "gameId=" + ApplifierImpactProperties.IMPACT_APP_ID + "&openUdid=someudid&device=iphone&iosVersion=6.0";
+	public boolean initVideoPlan () {
+		String url = ApplifierImpactProperties.IMPACT_BASEURL + ApplifierImpactProperties.IMPACT_MOBILEPATH + "/" + ApplifierImpactProperties.IMPACT_CAMPAIGNPATH;
+		String queryString = "gameId=" + ApplifierImpactProperties.IMPACT_APP_ID + "&openUdid=someudid&device=iphone&iosVersion=6.0";
 		
-		
-		if (data != null)
-			dataString = json.toString();
-			
-		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(ApplifierImpactProperties.WEBDATA_URL + "?" + dataString, ApplifierImpactRequestType.VideoPlan);
+		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(url + "?" + queryString, ApplifierImpactRequestType.VideoPlan);
 		addLoader(loader);
 		startNextLoader();
 		checkFailedUrls();
@@ -113,25 +122,18 @@ public class ApplifierImpactWebData {
 		return true;
 	}
 	
-	public boolean sendCampaignViewed (ApplifierImpactCampaign campaign, ApplifierVideoPosition position) {
+	public boolean sendCampaignViewProgress (ApplifierImpactCampaign campaign, ApplifierVideoPosition position) {
 		if (campaign == null) return false;
+
+		Log.d(ApplifierImpactProperties.LOG_NAME, "VP: " + position.toString() + ", " + getGamerId());
 		
-		JSONObject json = new JSONObject();
-		
-		try {
-			json.put("did", ApplifierImpactUtils.getDeviceId(ApplifierImpactProperties.CURRENT_ACTIVITY));
-			json.put("c", campaign.getCampaignId());
-			json.put("pos", position.toString());
+		if (position != null && getGamerId() != null && (position.equals(ApplifierVideoPosition.Start)  || position.equals(ApplifierVideoPosition.End))) {
+			String viewUrl = ApplifierImpactProperties.IMPACT_BASEURL + ApplifierImpactProperties.IMPACT_GAMERPATH + "/" + getGamerId() + "/" + position.toString() + "/" + campaign.getCampaignId();
+			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(viewUrl, ApplifierImpactRequestType.VideoViewed);
+			addLoader(loader);
+			startNextLoader();
+			return true;
 		}
-		catch (Exception e) {			
-		}
-		
-		String dataString = "";
-		dataString = json.toString();
-		
-		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(ApplifierImpactProperties.WEBDATA_URL + "?v=" + dataString, ApplifierImpactRequestType.VideoViewed);
-		addLoader(loader);
-		startNextLoader();		
 		
 		return false;
 	}
@@ -144,7 +146,36 @@ public class ApplifierImpactWebData {
 	}
 	
 	public String getVideoPlan () {
-		return _videoPlan.toString();
+		if (_videoPlan != null)
+			return _videoPlan.toString();
+		
+		return null;
+	}
+	
+	public String getGamerId () {
+		if (_videoPlan != null) {
+			if (_videoPlan.has("data")) {				
+				JSONObject dataObj = null;
+				try {
+					dataObj = _videoPlan.getJSONObject("data");
+				}
+				catch (Exception e) {
+					Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
+					return null;
+				}
+				
+				if (dataObj != null) {
+					try {						
+						return dataObj.getString("gamerId");
+					}
+					catch (Exception e) {
+						Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
+					}
+				}
+			}
+		}
+			
+		return null;
 	}
 	
 	
@@ -162,20 +193,6 @@ public class ApplifierImpactWebData {
 			_isLoading = true;
 			_currentLoader = (ApplifierImpactUrlLoader)_urlLoaders.remove(0).execute();
 		}			
-	}
-	
-	private JSONArray getCachedCampaignIdsArray (ArrayList<String> cachedCampaignIds) {
-		JSONArray campaignIds = null;
-		
-		if (cachedCampaignIds != null && cachedCampaignIds.size() > 0) {
-			campaignIds = new JSONArray();
-			
-			for (String id : cachedCampaignIds) {
-				campaignIds.put(id);
-			}
-		}
-		
-		return campaignIds;
 	}
 	
 	private void urlLoadCompleted (ApplifierImpactUrlLoader loader) {

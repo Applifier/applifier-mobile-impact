@@ -11,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -22,37 +21,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class ApplifierImpactUtils {
-	
-	/*
-	public static ArrayList<ApplifierImpactCampaign> createCampaignsFromJson (JSONObject json) {
-		if (json != null && json.has("va")) {
-			ArrayList<ApplifierImpactCampaign> campaignData = new ArrayList<ApplifierImpactCampaign>();
-			JSONArray va = null;
-			JSONObject currentCampaign = null;
-			
-			try {
-				va = json.getJSONArray("va");
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
-			}
-			
-			for (int i = 0; i < va.length(); i++) {
-				try {
-					currentCampaign = va.getJSONObject(i);
-					campaignData.add(new ApplifierImpactCampaign(currentCampaign));
-				}
-				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
-				}				
-			}
-			
-			return campaignData;
-		}
-		
-		return null;
-	}*/
-	
 	public static ArrayList<ApplifierImpactCampaign> createCampaignsFromJson (JSONObject json) {
 		if (json != null && json.has("campaigns")) {
 			ArrayList<ApplifierImpactCampaign> campaignData = new ArrayList<ApplifierImpactCampaign>();
@@ -152,31 +120,6 @@ public class ApplifierImpactUtils {
 		}
 	}
 		
-	/*
-	public static JSONObject createJsonFromCampaigns (ArrayList<ApplifierImpactCampaign> campaignList) {
-		JSONObject retJson = new JSONObject();
-		JSONArray campaigns = new JSONArray();
-		JSONObject currentCampaign = null;
-		
-		try {
-			for (ApplifierImpactCampaign campaign : campaignList) {
-				currentCampaign = campaign.toJson();
-				
-				if (currentCampaign != null)
-					campaigns.put(currentCampaign);
-			}
-			JSONObject obj = new JSONObject();
-			obj.put("campaigns", campaigns);
-			retJson.put("data", obj);
-		}
-		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Error while creating JSON from Campaigns");
-			return null;
-		}
-		
-		return retJson;
-	}*/
-		
 	public static ArrayList<ApplifierImpactCampaign> substractFromCampaignList (ArrayList<ApplifierImpactCampaign> fromList, ArrayList<ApplifierImpactCampaign> substractionList) {
 		if (fromList == null) return null;
 		if (substractionList == null) return fromList;
@@ -228,23 +171,7 @@ public class ApplifierImpactUtils {
 		
 		return false;
 	}
-	
-	/*
-	public static ArrayList<ApplifierImpactCampaign> getViewableCampaignsFromCampaignList (ArrayList<ApplifierImpactCampaign> campaignList) {
-		ArrayList<ApplifierImpactCampaign> retList = new ArrayList<ApplifierImpactCampaign>();
-		
-		if (campaignList != null) {
-			for (ApplifierImpactCampaign campaign : campaignList) {
-				if (campaign != null && campaign.getCampaignStatus() != ApplifierImpactCampaignStatus.VIEWED && campaign.getCampaignStatus() != ApplifierImpactCampaignStatus.PANIC)
-					retList.add(campaign);
-			}
-			
-			return retList;
-		}
-		
-		return null;		
-	}*/
-	
+
 	public static boolean isFileInCache (String fileName) {
 		File targetFile = new File (fileName);
 		File testFile = new File(getCacheDirectory() + "/" + targetFile.getName());
