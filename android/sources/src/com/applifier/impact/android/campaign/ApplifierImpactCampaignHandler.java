@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.util.Log;
 
-import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.cache.ApplifierImpactDownloader;
@@ -14,14 +13,12 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	
 	private ArrayList<String> _downloadList = null;
 	private ApplifierImpactCampaign _campaign = null;
-	private ArrayList<ApplifierImpactCampaign> _activeCampaigns = null;
 	private IApplifierImpactCampaignHandlerListener _handlerListener = null;
 	private boolean _cancelledDownloads = false;
 	
 	
-	public ApplifierImpactCampaignHandler (ApplifierImpactCampaign campaign, ArrayList<ApplifierImpactCampaign> activeList) {
+	public ApplifierImpactCampaignHandler (ApplifierImpactCampaign campaign) {
 		_campaign = campaign;
-		_activeCampaigns = activeList;
 	}
 	
 	public boolean hasDownloads () {

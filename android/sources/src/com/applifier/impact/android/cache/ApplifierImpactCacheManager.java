@@ -67,7 +67,7 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 			_totalCampaigns = activeList.size();
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Updating cache: Going through active campaigns");			
 			for (ApplifierImpactCampaign campaign : activeList) {
-				ApplifierImpactCampaignHandler campaignHandler = new ApplifierImpactCampaignHandler(campaign, activeList);
+				ApplifierImpactCampaignHandler campaignHandler = new ApplifierImpactCampaignHandler(campaign);
 				addToUpdatingHandlers(campaignHandler);
 				campaignHandler.setListener(this);
 				campaignHandler.initCampaign();

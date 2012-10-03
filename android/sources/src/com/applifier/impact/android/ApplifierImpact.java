@@ -33,7 +33,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	// Impact components
 	public static ApplifierImpact instance = null;
-	//public static ApplifierImpactCacheManifest cachemanifest = null;
 	public static ApplifierImpactCacheManager cachemanager = null;
 	public static ApplifierImpactWebData webdata = null;
 	
@@ -79,7 +78,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		
 		cachemanager = new ApplifierImpactCacheManager();
 		cachemanager.setDownloadListener(this);
-		//cachemanifest = new ApplifierImpactCacheManifest();
 		webdata = new ApplifierImpactWebData();
 		webdata.setWebDataListener(this);
 		
