@@ -5,10 +5,12 @@ import java.lang.reflect.Method;
 import org.json.JSONObject;
 
 import com.applifier.impact.android.ApplifierImpactProperties;
+import com.applifier.impact.android.ApplifierImpactUtils;
 
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -45,23 +47,13 @@ public class ApplifierImpactWebView extends WebView {
 	
 	public void setView (String view, JSONObject data) {		
 		if (isWebAppLoaded()) {
-			String jsCommand = "javascript:";
-			
-			if (view.equals("videoStart"))
-				jsCommand = jsCommand + "impactShow();";
-			else if (view.equals("videoCompleted")) {
-				String campaignId = "";
-				
-				try {
-					campaignId = data.getString("campaignId");
-				}
-				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Could not get campaignId");
-				}
-				
-				jsCommand = jsCommand + "impactVideoComplete(\"" + campaignId + "\");";
+			String dataStr = "";
+			if (data != null) {
+				dataStr = data.toString();
+				dataStr = dataStr.replace("\"", "\\\"");
 			}
-			
+							
+			String jsCommand = ApplifierImpactProperties.IMPACT_JS_PREFIX + "setView(\"" + view + "\", \"" + dataStr + "\")";
 			loadUrl(jsCommand);
 		}
 	}
@@ -71,6 +63,11 @@ public class ApplifierImpactWebView extends WebView {
 			videoPlan = videoPlan.replace("\"", "\\\"");
 			JSONObject params = new JSONObject();
 			try {
+				params.put("deviceId", ApplifierImpactUtils.getDeviceId(getContext()));
+				params.put("softwareVersion", Build.VERSION.SDK_INT);
+				params.put("hardwareVersion", "unknown");
+				params.put("deviceType", "phone");
+				params.put("apiVersion", "1");
 				params.put("platform", "android");
 			}
 			catch (Exception e) {
@@ -79,7 +76,7 @@ public class ApplifierImpactWebView extends WebView {
 			String paramStr = "";
 			paramStr = params.toString();
 			paramStr = paramStr.replace("\"", "\\\"");
-			loadUrl("javascript:impactInit(\"" + videoPlan + "\", \"" + paramStr + "\");");
+			loadUrl(ApplifierImpactProperties.IMPACT_JS_PREFIX + "init(\"" + videoPlan + "\", \"" + paramStr + "\");");
 		}
 	}
 	

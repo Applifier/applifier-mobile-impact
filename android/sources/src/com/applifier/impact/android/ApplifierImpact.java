@@ -95,7 +95,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		if (!_showingImpact && canShowCampaigns()) {
 			ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 			focusToView(_webView);
-			_webView.setView("videoStart");
+			_webView.setView("start");
 			_showingImpact = true;	
 			
 			if (_impactListener != null)
@@ -153,7 +153,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	@Override
 	public void onWebDataFailed () {
-		//setup();
 	}
 	
 	// IApplifierImpactWebViewListener
@@ -226,9 +225,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public void onCompletion(MediaPlayer mp) {				
 		if (_videoListener != null)
 			_videoListener.onVideoCompleted();
-		
-		_selectedCampaign.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
-		
+				
 		_vp.setKeepScreenOn(false);
 		closeView(_vp, false);
 		JSONObject params = null;
@@ -240,10 +237,11 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Could not create JSON");
 		}
 		
-		_webView.setView("videoCompleted", params);
+		_webView.setView("completed", params);
 		ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 		focusToView(_webView);
 		onEventPositionReached(ApplifierVideoPosition.End);
+		_selectedCampaign.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 		_selectedCampaign = null;
 	}
 	
@@ -264,7 +262,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	private boolean canShowCampaigns () {
-		Log.d(ApplifierImpactProperties.LOG_NAME, "" + webdata.getViewableVideoPlanCampaigns().size());
 		return _webView != null && _webView.isWebAppLoaded() && _webAppLoaded && webdata.getViewableVideoPlanCampaigns().size() > 0;
 	}
 	

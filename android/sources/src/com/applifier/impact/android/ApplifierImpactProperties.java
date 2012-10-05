@@ -12,6 +12,7 @@ public class ApplifierImpactProperties {
 	public static final String IMPACT_GAMERPATH = "gamers";
 	public static final String IMPACT_MOBILEPATH = "mobile";
 	public static final String IMPACT_CAMPAIGNPATH = "campaigns";
+	public static final String IMPACT_JS_PREFIX = "javascript:applifierimpact.";
 	
 	public static Activity CURRENT_ACTIVITY = null;
 	public static String IMPACT_APP_ID = "";
