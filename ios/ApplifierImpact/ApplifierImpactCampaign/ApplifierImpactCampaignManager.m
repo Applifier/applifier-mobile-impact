@@ -230,7 +230,7 @@ NSString * const kGamerIDKey = @"gamerId";
 	if (self.queryString != nil)
 		urlString = [urlString stringByAppendingString:self.queryString];
 	
-    AILOG_DEBUG(@"UrlString %@", urlString);
+  AILOG_DEBUG(@"UrlString %@", urlString);
 	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlString]];
 	self.urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 	[self.urlConnection start];
@@ -273,19 +273,16 @@ NSString * const kGamerIDKey = @"gamerId";
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-	AILOG_DEBUG(@"didReceiveResponse");
   self.campaignDownloadData = [NSMutableData data];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-	AILOG_DEBUG(@"didReceiveData");
 	[self.campaignDownloadData appendData:data];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-  AILOG_DEBUG(@"connectionDidFinishLoading");
   [self _processCampaignDownloadData];
 }
 
