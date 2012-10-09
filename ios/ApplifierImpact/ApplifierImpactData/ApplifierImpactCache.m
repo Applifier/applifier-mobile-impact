@@ -370,7 +370,8 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	[self _removeInvalidDownloadsWithCampaigns:campaigns];
 	[self _cleanUpIndexWithCampaigns:campaigns];
   
-  BOOL downloadsQueued = YES;
+  BOOL downloadsQueued = NO;
+  
 	for (ApplifierImpactCampaign *campaign in campaigns)
 	{
 		if ([self _queueCampaignDownload:campaign])
