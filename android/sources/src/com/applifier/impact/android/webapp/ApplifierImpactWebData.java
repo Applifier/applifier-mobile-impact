@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.json.JSONObject;
 
@@ -113,8 +114,22 @@ public class ApplifierImpactWebData {
 	public boolean initVideoPlan () {
 		String url = ApplifierImpactProperties.IMPACT_BASEURL + ApplifierImpactProperties.IMPACT_MOBILEPATH + "/" + ApplifierImpactProperties.IMPACT_CAMPAIGNPATH;
 		String queryString = "gameId=" + ApplifierImpactProperties.IMPACT_APP_ID + "&openUdid=someudid&device=iphone&iosVersion=6.0";
+		String collatedProperties = "";
+		JSONObject properties = ApplifierImpactUtils.getPlatformProperties();		
+		Iterator<String> dataKeys = properties.keys();
+		String key = "";
 		
-		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(url + "?" + queryString, ApplifierImpactRequestType.VideoPlan);
+		while (dataKeys.hasNext()) {
+			key = dataKeys.next();
+			try {
+				collatedProperties = collatedProperties + "&" + key + "=" + properties.getString(key);
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactProperties.LOG_NAME, "Error while creating properties");
+			}
+		}
+		
+		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(url + "?" + queryString + collatedProperties, ApplifierImpactRequestType.VideoPlan);
 		addLoader(loader);
 		startNextLoader();
 		checkFailedUrls();

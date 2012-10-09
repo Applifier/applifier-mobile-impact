@@ -61,30 +61,14 @@ public class ApplifierImpactWebView extends WebView {
 	public void setAvailableCampaigns (String videoPlan) {
 		if (isWebAppLoaded()) {
 			videoPlan = videoPlan.replace("\"", "\\\"");
-			JSONObject params = new JSONObject();
-			try {
-				params.put("deviceId", ApplifierImpactUtils.getDeviceId(getContext()));
-				params.put("softwareVersion", Build.VERSION.SDK_INT);
-				params.put("hardwareVersion", "unknown");
-				params.put("deviceType", "phone");
-				params.put("apiVersion", "1");
-				params.put("platform", "android");
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "JSON Error");
-			}
+			JSONObject params = ApplifierImpactUtils.getPlatformProperties();
 			String paramStr = "";
 			paramStr = params.toString();
 			paramStr = paramStr.replace("\"", "\\\"");
 			loadUrl(ApplifierImpactProperties.IMPACT_JS_PREFIX + "init(\"" + videoPlan + "\", \"" + paramStr + "\");");
 		}
 	}
-	
-	
-	public void setDeviceId (String deviceId) {
-		if (isWebAppLoaded())
-			loadUrl("javascript:setDeviceId('" + deviceId +"');");
-	}
+
 	
 	/* INTENRAL METHODS */
 	
