@@ -5,5 +5,9 @@ android/sources/gen
 android/example/gen
 device/
 testvideos/
-ios/ImpactProto/ImpactProto.xcodeproj/project.xcworkspace/xcuserdata
-ios/ImpactProto/ImpactProto.xcodeproj/xcuserdata
+ios/example/ImpactProto.xcodeproj/project.xcworkspace/xcuserdata
+ios/example/ImpactProto.xcodeproj/xcuserdata
+ios/ApplifierImpact.xcodeproj/project.xcworkspace/xcuserdata
+ios/ApplifierImpact.xcodeproj/xcuserdata
+ios/ApplifierImpact.xcworkspace/project.xcworkspace/xcuserdata
+ios/ApplifierImpact.xcworkspace/xcuserdata
