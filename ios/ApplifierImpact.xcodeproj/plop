@@ -1,0 +1,700 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3B59151F151B1EDF009E4F87 /* ApplifierDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B59151D151B1EDF009E4F87 /* ApplifierDevice.h */; };
+		3B591520151B1EDF009E4F87 /* ApplifierDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B59151E151B1EDF009E4F87 /* ApplifierDevice.m */; };
+		3BD877FF15414A8200840C70 /* ApplifierLeaderboardsScore.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BD877FD15414A8200840C70 /* ApplifierLeaderboardsScore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3BD8780015414A8200840C70 /* ApplifierLeaderboardsScore.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BD877FE15414A8200840C70 /* ApplifierLeaderboardsScore.m */; };
+		3BD878041541560100840C70 /* ApplifierLeaderboardsResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BD878021541560100840C70 /* ApplifierLeaderboardsResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3BD878051541560100840C70 /* ApplifierLeaderboardsResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BD878031541560100840C70 /* ApplifierLeaderboardsResult.m */; };
+		CC158911150789ED00B3D188 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC15890F150789ED00B3D188 /* InfoPlist.strings */; };
+		CC35014715398EC700FF6066 /* ApplifierJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35012D15398EC700FF6066 /* ApplifierJSON.h */; };
+		CC35014815398EC700FF6066 /* ApplifierSBJson.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35012E15398EC700FF6066 /* ApplifierSBJson.h */; };
+		CC35014915398EC700FF6066 /* ApplifierSBJsonParser.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35012F15398EC700FF6066 /* ApplifierSBJsonParser.h */; };
+		CC35014A15398EC700FF6066 /* ApplifierSBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = CC35013015398EC700FF6066 /* ApplifierSBJsonParser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC35014B15398EC700FF6066 /* ApplifierSBJsonStreamParser.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35013115398EC700FF6066 /* ApplifierSBJsonStreamParser.h */; };
+		CC35014C15398EC700FF6066 /* ApplifierSBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = CC35013215398EC700FF6066 /* ApplifierSBJsonStreamParser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC35014D15398EC700FF6066 /* ApplifierSBJsonStreamParserAccumulator.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35013315398EC700FF6066 /* ApplifierSBJsonStreamParserAccumulator.h */; };
+		CC35014E15398EC700FF6066 /* ApplifierSBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = CC35013415398EC700FF6066 /* ApplifierSBJsonStreamParserAccumulator.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC35014F15398EC700FF6066 /* ApplifierSBJsonStreamParserAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35013515398EC700FF6066 /* ApplifierSBJsonStreamParserAdapter.h */; };
+		CC35015015398EC700FF6066 /* ApplifierSBJsonStreamParserAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = CC35013615398EC700FF6066 /* ApplifierSBJsonStreamParserAdapter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC35015115398EC700FF6066 /* ApplifierSBJsonStreamParserState.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35013715398EC700FF6066 /* ApplifierSBJsonStreamParserState.h */; };
+		CC35015215398EC700FF6066 /* ApplifierSBJsonStreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = CC35013815398EC700FF6066 /* ApplifierSBJsonStreamParserState.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC35015315398EC700FF6066 /* ApplifierSBJsonStreamWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35013915398EC700FF6066 /* ApplifierSBJsonStreamWriter.h */; };
+		CC35015415398EC700FF6066 /* ApplifierSBJsonStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = CC35013A15398EC700FF6066 /* ApplifierSBJsonStreamWriter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC35015515398EC700FF6066 /* ApplifierSBJsonStreamWriterAccumulator.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35013B15398EC700FF6066 /* ApplifierSBJsonStreamWriterAccumulator.h */; };
+		CC35015615398EC700FF6066 /* ApplifierSBJsonStreamWriterAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = CC35013C15398EC700FF6066 /* ApplifierSBJsonStreamWriterAccumulator.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC35015715398EC700FF6066 /* ApplifierSBJsonStreamWriterState.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35013D15398EC700FF6066 /* ApplifierSBJsonStreamWriterState.h */; };
+		CC35015815398EC700FF6066 /* ApplifierSBJsonStreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = CC35013E15398EC700FF6066 /* ApplifierSBJsonStreamWriterState.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC35015915398EC700FF6066 /* ApplifierSBJsonTokeniser.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35013F15398EC700FF6066 /* ApplifierSBJsonTokeniser.h */; };
+		CC35015A15398EC700FF6066 /* ApplifierSBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = CC35014015398EC700FF6066 /* ApplifierSBJsonTokeniser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC35015B15398EC700FF6066 /* ApplifierSBJsonUTF8Stream.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35014115398EC700FF6066 /* ApplifierSBJsonUTF8Stream.h */; };
+		CC35015C15398EC700FF6066 /* ApplifierSBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = CC35014215398EC700FF6066 /* ApplifierSBJsonUTF8Stream.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC35015D15398EC700FF6066 /* ApplifierSBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35014315398EC700FF6066 /* ApplifierSBJsonWriter.h */; };
+		CC35015E15398EC700FF6066 /* ApplifierSBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = CC35014415398EC700FF6066 /* ApplifierSBJsonWriter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC35015F15398EC700FF6066 /* NSObject+ApplifierSBJson.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35014515398EC700FF6066 /* NSObject+ApplifierSBJson.h */; };
+		CC35016015398EC700FF6066 /* NSObject+ApplifierSBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = CC35014615398EC700FF6066 /* NSObject+ApplifierSBJson.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC496C7E15078AA100AF335E /* Applifier.h in Headers */ = {isa = PBXBuildFile; fileRef = CC496C7115078AA100AF335E /* Applifier.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC496C7F15078AA100AF335E /* Applifier.m in Sources */ = {isa = PBXBuildFile; fileRef = CC496C7215078AA100AF335E /* Applifier.m */; };
+		CC496C8015078AA100AF335E /* ApplifierCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = CC496C7315078AA100AF335E /* ApplifierCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC496C8115078AA100AF335E /* ApplifierLeaderboard.h in Headers */ = {isa = PBXBuildFile; fileRef = CC496C7415078AA100AF335E /* ApplifierLeaderboard.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC496C8215078AA100AF335E /* ApplifierLeaderboard.m in Sources */ = {isa = PBXBuildFile; fileRef = CC496C7515078AA100AF335E /* ApplifierLeaderboard.m */; };
+		CC496C8315078AA100AF335E /* ApplifierLeaderboards.h in Headers */ = {isa = PBXBuildFile; fileRef = CC496C7615078AA100AF335E /* ApplifierLeaderboards.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC496C8415078AA100AF335E /* ApplifierLeaderboards.m in Sources */ = {isa = PBXBuildFile; fileRef = CC496C7715078AA100AF335E /* ApplifierLeaderboards.m */; };
+		CC496C8515078AA100AF335E /* ApplifierLeaderboardsAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = CC496C7815078AA100AF335E /* ApplifierLeaderboardsAPIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC496C8615078AA100AF335E /* ApplifierLeaderboardsAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = CC496C7915078AA100AF335E /* ApplifierLeaderboardsAPIClient.m */; };
+		CC496C8715078AA100AF335E /* ApplifierLeaderboardsPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = CC496C7A15078AA100AF335E /* ApplifierLeaderboardsPlayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC496C8815078AA100AF335E /* ApplifierLeaderboardsPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = CC496C7B15078AA100AF335E /* ApplifierLeaderboardsPlayer.m */; };
+		CC496C8915078AA100AF335E /* ApplifierView.h in Headers */ = {isa = PBXBuildFile; fileRef = CC496C7C15078AA100AF335E /* ApplifierView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC496C8A15078AA100AF335E /* ApplifierView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC496C7D15078AA100AF335E /* ApplifierView.m */; };
+		CC496CD615078AB000AF335E /* ApplifierFacebook.h in Headers */ = {isa = PBXBuildFile; fileRef = CC496CA415078AB000AF335E /* ApplifierFacebook.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC496CD715078AB000AF335E /* ApplifierFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = CC496CA515078AB000AF335E /* ApplifierFacebook.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC496CD915078AB000AF335E /* ApplifierFBConnect.h in Headers */ = {isa = PBXBuildFile; fileRef = CC496CA715078AB000AF335E /* ApplifierFBConnect.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC496CDB15078AB000AF335E /* ApplifierFBDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = CC496CA915078AB000AF335E /* ApplifierFBDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC496CDC15078AB000AF335E /* ApplifierFBDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = CC496CAA15078AB000AF335E /* ApplifierFBDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC496CDD15078AB000AF335E /* ApplifierFBLoginDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = CC496CAB15078AB000AF335E /* ApplifierFBLoginDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC496CDE15078AB000AF335E /* ApplifierFBLoginDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = CC496CAC15078AB000AF335E /* ApplifierFBLoginDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC496CDF15078AB000AF335E /* ApplifierFBRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = CC496CAD15078AB000AF335E /* ApplifierFBRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC496CE015078AB000AF335E /* ApplifierFBRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CC496CAE15078AB000AF335E /* ApplifierFBRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC496CEE15078AB000AF335E /* ApplifierSDURLCache.h in Headers */ = {isa = PBXBuildFile; fileRef = CC496CBE15078AB000AF335E /* ApplifierSDURLCache.h */; };
+		CC496CEF15078AB000AF335E /* ApplifierSDURLCache.m in Sources */ = {isa = PBXBuildFile; fileRef = CC496CBF15078AB000AF335E /* ApplifierSDURLCache.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC515DC815121E3A00A2DAFA /* Applifier.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CC515DC715121E3A00A2DAFA /* Applifier.bundle */; };
+		CC558DF9151228A300B1EAD9 /* AFHTTPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = CC558DE3151228A300B1EAD9 /* AFHTTPClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC558DFA151228A300B1EAD9 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = CC558DE4151228A300B1EAD9 /* AFHTTPClient.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC558DFB151228A300B1EAD9 /* AFHTTPRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = CC558DE5151228A300B1EAD9 /* AFHTTPRequestOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC558DFC151228A300B1EAD9 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = CC558DE6151228A300B1EAD9 /* AFHTTPRequestOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC558DFD151228A300B1EAD9 /* AFImageRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = CC558DE7151228A300B1EAD9 /* AFImageRequestOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC558DFE151228A300B1EAD9 /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = CC558DE8151228A300B1EAD9 /* AFImageRequestOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC558DFF151228A300B1EAD9 /* AFJSONRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = CC558DE9151228A300B1EAD9 /* AFJSONRequestOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC558E00151228A300B1EAD9 /* AFJSONRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = CC558DEA151228A300B1EAD9 /* AFJSONRequestOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC558E01151228A300B1EAD9 /* AFJSONUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CC558DEB151228A300B1EAD9 /* AFJSONUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC558E02151228A300B1EAD9 /* AFJSONUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = CC558DEC151228A300B1EAD9 /* AFJSONUtilities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC558E03151228A300B1EAD9 /* AFNetworkActivityIndicatorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CC558DED151228A300B1EAD9 /* AFNetworkActivityIndicatorManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC558E04151228A300B1EAD9 /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CC558DEE151228A300B1EAD9 /* AFNetworkActivityIndicatorManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC558E05151228A300B1EAD9 /* AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CC558DEF151228A300B1EAD9 /* AFNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC558E06151228A300B1EAD9 /* AFPropertyListRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = CC558DF0151228A300B1EAD9 /* AFPropertyListRequestOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC558E07151228A300B1EAD9 /* AFPropertyListRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = CC558DF1151228A300B1EAD9 /* AFPropertyListRequestOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC558E08151228A300B1EAD9 /* AFURLConnectionOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = CC558DF2151228A300B1EAD9 /* AFURLConnectionOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC558E09151228A300B1EAD9 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = CC558DF3151228A300B1EAD9 /* AFURLConnectionOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC558E0A151228A300B1EAD9 /* AFXMLRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = CC558DF4151228A300B1EAD9 /* AFXMLRequestOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC558E0B151228A300B1EAD9 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = CC558DF5151228A300B1EAD9 /* AFXMLRequestOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC558E0D151228A300B1EAD9 /* UIImageView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CC558DF7151228A300B1EAD9 /* UIImageView+AFNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC558E0E151228A300B1EAD9 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = CC558DF8151228A300B1EAD9 /* UIImageView+AFNetworking.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC6C7D8F1523390A00B1B783 /* ApplifierOpenUDID.h in Headers */ = {isa = PBXBuildFile; fileRef = CC6C7D8D1523390A00B1B783 /* ApplifierOpenUDID.h */; };
+		CC6C7D901523390A00B1B783 /* ApplifierOpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6C7D8E1523390A00B1B783 /* ApplifierOpenUDID.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CC74A4D81520A18000CD8729 /* ApplifierFBClient.h in Headers */ = {isa = PBXBuildFile; fileRef = CC74A4D61520A18000CD8729 /* ApplifierFBClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC74A4D91520A18000CD8729 /* ApplifierFBClient.m in Sources */ = {isa = PBXBuildFile; fileRef = CC74A4D71520A18000CD8729 /* ApplifierFBClient.m */; };
+		CCD3D08E152440590050989E /* ApplifierFBFrictionlessRequestSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = CCD3D08C152440590050989E /* ApplifierFBFrictionlessRequestSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CCD3D08F152440590050989E /* ApplifierFBFrictionlessRequestSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD3D08D152440590050989E /* ApplifierFBFrictionlessRequestSettings.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3B59151D151B1EDF009E4F87 /* ApplifierDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierDevice.h; sourceTree = "<group>"; };
+		3B59151E151B1EDF009E4F87 /* ApplifierDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierDevice.m; sourceTree = "<group>"; };
+		3BD877FD15414A8200840C70 /* ApplifierLeaderboardsScore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierLeaderboardsScore.h; sourceTree = "<group>"; };
+		3BD877FE15414A8200840C70 /* ApplifierLeaderboardsScore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierLeaderboardsScore.m; sourceTree = "<group>"; };
+		3BD878021541560100840C70 /* ApplifierLeaderboardsResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierLeaderboardsResult.h; sourceTree = "<group>"; };
+		3BD878031541560100840C70 /* ApplifierLeaderboardsResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierLeaderboardsResult.m; sourceTree = "<group>"; };
+		CC15890A150789ED00B3D188 /* Applifier.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Applifier.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC15890E150789ED00B3D188 /* Applifier-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Applifier-Info.plist"; sourceTree = "<group>"; };
+		CC158910150789ED00B3D188 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CC158912150789ED00B3D188 /* Applifier-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Applifier-Prefix.pch"; sourceTree = "<group>"; };
+		CC35012D15398EC700FF6066 /* ApplifierJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierJSON.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC35012E15398EC700FF6066 /* ApplifierSBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierSBJson.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC35012F15398EC700FF6066 /* ApplifierSBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierSBJsonParser.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013015398EC700FF6066 /* ApplifierSBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierSBJsonParser.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013115398EC700FF6066 /* ApplifierSBJsonStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierSBJsonStreamParser.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013215398EC700FF6066 /* ApplifierSBJsonStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierSBJsonStreamParser.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013315398EC700FF6066 /* ApplifierSBJsonStreamParserAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierSBJsonStreamParserAccumulator.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013415398EC700FF6066 /* ApplifierSBJsonStreamParserAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierSBJsonStreamParserAccumulator.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013515398EC700FF6066 /* ApplifierSBJsonStreamParserAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierSBJsonStreamParserAdapter.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013615398EC700FF6066 /* ApplifierSBJsonStreamParserAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierSBJsonStreamParserAdapter.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013715398EC700FF6066 /* ApplifierSBJsonStreamParserState.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierSBJsonStreamParserState.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013815398EC700FF6066 /* ApplifierSBJsonStreamParserState.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierSBJsonStreamParserState.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013915398EC700FF6066 /* ApplifierSBJsonStreamWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierSBJsonStreamWriter.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013A15398EC700FF6066 /* ApplifierSBJsonStreamWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierSBJsonStreamWriter.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013B15398EC700FF6066 /* ApplifierSBJsonStreamWriterAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierSBJsonStreamWriterAccumulator.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013C15398EC700FF6066 /* ApplifierSBJsonStreamWriterAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierSBJsonStreamWriterAccumulator.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013D15398EC700FF6066 /* ApplifierSBJsonStreamWriterState.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierSBJsonStreamWriterState.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013E15398EC700FF6066 /* ApplifierSBJsonStreamWriterState.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierSBJsonStreamWriterState.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC35013F15398EC700FF6066 /* ApplifierSBJsonTokeniser.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierSBJsonTokeniser.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC35014015398EC700FF6066 /* ApplifierSBJsonTokeniser.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierSBJsonTokeniser.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC35014115398EC700FF6066 /* ApplifierSBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierSBJsonUTF8Stream.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC35014215398EC700FF6066 /* ApplifierSBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierSBJsonUTF8Stream.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC35014315398EC700FF6066 /* ApplifierSBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierSBJsonWriter.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC35014415398EC700FF6066 /* ApplifierSBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierSBJsonWriter.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC35014515398EC700FF6066 /* NSObject+ApplifierSBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+ApplifierSBJson.h"; sourceTree = "<group>"; tabWidth = 4; };
+		CC35014615398EC700FF6066 /* NSObject+ApplifierSBJson.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+ApplifierSBJson.m"; sourceTree = "<group>"; tabWidth = 4; };
+		CC496C7115078AA100AF335E /* Applifier.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = Applifier.h; sourceTree = "<group>"; tabWidth = 2; };
+		CC496C7215078AA100AF335E /* Applifier.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = Applifier.m; sourceTree = "<group>"; tabWidth = 2; };
+		CC496C7315078AA100AF335E /* ApplifierCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = ApplifierCommon.h; sourceTree = "<group>"; tabWidth = 2; };
+		CC496C7415078AA100AF335E /* ApplifierLeaderboard.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = ApplifierLeaderboard.h; sourceTree = "<group>"; tabWidth = 2; };
+		CC496C7515078AA100AF335E /* ApplifierLeaderboard.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = ApplifierLeaderboard.m; sourceTree = "<group>"; tabWidth = 2; };
+		CC496C7615078AA100AF335E /* ApplifierLeaderboards.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = ApplifierLeaderboards.h; sourceTree = "<group>"; tabWidth = 2; };
+		CC496C7715078AA100AF335E /* ApplifierLeaderboards.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = ApplifierLeaderboards.m; sourceTree = "<group>"; tabWidth = 2; };
+		CC496C7815078AA100AF335E /* ApplifierLeaderboardsAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = ApplifierLeaderboardsAPIClient.h; sourceTree = "<group>"; tabWidth = 2; };
+		CC496C7915078AA100AF335E /* ApplifierLeaderboardsAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = ApplifierLeaderboardsAPIClient.m; sourceTree = "<group>"; tabWidth = 2; };
+		CC496C7A15078AA100AF335E /* ApplifierLeaderboardsPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = ApplifierLeaderboardsPlayer.h; sourceTree = "<group>"; tabWidth = 2; };
+		CC496C7B15078AA100AF335E /* ApplifierLeaderboardsPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = ApplifierLeaderboardsPlayer.m; sourceTree = "<group>"; tabWidth = 2; };
+		CC496C7C15078AA100AF335E /* ApplifierView.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = ApplifierView.h; sourceTree = "<group>"; tabWidth = 2; };
+		CC496C7D15078AA100AF335E /* ApplifierView.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = ApplifierView.m; sourceTree = "<group>"; tabWidth = 2; };
+		CC496CA415078AB000AF335E /* ApplifierFacebook.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = ApplifierFacebook.h; sourceTree = "<group>"; tabWidth = 2; };
+		CC496CA515078AB000AF335E /* ApplifierFacebook.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = ApplifierFacebook.m; sourceTree = "<group>"; tabWidth = 2; };
+		CC496CA715078AB000AF335E /* ApplifierFBConnect.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = ApplifierFBConnect.h; sourceTree = "<group>"; tabWidth = 2; };
+		CC496CA915078AB000AF335E /* ApplifierFBDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = ApplifierFBDialog.h; sourceTree = "<group>"; tabWidth = 2; };
+		CC496CAA15078AB000AF335E /* ApplifierFBDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = ApplifierFBDialog.m; sourceTree = "<group>"; tabWidth = 2; };
+		CC496CAB15078AB000AF335E /* ApplifierFBLoginDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = ApplifierFBLoginDialog.h; sourceTree = "<group>"; tabWidth = 2; };
+		CC496CAC15078AB000AF335E /* ApplifierFBLoginDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = ApplifierFBLoginDialog.m; sourceTree = "<group>"; tabWidth = 2; };
+		CC496CAD15078AB000AF335E /* ApplifierFBRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = ApplifierFBRequest.h; sourceTree = "<group>"; tabWidth = 2; };
+		CC496CAE15078AB000AF335E /* ApplifierFBRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = ApplifierFBRequest.m; sourceTree = "<group>"; tabWidth = 2; };
+		CC496CBE15078AB000AF335E /* ApplifierSDURLCache.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierSDURLCache.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC496CBF15078AB000AF335E /* ApplifierSDURLCache.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierSDURLCache.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC515DC715121E3A00A2DAFA /* Applifier.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Applifier.bundle; sourceTree = "<group>"; };
+		CC558DE3151228A300B1EAD9 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DE4151228A300B1EAD9 /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DE5151228A300B1EAD9 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DE6151228A300B1EAD9 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DE7151228A300B1EAD9 /* AFImageRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = AFImageRequestOperation.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DE8151228A300B1EAD9 /* AFImageRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageRequestOperation.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DE9151228A300B1EAD9 /* AFJSONRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = AFJSONRequestOperation.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DEA151228A300B1EAD9 /* AFJSONRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = AFJSONRequestOperation.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DEB151228A300B1EAD9 /* AFJSONUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = AFJSONUtilities.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DEC151228A300B1EAD9 /* AFJSONUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = AFJSONUtilities.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DED151228A300B1EAD9 /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityIndicatorManager.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DEE151228A300B1EAD9 /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityIndicatorManager.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DEF151228A300B1EAD9 /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworking.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DF0151228A300B1EAD9 /* AFPropertyListRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = AFPropertyListRequestOperation.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DF1151228A300B1EAD9 /* AFPropertyListRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = AFPropertyListRequestOperation.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DF2151228A300B1EAD9 /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = AFURLConnectionOperation.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DF3151228A300B1EAD9 /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DF4151228A300B1EAD9 /* AFXMLRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = AFXMLRequestOperation.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DF5151228A300B1EAD9 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DF7151228A300B1EAD9 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; tabWidth = 4; };
+		CC558DF8151228A300B1EAD9 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; tabWidth = 4; };
+		CC6C7D8D1523390A00B1B783 /* ApplifierOpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierOpenUDID.h; sourceTree = "<group>"; tabWidth = 4; };
+		CC6C7D8E1523390A00B1B783 /* ApplifierOpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierOpenUDID.m; sourceTree = "<group>"; tabWidth = 4; };
+		CC74A4D61520A18000CD8729 /* ApplifierFBClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierFBClient.h; sourceTree = "<group>"; };
+		CC74A4D71520A18000CD8729 /* ApplifierFBClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierFBClient.m; sourceTree = "<group>"; };
+		CCD3D08C152440590050989E /* ApplifierFBFrictionlessRequestSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = ApplifierFBFrictionlessRequestSettings.h; sourceTree = "<group>"; tabWidth = 2; };
+		CCD3D08D152440590050989E /* ApplifierFBFrictionlessRequestSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = ApplifierFBFrictionlessRequestSettings.m; sourceTree = "<group>"; tabWidth = 2; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CC158904150789ED00B3D188 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CC1588FB150789ED00B3D188 = {
+			isa = PBXGroup;
+			children = (
+				CC15890C150789ED00B3D188 /* Applifier */,
+				CC15890B150789ED00B3D188 /* Products */,
+			);
+			indentWidth = 2;
+			sourceTree = "<group>";
+			tabWidth = 2;
+		};
+		CC15890B150789ED00B3D188 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CC15890A150789ED00B3D188 /* Applifier.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CC15890C150789ED00B3D188 /* Applifier */ = {
+			isa = PBXGroup;
+			children = (
+				CC558DE2151228A300B1EAD9 /* AFNetworking */,
+				CC496CA315078AB000AF335E /* ApplifierFacebook */,
+				CC6C7D8C1523390A00B1B783 /* ApplifierOpenUDID */,
+				CC496CAF15078AB000AF335E /* ApplifierSBJSON */,
+				CC496CBD15078AB000AF335E /* ApplifierSDURLCache */,
+				CC496C7115078AA100AF335E /* Applifier.h */,
+				CC496C7215078AA100AF335E /* Applifier.m */,
+				3B59151D151B1EDF009E4F87 /* ApplifierDevice.h */,
+				3B59151E151B1EDF009E4F87 /* ApplifierDevice.m */,
+				CC74A4D61520A18000CD8729 /* ApplifierFBClient.h */,
+				CC74A4D71520A18000CD8729 /* ApplifierFBClient.m */,
+				CC496C7315078AA100AF335E /* ApplifierCommon.h */,
+				CC496C7415078AA100AF335E /* ApplifierLeaderboard.h */,
+				CC496C7515078AA100AF335E /* ApplifierLeaderboard.m */,
+				CC496C7615078AA100AF335E /* ApplifierLeaderboards.h */,
+				CC496C7715078AA100AF335E /* ApplifierLeaderboards.m */,
+				CC496C7815078AA100AF335E /* ApplifierLeaderboardsAPIClient.h */,
+				CC496C7915078AA100AF335E /* ApplifierLeaderboardsAPIClient.m */,
+				CC496C7A15078AA100AF335E /* ApplifierLeaderboardsPlayer.h */,
+				CC496C7B15078AA100AF335E /* ApplifierLeaderboardsPlayer.m */,
+				3BD877FD15414A8200840C70 /* ApplifierLeaderboardsScore.h */,
+				3BD877FE15414A8200840C70 /* ApplifierLeaderboardsScore.m */,
+				3BD878021541560100840C70 /* ApplifierLeaderboardsResult.h */,
+				3BD878031541560100840C70 /* ApplifierLeaderboardsResult.m */,
+				CC496C7C15078AA100AF335E /* ApplifierView.h */,
+				CC496C7D15078AA100AF335E /* ApplifierView.m */,
+				CC15890D150789ED00B3D188 /* Supporting Files */,
+			);
+			path = Applifier;
+			sourceTree = "<group>";
+		};
+		CC15890D150789ED00B3D188 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CC515DC715121E3A00A2DAFA /* Applifier.bundle */,
+				CC15890E150789ED00B3D188 /* Applifier-Info.plist */,
+				CC15890F150789ED00B3D188 /* InfoPlist.strings */,
+				CC158912150789ED00B3D188 /* Applifier-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CC496CA315078AB000AF335E /* ApplifierFacebook */ = {
+			isa = PBXGroup;
+			children = (
+				CC496CA415078AB000AF335E /* ApplifierFacebook.h */,
+				CC496CA515078AB000AF335E /* ApplifierFacebook.m */,
+				CC496CA715078AB000AF335E /* ApplifierFBConnect.h */,
+				CC496CA915078AB000AF335E /* ApplifierFBDialog.h */,
+				CC496CAA15078AB000AF335E /* ApplifierFBDialog.m */,
+				CCD3D08C152440590050989E /* ApplifierFBFrictionlessRequestSettings.h */,
+				CCD3D08D152440590050989E /* ApplifierFBFrictionlessRequestSettings.m */,
+				CC496CAB15078AB000AF335E /* ApplifierFBLoginDialog.h */,
+				CC496CAC15078AB000AF335E /* ApplifierFBLoginDialog.m */,
+				CC496CAD15078AB000AF335E /* ApplifierFBRequest.h */,
+				CC496CAE15078AB000AF335E /* ApplifierFBRequest.m */,
+			);
+			path = ApplifierFacebook;
+			sourceTree = "<group>";
+		};
+		CC496CAF15078AB000AF335E /* ApplifierSBJSON */ = {
+			isa = PBXGroup;
+			children = (
+				CC35012D15398EC700FF6066 /* ApplifierJSON.h */,
+				CC35012E15398EC700FF6066 /* ApplifierSBJson.h */,
+				CC35012F15398EC700FF6066 /* ApplifierSBJsonParser.h */,
+				CC35013015398EC700FF6066 /* ApplifierSBJsonParser.m */,
+				CC35013115398EC700FF6066 /* ApplifierSBJsonStreamParser.h */,
+				CC35013215398EC700FF6066 /* ApplifierSBJsonStreamParser.m */,
+				CC35013315398EC700FF6066 /* ApplifierSBJsonStreamParserAccumulator.h */,
+				CC35013415398EC700FF6066 /* ApplifierSBJsonStreamParserAccumulator.m */,
+				CC35013515398EC700FF6066 /* ApplifierSBJsonStreamParserAdapter.h */,
+				CC35013615398EC700FF6066 /* ApplifierSBJsonStreamParserAdapter.m */,
+				CC35013715398EC700FF6066 /* ApplifierSBJsonStreamParserState.h */,
+				CC35013815398EC700FF6066 /* ApplifierSBJsonStreamParserState.m */,
+				CC35013915398EC700FF6066 /* ApplifierSBJsonStreamWriter.h */,
+				CC35013A15398EC700FF6066 /* ApplifierSBJsonStreamWriter.m */,
+				CC35013B15398EC700FF6066 /* ApplifierSBJsonStreamWriterAccumulator.h */,
+				CC35013C15398EC700FF6066 /* ApplifierSBJsonStreamWriterAccumulator.m */,
+				CC35013D15398EC700FF6066 /* ApplifierSBJsonStreamWriterState.h */,
+				CC35013E15398EC700FF6066 /* ApplifierSBJsonStreamWriterState.m */,
+				CC35013F15398EC700FF6066 /* ApplifierSBJsonTokeniser.h */,
+				CC35014015398EC700FF6066 /* ApplifierSBJsonTokeniser.m */,
+				CC35014115398EC700FF6066 /* ApplifierSBJsonUTF8Stream.h */,
+				CC35014215398EC700FF6066 /* ApplifierSBJsonUTF8Stream.m */,
+				CC35014315398EC700FF6066 /* ApplifierSBJsonWriter.h */,
+				CC35014415398EC700FF6066 /* ApplifierSBJsonWriter.m */,
+				CC35014515398EC700FF6066 /* NSObject+ApplifierSBJson.h */,
+				CC35014615398EC700FF6066 /* NSObject+ApplifierSBJson.m */,
+			);
+			path = ApplifierSBJSON;
+			sourceTree = "<group>";
+		};
+		CC496CBD15078AB000AF335E /* ApplifierSDURLCache */ = {
+			isa = PBXGroup;
+			children = (
+				CC496CBE15078AB000AF335E /* ApplifierSDURLCache.h */,
+				CC496CBF15078AB000AF335E /* ApplifierSDURLCache.m */,
+			);
+			path = ApplifierSDURLCache;
+			sourceTree = "<group>";
+		};
+		CC558DE2151228A300B1EAD9 /* AFNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				CC558DE3151228A300B1EAD9 /* AFHTTPClient.h */,
+				CC558DE4151228A300B1EAD9 /* AFHTTPClient.m */,
+				CC558DE5151228A300B1EAD9 /* AFHTTPRequestOperation.h */,
+				CC558DE6151228A300B1EAD9 /* AFHTTPRequestOperation.m */,
+				CC558DE7151228A300B1EAD9 /* AFImageRequestOperation.h */,
+				CC558DE8151228A300B1EAD9 /* AFImageRequestOperation.m */,
+				CC558DE9151228A300B1EAD9 /* AFJSONRequestOperation.h */,
+				CC558DEA151228A300B1EAD9 /* AFJSONRequestOperation.m */,
+				CC558DEB151228A300B1EAD9 /* AFJSONUtilities.h */,
+				CC558DEC151228A300B1EAD9 /* AFJSONUtilities.m */,
+				CC558DED151228A300B1EAD9 /* AFNetworkActivityIndicatorManager.h */,
+				CC558DEE151228A300B1EAD9 /* AFNetworkActivityIndicatorManager.m */,
+				CC558DEF151228A300B1EAD9 /* AFNetworking.h */,
+				CC558DF0151228A300B1EAD9 /* AFPropertyListRequestOperation.h */,
+				CC558DF1151228A300B1EAD9 /* AFPropertyListRequestOperation.m */,
+				CC558DF2151228A300B1EAD9 /* AFURLConnectionOperation.h */,
+				CC558DF3151228A300B1EAD9 /* AFURLConnectionOperation.m */,
+				CC558DF4151228A300B1EAD9 /* AFXMLRequestOperation.h */,
+				CC558DF5151228A300B1EAD9 /* AFXMLRequestOperation.m */,
+				CC558DF7151228A300B1EAD9 /* UIImageView+AFNetworking.h */,
+				CC558DF8151228A300B1EAD9 /* UIImageView+AFNetworking.m */,
+			);
+			path = AFNetworking;
+			sourceTree = "<group>";
+		};
+		CC6C7D8C1523390A00B1B783 /* ApplifierOpenUDID */ = {
+			isa = PBXGroup;
+			children = (
+				CC6C7D8D1523390A00B1B783 /* ApplifierOpenUDID.h */,
+				CC6C7D8E1523390A00B1B783 /* ApplifierOpenUDID.m */,
+			);
+			path = ApplifierOpenUDID;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		CC158905150789ED00B3D188 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC558DF9151228A300B1EAD9 /* AFHTTPClient.h in Headers */,
+				CC558DFB151228A300B1EAD9 /* AFHTTPRequestOperation.h in Headers */,
+				CC558DFD151228A300B1EAD9 /* AFImageRequestOperation.h in Headers */,
+				CC558DFF151228A300B1EAD9 /* AFJSONRequestOperation.h in Headers */,
+				CC558E01151228A300B1EAD9 /* AFJSONUtilities.h in Headers */,
+				CC558E03151228A300B1EAD9 /* AFNetworkActivityIndicatorManager.h in Headers */,
+				CC558E05151228A300B1EAD9 /* AFNetworking.h in Headers */,
+				CC558E06151228A300B1EAD9 /* AFPropertyListRequestOperation.h in Headers */,
+				CC558E08151228A300B1EAD9 /* AFURLConnectionOperation.h in Headers */,
+				CC558E0A151228A300B1EAD9 /* AFXMLRequestOperation.h in Headers */,
+				CC558E0D151228A300B1EAD9 /* UIImageView+AFNetworking.h in Headers */,
+				CC496CD615078AB000AF335E /* ApplifierFacebook.h in Headers */,
+				CC496CD915078AB000AF335E /* ApplifierFBConnect.h in Headers */,
+				CC496CDB15078AB000AF335E /* ApplifierFBDialog.h in Headers */,
+				CCD3D08E152440590050989E /* ApplifierFBFrictionlessRequestSettings.h in Headers */,
+				CC496CDD15078AB000AF335E /* ApplifierFBLoginDialog.h in Headers */,
+				CC496CDF15078AB000AF335E /* ApplifierFBRequest.h in Headers */,
+				CC496C7E15078AA100AF335E /* Applifier.h in Headers */,
+				CC496C8015078AA100AF335E /* ApplifierCommon.h in Headers */,
+				CC74A4D81520A18000CD8729 /* ApplifierFBClient.h in Headers */,
+				CC496C8115078AA100AF335E /* ApplifierLeaderboard.h in Headers */,
+				CC496C8315078AA100AF335E /* ApplifierLeaderboards.h in Headers */,
+				CC496C8515078AA100AF335E /* ApplifierLeaderboardsAPIClient.h in Headers */,
+				CC496C8715078AA100AF335E /* ApplifierLeaderboardsPlayer.h in Headers */,
+				3BD877FF15414A8200840C70 /* ApplifierLeaderboardsScore.h in Headers */,
+				3BD878041541560100840C70 /* ApplifierLeaderboardsResult.h in Headers */,
+				CC496C8915078AA100AF335E /* ApplifierView.h in Headers */,
+				CC496CEE15078AB000AF335E /* ApplifierSDURLCache.h in Headers */,
+				3B59151F151B1EDF009E4F87 /* ApplifierDevice.h in Headers */,
+				CC6C7D8F1523390A00B1B783 /* ApplifierOpenUDID.h in Headers */,
+				CC35014715398EC700FF6066 /* ApplifierJSON.h in Headers */,
+				CC35014815398EC700FF6066 /* ApplifierSBJson.h in Headers */,
+				CC35014915398EC700FF6066 /* ApplifierSBJsonParser.h in Headers */,
+				CC35014B15398EC700FF6066 /* ApplifierSBJsonStreamParser.h in Headers */,
+				CC35014D15398EC700FF6066 /* ApplifierSBJsonStreamParserAccumulator.h in Headers */,
+				CC35014F15398EC700FF6066 /* ApplifierSBJsonStreamParserAdapter.h in Headers */,
+				CC35015115398EC700FF6066 /* ApplifierSBJsonStreamParserState.h in Headers */,
+				CC35015315398EC700FF6066 /* ApplifierSBJsonStreamWriter.h in Headers */,
+				CC35015515398EC700FF6066 /* ApplifierSBJsonStreamWriterAccumulator.h in Headers */,
+				CC35015715398EC700FF6066 /* ApplifierSBJsonStreamWriterState.h in Headers */,
+				CC35015915398EC700FF6066 /* ApplifierSBJsonTokeniser.h in Headers */,
+				CC35015B15398EC700FF6066 /* ApplifierSBJsonUTF8Stream.h in Headers */,
+				CC35015D15398EC700FF6066 /* ApplifierSBJsonWriter.h in Headers */,
+				CC35015F15398EC700FF6066 /* NSObject+ApplifierSBJson.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		CC158909150789ED00B3D188 /* Applifier */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC158915150789ED00B3D188 /* Build configuration list for PBXNativeTarget "Applifier" */;
+			buildPhases = (
+				CC158902150789ED00B3D188 /* ShellScript */,
+				CC158903150789ED00B3D188 /* Sources */,
+				CC158904150789ED00B3D188 /* Frameworks */,
+				CC158905150789ED00B3D188 /* Headers */,
+				CC158906150789ED00B3D188 /* Resources */,
+				CC158907150789ED00B3D188 /* ShellScript */,
+				CC158908150789ED00B3D188 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Applifier;
+			productName = Applifier;
+			productReference = CC15890A150789ED00B3D188 /* Applifier.framework */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CC1588FD150789ED00B3D188 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = Applifier;
+			};
+			buildConfigurationList = CC158900150789ED00B3D188 /* Build configuration list for PBXProject "Applifier" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CC1588FB150789ED00B3D188;
+			productRefGroup = CC15890B150789ED00B3D188 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CC158909150789ED00B3D188 /* Applifier */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CC158906150789ED00B3D188 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC158911150789ED00B3D188 /* InfoPlist.strings in Resources */,
+				CC515DC815121E3A00A2DAFA /* Applifier.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CC158902150789ED00B3D188 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nset +u\nif [[ $UFW_MASTER_SCRIPT_RUNNING ]]\nthen\n    # Nothing for the slave script to do\n    exit 0\nfi\nset -u\n\nif [[ \"$SDK_NAME\" =~ ([A-Za-z]+) ]]\nthen\n    UFW_SDK_PLATFORM=${BASH_REMATCH[1]}\nelse\n    echo \"Could not find platform name from SDK_NAME: $SDK_NAME\"\n    exit 1\nfi\n\nif [[ \"$SDK_NAME\" =~ ([0-9]+.*$) ]]\nthen\n\tUFW_SDK_VERSION=${BASH_REMATCH[1]}\nelse\n    echo \"Could not find sdk version  from SDK_NAME: $SDK_NAME\"\n    exit 1\nfi\n\nif [[ \"$UFW_SDK_PLATFORM\" = \"iphoneos\" ]]\nthen\n    UFW_OTHER_PLATFORM=iphonesimulator\nelse\n    UFW_OTHER_PLATFORM=iphoneos\nfi\n\nif [[ \"$BUILT_PRODUCTS_DIR\" =~ (.*)$UFW_SDK_PLATFORM$ ]]\nthen\n    UFW_OTHER_BUILT_PRODUCTS_DIR=\"${BASH_REMATCH[1]}${UFW_OTHER_PLATFORM}\"\nelse\n    echo \"Could not find $UFW_SDK_PLATFORM in $BUILT_PRODUCTS_DIR\"\n    exit 1\nfi\n\n\n# Short-circuit if all binaries are up to date\n\nif [[ -f \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" ]] && \\\n   [[ -f \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/${EXECUTABLE_PATH}\" ]] && \\\n   [[ ! \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" -nt \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/${EXECUTABLE_PATH}\" ]]\n   [[ -f \"${UFW_OTHER_BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" ]] && \\\n   [[ -f \"${UFW_OTHER_BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/${EXECUTABLE_PATH}\" ]] && \\\n   [[ ! \"${UFW_OTHER_BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" -nt \"${UFW_OTHER_BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/${EXECUTABLE_PATH}\" ]]\nthen\n    exit 0\nfi\n\nvrun() {\n  echo $@\n  $@\n}\n\n# Clean other platform if needed\n\nif [[ ! -f \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" ]]\nthen\n\techo \"Platform \\\"$UFW_SDK_PLATFORM\\\" was cleaned recently. Cleaning \\\"$UFW_OTHER_PLATFORM\\\" as well\"\n\tvrun xcodebuild -project \"${PROJECT_FILE_PATH}\" -target \"${TARGET_NAME}\" -configuration \"${CONFIGURATION}\" -sdk ${UFW_OTHER_PLATFORM}${UFW_SDK_VERSION} BUILD_DIR=\"${BUILD_DIR}\" CONFIGURATION_TEMP_DIR=\"${PROJECT_TEMP_DIR}/${CONFIGURATION}-${UFW_OTHER_PLATFORM}\" clean\nfi\n\n\n# Make sure we are building from fresh binaries\n\nrm -rf \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\nrm -rf \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework\"\nrm -rf \"${UFW_OTHER_BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\nrm -rf \"${UFW_OTHER_BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework\"\n";
+		};
+		CC158907150789ED00B3D188 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "HEADERS_ROOT=$SRCROOT/$PRODUCT_NAME\nFRAMEWORK_HEADERS_DIR=\"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME/Versions/$FRAMEWORK_VERSION/Headers\"\n\n## only header files expected at this point\nPUBLIC_HEADERS=$(find $FRAMEWORK_HEADERS_DIR/. -not -type d 2> /dev/null | sed -e \"s@.*/@@g\")\n\nFIND_OPTS=\"\"\nfor PUBLIC_HEADER in $PUBLIC_HEADERS; do\n  if [ -n \"$FIND_OPTS\" ]; then\n    FIND_OPTS=\"$FIND_OPTS -o\"\n  fi\n  FIND_OPTS=\"$FIND_OPTS -name '$PUBLIC_HEADER'\"\ndone\n\nif [ -n \"$FIND_OPTS\" ]; then\n  for ORIG_HEADER in $(eval \"find $HEADERS_ROOT/. $FIND_OPTS\" 2> /dev/null | sed -e \"s@^$HEADERS_ROOT/./@@g\"); do\n    PUBLIC_HEADER=$(basename $ORIG_HEADER)\n    RELATIVE_PATH=$(dirname $ORIG_HEADER)\n    if [ -e $FRAMEWORK_HEADERS_DIR/$PUBLIC_HEADER ]; then\n      mkdir -p \"$FRAMEWORK_HEADERS_DIR/$RELATIVE_PATH\"\n      mv \"$FRAMEWORK_HEADERS_DIR/$PUBLIC_HEADER\" \"$FRAMEWORK_HEADERS_DIR/$RELATIVE_PATH/$PUBLIC_HEADER\"\n    fi\n  done\nfi";
+		};
+		CC158908150789ED00B3D188 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nset +u\nif [[ $UFW_MASTER_SCRIPT_RUNNING ]]\nthen\n    # Nothing for the slave script to do\n    exit 0\nfi\nset -u\nexport UFW_MASTER_SCRIPT_RUNNING=1\n\n\n# Functions\n\n## List files in the specified directory, storing to the specified array.\n#\n# @param $1 The path to list\n# @param $2 The name of the array to fill\n#\n##\nlist_files ()\n{\n    filelist=$(ls \"$1\")\n    while read line\n    do\n        eval \"$2[\\${#$2[*]}]=\\\"\\$line\\\"\"\n    done <<< \"$filelist\"\n}\n\n\n# Sanity check\n\nif [[ ! -f \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" ]]\nthen\n    echo \"Framework target \\\"${TARGET_NAME}\\\" had no source files to build from. Make sure your source files have the correct target membership\"\n    exit 1\nfi\n\n\n# Gather information\n\nif [[ \"$SDK_NAME\" =~ ([A-Za-z]+) ]]\nthen\n    UFW_SDK_PLATFORM=${BASH_REMATCH[1]}\nelse\n    echo \"Could not find platform name from SDK_NAME: $SDK_NAME\"\n    exit 1\nfi\n\nif [[ \"$SDK_NAME\" =~ ([0-9]+.*$) ]]\nthen\n    UFW_SDK_VERSION=${BASH_REMATCH[1]}\nelse\n    echo \"Could not find sdk version from SDK_NAME: $SDK_NAME\"\n    exit 1\nfi\n\nif [[ \"$UFW_SDK_PLATFORM\" = \"iphoneos\" ]]\nthen\n    UFW_OTHER_PLATFORM=iphonesimulator\nelse\n    UFW_OTHER_PLATFORM=iphoneos\nfi\n\nif [[ \"$BUILT_PRODUCTS_DIR\" =~ (.*)$UFW_SDK_PLATFORM$ ]]\nthen\n    UFW_OTHER_BUILT_PRODUCTS_DIR=\"${BASH_REMATCH[1]}${UFW_OTHER_PLATFORM}\"\nelse\n    echo \"Could not find $UFW_SDK_PLATFORM in $BUILT_PRODUCTS_DIR\"\n    exit 1\nfi\n\n\n# Short-circuit if all binaries are up to date.\n# We already checked the other platform in the prerun script.\n\nif [[ -f \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" ]] && [[ -f \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/${EXECUTABLE_PATH}\" ]] && [[ ! \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" -nt \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/${EXECUTABLE_PATH}\" ]]\nthen\n    exit 0\nfi\n\nvrun() {\n  echo $@\n  $@\n}\n\n# Make sure the other platform gets built\n\necho \"Build other platform\"\n\nvrun xcodebuild -project \"${PROJECT_FILE_PATH}\" -target \"${TARGET_NAME}\" -configuration \"${CONFIGURATION}\" -sdk ${UFW_OTHER_PLATFORM}${UFW_SDK_VERSION} BUILD_DIR=\"${BUILD_DIR}\" CONFIGURATION_TEMP_DIR=\"${PROJECT_TEMP_DIR}/${CONFIGURATION}-${UFW_OTHER_PLATFORM}\" $ACTION\n\n# Build the fat static library binary\n\necho \"Create universal static library\"\n\nvrun \"$PLATFORM_DEVELOPER_BIN_DIR/libtool\" -static \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" \"${UFW_OTHER_BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" -o \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}.temp\"\n\nif [[ \"$COPY_PHASE_STRIP\" = \"YES\" ]]\nthen\n    vrun \"$PLATFORM_DEVELOPER_BIN_DIR/strip\" -S \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}.temp\"\nfi\n\nvrun mv \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}.temp\" \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\n\n\n# Build framework structure\n\necho \"Build symlinks\"\n\nvrun ln -sfh A \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Versions/Current\"\nvrun ln -sfh Versions/Current/Headers \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Headers\"\nvrun ln -sfh Versions/Current/Resources \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Resources\"\nvrun ln -sfh \"Versions/Current/${EXECUTABLE_NAME}\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/${EXECUTABLE_NAME}\"\n\n# Link to binary for unit tests\n\nmkdir -p \"${BUILT_PRODUCTS_DIR}/.fake_fw_testing.framework\"\nln -sfh \"../${WRAPPER_NAME}/${EXECUTABLE_NAME}\" \"${BUILT_PRODUCTS_DIR}/.fake_fw_testing.framework/.fake_fw_testing\"\n\n\n# Build embedded framework structure\n\necho \"Build Embedded Framework\"\n\necho rm -rf \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework\"\nrm -rf \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework\"\necho mkdir -p \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/Resources\"\nmkdir -p \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/Resources\"\necho cp -a \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/\"\ncp -a \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/\"\n\ndeclare -a UFW_FILE_LIST\nlist_files \"${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\" UFW_FILE_LIST\nfor filename in \"${UFW_FILE_LIST[@]}\"\ndo\n    if [[ \"${filename}\" != \"Info.plist\" ]] && [[ ! \"${filename}\" =~ .*\\.lproj$ ]]\n    then\n        echo ln -sfh \"../${WRAPPER_NAME}/Resources/${filename}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/Resources/${filename}\"\n        ln -sfh \"../${WRAPPER_NAME}/Resources/${filename}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/Resources/${filename}\"\n    fi\ndone\n\n\n# Replace other platform's framework with a copy of this one (so that both have the same universal binary)\n\necho \"Copy from $UFW_SDK_PLATFORM to $UFW_OTHER_PLATFORM\"\n\necho rm -rf \"${BUILD_DIR}/${CONFIGURATION}-${UFW_OTHER_PLATFORM}\"\nrm -rf \"${BUILD_DIR}/${CONFIGURATION}-${UFW_OTHER_PLATFORM}\"\necho cp -a \"${BUILD_DIR}/${CONFIGURATION}-${UFW_SDK_PLATFORM}\" \"${BUILD_DIR}/${CONFIGURATION}-${UFW_OTHER_PLATFORM}\"\ncp -a \"${BUILD_DIR}/${CONFIGURATION}-${UFW_SDK_PLATFORM}\" \"${BUILD_DIR}/${CONFIGURATION}-${UFW_OTHER_PLATFORM}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CC158903150789ED00B3D188 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC496C7F15078AA100AF335E /* Applifier.m in Sources */,
+				3B591520151B1EDF009E4F87 /* ApplifierDevice.m in Sources */,
+				CC74A4D91520A18000CD8729 /* ApplifierFBClient.m in Sources */,
+				CC496C8215078AA100AF335E /* ApplifierLeaderboard.m in Sources */,
+				CC496C8415078AA100AF335E /* ApplifierLeaderboards.m in Sources */,
+				CC496C8615078AA100AF335E /* ApplifierLeaderboardsAPIClient.m in Sources */,
+				CC496C8815078AA100AF335E /* ApplifierLeaderboardsPlayer.m in Sources */,
+				CC496C8A15078AA100AF335E /* ApplifierView.m in Sources */,
+				CC558DFA151228A300B1EAD9 /* AFHTTPClient.m in Sources */,
+				CC558DFC151228A300B1EAD9 /* AFHTTPRequestOperation.m in Sources */,
+				CC558DFE151228A300B1EAD9 /* AFImageRequestOperation.m in Sources */,
+				CC558E00151228A300B1EAD9 /* AFJSONRequestOperation.m in Sources */,
+				CC558E02151228A300B1EAD9 /* AFJSONUtilities.m in Sources */,
+				CC558E04151228A300B1EAD9 /* AFNetworkActivityIndicatorManager.m in Sources */,
+				CC558E07151228A300B1EAD9 /* AFPropertyListRequestOperation.m in Sources */,
+				CC558E09151228A300B1EAD9 /* AFURLConnectionOperation.m in Sources */,
+				CC558E0B151228A300B1EAD9 /* AFXMLRequestOperation.m in Sources */,
+				CC558E0E151228A300B1EAD9 /* UIImageView+AFNetworking.m in Sources */,
+				CC496CD715078AB000AF335E /* ApplifierFacebook.m in Sources */,
+				CC496CDC15078AB000AF335E /* ApplifierFBDialog.m in Sources */,
+				CCD3D08F152440590050989E /* ApplifierFBFrictionlessRequestSettings.m in Sources */,
+				CC496CDE15078AB000AF335E /* ApplifierFBLoginDialog.m in Sources */,
+				CC496CE015078AB000AF335E /* ApplifierFBRequest.m in Sources */,
+				CC6C7D901523390A00B1B783 /* ApplifierOpenUDID.m in Sources */,
+				CC496CEF15078AB000AF335E /* ApplifierSDURLCache.m in Sources */,
+				CC35014A15398EC700FF6066 /* ApplifierSBJsonParser.m in Sources */,
+				CC35014C15398EC700FF6066 /* ApplifierSBJsonStreamParser.m in Sources */,
+				CC35014E15398EC700FF6066 /* ApplifierSBJsonStreamParserAccumulator.m in Sources */,
+				CC35015015398EC700FF6066 /* ApplifierSBJsonStreamParserAdapter.m in Sources */,
+				CC35015215398EC700FF6066 /* ApplifierSBJsonStreamParserState.m in Sources */,
+				CC35015415398EC700FF6066 /* ApplifierSBJsonStreamWriter.m in Sources */,
+				CC35015615398EC700FF6066 /* ApplifierSBJsonStreamWriterAccumulator.m in Sources */,
+				CC35015815398EC700FF6066 /* ApplifierSBJsonStreamWriterState.m in Sources */,
+				CC35015A15398EC700FF6066 /* ApplifierSBJsonTokeniser.m in Sources */,
+				CC35015C15398EC700FF6066 /* ApplifierSBJsonUTF8Stream.m in Sources */,
+				CC35015E15398EC700FF6066 /* ApplifierSBJsonWriter.m in Sources */,
+				CC35016015398EC700FF6066 /* NSObject+ApplifierSBJson.m in Sources */,
+				3BD8780015414A8200840C70 /* ApplifierLeaderboardsScore.m in Sources */,
+				3BD878051541560100840C70 /* ApplifierLeaderboardsResult.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		CC15890F150789ED00B3D188 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CC158910150789ED00B3D188 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		CC158913150789ED00B3D188 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				BUILD_DIR = "$(SRCROOT)/build";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CC158914150789ED00B3D188 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				BUILD_DIR = "$(SRCROOT)/build";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CC158916150789ED00B3D188 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					armv6,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
+				CONTENTS_FOLDER_PATH = "$(WRAPPER_NAME)/Versions/$(FRAMEWORK_VERSION)";
+				DEAD_CODE_STRIPPING = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Applifier/Applifier-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
+				INFOPLIST_FILE = "Applifier/Applifier-Info.plist";
+				INFOPLIST_PATH = "$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Info.plist";
+				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				MACH_O_TYPE = mh_object;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				UNLOCALIZED_RESOURCES_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Resources";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		CC158917150789ED00B3D188 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					armv6,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
+				CONTENTS_FOLDER_PATH = "$(WRAPPER_NAME)/Versions/$(FRAMEWORK_VERSION)";
+				DEAD_CODE_STRIPPING = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Applifier/Applifier-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
+				INFOPLIST_FILE = "Applifier/Applifier-Info.plist";
+				INFOPLIST_PATH = "$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Info.plist";
+				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				MACH_O_TYPE = mh_object;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				UNLOCALIZED_RESOURCES_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Resources";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CC158900150789ED00B3D188 /* Build configuration list for PBXProject "Applifier" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC158913150789ED00B3D188 /* Debug */,
+				CC158914150789ED00B3D188 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CC158915150789ED00B3D188 /* Build configuration list for PBXNativeTarget "Applifier" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC158916150789ED00B3D188 /* Debug */,
+				CC158917150789ED00B3D188 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CC1588FD150789ED00B3D188 /* Project object */;
+}

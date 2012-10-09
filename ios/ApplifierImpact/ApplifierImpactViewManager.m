@@ -14,6 +14,8 @@
 
 // FIXME: this is (obviously) NOT the final URL!
 NSString * const kApplifierImpactTestWebViewURL = @"https://dl.dropbox.com/u/3542608/protos/impact-mobile-proto/index.html";
+//NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~bluesun/impact/newproto/index.html";
+/*  http://quake.everyplay.fi/~bluesun/impact/newproto/ */
 NSString * const kApplifierImpactWebViewAPINativeInit = @"impactInit";
 NSString * const kApplifierImpactWebViewAPINativeShow = @"impactShow";
 NSString * const kApplifierImpactWebViewAPINativeVideoComplete = @"impactVideoComplete";
@@ -215,19 +217,27 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 	[self.adContainerView.layer addSublayer:self.playerLayer];
 	
 	__block ApplifierImpactViewManager *blockSelf = self;
-	self.timeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
-		[blockSelf _updateTimeRemainingLabelWithTime:time];
-	}];
 	
+#if !(TARGET_IPHONE_SIMULATOR)
+  self.timeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [blockSelf _updateTimeRemainingLabelWithTime:time];
+    });
+	}];
+#endif
+  
 	self.videoPosition = kVideoAnalyticsPositionUnplayed;
 	Float64 duration = [self _currentVideoDuration];
 	NSMutableArray *analyticsTimeValues = [NSMutableArray array];
 	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .25]];
 	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .5]];
 	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .75]];
-	self.analyticsTimeObserver = [self.player addBoundaryTimeObserverForTimes:analyticsTimeValues queue:nil usingBlock:^{
+ 
+#if !(TARGET_IPHONE_SIMULATOR)
+  self.analyticsTimeObserver = [self.player addBoundaryTimeObserverForTimes:analyticsTimeValues queue:nil usingBlock:^{
 		[blockSelf _logVideoAnalytics];
 	}];
+#endif
 	
 	[self.player play];
 	
@@ -236,7 +246,7 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
 	
 	[self.delegate viewManagerStartedPlayingVideo:self];
-	
+
 	[self _logVideoAnalytics];
 }
 

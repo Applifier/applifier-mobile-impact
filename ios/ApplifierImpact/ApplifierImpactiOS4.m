@@ -470,7 +470,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		[self performSelector:@selector(_startCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 		[self performSelector:@selector(_startAnalyticsUploader) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 		
-		dispatch_sync(dispatch_get_main_queue(), ^{
+    dispatch_sync(dispatch_get_main_queue(), ^{
 			self.viewManager = [[ApplifierImpactViewManager alloc] init];
 			self.viewManager.delegate = self;
 			self.viewManager.machineName = self.machineName;
@@ -559,15 +559,15 @@ NSString * const kApplifierImpactVersion = @"1.0";
 {
 	AIAssert([NSThread isMainThread]);
 	
-	// If the view manager already has campaign JSON data, it means that
+  // If the view manager already has campaign JSON data, it means that
 	// campaigns were updated, and we might want to update the webapp.
 	if (self.viewManager.campaignJSON != nil)
 	{
 		self.webViewInitialized = NO;
 		[self.viewManager loadWebView];
 	}
-	
-	self.viewManager.campaignJSON = json;
+  
+  self.viewManager.campaignJSON = json;
 }
 
 #pragma mark - ApplifierImpactViewManagerDelegate
