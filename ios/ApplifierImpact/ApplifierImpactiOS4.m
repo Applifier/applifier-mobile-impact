@@ -27,7 +27,6 @@ NSString * const kApplifierImpactVersion = @"1.0";
 @interface ApplifierImpactiOS4 () <ApplifierImpactCampaignManagerDelegate, UIWebViewDelegate, UIScrollViewDelegate, ApplifierImpactViewManagerDelegate>
 @property (nonatomic, strong) ApplifierImpactCampaignManager *campaignManager;
 @property (nonatomic, strong) ApplifierImpactAnalyticsUploader *analyticsUploader;
-@property (nonatomic, strong) ApplifierImpactViewManager *viewManager;
 @property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
 @property (nonatomic, strong) NSString *applifierID;
 @property (nonatomic, strong) NSString *campaignJSON;
@@ -471,13 +470,12 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		[self performSelector:@selector(_startAnalyticsUploader) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 		
     dispatch_sync(dispatch_get_main_queue(), ^{
-			self.viewManager = [[ApplifierImpactViewManager alloc] init];
-			self.viewManager.delegate = self;
-			self.viewManager.machineName = self.machineName;
-			self.viewManager.md5AdvertisingIdentifier = self.md5AdvertisingIdentifier;
-			self.viewManager.md5MACAddress = self.md5MACAddress;
-			self.viewManager.md5OpenUDID = self.md5OpenUDID;
-			[self.viewManager loadWebView];
+      [[ApplifierImpactViewManager sharedInstance] setDelegate:self];
+      [[ApplifierImpactViewManager sharedInstance] setMachineName:self.machineName];
+      [[ApplifierImpactViewManager sharedInstance] setMd5AdvertisingIdentifier:self.md5AdvertisingIdentifier];
+      [[ApplifierImpactViewManager sharedInstance] setMd5MACAddress:self.md5MACAddress];
+      [[ApplifierImpactViewManager sharedInstance] setMd5OpenUDID:self.md5OpenUDID];
+      [[ApplifierImpactViewManager sharedInstance] loadWebView];
 		});
 	});
 }
@@ -488,7 +486,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	
 	if ([self _adViewCanBeShown])
 	{
-		UIView *adView = [self.viewManager adView];
+		UIView *adView = [[ApplifierImpactViewManager sharedInstance] adView];
 		if (adView != nil)
 		{
 			if ([self.delegate respondsToSelector:@selector(applifierImpactWillOpen:)])
@@ -526,7 +524,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 {
 	AIAssert([NSThread isMainThread]);
 	
-	if ([self.viewManager adViewVisible])
+	if ([[ApplifierImpactViewManager sharedInstance] adViewVisible])
 		AILOG_DEBUG(@"Ad view visible, not refreshing.");
 	else
 		[self _refresh];
@@ -535,7 +533,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 - (void)dealloc
 {
 	self.campaignManager.delegate = nil;
-	self.viewManager.delegate = nil;
+	[[ApplifierImpactViewManager sharedInstance] setDelegate:nil];
 	
 	dispatch_release(self.queue);
 }
@@ -561,13 +559,13 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	
   // If the view manager already has campaign JSON data, it means that
 	// campaigns were updated, and we might want to update the webapp.
-	if (self.viewManager.campaignJSON != nil)
+	if ([[ApplifierImpactViewManager sharedInstance] campaignJSON] != nil)
 	{
 		self.webViewInitialized = NO;
-		[self.viewManager loadWebView];
+    [[ApplifierImpactViewManager sharedInstance] loadWebView];
 	}
   
-  self.viewManager.campaignJSON = json;
+  [[ApplifierImpactViewManager sharedInstance] setCampaignJSON:json];
 }
 
 #pragma mark - ApplifierImpactViewManagerDelegate

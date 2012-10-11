@@ -48,6 +48,8 @@ typedef enum
 @property (nonatomic, strong) ApplifierImpactCampaign *selectedCampaign;
 @property (nonatomic, assign, readonly) BOOL adViewVisible;
 
++ (id)sharedInstance;
+- (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data;
 - (void)loadWebView;
 - (UIView *)adView;
 

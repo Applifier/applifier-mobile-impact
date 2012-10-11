@@ -10,17 +10,18 @@
 
 #import "ApplifierImpactViewManager.h"
 #import "ApplifierImpact.h"
-#import "ApplifierImpactCampaign.h"
+#import "ApplifierImpactCampaign/ApplifierImpactCampaign.h"
+#import "ApplifierImpactURLProtocol/ApplifierImpactURLProtocol.h"
 
 // FIXME: this is (obviously) NOT the final URL!
-NSString * const kApplifierImpactTestWebViewURL = @"https://dl.dropbox.com/u/3542608/protos/impact-mobile-proto/index.html";
-NSString * const kApplifierImpactWebViewAPINativeInit = @"impactInit";
-NSString * const kApplifierImpactWebViewAPINativeShow = @"impactShow";
-NSString * const kApplifierImpactWebViewAPINativeVideoComplete = @"impactVideoComplete";
-NSString * const kApplifierImpactWebViewAPIPlayVideo = @"playvideo";
+NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~bluesun/impact/ios/index.html";
+NSString * const kApplifierImpactWebViewPrefix = @"applifierimpact.";
+NSString * const kApplifierImpactWebViewJSInit = @"init";
+NSString * const kApplifierImpactWebViewJSChangeView = @"setView";
+NSString * const kApplifierImpactWebViewAPIPlayVideo = @"playVideo";
 NSString * const kApplifierImpactWebViewAPIClose = @"close";
-NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateto";
-NSString * const kApplifierImpactWebViewAPIInitComplete = @"initcomplete";
+NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateTo";
+NSString * const kApplifierImpactWebViewAPIInitComplete = @"initComplete";
 NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 
 @interface ApplifierImpactViewManager () <UIWebViewDelegate, UIScrollViewDelegate>
@@ -36,6 +37,7 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 @property (nonatomic, strong) id analyticsTimeObserver;
 @property (nonatomic, assign) VideoAnalyticsPosition videoPosition;
 @property (nonatomic, assign) UIViewController *storePresentingViewController;
+
 @end
 
 @implementation ApplifierImpactViewManager
@@ -319,6 +321,8 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 	
 	AILOG_DEBUG(@"");
 	
+  [NSURLProtocol registerClass:[ApplifierImpactURLProtocol class]];
+  
 	NSString *escapedJSON = [self _escapedStringFromString:self.campaignJSON];
 	NSString *deviceInformation = nil;
 	if (self.md5AdvertisingIdentifier != nil)
@@ -326,24 +330,71 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 	else
 		deviceInformation = [NSString stringWithFormat:@"{\"openUdid\":\"%@\",\"macAddress\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}", self.md5OpenUDID, self.md5MACAddress, [[UIDevice currentDevice] systemVersion], self.machineName];
 	
-	NSString *js = [NSString stringWithFormat:@"%@(\"%@\",\"%@\");", kApplifierImpactWebViewAPINativeInit, escapedJSON, [self _escapedStringFromString:deviceInformation]];
+	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\",\"%@\");", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSInit, escapedJSON, [self _escapedStringFromString:deviceInformation]];
 	
 	[self.webView stringByEvaluatingJavaScriptFromString:js];
+}
+
+- (void)_setWebViewCurrentView:(NSString *)view data:(NSString *)data
+{
+  [self.webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"%@%@(\"%@\", \"%@\");", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSChangeView, view, data]];
 }
 
 - (void)_webViewShow
 {
-	[self.webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"%@();", kApplifierImpactWebViewAPINativeShow]];
+	[self _setWebViewCurrentView:@"start" data:@""];
 }
 
 - (void)_webViewVideoComplete
 {
-	NSString *js = [NSString stringWithFormat:@"%@(%@);", kApplifierImpactWebViewAPINativeVideoComplete, self.selectedCampaign.id];
-	
-	[self.webView stringByEvaluatingJavaScriptFromString:js];
+	NSString *data = [NSString stringWithFormat:@"{\"campaignId\":\"%@\"}", self.selectedCampaign.id];
+  [self _setWebViewCurrentView:@"completed" data:[self _escapedStringFromString:data]];
 }
 
 #pragma mark - Public
+
+static ApplifierImpactViewManager *sharedImpactViewManager = nil;
+
++ (id)sharedInstance
+{
+	@synchronized(self)
+	{
+		if (sharedImpactViewManager == nil)
+				sharedImpactViewManager = [[ApplifierImpactViewManager alloc] init];
+	}
+	
+	return sharedImpactViewManager;
+}
+
+- (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data
+{
+  if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo] || [type isEqualToString:kApplifierImpactWebViewAPINavigateTo] || [type isEqualToString:kApplifierImpactWebViewAPIAppStore])
+	{
+		if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo])
+		{
+      if ([data objectForKey:@"campaignId"] != nil)
+        [self _selectCampaignWithID:[data objectForKey:@"campaignId"]];
+		}
+		else if ([type isEqualToString:kApplifierImpactWebViewAPINavigateTo])
+		{
+        if ([data objectForKey:@"clickUrl"] != nil)
+          [self _openURL:[data objectForKey:@"clickUrl"]];
+		}
+		else if ([type isEqualToString:kApplifierImpactWebViewAPIAppStore])
+		{
+          if ([data objectForKey:@"clickUrl"] != nil)
+            [self _openStoreViewControllerWithGameID:[data objectForKey:@"clickUrl"]];
+		}
+	}
+	else if ([type isEqualToString:kApplifierImpactWebViewAPIClose])
+	{
+		[self _closeAdView];
+	}
+	else if ([type isEqualToString:kApplifierImpactWebViewAPIInitComplete])
+	{
+		[self _webViewInitComplete];
+	}
+}
 
 - (id)init
 {
@@ -457,13 +508,8 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 {
 	NSURL *url = [request URL];
 	AILOG_DEBUG(@"url %@", url);
-	if ([[url scheme] isEqualToString:@"applifier-impact"])
-	{
-		[self _processWebViewResponseWithHost:[url host] query:[url query]];
-		
-		return NO;
-	}
-	else if ([[url scheme] isEqualToString:@"itms-apps"])
+	
+  if ([[url scheme] isEqualToString:@"itms-apps"])
 	{
 		return NO;
 	}

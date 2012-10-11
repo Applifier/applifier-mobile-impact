@@ -29,6 +29,8 @@
 		78AC20421622F01F007DE419 /* ApplifierImpactiOS4.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC203C1622F01F007DE419 /* ApplifierImpactiOS4.m */; };
 		78AC20431622F01F007DE419 /* ApplifierImpactViewManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC203D1622F01F007DE419 /* ApplifierImpactViewManager.h */; };
 		78AC20441622F01F007DE419 /* ApplifierImpactViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC203E1622F01F007DE419 /* ApplifierImpactViewManager.m */; };
+		78CB843A16255FAA00E94915 /* ApplifierImpactURLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CB843816255FAA00E94915 /* ApplifierImpactURLProtocol.h */; };
+		78CB843B16255FAA00E94915 /* ApplifierImpactURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */; };
 		CC158911150789ED00B3D188 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC15890F150789ED00B3D188 /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
@@ -55,6 +57,8 @@
 		78AC203C1622F01F007DE419 /* ApplifierImpactiOS4.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactiOS4.m; sourceTree = "<group>"; };
 		78AC203D1622F01F007DE419 /* ApplifierImpactViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactViewManager.h; sourceTree = "<group>"; };
 		78AC203E1622F01F007DE419 /* ApplifierImpactViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactViewManager.m; sourceTree = "<group>"; };
+		78CB843816255FAA00E94915 /* ApplifierImpactURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactURLProtocol.h; sourceTree = "<group>"; };
+		78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactURLProtocol.m; sourceTree = "<group>"; };
 		CC15890A150789ED00B3D188 /* ApplifierImpact.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ApplifierImpact.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC15890E150789ED00B3D188 /* ApplifierImpact-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ApplifierImpact-Info.plist"; sourceTree = "<group>"; };
 		CC158910150789ED00B3D188 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -96,6 +100,15 @@
 			path = ApplifierImpactData;
 			sourceTree = "<group>";
 		};
+		78CB842C16255EB200E94915 /* ApplifierImpactURLProtocol */ = {
+			isa = PBXGroup;
+			children = (
+				78CB843816255FAA00E94915 /* ApplifierImpactURLProtocol.h */,
+				78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */,
+			);
+			path = ApplifierImpactURLProtocol;
+			sourceTree = "<group>";
+		};
 		CC1588FB150789ED00B3D188 = {
 			isa = PBXGroup;
 			children = (
@@ -127,6 +140,7 @@
 				78AC20131622EF56007DE419 /* ApplifierImpactData */,
 				CC6C7D8C1523390A00B1B783 /* ApplifierImpactOpenUDID */,
 				CC496CAF15078AB000AF335E /* ApplifierImpactSBJSON */,
+				78CB842C16255EB200E94915 /* ApplifierImpactURLProtocol */,
 				CC15890D150789ED00B3D188 /* Supporting Files */,
 			);
 			path = ApplifierImpact;
@@ -180,6 +194,7 @@
 				78AC203F1622F01F007DE419 /* ApplifierImpact.h in Headers */,
 				78AC20411622F01F007DE419 /* ApplifierImpactiOS4.h in Headers */,
 				78AC20431622F01F007DE419 /* ApplifierImpactViewManager.h in Headers */,
+				78CB843A16255FAA00E94915 /* ApplifierImpactURLProtocol.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,6 +317,7 @@
 				78AC20401622F01F007DE419 /* ApplifierImpact.m in Sources */,
 				78AC20421622F01F007DE419 /* ApplifierImpactiOS4.m in Sources */,
 				78AC20441622F01F007DE419 /* ApplifierImpactViewManager.m in Sources */,
+				78CB843B16255FAA00E94915 /* ApplifierImpactURLProtocol.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
