@@ -83,6 +83,29 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	return identifier;
 }
 
+- (BOOL)_canUseTracking
+{
+  Class advertisingManagerClass = NSClassFromString(@"ASIdentifierManager");
+	if ([advertisingManagerClass respondsToSelector:@selector(sharedManager)])
+	{
+		id advertisingManager = [[advertisingManagerClass class] performSelector:@selector(sharedManager)];
+		BOOL enabled = YES; // Not sure what to do with this value.
+
+		if ([advertisingManager respondsToSelector:@selector(isAdvertisingTrackingEnabled)])
+		{
+			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[advertisingManagerClass instanceMethodSignatureForSelector:@selector(isAdvertisingTrackingEnabled)]];
+			[invocation setSelector:@selector(isAdvertisingTrackingEnabled)];
+			[invocation setTarget:advertisingManager];
+			[invocation invoke];
+			[invocation getReturnValue:&enabled];
+
+      return enabled;
+		}
+  }
+
+  return YES;
+}
+
 - (NSString *)_machineName
 {
 	size_t size;
@@ -296,9 +319,20 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (NSString *)_queryString
 {
-	NSString *advertisingIdentifier = self.md5AdvertisingIdentifier != nil ? [NSString stringWithFormat:@"&advertisingTrackingId=%@", self.md5AdvertisingIdentifier] : @"";
-	
-	return [NSString stringWithFormat:@"?openUdid=%@&macAddress=%@%@&iosVersion=%@&device=%@&sdkVersion=%@&gameId=%@&type=ios&connection=%@", self.md5OpenUDID, self.md5MACAddress, advertisingIdentifier, [[UIDevice currentDevice] systemVersion], self.machineName, kApplifierImpactVersion, self.applifierID, self.connectionType];
+	NSString *advertisingIdentifier = self.md5AdvertisingIdentifier != nil ? self.md5AdvertisingIdentifier : @"";
+  NSString *deviceId = self.md5AdvertisingIdentifier != nil ? self.md5AdvertisingIdentifier : self.md5OpenUDID;
+
+	NSString *queryParams = [NSString stringWithFormat:@"?openUdid=%@&macAddress=%@&iosVersion=%@&device=%@&sdkVersion=%@&gameId=%@&type=ios&connection=%@", self.md5OpenUDID, self.md5MACAddress, [[UIDevice currentDevice] systemVersion], self.machineName, kApplifierImpactVersion, self.applifierID, self.connectionType];
+
+  if (self.md5AdvertisingIdentifier != nil)
+    queryParams = [NSString stringWithFormat:@"%@&advertisingTrackingId=%@", queryParams, advertisingIdentifier];
+
+  queryParams = [NSString stringWithFormat:@"%@&deviceId=%@&platform=%@", queryParams, deviceId, @"ios"];
+
+  if ([self _canUseTracking])
+    queryParams = [NSString stringWithFormat:@"%@&softwareVersion=%@&hardwareVersion=%@&deviceType=%@&apiVersion=%@connectionType=%@", queryParams, [[UIDevice currentDevice] systemVersion], @"unknown", self.machineName, kApplifierImpactVersion, self.connectionType];
+
+  return queryParams;
 }
 
 - (void)_backgroundRunLoop:(id)dummy

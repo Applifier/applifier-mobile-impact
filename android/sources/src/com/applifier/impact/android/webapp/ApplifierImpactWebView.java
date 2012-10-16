@@ -22,7 +22,7 @@ import android.webkit.WebViewClient;
 
 public class ApplifierImpactWebView extends WebView {
 
-	private String _url = "http://quake.everyplay.fi/~bluesun/impact/newproto/index.html";	
+	private String _url = "http://quake.everyplay.fi/~bluesun/impact/android/index.html";
 	private IApplifierImpactWebViewListener _listener = null;
 	private boolean _webAppLoaded = false;
 	private ApplifierImpactWebBridge _webBridge = null;

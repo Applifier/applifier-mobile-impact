@@ -47,18 +47,20 @@ public class ApplifierImpactWebBridge {
 	public void handleWebEvent (String data) {
 		if (_listener == null || data == null) return;
 		
-		JSONObject paramObj = null;
+		JSONObject jsonData = null;
+		JSONObject parameters = null;
 		String event = null;
 		
 		try {
-			paramObj = new JSONObject(data);
-			event = paramObj.getString("type");
+			jsonData = new JSONObject(data);
+			event = jsonData.getString("type");
+			parameters = jsonData.getJSONObject("data");
 		}
 		catch (Exception e) {
 			Log.d(ApplifierImpactProperties.LOG_NAME, "Error while parsing parameters: " + e.getMessage());
 		}
 		
-		if (paramObj == null || event == null) return;
+		if (jsonData == null || event == null) return;
 		
 		ApplifierImpactWebEvent eventType = getEventType(event);
 		
@@ -66,16 +68,16 @@ public class ApplifierImpactWebBridge {
 		
 		switch (eventType) {
 			case PlayVideo:
-				_listener.onPlayVideo(paramObj);
+				_listener.onPlayVideo(parameters);
 				break;
 			case PauseVideo:
-				_listener.onPauseVideo(paramObj);
+				_listener.onPauseVideo(parameters);
 				break;
 			case CloseView:
-				_listener.onCloseView(paramObj);
+				_listener.onCloseView(parameters);
 				break;
 			case InitComplete:
-				_listener.onWebAppInitComplete(paramObj);
+				_listener.onWebAppInitComplete(parameters);
 				break;
 		}
 	}
