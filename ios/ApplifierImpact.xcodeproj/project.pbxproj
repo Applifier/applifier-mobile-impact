@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		786F5D64163142BB00FD34C4 /* ApplifierImpactDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 786F5D62163142BB00FD34C4 /* ApplifierImpactDevice.h */; };
+		786F5D65163142BB00FD34C4 /* ApplifierImpactDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 786F5D63163142BB00FD34C4 /* ApplifierImpactDevice.m */; };
 		78AC201A1622EFEA007DE419 /* ApplifierImpactOpenUDID.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */; };
 		78AC201B1622EFEA007DE419 /* ApplifierImpactOpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20191622EFEA007DE419 /* ApplifierImpactOpenUDID.m */; };
 		78AC20211622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */; };
@@ -35,6 +37,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		786F5D62163142BB00FD34C4 /* ApplifierImpactDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactDevice.h; sourceTree = "<group>"; };
+		786F5D63163142BB00FD34C4 /* ApplifierImpactDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactDevice.m; sourceTree = "<group>"; };
 		78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactOpenUDID.h; sourceTree = "<group>"; };
 		78AC20191622EFEA007DE419 /* ApplifierImpactOpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactOpenUDID.m; sourceTree = "<group>"; };
 		78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactAnalyticsUploader.h; sourceTree = "<group>"; };
@@ -76,6 +80,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		786F5D61163142BB00FD34C4 /* ApplifierImpactDevice */ = {
+			isa = PBXGroup;
+			children = (
+				786F5D62163142BB00FD34C4 /* ApplifierImpactDevice.h */,
+				786F5D63163142BB00FD34C4 /* ApplifierImpactDevice.m */,
+			);
+			path = ApplifierImpactDevice;
+			sourceTree = "<group>";
+		};
 		78AC200E1622EE4D007DE419 /* ApplifierImpactCampaign */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,6 +151,7 @@
 				78AC203E1622F01F007DE419 /* ApplifierImpactViewManager.m */,
 				78AC200E1622EE4D007DE419 /* ApplifierImpactCampaign */,
 				78AC20131622EF56007DE419 /* ApplifierImpactData */,
+				786F5D61163142BB00FD34C4 /* ApplifierImpactDevice */,
 				CC6C7D8C1523390A00B1B783 /* ApplifierImpactOpenUDID */,
 				CC496CAF15078AB000AF335E /* ApplifierImpactSBJSON */,
 				78CB842C16255EB200E94915 /* ApplifierImpactURLProtocol */,
@@ -195,6 +209,7 @@
 				78AC20411622F01F007DE419 /* ApplifierImpactiOS4.h in Headers */,
 				78AC20431622F01F007DE419 /* ApplifierImpactViewManager.h in Headers */,
 				78CB843A16255FAA00E94915 /* ApplifierImpactURLProtocol.h in Headers */,
+				786F5D64163142BB00FD34C4 /* ApplifierImpactDevice.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,6 +333,7 @@
 				78AC20421622F01F007DE419 /* ApplifierImpactiOS4.m in Sources */,
 				78AC20441622F01F007DE419 /* ApplifierImpactViewManager.m in Sources */,
 				78CB843B16255FAA00E94915 /* ApplifierImpactURLProtocol.m in Sources */,
+				786F5D65163142BB00FD34C4 /* ApplifierImpactDevice.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
