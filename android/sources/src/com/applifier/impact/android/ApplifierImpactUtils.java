@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
