@@ -8,16 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-
-typedef enum
-{
-	kVideoAnalyticsPositionUnplayed = -1,
-	kVideoAnalyticsPositionStart = 0,
-	kVideoAnalyticsPositionFirstQuartile = 1,
-	kVideoAnalyticsPositionMidPoint = 2,
-	kVideoAnalyticsPositionThirdQuartile = 3,
-	kVideoAnalyticsPositionEnd = 4,
-} VideoAnalyticsPosition;
+#import "ApplifierImpactVideo/ApplifierImpactVideo.h"
 
 @class ApplifierImpactCampaign;
 @class ApplifierImpactViewManager;
@@ -37,7 +28,7 @@ typedef enum
 
 @end
 
-@interface ApplifierImpactViewManager : NSObject
+@interface ApplifierImpactViewManager : NSObject <ApplifierImpactVideoDelegate>
 
 @property (nonatomic, assign) id<ApplifierImpactViewManagerDelegate> delegate;
 @property (nonatomic, strong) NSString *machineName;

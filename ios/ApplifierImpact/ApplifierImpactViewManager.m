@@ -12,6 +12,7 @@
 #import "ApplifierImpact.h"
 #import "ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "ApplifierImpactURLProtocol/ApplifierImpactURLProtocol.h"
+#import "ApplifierImpactVideo/ApplifierImpactVideo.h"
 
 // FIXME: this is (obviously) NOT the final URL!
 NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~bluesun/impact/ios/index.html";
@@ -31,11 +32,7 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 @property (nonatomic, strong) UILabel *progressLabel;
 @property (nonatomic, assign) BOOL webViewLoaded;
 @property (nonatomic, assign) BOOL webViewInitialized;
-@property (nonatomic, strong) AVPlayer *player;
-@property (nonatomic, strong) AVPlayerLayer *playerLayer;
-@property (nonatomic, strong) id timeObserver;
-@property (nonatomic, strong) id analyticsTimeObserver;
-@property (nonatomic, assign) VideoAnalyticsPosition videoPosition;
+@property (nonatomic, strong) ApplifierImpactVideo *player;
 @property (nonatomic, assign) UIViewController *storePresentingViewController;
 
 @end
@@ -189,88 +186,6 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 {
 	CMTime time = CMTimeMakeWithSeconds(duration, NSEC_PER_SEC);
 	return [NSValue valueWithCMTime:time];
-}
-
-- (void)_logVideoAnalytics
-{
-	self.videoPosition++;
-	
-	[self.delegate viewManager:self loggedVideoPosition:self.videoPosition campaign:self.selectedCampaign];
-}
-
-- (void)_playVideo
-{
-	AILOG_DEBUG(@"");
-	
-	NSURL *videoURL = [self.delegate viewManager:self videoURLForCampaign:self.selectedCampaign];
-	if (videoURL == nil)
-	{
-		AILOG_DEBUG(@"Video not found!");
-		return;
-	}
-	
-	AVPlayerItem *item = [AVPlayerItem playerItemWithURL:videoURL];
-	self.player = [AVPlayer playerWithPlayerItem:item];
-	self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-	self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-	self.playerLayer.frame = self.adContainerView.bounds;
-	[self.adContainerView.layer addSublayer:self.playerLayer];
-	
-#if !(TARGET_IPHONE_SIMULATOR)
-	__block ApplifierImpactViewManager *blockSelf = self;  
-  self.timeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
-      [blockSelf _updateTimeRemainingLabelWithTime:time];
-	}];
-#endif
-  
-	self.videoPosition = kVideoAnalyticsPositionUnplayed;
-	Float64 duration = [self _currentVideoDuration];
-	NSMutableArray *analyticsTimeValues = [NSMutableArray array];
-	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .25]];
-	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .5]];
-	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .75]];
- 
-#if !(TARGET_IPHONE_SIMULATOR)
-  self.analyticsTimeObserver = [self.player addBoundaryTimeObserverForTimes:analyticsTimeValues queue:nil usingBlock:^{
-		[blockSelf _logVideoAnalytics];
-	}];
-#endif
-	
-	[self.player play];
-	
-	[self _displayProgressLabel];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-	
-	[self.delegate viewManagerStartedPlayingVideo:self];
-
-	[self _logVideoAnalytics];
-}
-
-- (void)_videoPlaybackEnded:(NSNotification *)notification
-{
-	AILOG_DEBUG(@"");
-	
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-	
-	[self.delegate viewManagerVideoEnded:self];
-	
-	[self _logVideoAnalytics];
-	
-	[self.player removeTimeObserver:self.timeObserver];
-	self.timeObserver = nil;
-	[self.player removeTimeObserver:self.analyticsTimeObserver];
-	self.analyticsTimeObserver = nil;
-	
-	self.progressLabel.hidden = YES;
-	
-	[self.playerLayer removeFromSuperlayer];
-	self.playerLayer = nil;
-	self.player = nil;
-	
-	[self _webViewVideoComplete];
-	
-	self.selectedCampaign.viewed = YES;
 }
 
 - (void)_openStoreViewControllerWithGameID:(NSString *)gameID
@@ -551,6 +466,61 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 	[self.storePresentingViewController dismissViewControllerAnimated:YES completion:nil];
 
 	self.storePresentingViewController = nil;
+}
+
+#pragma mark - ApplifierImpactVideoDelegate
+
+- (void)videoAnalyticsPositionReached:(VideoAnalyticsPosition)analyticsPosition {
+  AILOG_DEBUG(@"VID ANALYTICS POS: %i", analyticsPosition);
+  [self.delegate viewManager:self loggedVideoPosition:analyticsPosition campaign:self.selectedCampaign];
+}
+
+- (void)videoPositionChanged:(CMTime)time {
+  [self _updateTimeRemainingLabelWithTime:time];
+}
+
+- (void)videoPlaybackStarted {
+  [self _displayProgressLabel];
+  [self.delegate viewManagerStartedPlayingVideo:self];
+}
+
+- (void)videoPlaybackEnded {
+	AILOG_DEBUG(@"");
+	
+	[self.delegate viewManagerVideoEnded:self];
+	
+	self.progressLabel.hidden = YES;
+	
+	[self.player.playerLayer removeFromSuperlayer];
+	self.player.playerLayer = nil;
+	self.player = nil;
+	
+	[self _webViewVideoComplete];
+	
+	self.selectedCampaign.viewed = YES;
+}
+
+#pragma mark - Video
+
+- (void)_playVideo
+{
+	AILOG_DEBUG(@"");
+	
+	NSURL *videoURL = [self.delegate viewManager:self videoURLForCampaign:self.selectedCampaign];
+	if (videoURL == nil)
+	{
+		AILOG_DEBUG(@"Video not found!");
+		return;
+	}
+	
+	AVPlayerItem *item = [AVPlayerItem playerItemWithURL:videoURL];
+  
+  self.player = [[ApplifierImpactVideo alloc] initWithPlayerItem:item];
+  self.player.delegate = self;
+  [self.player createPlayerLayer];
+  self.player.playerLayer.frame = self.adContainerView.bounds;
+	[self.adContainerView.layer addSublayer:self.player.playerLayer];
+  [self.player playSelectedVideo];
 }
 
 @end
