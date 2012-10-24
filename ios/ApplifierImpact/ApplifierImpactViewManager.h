@@ -41,7 +41,7 @@
 
 + (id)sharedInstance;
 - (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data;
-- (void)loadWebView;
 - (UIView *)adView;
+- (void)loadWebView;
 
 @end

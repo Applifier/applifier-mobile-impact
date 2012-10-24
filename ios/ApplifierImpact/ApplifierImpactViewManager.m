@@ -13,19 +13,11 @@
 #import "ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "ApplifierImpactURLProtocol/ApplifierImpactURLProtocol.h"
 #import "ApplifierImpactVideo/ApplifierImpactVideo.h"
-
-// FIXME: this is (obviously) NOT the final URL!
-NSString * const kApplifierImpactTestWebViewURL = @"http://quake.everyplay.fi/~bluesun/impact/ios/index.html";
-NSString * const kApplifierImpactWebViewPrefix = @"applifierimpact.";
-NSString * const kApplifierImpactWebViewJSInit = @"init";
-NSString * const kApplifierImpactWebViewJSChangeView = @"setView";
-NSString * const kApplifierImpactWebViewAPIPlayVideo = @"playVideo";
-NSString * const kApplifierImpactWebViewAPIClose = @"close";
-NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateTo";
-NSString * const kApplifierImpactWebViewAPIInitComplete = @"initComplete";
-NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
+#import "ApplifierImpactWebView/ApplifierImpactWebAppController.h"
+#import "ApplifierImpactUtils/ApplifierImpactUtils.h"
 
 @interface ApplifierImpactViewManager () <UIWebViewDelegate, UIScrollViewDelegate>
+@property (nonatomic, strong) ApplifierImpactWebAppController *webApp;
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong) UIView *adContainerView;
@@ -45,7 +37,7 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 {
 	[self.delegate viewManagerWillCloseAdView:self];
 	
-	[self.window addSubview:self.webView];
+	[self.window addSubview:_webApp.webView];
 	[self.adContainerView removeFromSuperview];
 }
 
@@ -70,59 +62,6 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 		AILOG_DEBUG(@"No campaign with id '%@' found.", campaignID);
 }
 
-- (void)_processWebViewResponseWithHost:(NSString *)host query:(NSString *)query
-{
-	if (host == nil)
-		return;
-	
-	NSString *command = [host lowercaseString];
-	NSArray *queryComponents = nil;
-	if (query != nil)
-		queryComponents = [query componentsSeparatedByString:@"="];
-	
-	if ([command isEqualToString:kApplifierImpactWebViewAPIPlayVideo] || [command isEqualToString:kApplifierImpactWebViewAPINavigateTo] || [command isEqualToString:kApplifierImpactWebViewAPIAppStore])
-	{
-		if (queryComponents == nil)
-		{
-			AILOG_DEBUG(@"No parameters given.");
-			return;
-		}
-		
-		NSString *parameter = [queryComponents objectAtIndex:0];
-		NSString *value = [queryComponents objectAtIndex:1];
-		
-		if ([queryComponents count] > 2)
-		{
-			for (NSInteger i = 2; i < [queryComponents count]; i++)
-				value = [value stringByAppendingFormat:@"=%@", [queryComponents objectAtIndex:i]];
-		}
-		
-		if ([command isEqualToString:kApplifierImpactWebViewAPIPlayVideo])
-		{
-			if ([parameter isEqualToString:@"campaignID"])
-				[self _selectCampaignWithID:value];
-		}
-		else if ([command isEqualToString:kApplifierImpactWebViewAPINavigateTo])
-		{
-			if ([parameter isEqualToString:@"clickUrl"])
-				[self _openURL:value];
-		}
-		else if ([command isEqualToString:kApplifierImpactWebViewAPIAppStore])
-		{
-			if ([parameter isEqualToString:@"id"])
-				[self _openStoreViewControllerWithGameID:value];
-		}
-	}
-	else if ([command isEqualToString:kApplifierImpactWebViewAPIClose])
-	{
-		[self _closeAdView];
-	}
-	else if ([command isEqualToString:kApplifierImpactWebViewAPIInitComplete])
-	{
-		[self _webViewInitComplete];
-	}
-}
-
 - (BOOL)_canOpenStoreProductViewController
 {
 	Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
@@ -138,22 +77,6 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 	}
 	
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
-}
-
-- (NSString *)_escapedStringFromString:(NSString *)string
-{
-	if (string == nil)
-	{
-		AILOG_DEBUG(@"Input is nil.");
-		return nil;
-	}
-	
-	NSString *escapedString = [string stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-	escapedString = [escapedString stringByReplacingOccurrencesOfString:@"'" withString:@"\'"];
-	NSArray *components = [escapedString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-	escapedString = [components componentsJoinedByString:@""];
-	
-	return escapedString;
 }
 
 - (Float64)_currentVideoDuration
@@ -221,49 +144,19 @@ NSString * const kApplifierImpactWebViewAPIAppStore = @"appstore";
 
 - (void)_webViewInitComplete
 {
-	self.webViewInitialized = YES;
-	
+	_webApp.webViewInitialized = YES;
 	[self.delegate viewManagerWebViewInitialized:self];
-}
-
-- (void)_webViewInit
-{
-	if (self.campaignJSON == nil || !self.webViewLoaded)
-	{
-		AILOG_DEBUG(@"JSON or web view has not been loaded yet.");
-		return;
-	}
-	
-	AILOG_DEBUG(@"");
-	
-  [NSURLProtocol registerClass:[ApplifierImpactURLProtocol class]];
-  
-	NSString *escapedJSON = [self _escapedStringFromString:self.campaignJSON];
-	NSString *deviceInformation = nil;
-	if (self.md5AdvertisingIdentifier != nil)
-		deviceInformation = [NSString stringWithFormat:@"{\"advertisingTrackingID\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}", self.md5AdvertisingIdentifier, [[UIDevice currentDevice] systemVersion], self.machineName];
-	else
-		deviceInformation = [NSString stringWithFormat:@"{\"openUdid\":\"%@\",\"macAddress\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}", self.md5OpenUDID, self.md5MACAddress, [[UIDevice currentDevice] systemVersion], self.machineName];
-	
-	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\",\"%@\");", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSInit, escapedJSON, [self _escapedStringFromString:deviceInformation]];
-	
-	[self.webView stringByEvaluatingJavaScriptFromString:js];
-}
-
-- (void)_setWebViewCurrentView:(NSString *)view data:(NSString *)data
-{
-  [self.webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"%@%@(\"%@\", \"%@\");", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSChangeView, view, data]];
 }
 
 - (void)_webViewShow
 {
-	[self _setWebViewCurrentView:@"start" data:@""];
+  [_webApp setWebViewCurrentView:@"start" data:@""];
 }
 
 - (void)_webViewVideoComplete
 {
 	NSString *data = [NSString stringWithFormat:@"{\"campaignId\":\"%@\"}", self.selectedCampaign.id];
-  [self _setWebViewCurrentView:@"completed" data:[self _escapedStringFromString:data]];
+  [_webApp setWebViewCurrentView:@"completed" data:[ApplifierImpactUtils escapedStringFromString:data]];
 }
 
 #pragma mark - Public
@@ -283,29 +176,29 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 
 - (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data
 {
-  if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo] || [type isEqualToString:kApplifierImpactWebViewAPINavigateTo] || [type isEqualToString:kApplifierImpactWebViewAPIAppStore])
+  if ([type isEqualToString:_webApp.WEBVIEW_API_PLAYVIDEO] || [type isEqualToString:_webApp.WEBVIEW_API_NAVIGATETO] || [type isEqualToString:_webApp.WEBVIEW_API_APPSTORE])
 	{
-		if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo])
+		if ([type isEqualToString:_webApp.WEBVIEW_API_PLAYVIDEO])
 		{
       if ([data objectForKey:@"campaignId"] != nil)
         [self _selectCampaignWithID:[data objectForKey:@"campaignId"]];
 		}
-		else if ([type isEqualToString:kApplifierImpactWebViewAPINavigateTo])
+		else if ([type isEqualToString:_webApp.WEBVIEW_API_NAVIGATETO])
 		{
         if ([data objectForKey:@"clickUrl"] != nil)
           [self _openURL:[data objectForKey:@"clickUrl"]];
 		}
-		else if ([type isEqualToString:kApplifierImpactWebViewAPIAppStore])
+		else if ([type isEqualToString:_webApp.WEBVIEW_API_APPSTORE])
 		{
           if ([data objectForKey:@"clickUrl"] != nil)
             [self _openStoreViewControllerWithGameID:[data objectForKey:@"clickUrl"]];
 		}
 	}
-	else if ([type isEqualToString:kApplifierImpactWebViewAPIClose])
+	else if ([type isEqualToString:_webApp.WEBVIEW_API_CLOSE])
 	{
 		[self _closeAdView];
 	}
-	else if ([type isEqualToString:kApplifierImpactWebViewAPIInitComplete])
+	else if ([type isEqualToString:_webApp.WEBVIEW_API_INITCOMPLETE])
 	{
 		[self _webViewInitComplete];
 	}
@@ -318,27 +211,9 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 	if ((self = [super init]))
 	{
 		_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-		_webView = [[UIWebView alloc] initWithFrame:_window.bounds];
-		_webView.delegate = self;
-		_webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		
-		UIScrollView *scrollView = nil;
-		if ([_webView respondsToSelector:@selector(scrollView)])
-			scrollView = _webView.scrollView;
-		else
-		{
-			UIView *view = [_webView.subviews lastObject];
-			if ([view isKindOfClass:[UIScrollView class]])
-				scrollView = (UIScrollView *)view;
-		}
-		
-		if (scrollView != nil)
-		{
-			scrollView.delegate = self;
-			scrollView.showsVerticalScrollIndicator = NO;
-		}
-		
-		[_window addSubview:_webView];
+		_webApp = [[ApplifierImpactWebAppController alloc] init];
+
+		[_window addSubview:_webApp.webView];
 	}
 	
 	return self;
@@ -347,18 +222,14 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 - (void)loadWebView
 {
 	AIAssert([NSThread isMainThread]);
-	
-	self.webViewLoaded = NO;
-	self.webViewInitialized = NO;
-	
-	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kApplifierImpactTestWebViewURL]]];
+  //[_webApp setup:_window.bounds webAppParams:valueDictionary];
 }
 
 - (UIView *)adView
 {
 	AIAssertV([NSThread isMainThread], nil);
 	
-	if (self.webViewInitialized)
+	if (_webApp.webViewInitialized)
 	{
 		[self _webViewShow];
 		
@@ -377,10 +248,10 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 			[self.adContainerView addSubview:self.progressLabel];
 		}
 		
-		if (self.webView.superview != self.adContainerView)
+		if (_webApp.webView.superview != self.adContainerView)
 		{
-			self.webView.bounds = self.adContainerView.bounds;
-			[self.adContainerView addSubview:self.webView];
+			_webApp.webView.bounds = self.adContainerView.bounds;
+			[self.adContainerView addSubview:_webApp.webView];
 		}
 		
 		return self.adContainerView;
@@ -397,16 +268,17 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 	AIAssert([NSThread isMainThread]);
 	
 	_campaignJSON = campaignJSON;
-	
-	if (self.webViewLoaded)
-		[self _webViewInit];
+  
+  NSDictionary *values = @{@"advertisingTraackingId":self.md5AdvertisingIdentifier, @"iOSVersion":[[UIDevice currentDevice] systemVersion], @"deviceType":self.machineName, @"openUdid":self.md5OpenUDID, @"macAddress":self.md5MACAddress, @"campaignJSON":self.campaignJSON};
+ 
+  [_webApp setup:_window.bounds webAppParams:values];
 }
 
 - (BOOL)adViewVisible
 {
 	AIAssertV([NSThread isMainThread], NO);
 	
-	if (self.webView.superview == self.window)
+	if (_webApp.webView.superview == self.window)
 		return NO;
 	else
 		return YES;
@@ -415,48 +287,6 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-#pragma mark - UIWebViewDelegate
-
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
-	NSURL *url = [request URL];
-	AILOG_DEBUG(@"url %@", url);
-	
-  if ([[url scheme] isEqualToString:@"itms-apps"])
-	{
-		return NO;
-	}
-	
-	return YES;
-}
-
-- (void)webViewDidStartLoad:(UIWebView *)webView
-{
-	AILOG_DEBUG(@"");
-}
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
-	AILOG_DEBUG(@"");
-	
-	self.webViewLoaded = YES;
-	
-	if ( ! self.webViewInitialized)
-		[self _webViewInit];
-}
-
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
-	AILOG_DEBUG(@"%@", error);
-}
-
-#pragma mark - UIScrollViewDelegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-	scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, 0);
 }
 
 #pragma mark - SKStoreProductViewControllerDelegate
@@ -471,7 +301,6 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 #pragma mark - ApplifierImpactVideoDelegate
 
 - (void)videoAnalyticsPositionReached:(VideoAnalyticsPosition)analyticsPosition {
-  AILOG_DEBUG(@"VID ANALYTICS POS: %i", analyticsPosition);
   [self.delegate viewManager:self loggedVideoPosition:analyticsPosition campaign:self.selectedCampaign];
 }
 
@@ -485,8 +314,6 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 }
 
 - (void)videoPlaybackEnded {
-	AILOG_DEBUG(@"");
-	
 	[self.delegate viewManagerVideoEnded:self];
 	
 	self.progressLabel.hidden = YES;

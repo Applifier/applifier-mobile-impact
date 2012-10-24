@@ -50,6 +50,8 @@ static const NSString *kApplifierImpactURLProtocolHostname = @"client.impact.app
   NSURLRequest *request = [self request];
   NSData *reqData = [request HTTPBody];
   
+  //AILOG_DEBUG(@"WOOOOT: %@ %@", request, reqData);
+  
   [self actOnJSONResults: reqData];
   
   // Create the response
@@ -91,8 +93,6 @@ static const NSString *kApplifierImpactURLProtocolHostname = @"client.impact.app
     dictData = (NSDictionary *)data;
   }
   
-  AILOG_DEBUG(@"TYPE: %@", type);
-
   if (dictData != nil) {
     dispatch_async(dispatch_get_main_queue(), ^{
       [[ApplifierImpactViewManager sharedInstance] handleWebEvent:type data:dictData];
