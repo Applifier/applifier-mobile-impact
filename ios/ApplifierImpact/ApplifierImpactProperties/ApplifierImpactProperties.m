@@ -25,8 +25,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
 
 -(ApplifierImpactProperties *)init {
   if (self = [super init]) {
-    //[self setCampaignDataUrl:@"https://impact.applifier.com/mobile/campaigns"];
-    [self setCampaignDataUrl:@"http://quake.everyplay.fi/~bluesun/impact/data.json"];
+    [self setCampaignDataUrl:@"https://impact.applifier.com/mobile/campaigns"];
   }
   
   return self;
