@@ -35,6 +35,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 @property (nonatomic, strong) NSThread *backgroundThread;
 @property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, assign) BOOL webViewInitialized;
+@property (nonatomic, assign) BOOL testModeEnabled;
 @property (nonatomic, assign) dispatch_queue_t queue;
 @end
 
@@ -57,6 +58,10 @@ NSString * const kApplifierImpactVersion = @"1.0";
     if (self.md5AdvertisingIdentifier == nil) {
       queryParams = [NSString stringWithFormat:@"%@&macAddress=%@&openUdid=%@", queryParams, self.md5MACAddress, self.md5OpenUDID];
     }
+  }
+  
+  if (_testModeEnabled) {
+    queryParams = [NSString stringWithFormat:@"%@test=true", queryParams];
   }
 
   return queryParams;
@@ -199,6 +204,10 @@ NSString * const kApplifierImpactVersion = @"1.0";
 }
 
 #pragma mark - Public
+
+- (void)setTestMode:(BOOL)testModeEnabled {
+  _testModeEnabled = testModeEnabled;
+}
 
 - (void)startWithApplifierID:(NSString *)applifierID
 {

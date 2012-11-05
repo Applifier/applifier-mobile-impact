@@ -53,6 +53,7 @@
 @property (nonatomic, assign) id<ApplifierImpactDelegate> delegate;
 
 + (id)sharedInstance;
+- (void)setTestMode:(BOOL)testModeEnabled;
 - (void)startWithApplifierID:(NSString *)applifierID;
 - (UIView *)impactAdView;
 - (BOOL)canShowImpact;

@@ -51,6 +51,10 @@ static ApplifierImpact *sharedApplifierInstance = nil;
 	return sharedApplifierInstance;
 }
 
+- (void)setTestMode:(BOOL)testModeEnabled {
+	AILOG_DEBUG(@"Disabled on older versions of iOS.");
+}
+
 - (void)startWithApplifierID:(NSString *)applifierID
 {
 	AILOG_DEBUG(@"Disabled on older versions of iOS.");
