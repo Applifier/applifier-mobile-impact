@@ -15,8 +15,8 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 
 #import "ApplifierImpactDevice.h"
-#import "ApplifierImpact.h"
-#import "ApplifierImpactOpenUDID.h"
+#import "../ApplifierImpact.h"
+#import "../ApplifierImpactOpenUDID/ApplifierImpactOpenUDID.h"
 
 @implementation ApplifierImpactDevice
 

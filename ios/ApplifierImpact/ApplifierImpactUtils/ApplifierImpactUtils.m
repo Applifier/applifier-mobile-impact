@@ -7,7 +7,7 @@
 //
 
 #import "ApplifierImpactUtils.h"
-#import "ApplifierImpact.h"
+#import "../ApplifierImpact.h"
 
 @implementation ApplifierImpactUtils
 

@@ -8,7 +8,7 @@
 
 #import "ApplifierImpact.h"
 #import "ApplifierImpactCache.h"
-#import "ApplifierImpactCampaign.h"
+#import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 
 NSString * const kApplifierImpactCacheCampaignKey = @"kApplifierImpactCacheCampaignKey";
 NSString * const kApplifierImpactCacheConnectionKey = @"kApplifierImpactCacheConnectionKey";

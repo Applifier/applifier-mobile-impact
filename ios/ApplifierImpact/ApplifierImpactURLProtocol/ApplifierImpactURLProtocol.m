@@ -7,7 +7,7 @@
 //
 
 #import "ApplifierImpactURLProtocol.h"
-#import "ApplifierImpactViewManager.h"
+#import "../ApplifierImpactViewManager.h"
 
 static const NSString *kApplifierImpactURLProtocolHostname = @"client.impact.applifier.com";
 
