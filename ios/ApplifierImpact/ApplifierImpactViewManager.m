@@ -200,7 +200,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 	}
 	else if ([type isEqualToString:_webApp.WEBVIEW_API_INITCOMPLETE])
 	{
-		[self _webViewInitComplete];
+    [self _webViewInitComplete];
 	}
 }
 
@@ -269,7 +269,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 	
 	_campaignJSON = campaignJSON;
   
-  NSDictionary *values = @{@"advertisingTraackingId":self.md5AdvertisingIdentifier, @"iOSVersion":[[UIDevice currentDevice] systemVersion], @"deviceType":self.machineName, @"openUdid":self.md5OpenUDID, @"macAddress":self.md5MACAddress, @"campaignJSON":self.campaignJSON};
+  NSDictionary *values = @{@"advertisingTrackingId":self.md5AdvertisingIdentifier, @"iOSVersion":[[UIDevice currentDevice] systemVersion], @"deviceType":self.machineName, @"deviceId":self.md5DeviceId, @"macAddress":self.md5MACAddress, @"openUdid":self.md5OpenUDID, @"campaignJSON":self.campaignJSON};
  
   [_webApp setup:_window.bounds webAppParams:values];
 }

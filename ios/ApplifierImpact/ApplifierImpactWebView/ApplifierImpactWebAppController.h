@@ -10,7 +10,6 @@
 #import <UIKit/UIKit.h>
 
 @interface ApplifierImpactWebAppController : NSObject <UIWebViewDelegate, UIScrollViewDelegate>
-@property (nonatomic, assign) NSString* WEBVIEW_URL;
 @property (nonatomic, assign) NSString* WEBVIEW_PREFIX;
 @property (nonatomic, assign) NSString* WEBVIEW_JS_INIT;
 @property (nonatomic, assign) NSString* WEBVIEW_JS_CHANGEVIEW;

@@ -7,13 +7,14 @@
 //
 
 #import "ApplifierImpactCampaignManager.h"
-#import "ApplifierImpactSBJsonParser.h"
+#import "../ApplifierImpactSBJSON/ApplifierImpactSBJsonParser.h"
 #import "ApplifierImpactCampaign.h"
 #import "ApplifierImpactRewardItem.h"
-#import "ApplifierImpactCache.h"
-#import "ApplifierImpact.h"
+#import "../ApplifierImpactData/ApplifierImpactCache.h"
+#import "../ApplifierImpact.h"
+#import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 
-NSString * const kApplifierImpactBackendURL = @"https://impact.applifier.com/mobile/campaigns";
+//NSString * const kApplifierImpactBackendURL = @"https://impact.applifier.com/mobile/campaigns";
 
 NSString * const kCampaignEndScreenKey = @"endScreen";
 NSString * const kCampaignClickURLKey = @"clickUrl";
@@ -66,11 +67,7 @@ NSString * const kGamerIDKey = @"gamerId";
 	}
 	
 	self.campaignJSON = jsonString;
-	
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[self.delegate campaignManager:self updatedJSON:jsonString];
-	});
-	
+  
 	return repr;
 }
 
@@ -193,6 +190,7 @@ NSString * const kGamerIDKey = @"gamerId";
 - (void)_processCampaignDownloadData
 {
   id json = [self _JSONValueFromData:self.campaignDownloadData];
+  [self setCampaignData:json];
 
 	AIAssert([json isKindOfClass:[NSDictionary class]]);
 	
@@ -200,11 +198,19 @@ NSString * const kGamerIDKey = @"gamerId";
 	self.campaigns = [self _deserializeCampaigns:[jsonDictionary objectForKey:@"campaigns"]];
 	self.rewardItem = [self _deserializeRewardItem:[jsonDictionary objectForKey:@"item"]];
 	
+  [[ApplifierImpactProperties sharedInstance] setWebViewBaseUrl:(NSString *)[jsonDictionary objectForKey:@"webViewUrl"]];
+  [[ApplifierImpactProperties sharedInstance] setAnalyticsBaseUrl:(NSString *)[jsonDictionary objectForKey:@"analyticsUrl"]];
+  [[ApplifierImpactProperties sharedInstance] setImpactBaseUrl:(NSString *)[jsonDictionary objectForKey:@"impactUrl"]];
+  
 	NSString *gamerID = [jsonDictionary objectForKey:kGamerIDKey];
 	AIAssert(gamerID != nil);
 	self.gamerID = gamerID;
 	
 	[self.cache cacheCampaigns:self.campaigns];
+  
+  dispatch_async(dispatch_get_main_queue(), ^{
+		[self.delegate campaignManager:self updatedJSON:self.campaignJSON];
+	});
 }
 
 #pragma mark - Public
@@ -226,7 +232,7 @@ NSString * const kGamerIDKey = @"gamerId";
 {
 	AIAssert( ! [NSThread isMainThread]);
 	
-	NSString *urlString = kApplifierImpactBackendURL;
+	NSString *urlString = [[ApplifierImpactProperties sharedInstance] campaignDataUrl];
 	if (self.queryString != nil)
 		urlString = [urlString stringByAppendingString:self.queryString];
 	

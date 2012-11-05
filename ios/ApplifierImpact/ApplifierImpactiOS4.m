@@ -14,6 +14,7 @@
 #import "ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 #import "ApplifierImpactViewManager.h"
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
+#import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 
 NSString * const kApplifierImpactVersion = @"1.0";
 
@@ -25,6 +26,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 @property (nonatomic, strong) NSString *campaignJSON;
 @property (nonatomic, strong) NSString *machineName;
 @property (nonatomic, strong) NSString *md5AdvertisingIdentifier;
+@property (nonatomic, strong) NSString *md5DeviceId;
 @property (nonatomic, strong) NSString *md5MACAddress;
 @property (nonatomic, strong) NSString *md5OpenUDID;
 @property (nonatomic, strong) NSString *campaignQueryString;
@@ -43,17 +45,19 @@ NSString * const kApplifierImpactVersion = @"1.0";
 - (NSString *)_queryString
 {
 	NSString *advertisingIdentifier = self.md5AdvertisingIdentifier != nil ? self.md5AdvertisingIdentifier : @"";
-  NSString *deviceId = self.md5AdvertisingIdentifier != nil ? self.md5AdvertisingIdentifier : self.md5OpenUDID;
-
-	NSString *queryParams = [NSString stringWithFormat:@"?openUdid=%@&macAddress=%@&iosVersion=%@&device=%@&sdkVersion=%@&gameId=%@&type=ios&connection=%@", self.md5OpenUDID, self.md5MACAddress, [[UIDevice currentDevice] systemVersion], self.machineName, kApplifierImpactVersion, self.applifierID, self.connectionType];
-
+  NSString *queryParams = @"?";
+  
+  queryParams = [NSString stringWithFormat:@"%@deviceId=%@&platform=%@", queryParams, self.md5DeviceId, @"ios"];
+  
   if (self.md5AdvertisingIdentifier != nil)
     queryParams = [NSString stringWithFormat:@"%@&advertisingTrackingId=%@", queryParams, advertisingIdentifier];
 
-  queryParams = [NSString stringWithFormat:@"%@&deviceId=%@&platform=%@", queryParams, deviceId, @"ios"];
-
-  if ([ApplifierImpactDevice canUseTracking])
+  if ([ApplifierImpactDevice canUseTracking]) {
     queryParams = [NSString stringWithFormat:@"%@&softwareVersion=%@&hardwareVersion=%@&deviceType=%@&apiVersion=%@&connectionType=%@", queryParams, [[UIDevice currentDevice] systemVersion], @"unknown", self.machineName, kApplifierImpactVersion, self.connectionType];
+    if (self.md5AdvertisingIdentifier == nil) {
+      queryParams = [NSString stringWithFormat:@"%@&macAddress=%@&openUdid=%@", queryParams, self.md5MACAddress, self.md5OpenUDID];
+    }
+  }
 
   return queryParams;
 }
@@ -168,7 +172,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	
 	dispatch_async(self.queue, ^{
 		NSString *queryString = [NSString stringWithFormat:@"%@/install", self.applifierID];
-		NSString *bodyString = [NSString stringWithFormat:@"openUdid=%@&macAddress=%@", self.md5OpenUDID, self.md5MACAddress];
+		NSString *bodyString = [NSString stringWithFormat:@"deviceId=%@", self.md5DeviceId];
 		NSDictionary *queryDictionary = @{ kApplifierImpactQueryDictionaryQueryKey : queryString, kApplifierImpactQueryDictionaryBodyKey : bodyString };
 		
 		[self.analyticsUploader performSelector:@selector(sendInstallTrackingCallWithQueryDictionary:) onThread:self.backgroundThread withObject:queryDictionary waitUntilDone:NO];
@@ -219,6 +223,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		self.md5OpenUDID = [ApplifierImpactDevice md5OpenUDIDString];
 		self.connectionType = [ApplifierImpactDevice currentConnectionType];
 		self.campaignQueryString = [self _queryString];
+    self.md5DeviceId = self.md5AdvertisingIdentifier != nil ? self.md5AdvertisingIdentifier : self.md5OpenUDID;
 		
 		self.backgroundThread = [[NSThread alloc] initWithTarget:self selector:@selector(_backgroundRunLoop:) object:nil];
 		[self.backgroundThread start];
@@ -230,9 +235,9 @@ NSString * const kApplifierImpactVersion = @"1.0";
       [[ApplifierImpactViewManager sharedInstance] setDelegate:self];
       [[ApplifierImpactViewManager sharedInstance] setMachineName:self.machineName];
       [[ApplifierImpactViewManager sharedInstance] setMd5AdvertisingIdentifier:self.md5AdvertisingIdentifier];
+      [[ApplifierImpactViewManager sharedInstance] setMd5DeviceId:self.md5DeviceId];
       [[ApplifierImpactViewManager sharedInstance] setMd5MACAddress:self.md5MACAddress];
       [[ApplifierImpactViewManager sharedInstance] setMd5OpenUDID:self.md5OpenUDID];
-      [[ApplifierImpactViewManager sharedInstance] loadWebView];
 		});
 	});
 }
@@ -313,14 +318,16 @@ NSString * const kApplifierImpactVersion = @"1.0";
 - (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedJSON:(NSString *)json
 {
 	AIAssert([NSThread isMainThread]);
-	
+
   // If the view manager already has campaign JSON data, it means that
 	// campaigns were updated, and we might want to update the webapp.
-	if ([[ApplifierImpactViewManager sharedInstance] campaignJSON] != nil)
-	{
+	if ([[ApplifierImpactViewManager sharedInstance] campaignJSON] != nil) {
 		self.webViewInitialized = NO;
-    [[ApplifierImpactViewManager sharedInstance] loadWebView];
 	}
+  
+  if (self.webViewInitialized == NO) {
+    [[ApplifierImpactViewManager sharedInstance] loadWebView];
+  }
   
   [[ApplifierImpactViewManager sharedInstance] setCampaignJSON:json];
 }

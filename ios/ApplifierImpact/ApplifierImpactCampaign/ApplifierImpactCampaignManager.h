@@ -24,6 +24,7 @@
 
 @property (nonatomic, assign) id<ApplifierImpactCampaignManagerDelegate> delegate;
 @property (nonatomic, strong) NSString *queryString;
+@property (nonatomic, strong) id campaignData;
 
 - (void)updateCampaigns;
 - (NSURL *)videoURLForCampaign:(ApplifierImpactCampaign *)campaign;

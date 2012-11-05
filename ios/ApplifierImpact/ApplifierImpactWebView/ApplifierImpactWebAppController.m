@@ -10,6 +10,7 @@
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactUtils/ApplifierImpactUtils.h"
 #import "../ApplifierImpactURLProtocol/ApplifierImpactURLProtocol.h"
+#import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 
 NSDictionary* initalizationParams;
 
@@ -17,7 +18,6 @@ NSDictionary* initalizationParams;
 
 - (ApplifierImpactWebAppController *)init {
   
-  self.WEBVIEW_URL = @"http://quake.everyplay.fi/~bluesun/impact/ios/index.html";
   self.WEBVIEW_PREFIX = @"applifierimpact.";
   self.WEBVIEW_JS_INIT = @"init";
   self.WEBVIEW_JS_CHANGEVIEW = @"setView";
@@ -57,7 +57,7 @@ NSDictionary* initalizationParams;
   }
   
   [NSURLProtocol registerClass:[ApplifierImpactURLProtocol class]];
-	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.WEBVIEW_URL]]];
+	[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[[ApplifierImpactProperties sharedInstance] webViewBaseUrl]]]];
 }
 
 - (void)setWebViewCurrentView:(NSString *)view data:(NSString *)data
@@ -74,14 +74,15 @@ NSDictionary* initalizationParams;
   NSString *md5AdvertisingTrackingID = [values valueForKey:@"advertisingTrackingID"];
   NSString *iOSVersion = [values valueForKey:@"iOSVersion"];
   NSString *deviceType = [values valueForKey:@"deviceType"];
+  NSString *deviceId = [values valueForKey:@"deviceId"];
   NSString *md5OpenUDID = [values valueForKey:@"openUdid"];
   NSString *md5MACAddress = [values valueForKey:@"macAddress"];
 	
   if (md5AdvertisingTrackingID != nil) {
-		deviceInformation = [NSString stringWithFormat:@"{\"advertisingTrackingID\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}", md5AdvertisingTrackingID, iOSVersion, deviceType];
+		deviceInformation = [NSString stringWithFormat:@"{\"deviceId\":\"%@\",\"advertisingTrackingID\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}",  deviceId, md5AdvertisingTrackingID, iOSVersion, deviceType];
   }
 	else {
-		deviceInformation = [NSString stringWithFormat:@"{\"openUdid\":\"%@\",\"macAddress\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}", md5OpenUDID, md5MACAddress, [[UIDevice currentDevice] systemVersion], deviceType];
+		deviceInformation = [NSString stringWithFormat:@"{\"deviceId\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\",\"macAddress\":\"%@\",\"openUdid\":\"%@\"}", deviceId, [[UIDevice currentDevice] systemVersion], deviceType, md5MACAddress, md5OpenUDID];
   }
 	
 	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\",\"%@\");", self.WEBVIEW_PREFIX, self.WEBVIEW_JS_INIT, escapedJSON, [ApplifierImpactUtils escapedStringFromString:deviceInformation]];
@@ -110,7 +111,7 @@ NSDictionary* initalizationParams;
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-	AILOG_DEBUG(@"");
+	AILOG_DEBUG(@"%@", initalizationParams);
 	
 	self.webViewLoaded = YES;
 	

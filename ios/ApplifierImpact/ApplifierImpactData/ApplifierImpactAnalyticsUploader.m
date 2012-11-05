@@ -7,12 +7,13 @@
 //
 
 #import "ApplifierImpactAnalyticsUploader.h"
-#import "ApplifierImpactCampaign.h"
-#import "ApplifierImpact.h"
+#import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
+#import "../ApplifierImpact.h"
+#import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 
-NSString * const kApplifierImpactAnalyticsURL = @"https://log.applifier.com/videoads-tracking";
-NSString * const kApplifierImpactTrackingURL = @"https://impact.applifier.com/gamers/";
-NSString * const kApplifierImpactInstallTrackingURL = @"https://impact.applifier.com/games/";
+//NSString * const kApplifierImpactAnalyticsURL = @"https://log.applifier.com/videoads-tracking";
+NSString * const kApplifierImpactTrackingPath = @"gamers/";
+NSString * const kApplifierImpactInstallTrackingPath = @"games/";
 NSString * const kApplifierImpactAnalyticsUploaderRequestKey = @"kApplifierImpactAnalyticsUploaderRequestKey";
 NSString * const kApplifierImpactAnalyticsUploaderConnectionKey = @"kApplifierImpactAnalyticsUploaderConnectionKey";
 NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAnalyticsSavedUploadsKey";
@@ -142,7 +143,7 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 		return;
 	}
 	
-	[self _queueWithURLString:kApplifierImpactAnalyticsURL queryString:queryString httpMethod:@"POST"];
+	[self _queueWithURLString:[[ApplifierImpactProperties sharedInstance] analyticsBaseUrl] queryString:queryString httpMethod:@"POST"];
 }
 
 - (void)sendTrackingCallWithQueryString:(NSString *)queryString
@@ -154,8 +155,10 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 		AILOG_DEBUG(@"Invalid input.");
 		return;
 	}
-	
-	[self _queueWithURLString:[kApplifierImpactTrackingURL stringByAppendingString:queryString] queryString:nil httpMethod:@"GET"];
+  
+	[self _queueWithURLString:[NSString stringWithFormat:@"%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactTrackingPath] queryString:nil httpMethod:@"GET"];
+  
+	//[self _queueWithURLString:[kApplifierImpactTrackingURL stringByAppendingString:queryString] queryString:nil httpMethod:@"GET"];
 }
 
 - (void)sendInstallTrackingCallWithQueryDictionary:(NSDictionary *)queryDictionary
@@ -177,7 +180,10 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 		return;
 	}
 	
-	[self _queueWithURLString:[kApplifierImpactInstallTrackingURL stringByAppendingString:query] queryString:body httpMethod:@"POST"];
+  [self _queueWithURLString:[NSString stringWithFormat:@"%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactInstallTrackingPath] queryString:nil httpMethod:@"GET"];
+
+  
+	//[self _queueWithURLString:[kApplifierImpactInstallTrackingURL stringByAppendingString:query] queryString:body httpMethod:@"POST"];
 }
 
 - (void)retryFailedUploads
