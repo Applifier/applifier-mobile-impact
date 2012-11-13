@@ -15,6 +15,7 @@
 #import "ApplifierImpactVideo/ApplifierImpactVideo.h"
 #import "ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 #import "ApplifierImpactUtils/ApplifierImpactUtils.h"
+#import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 
 @interface ApplifierImpactViewManager () <UIWebViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, strong) ApplifierImpactWebAppController *webApp;
@@ -156,7 +157,9 @@
 - (void)_webViewVideoComplete
 {
 	NSString *data = [NSString stringWithFormat:@"{\"campaignId\":\"%@\"}", self.selectedCampaign.id];
-  [_webApp setWebViewCurrentView:@"completed" data:[ApplifierImpactUtils escapedStringFromString:data]];
+  
+  // FIX
+ // [_webApp setWebViewCurrentView:@"completed" data:[ApplifierImpactUtils escapedStringFromString:data]];
 }
 
 #pragma mark - Public
@@ -263,13 +266,13 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 	}
 }
 
-- (void)setCampaignJSON:(NSString *)campaignJSON
+- (void)setCampaignJSON:(NSDictionary *)campaignJSON
 {
 	AIAssert([NSThread isMainThread]);
 	
 	_campaignJSON = campaignJSON;
   
-  NSDictionary *values = @{@"advertisingTrackingId":self.md5AdvertisingIdentifier, @"iOSVersion":[[UIDevice currentDevice] systemVersion], @"deviceType":self.machineName, @"deviceId":self.md5DeviceId, @"macAddress":self.md5MACAddress, @"openUdid":self.md5OpenUDID, @"campaignJSON":self.campaignJSON};
+  NSDictionary *values = @{@"advertisingTrackingId":self.md5AdvertisingIdentifier, @"iOSVersion":[ApplifierImpactDevice softwareVersion], @"deviceType":self.machineName, @"deviceId":self.md5DeviceId, @"macAddress":self.md5MACAddress, @"openUdid":self.md5OpenUDID, @"campaignData":_campaignJSON};
  
   [_webApp setup:_window.bounds webAppParams:values];
 }

@@ -11,8 +11,14 @@
 #import "../ApplifierImpactUtils/ApplifierImpactUtils.h"
 #import "../ApplifierImpactURLProtocol/ApplifierImpactURLProtocol.h"
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
+#import "../ApplifierImpactSBJSON/ApplifierImpactSBJsonWriter.h"
+#import "../ApplifierImpactSBJSON/NSObject+ApplifierImpactSBJson.h"
 
-NSDictionary* initalizationParams;
+
+
+@interface ApplifierImpactWebAppController ()
+  @property (nonatomic, strong) NSDictionary* webAppInitalizationParams;
+@end
 
 @implementation ApplifierImpactWebAppController
 
@@ -32,7 +38,7 @@ NSDictionary* initalizationParams;
 
 - (void)setup:(CGRect)frame webAppParams:(NSDictionary *)webAppParams {
  
-  initalizationParams = webAppParams;
+  _webAppInitalizationParams = webAppParams;
   self.webView = [[UIWebView alloc] initWithFrame:frame];
   self.webView.delegate = self;
   self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -69,23 +75,37 @@ NSDictionary* initalizationParams;
 
 - (void)initWebAppWithValues:(NSDictionary *)values {
   
-  NSString *escapedJSON = [ApplifierImpactUtils escapedStringFromString:[values valueForKey:@"campaignJSON"]];
-	NSString *deviceInformation = nil;
+  AILOG_DEBUG(@"%@", [values JSONRepresentation]);
+  
+  /*
+  NSMutableDictionary *deviceInformation = [[NSMutableDictionary init] alloc];
+  [deviceInformation setValue:[values valueForKey:@"deviceId"] forKey:@"deviceId"];
+  AILOG_DEBUG(@"%@", [deviceInformation JSONRepresentation]);*/
+  
+  
+  
+  //NSString *escapedJSON = [ApplifierImpactUtils escapedStringFromString:[values valueForKey:@"campaignJSON"]];
+	
+  /*
+  NSString *deviceInformation = nil;
   NSString *md5AdvertisingTrackingID = [values valueForKey:@"advertisingTrackingID"];
   NSString *iOSVersion = [values valueForKey:@"iOSVersion"];
   NSString *deviceType = [values valueForKey:@"deviceType"];
   NSString *deviceId = [values valueForKey:@"deviceId"];
   NSString *md5OpenUDID = [values valueForKey:@"openUdid"];
   NSString *md5MACAddress = [values valueForKey:@"macAddress"];
-	
+	*/
+  
+  /*
   if (md5AdvertisingTrackingID != nil) {
-		deviceInformation = [NSString stringWithFormat:@"{\"deviceId\":\"%@\",\"advertisingTrackingID\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}",  deviceId, md5AdvertisingTrackingID, iOSVersion, deviceType];
+		//deviceInformation = [NSString stringWithFormat:@"{\"deviceId\":\"%@\",\"advertisingTrackingID\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\"}",  deviceId, md5AdvertisingTrackingID, iOSVersion, deviceType];
   }
 	else {
-		deviceInformation = [NSString stringWithFormat:@"{\"deviceId\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\",\"macAddress\":\"%@\",\"openUdid\":\"%@\"}", deviceId, [[UIDevice currentDevice] systemVersion], deviceType, md5MACAddress, md5OpenUDID];
+		//deviceInformation = [NSString stringWithFormat:@"{\"deviceId\":\"%@\",\"iOSVersion\":\"%@\",\"deviceType\":\"%@\",\"macAddress\":\"%@\",\"openUdid\":\"%@\"}", deviceId, [[UIDevice currentDevice] systemVersion], deviceType, md5MACAddress, md5OpenUDID];
   }
-	
-	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\",\"%@\");", self.WEBVIEW_PREFIX, self.WEBVIEW_JS_INIT, escapedJSON, [ApplifierImpactUtils escapedStringFromString:deviceInformation]];
+	*/
+  
+	NSString *js = [NSString stringWithFormat:@"%@%@(%@);", self.WEBVIEW_PREFIX, self.WEBVIEW_JS_INIT, [values JSONRepresentation]];
 	[self.webView stringByEvaluatingJavaScriptFromString:js];
 }
 
@@ -111,12 +131,12 @@ NSDictionary* initalizationParams;
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-	AILOG_DEBUG(@"%@", initalizationParams);
+	AILOG_DEBUG(@"%@", _webAppInitalizationParams);
 	
 	self.webViewLoaded = YES;
 	
 	if (!self.webViewInitialized)
-		[self initWebAppWithValues:initalizationParams];
+		[self initWebAppWithValues:_webAppInitalizationParams];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error

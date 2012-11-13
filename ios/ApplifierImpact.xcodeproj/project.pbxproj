@@ -9,6 +9,30 @@
 /* Begin PBXBuildFile section */
 		78057A121643CADB005EF487 /* ApplifierImpactProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 78057A0E1643CADB005EF487 /* ApplifierImpactProperties.h */; };
 		78057A131643CADB005EF487 /* ApplifierImpactProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 78057A0F1643CADB005EF487 /* ApplifierImpactProperties.m */; };
+		784E9314165245DC009667F6 /* ApplifierImpactSBJsonParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 784E930D165245DC009667F6 /* ApplifierImpactSBJsonParser.h */; };
+		784E9315165245DC009667F6 /* ApplifierImpactSBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E930E165245DC009667F6 /* ApplifierImpactSBJsonParser.m */; };
+		784E9316165245DC009667F6 /* ApplifierImpactSBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 784E930F165245DC009667F6 /* ApplifierImpactSBJsonWriter.h */; };
+		784E9317165245DC009667F6 /* ApplifierImpactSBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E9310165245DC009667F6 /* ApplifierImpactSBJsonWriter.m */; };
+		784E9318165245DC009667F6 /* NSObject+ApplifierImpactSBJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 784E9311165245DC009667F6 /* NSObject+ApplifierImpactSBJson.h */; };
+		784E9319165245DC009667F6 /* NSObject+ApplifierImpactSBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E9312165245DC009667F6 /* NSObject+ApplifierImpactSBJson.m */; };
+		784E9322165246A6009667F6 /* ApplifierImpactSBJsonStreamParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 784E931A165246A6009667F6 /* ApplifierImpactSBJsonStreamParser.h */; };
+		784E9323165246A6009667F6 /* ApplifierImpactSBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E931B165246A6009667F6 /* ApplifierImpactSBJsonStreamParser.m */; };
+		784E9324165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAccumulator.h in Headers */ = {isa = PBXBuildFile; fileRef = 784E931C165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAccumulator.h */; };
+		784E9325165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E931D165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAccumulator.m */; };
+		784E9326165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 784E931E165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAdapter.h */; };
+		784E9327165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E931F165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAdapter.m */; };
+		784E9328165246A6009667F6 /* ApplifierImpactSBJsonStreamParserState.h in Headers */ = {isa = PBXBuildFile; fileRef = 784E9320165246A6009667F6 /* ApplifierImpactSBJsonStreamParserState.h */; };
+		784E9329165246A6009667F6 /* ApplifierImpactSBJsonStreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E9321165246A6009667F6 /* ApplifierImpactSBJsonStreamParserState.m */; };
+		784E932C165246F5009667F6 /* ApplifierImpactSBJsonTokeniser.h in Headers */ = {isa = PBXBuildFile; fileRef = 784E932A165246F5009667F6 /* ApplifierImpactSBJsonTokeniser.h */; };
+		784E932D165246F5009667F6 /* ApplifierImpactSBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E932B165246F5009667F6 /* ApplifierImpactSBJsonTokeniser.m */; };
+		784E93341652482D009667F6 /* ApplifierImpactSBJsonStreamWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 784E932E1652482B009667F6 /* ApplifierImpactSBJsonStreamWriter.h */; };
+		784E93351652482D009667F6 /* ApplifierImpactSBJsonStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E932F1652482B009667F6 /* ApplifierImpactSBJsonStreamWriter.m */; };
+		784E93361652482D009667F6 /* ApplifierImpactSBJsonStreamWriterAccumulator.h in Headers */ = {isa = PBXBuildFile; fileRef = 784E93301652482C009667F6 /* ApplifierImpactSBJsonStreamWriterAccumulator.h */; };
+		784E93371652482D009667F6 /* ApplifierImpactSBJsonStreamWriterAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E93311652482C009667F6 /* ApplifierImpactSBJsonStreamWriterAccumulator.m */; };
+		784E93381652482D009667F6 /* ApplifierImpactSBJsonStreamWriterState.h in Headers */ = {isa = PBXBuildFile; fileRef = 784E93321652482C009667F6 /* ApplifierImpactSBJsonStreamWriterState.h */; };
+		784E93391652482D009667F6 /* ApplifierImpactSBJsonStreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E93331652482D009667F6 /* ApplifierImpactSBJsonStreamWriterState.m */; };
+		784E933C1652487C009667F6 /* ApplifierImpactSBJsonUTF8Stream.h in Headers */ = {isa = PBXBuildFile; fileRef = 784E933A1652487B009667F6 /* ApplifierImpactSBJsonUTF8Stream.h */; };
+		784E933D1652487C009667F6 /* ApplifierImpactSBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E933B1652487B009667F6 /* ApplifierImpactSBJsonUTF8Stream.m */; };
 		786F5D64163142BB00FD34C4 /* ApplifierImpactDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 786F5D62163142BB00FD34C4 /* ApplifierImpactDevice.h */; };
 		786F5D65163142BB00FD34C4 /* ApplifierImpactDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 786F5D63163142BB00FD34C4 /* ApplifierImpactDevice.m */; };
 		786F5D6F1635359500FD34C4 /* ApplifierImpactVideo.h in Headers */ = {isa = PBXBuildFile; fileRef = 786F5D6B1635359400FD34C4 /* ApplifierImpactVideo.h */; };
@@ -29,10 +53,6 @@
 		78AC202E1622EFFD007DE419 /* ApplifierImpactCampaignManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20281622EFFD007DE419 /* ApplifierImpactCampaignManager.m */; };
 		78AC202F1622EFFD007DE419 /* ApplifierImpactRewardItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC20291622EFFD007DE419 /* ApplifierImpactRewardItem.h */; };
 		78AC20301622EFFD007DE419 /* ApplifierImpactRewardItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC202A1622EFFD007DE419 /* ApplifierImpactRewardItem.m */; };
-		78AC20351622F007007DE419 /* ApplifierImpactSBJsonBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC20311622F007007DE419 /* ApplifierImpactSBJsonBase.h */; };
-		78AC20361622F007007DE419 /* ApplifierImpactSBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20321622F007007DE419 /* ApplifierImpactSBJsonBase.m */; };
-		78AC20371622F007007DE419 /* ApplifierImpactSBJsonParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC20331622F007007DE419 /* ApplifierImpactSBJsonParser.h */; };
-		78AC20381622F007007DE419 /* ApplifierImpactSBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20341622F007007DE419 /* ApplifierImpactSBJsonParser.m */; };
 		78AC203F1622F01F007DE419 /* ApplifierImpact.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC20391622F01F007DE419 /* ApplifierImpact.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		78AC20401622F01F007DE419 /* ApplifierImpact.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC203A1622F01F007DE419 /* ApplifierImpact.m */; };
 		78AC20411622F01F007DE419 /* ApplifierImpactiOS4.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC203B1622F01F007DE419 /* ApplifierImpactiOS4.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -47,6 +67,30 @@
 /* Begin PBXFileReference section */
 		78057A0E1643CADB005EF487 /* ApplifierImpactProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactProperties.h; sourceTree = "<group>"; };
 		78057A0F1643CADB005EF487 /* ApplifierImpactProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactProperties.m; sourceTree = "<group>"; };
+		784E930D165245DC009667F6 /* ApplifierImpactSBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonParser.h; sourceTree = "<group>"; };
+		784E930E165245DC009667F6 /* ApplifierImpactSBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonParser.m; sourceTree = "<group>"; };
+		784E930F165245DC009667F6 /* ApplifierImpactSBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonWriter.h; sourceTree = "<group>"; };
+		784E9310165245DC009667F6 /* ApplifierImpactSBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonWriter.m; sourceTree = "<group>"; };
+		784E9311165245DC009667F6 /* NSObject+ApplifierImpactSBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+ApplifierImpactSBJson.h"; sourceTree = "<group>"; };
+		784E9312165245DC009667F6 /* NSObject+ApplifierImpactSBJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+ApplifierImpactSBJson.m"; sourceTree = "<group>"; };
+		784E931A165246A6009667F6 /* ApplifierImpactSBJsonStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonStreamParser.h; sourceTree = "<group>"; };
+		784E931B165246A6009667F6 /* ApplifierImpactSBJsonStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonStreamParser.m; sourceTree = "<group>"; };
+		784E931C165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonStreamParserAccumulator.h; sourceTree = "<group>"; };
+		784E931D165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonStreamParserAccumulator.m; sourceTree = "<group>"; };
+		784E931E165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonStreamParserAdapter.h; sourceTree = "<group>"; };
+		784E931F165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonStreamParserAdapter.m; sourceTree = "<group>"; };
+		784E9320165246A6009667F6 /* ApplifierImpactSBJsonStreamParserState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonStreamParserState.h; sourceTree = "<group>"; };
+		784E9321165246A6009667F6 /* ApplifierImpactSBJsonStreamParserState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonStreamParserState.m; sourceTree = "<group>"; };
+		784E932A165246F5009667F6 /* ApplifierImpactSBJsonTokeniser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonTokeniser.h; sourceTree = "<group>"; };
+		784E932B165246F5009667F6 /* ApplifierImpactSBJsonTokeniser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonTokeniser.m; sourceTree = "<group>"; };
+		784E932E1652482B009667F6 /* ApplifierImpactSBJsonStreamWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonStreamWriter.h; sourceTree = "<group>"; };
+		784E932F1652482B009667F6 /* ApplifierImpactSBJsonStreamWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonStreamWriter.m; sourceTree = "<group>"; };
+		784E93301652482C009667F6 /* ApplifierImpactSBJsonStreamWriterAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonStreamWriterAccumulator.h; sourceTree = "<group>"; };
+		784E93311652482C009667F6 /* ApplifierImpactSBJsonStreamWriterAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonStreamWriterAccumulator.m; sourceTree = "<group>"; };
+		784E93321652482C009667F6 /* ApplifierImpactSBJsonStreamWriterState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonStreamWriterState.h; sourceTree = "<group>"; };
+		784E93331652482D009667F6 /* ApplifierImpactSBJsonStreamWriterState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonStreamWriterState.m; sourceTree = "<group>"; };
+		784E933A1652487B009667F6 /* ApplifierImpactSBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonUTF8Stream.h; sourceTree = "<group>"; };
+		784E933B1652487B009667F6 /* ApplifierImpactSBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonUTF8Stream.m; sourceTree = "<group>"; };
 		786F5D62163142BB00FD34C4 /* ApplifierImpactDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactDevice.h; sourceTree = "<group>"; };
 		786F5D63163142BB00FD34C4 /* ApplifierImpactDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactDevice.m; sourceTree = "<group>"; };
 		786F5D6B1635359400FD34C4 /* ApplifierImpactVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactVideo.h; sourceTree = "<group>"; };
@@ -67,10 +111,6 @@
 		78AC20281622EFFD007DE419 /* ApplifierImpactCampaignManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCampaignManager.m; sourceTree = "<group>"; };
 		78AC20291622EFFD007DE419 /* ApplifierImpactRewardItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactRewardItem.h; sourceTree = "<group>"; };
 		78AC202A1622EFFD007DE419 /* ApplifierImpactRewardItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactRewardItem.m; sourceTree = "<group>"; };
-		78AC20311622F007007DE419 /* ApplifierImpactSBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonBase.h; sourceTree = "<group>"; };
-		78AC20321622F007007DE419 /* ApplifierImpactSBJsonBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonBase.m; sourceTree = "<group>"; };
-		78AC20331622F007007DE419 /* ApplifierImpactSBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactSBJsonParser.h; sourceTree = "<group>"; };
-		78AC20341622F007007DE419 /* ApplifierImpactSBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactSBJsonParser.m; sourceTree = "<group>"; };
 		78AC20391622F01F007DE419 /* ApplifierImpact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpact.h; sourceTree = "<group>"; };
 		78AC203A1622F01F007DE419 /* ApplifierImpact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpact.m; sourceTree = "<group>"; };
 		78AC203B1622F01F007DE419 /* ApplifierImpactiOS4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactiOS4.h; sourceTree = "<group>"; };
@@ -229,10 +269,30 @@
 		CC496CAF15078AB000AF335E /* ApplifierImpactSBJSON */ = {
 			isa = PBXGroup;
 			children = (
-				78AC20311622F007007DE419 /* ApplifierImpactSBJsonBase.h */,
-				78AC20321622F007007DE419 /* ApplifierImpactSBJsonBase.m */,
-				78AC20331622F007007DE419 /* ApplifierImpactSBJsonParser.h */,
-				78AC20341622F007007DE419 /* ApplifierImpactSBJsonParser.m */,
+				784E933A1652487B009667F6 /* ApplifierImpactSBJsonUTF8Stream.h */,
+				784E933B1652487B009667F6 /* ApplifierImpactSBJsonUTF8Stream.m */,
+				784E932E1652482B009667F6 /* ApplifierImpactSBJsonStreamWriter.h */,
+				784E932F1652482B009667F6 /* ApplifierImpactSBJsonStreamWriter.m */,
+				784E93301652482C009667F6 /* ApplifierImpactSBJsonStreamWriterAccumulator.h */,
+				784E93311652482C009667F6 /* ApplifierImpactSBJsonStreamWriterAccumulator.m */,
+				784E93321652482C009667F6 /* ApplifierImpactSBJsonStreamWriterState.h */,
+				784E93331652482D009667F6 /* ApplifierImpactSBJsonStreamWriterState.m */,
+				784E932A165246F5009667F6 /* ApplifierImpactSBJsonTokeniser.h */,
+				784E932B165246F5009667F6 /* ApplifierImpactSBJsonTokeniser.m */,
+				784E931A165246A6009667F6 /* ApplifierImpactSBJsonStreamParser.h */,
+				784E931B165246A6009667F6 /* ApplifierImpactSBJsonStreamParser.m */,
+				784E931C165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAccumulator.h */,
+				784E931D165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAccumulator.m */,
+				784E931E165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAdapter.h */,
+				784E931F165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAdapter.m */,
+				784E9320165246A6009667F6 /* ApplifierImpactSBJsonStreamParserState.h */,
+				784E9321165246A6009667F6 /* ApplifierImpactSBJsonStreamParserState.m */,
+				784E930D165245DC009667F6 /* ApplifierImpactSBJsonParser.h */,
+				784E930E165245DC009667F6 /* ApplifierImpactSBJsonParser.m */,
+				784E930F165245DC009667F6 /* ApplifierImpactSBJsonWriter.h */,
+				784E9310165245DC009667F6 /* ApplifierImpactSBJsonWriter.m */,
+				784E9311165245DC009667F6 /* NSObject+ApplifierImpactSBJson.h */,
+				784E9312165245DC009667F6 /* NSObject+ApplifierImpactSBJson.m */,
 			);
 			path = ApplifierImpactSBJSON;
 			sourceTree = "<group>";
@@ -259,8 +319,6 @@
 				78AC202B1622EFFD007DE419 /* ApplifierImpactCampaign.h in Headers */,
 				78AC202D1622EFFD007DE419 /* ApplifierImpactCampaignManager.h in Headers */,
 				78AC202F1622EFFD007DE419 /* ApplifierImpactRewardItem.h in Headers */,
-				78AC20351622F007007DE419 /* ApplifierImpactSBJsonBase.h in Headers */,
-				78AC20371622F007007DE419 /* ApplifierImpactSBJsonParser.h in Headers */,
 				78AC203F1622F01F007DE419 /* ApplifierImpact.h in Headers */,
 				78AC20411622F01F007DE419 /* ApplifierImpactiOS4.h in Headers */,
 				78AC20431622F01F007DE419 /* ApplifierImpactViewManager.h in Headers */,
@@ -270,6 +328,18 @@
 				786F5D921636A82200FD34C4 /* ApplifierImpactUtils.h in Headers */,
 				786F5D981636AF9600FD34C4 /* ApplifierImpactWebAppController.h in Headers */,
 				78057A121643CADB005EF487 /* ApplifierImpactProperties.h in Headers */,
+				784E9314165245DC009667F6 /* ApplifierImpactSBJsonParser.h in Headers */,
+				784E9316165245DC009667F6 /* ApplifierImpactSBJsonWriter.h in Headers */,
+				784E9318165245DC009667F6 /* NSObject+ApplifierImpactSBJson.h in Headers */,
+				784E9322165246A6009667F6 /* ApplifierImpactSBJsonStreamParser.h in Headers */,
+				784E9324165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAccumulator.h in Headers */,
+				784E9326165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAdapter.h in Headers */,
+				784E9328165246A6009667F6 /* ApplifierImpactSBJsonStreamParserState.h in Headers */,
+				784E932C165246F5009667F6 /* ApplifierImpactSBJsonTokeniser.h in Headers */,
+				784E93341652482D009667F6 /* ApplifierImpactSBJsonStreamWriter.h in Headers */,
+				784E93361652482D009667F6 /* ApplifierImpactSBJsonStreamWriterAccumulator.h in Headers */,
+				784E93381652482D009667F6 /* ApplifierImpactSBJsonStreamWriterState.h in Headers */,
+				784E933C1652487C009667F6 /* ApplifierImpactSBJsonUTF8Stream.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,8 +457,6 @@
 				78AC202C1622EFFD007DE419 /* ApplifierImpactCampaign.m in Sources */,
 				78AC202E1622EFFD007DE419 /* ApplifierImpactCampaignManager.m in Sources */,
 				78AC20301622EFFD007DE419 /* ApplifierImpactRewardItem.m in Sources */,
-				78AC20361622F007007DE419 /* ApplifierImpactSBJsonBase.m in Sources */,
-				78AC20381622F007007DE419 /* ApplifierImpactSBJsonParser.m in Sources */,
 				78AC20401622F01F007DE419 /* ApplifierImpact.m in Sources */,
 				78AC20421622F01F007DE419 /* ApplifierImpactiOS4.m in Sources */,
 				78AC20441622F01F007DE419 /* ApplifierImpactViewManager.m in Sources */,
@@ -398,6 +466,18 @@
 				786F5D931636A82200FD34C4 /* ApplifierImpactUtils.m in Sources */,
 				786F5D991636AF9600FD34C4 /* ApplifierImpactWebAppController.m in Sources */,
 				78057A131643CADB005EF487 /* ApplifierImpactProperties.m in Sources */,
+				784E9315165245DC009667F6 /* ApplifierImpactSBJsonParser.m in Sources */,
+				784E9317165245DC009667F6 /* ApplifierImpactSBJsonWriter.m in Sources */,
+				784E9319165245DC009667F6 /* NSObject+ApplifierImpactSBJson.m in Sources */,
+				784E9323165246A6009667F6 /* ApplifierImpactSBJsonStreamParser.m in Sources */,
+				784E9325165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAccumulator.m in Sources */,
+				784E9327165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAdapter.m in Sources */,
+				784E9329165246A6009667F6 /* ApplifierImpactSBJsonStreamParserState.m in Sources */,
+				784E932D165246F5009667F6 /* ApplifierImpactSBJsonTokeniser.m in Sources */,
+				784E93351652482D009667F6 /* ApplifierImpactSBJsonStreamWriter.m in Sources */,
+				784E93371652482D009667F6 /* ApplifierImpactSBJsonStreamWriterAccumulator.m in Sources */,
+				784E93391652482D009667F6 /* ApplifierImpactSBJsonStreamWriterState.m in Sources */,
+				784E933D1652487C009667F6 /* ApplifierImpactSBJsonUTF8Stream.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

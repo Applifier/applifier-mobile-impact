@@ -19,5 +19,5 @@
 + (NSString *)md5MACAddressString;
 + (NSString *)md5AdvertisingIdentifierString;
 + (NSString *)currentConnectionType;
-
++ (NSString *)softwareVersion;
 @end

@@ -290,4 +290,8 @@
 	return connectionString;
 }
 
++ (NSString *)softwareVersion {
+  return [[UIDevice currentDevice] systemVersion];
+}
+
 @end

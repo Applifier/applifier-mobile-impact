@@ -16,7 +16,7 @@
 
 @required
 - (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID;
-- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedJSON:(NSString *)json;
+- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager campaignData:(NSDictionary *)data;
 
 @end
 
@@ -24,7 +24,7 @@
 
 @property (nonatomic, assign) id<ApplifierImpactCampaignManagerDelegate> delegate;
 @property (nonatomic, strong) NSString *queryString;
-@property (nonatomic, strong) id campaignData;
+//@property (nonatomic, strong) id campaignData;
 
 - (void)updateCampaigns;
 - (NSURL *)videoURLForCampaign:(ApplifierImpactCampaign *)campaign;

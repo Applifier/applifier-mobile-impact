@@ -324,7 +324,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	[self _notifyDelegateOfCampaignAvailability];
 }
 
-- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedJSON:(NSString *)json
+- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager campaignData:(NSDictionary *)data
 {
 	AIAssert([NSThread isMainThread]);
 
@@ -338,7 +338,8 @@ NSString * const kApplifierImpactVersion = @"1.0";
     [[ApplifierImpactViewManager sharedInstance] loadWebView];
   }
   
-  [[ApplifierImpactViewManager sharedInstance] setCampaignJSON:json];
+  // FIX (SHOULD NOT EVEN SET THE CAMPAIGN DATA)
+  [[ApplifierImpactViewManager sharedInstance] setCampaignJSON:data];
 }
 
 #pragma mark - ApplifierImpactViewManagerDelegate
