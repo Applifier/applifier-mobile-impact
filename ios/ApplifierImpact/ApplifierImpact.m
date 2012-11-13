@@ -43,13 +43,10 @@ static ApplifierImpact *sharedApplifierInstance = nil;
 		if (sharedApplifierInstance == nil)
 		{
 			// check if we're on at least iOS 4.0
-      AILOG_DEBUG(@"%i", [ApplifierImpactDevice getIOSMajorVersion]);
-      if ([ApplifierImpactDevice getIOSMajorVersion] > 3) {
-        AILOG_DEBUG(@"PLOP");
+      if ([self respondsToSelector:@selector(autoContentAccessingProxy)]) {
         sharedApplifierInstance = [[ApplifierImpactiOS4 alloc] initApplifierInstance];
       }
       else {
-        AILOG_DEBUG(@"PLOP2");
 				sharedApplifierInstance = [[self alloc] initApplifierInstance];
       }
 		}

@@ -356,7 +356,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 {
 	AILOG_DEBUG(@"");
 	
-	NSURL *videoURL = [[ApplifierImpactCampaignManager sharedInstance] videoURLForCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
+	NSURL *videoURL = [[ApplifierImpactCampaignManager sharedInstance] getVideoURLForCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
 	if (videoURL == nil)
 	{
 		AILOG_DEBUG(@"Video not found!");

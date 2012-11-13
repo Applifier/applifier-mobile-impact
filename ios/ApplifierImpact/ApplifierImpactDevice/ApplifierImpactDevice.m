@@ -111,11 +111,11 @@
 		return @"iphone3g";
 	else if ([machine isEqualToString:@"iPhone2,1"])
 		return @"iphone3gs";
-	else if ([[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone3"])
+	else if ([machine length] > 6 && [[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone3"])
 		return @"iphone4";
-	else if ([[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone4"])
+	else if ([machine length] > 6 && [[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone4"])
 		return @"iphone4s";
-	else if ([[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone5"])
+	else if ([machine length] > 6 && [[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone5"])
 		return @"iphone5";
 	else if ([machine isEqualToString:@"iPod1,1"])
 		return @"ipodtouch1gen";
@@ -125,11 +125,11 @@
 		return @"ipodtouch3gen";
 	else if ([machine isEqualToString:@"iPod4,1"])
 		return @"ipodtouch4gen";
-	else if ([[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad1"])
+	else if ([machine length] > 4 && [[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad1"])
 		return @"ipad1";
-	else if ([[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad2"])
+	else if ([machine length] > 4 && [[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad2"])
 		return @"ipad2";
-	else if ([[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad3"])
+	else if ([machine length] > 4 && [[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad3"])
 		return @"ipad3";
   
 	return @"iosUnknown";

@@ -271,7 +271,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 	[self.urlConnection start];
 }
 
-- (NSURL *)videoURLForCampaign:(ApplifierImpactCampaign *)campaign
+- (NSURL *)getVideoURLForCampaign:(ApplifierImpactCampaign *)campaign
 {
 	@synchronized (self)
 	{
