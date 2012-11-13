@@ -8,6 +8,7 @@
 
 #import "ApplifierImpact.h"
 #import "ApplifierImpactiOS4.h"
+#import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 
 @implementation ApplifierImpact
 
@@ -41,10 +42,16 @@ static ApplifierImpact *sharedApplifierInstance = nil;
 	{
 		if (sharedApplifierInstance == nil)
 		{
-			if ([self respondsToSelector:@selector(autoContentAccessingProxy)]) // check if we're on at least iOS 4.0
-				sharedApplifierInstance = [[ApplifierImpactiOS4 alloc] initApplifierInstance];
-			else
+			// check if we're on at least iOS 4.0
+      AILOG_DEBUG(@"%i", [ApplifierImpactDevice getIOSMajorVersion]);
+      if ([ApplifierImpactDevice getIOSMajorVersion] > 3) {
+        AILOG_DEBUG(@"PLOP");
+        sharedApplifierInstance = [[ApplifierImpactiOS4 alloc] initApplifierInstance];
+      }
+      else {
+        AILOG_DEBUG(@"PLOP2");
 				sharedApplifierInstance = [[self alloc] initApplifierInstance];
+      }
 		}
 	}
 	
@@ -55,9 +62,8 @@ static ApplifierImpact *sharedApplifierInstance = nil;
 	AILOG_DEBUG(@"Disabled on older versions of iOS.");
 }
 
-- (void)startWithApplifierID:(NSString *)applifierID
-{
-	AILOG_DEBUG(@"Disabled on older versions of iOS.");
+- (void)startWithGameId:(NSString *)gameId {	
+  AILOG_DEBUG(@"Disabled on older versions of iOS.");
 }
 
 - (UIView *)impactAdView

@@ -50,7 +50,7 @@
 			[invocation getReturnValue:&enabled];
 		}
 		
-		AILOG_DEBUG(@"Ad tracking %@.", enabled ? @"enabled" : @"disabled");
+		//AILOG_DEBUG(@"Ad tracking %@.", enabled ? @"enabled" : @"disabled");
     
 		if ([advertisingManager respondsToSelector:@selector(advertisingIdentifier)])
 		{
@@ -292,6 +292,22 @@
 
 + (NSString *)softwareVersion {
   return [[UIDevice currentDevice] systemVersion];
+}
+
++ (NSString *)md5DeviceId {
+  return [ApplifierImpactDevice md5AdvertisingIdentifierString] != nil ? [ApplifierImpactDevice md5AdvertisingIdentifierString] : [ApplifierImpactDevice md5OpenUDIDString];
+}
+
++ (int)getIOSMajorVersion {
+  
+  return [[[self softwareVersion] substringToIndex:1] intValue];
+}
+
++ (NSNumber *)getIOSExactVersion {
+  NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+  [f setNumberStyle:NSNumberFormatterDecimalStyle];
+  NSNumber *myNumber = [f numberFromString:[self softwareVersion]];
+  return myNumber;
 }
 
 @end

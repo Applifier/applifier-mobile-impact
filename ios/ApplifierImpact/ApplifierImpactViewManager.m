@@ -16,6 +16,8 @@
 #import "ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 #import "ApplifierImpactUtils/ApplifierImpactUtils.h"
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
+#import "ApplifierImpactProperties/ApplifierImpactProperties.h"
+#import "ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 
 @interface ApplifierImpactViewManager () <UIWebViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, strong) ApplifierImpactWebAppController *webApp;
@@ -42,25 +44,27 @@
 	[self.adContainerView removeFromSuperview];
 }
 
-- (void)_selectCampaignWithID:(NSString *)campaignID
+- (void)_selectCampaignWithID:(NSString *)campaignId
 {
-	self.selectedCampaign = nil;
+	[[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:nil];
+  //self.selectedCampaign = nil;
 	
-	if (campaignID == nil)
+	if (campaignId == nil)
 	{
 		AILOG_DEBUG(@"Input is nil.");
 		return;
 	}
 
-	ApplifierImpactCampaign *campaign = [self.delegate viewManager:self campaignWithID:campaignID];
+	ApplifierImpactCampaign *campaign = [[ApplifierImpactCampaignManager sharedInstance] getCampaignWithId:campaignId];
 	
 	if (campaign != nil)
 	{
-		self.selectedCampaign = campaign;
+		[[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:campaign];
+    //self.selectedCampaign = campaign;
 		[self _playVideo];
 	}
 	else
-		AILOG_DEBUG(@"No campaign with id '%@' found.", campaignID);
+		AILOG_DEBUG(@"No campaign with id '%@' found.", campaignId);
 }
 
 - (BOOL)_canOpenStoreProductViewController
@@ -123,7 +127,8 @@
 	if ( ! [self _canOpenStoreProductViewController])
 	{
 		AILOG_DEBUG(@"Cannot open store product view controller, falling back to click URL.");
-		[self _openURL:[self.selectedCampaign.clickURL absoluteString]];
+		[self _openURL:[[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].clickURL absoluteString]];
+    //[self _openURL:[self.selectedCampaign.clickURL absoluteString]];
 		return;
 	}
 
@@ -156,7 +161,7 @@
 
 - (void)_webViewVideoComplete
 {
-	NSString *data = [NSString stringWithFormat:@"{\"campaignId\":\"%@\"}", self.selectedCampaign.id];
+	NSString *data = [NSString stringWithFormat:@"{\"campaignId\":\"%@\"}", [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id];
   
   // FIX
  // [_webApp setWebViewCurrentView:@"completed" data:[ApplifierImpactUtils escapedStringFromString:data]];
@@ -179,6 +184,8 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 
 - (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data
 {
+  AILOG_DEBUG(@"Gotevent: %@  widthData: %@", type, data);
+  
   if ([type isEqualToString:_webApp.WEBVIEW_API_PLAYVIDEO] || [type isEqualToString:_webApp.WEBVIEW_API_NAVIGATETO] || [type isEqualToString:_webApp.WEBVIEW_API_APPSTORE])
 	{
 		if ([type isEqualToString:_webApp.WEBVIEW_API_PLAYVIDEO])
@@ -266,6 +273,9 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 	}
 }
 
+// FIX
+
+/*
 - (void)setCampaignJSON:(NSDictionary *)campaignJSON
 {
 	AIAssert([NSThread isMainThread]);
@@ -274,6 +284,16 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
   
   NSDictionary *values = @{@"advertisingTrackingId":self.md5AdvertisingIdentifier, @"iOSVersion":[ApplifierImpactDevice softwareVersion], @"deviceType":self.machineName, @"deviceId":self.md5DeviceId, @"macAddress":self.md5MACAddress, @"openUdid":self.md5OpenUDID, @"campaignData":_campaignJSON};
  
+  [_webApp setup:_window.bounds webAppParams:values];
+}*/
+
+- (void)campaignDataReceived {
+	AIAssert([NSThread isMainThread]);
+	
+	//_campaignJSON = campaignJSON;
+  
+  NSDictionary *values = @{@"advertisingTrackingId":[ApplifierImpactDevice md5AdvertisingIdentifierString], @"iOSVersion":[ApplifierImpactDevice softwareVersion], @"deviceType":[ApplifierImpactDevice machineName], @"deviceId":[ApplifierImpactDevice md5DeviceId], @"macAddress":[ApplifierImpactDevice md5MACAddressString], @"openUdid":[ApplifierImpactDevice md5OpenUDIDString], @"campaignData":[[ApplifierImpactCampaignManager sharedInstance] campaignData]};
+  
   [_webApp setup:_window.bounds webAppParams:values];
 }
 
@@ -304,7 +324,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 #pragma mark - ApplifierImpactVideoDelegate
 
 - (void)videoAnalyticsPositionReached:(VideoAnalyticsPosition)analyticsPosition {
-  [self.delegate viewManager:self loggedVideoPosition:analyticsPosition campaign:self.selectedCampaign];
+  [self.delegate viewManager:self loggedVideoPosition:analyticsPosition campaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
 }
 
 - (void)videoPositionChanged:(CMTime)time {
@@ -327,7 +347,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 	
 	[self _webViewVideoComplete];
 	
-	self.selectedCampaign.viewed = YES;
+	[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed = YES;
 }
 
 #pragma mark - Video
@@ -336,7 +356,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 {
 	AILOG_DEBUG(@"");
 	
-	NSURL *videoURL = [self.delegate viewManager:self videoURLForCampaign:self.selectedCampaign];
+	NSURL *videoURL = [[ApplifierImpactCampaignManager sharedInstance] videoURLForCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
 	if (videoURL == nil)
 	{
 		AILOG_DEBUG(@"Video not found!");

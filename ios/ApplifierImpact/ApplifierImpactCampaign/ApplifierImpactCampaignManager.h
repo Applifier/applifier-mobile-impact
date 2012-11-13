@@ -16,18 +16,25 @@
 
 @required
 - (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID;
-- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager campaignData:(NSDictionary *)data;
+//- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager campaignData:(NSDictionary *)data;
+- (void)campaignManagerCampaignDataReceived;
 
 @end
 
 @interface ApplifierImpactCampaignManager : NSObject
 
 @property (nonatomic, assign) id<ApplifierImpactCampaignManagerDelegate> delegate;
-@property (nonatomic, strong) NSString *queryString;
+//@property (nonatomic, strong) NSString *queryString;
+@property (nonatomic, strong) NSArray *campaigns;
+@property (nonatomic, strong) NSDictionary *campaignData;
+@property (nonatomic, strong) ApplifierImpactCampaign *selectedCampaign;
 //@property (nonatomic, strong) id campaignData;
 
 - (void)updateCampaigns;
 - (NSURL *)videoURLForCampaign:(ApplifierImpactCampaign *)campaign;
 - (void)cancelAllDownloads;
+- (ApplifierImpactCampaign *)getCampaignWithId:(NSString *)campaignId;
+
++ (id)sharedInstance;
 
 @end

@@ -54,7 +54,7 @@
 
 + (id)sharedInstance;
 - (void)setTestMode:(BOOL)testModeEnabled;
-- (void)startWithApplifierID:(NSString *)applifierID;
+- (void)startWithGameId:(NSString *)gameId;
 - (UIView *)impactAdView;
 - (BOOL)canShowImpact;
 - (void)stopAll;

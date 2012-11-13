@@ -17,8 +17,8 @@
 @protocol ApplifierImpactViewManagerDelegate <NSObject>
 
 @required
-- (ApplifierImpactCampaign *)viewManager:(ApplifierImpactViewManager *)viewManager campaignWithID:(NSString *)campaignID;
-- (NSURL *)viewManager:(ApplifierImpactViewManager *)viewManager videoURLForCampaign:(ApplifierImpactCampaign *)campaign;
+//- (ApplifierImpactCampaign *)viewManager:(ApplifierImpactViewManager *)viewManager campaignWithID:(NSString *)campaignID;
+//- (NSURL *)viewManager:(ApplifierImpactViewManager *)viewManager videoURLForCampaign:(ApplifierImpactCampaign *)campaign;
 - (void)viewManagerStartedPlayingVideo:(ApplifierImpactViewManager *)viewManager;
 - (void)viewManagerVideoEnded:(ApplifierImpactViewManager *)viewManager;
 - (void)viewManager:(ApplifierImpactViewManager *)viewManager loggedVideoPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign;
@@ -31,6 +31,8 @@
 @interface ApplifierImpactViewManager : NSObject <ApplifierImpactVideoDelegate>
 
 @property (nonatomic, assign) id<ApplifierImpactViewManagerDelegate> delegate;
+
+/*
 @property (nonatomic, strong) NSString *machineName;
 @property (nonatomic, strong) NSString *md5AdvertisingIdentifier;
 @property (nonatomic, strong) NSString *md5MACAddress;
@@ -38,11 +40,14 @@
 @property (nonatomic, strong) NSString *md5DeviceId;
 @property (nonatomic, strong) NSDictionary *campaignJSON;
 @property (nonatomic, strong) ApplifierImpactCampaign *selectedCampaign;
+*/
+ 
 @property (nonatomic, assign, readonly) BOOL adViewVisible;
 
 + (id)sharedInstance;
 - (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data;
 - (UIView *)adView;
 - (void)loadWebView;
+- (void)campaignDataReceived;
 
 @end

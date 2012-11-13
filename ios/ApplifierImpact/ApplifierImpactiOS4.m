@@ -16,13 +16,16 @@
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 
-NSString * const kApplifierImpactVersion = @"1.0";
-
 @interface ApplifierImpactiOS4 () <ApplifierImpactCampaignManagerDelegate, UIWebViewDelegate, UIScrollViewDelegate, ApplifierImpactViewManagerDelegate>
-@property (nonatomic, strong) ApplifierImpactCampaignManager *campaignManager;
+//@property (nonatomic, strong) ApplifierImpactCampaignManager *campaignManager;
 @property (nonatomic, strong) ApplifierImpactAnalyticsUploader *analyticsUploader;
+
+/*
 @property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
 @property (nonatomic, strong) NSString *applifierID;
+*/
+
+/*
 @property (nonatomic, strong) NSString *campaignJSON;
 @property (nonatomic, strong) NSString *machineName;
 @property (nonatomic, strong) NSString *md5AdvertisingIdentifier;
@@ -32,8 +35,13 @@ NSString * const kApplifierImpactVersion = @"1.0";
 @property (nonatomic, strong) NSString *campaignQueryString;
 @property (nonatomic, strong) NSString *gamerID;
 @property (nonatomic, strong) NSString *connectionType;
+ */
 @property (nonatomic, strong) NSThread *backgroundThread;
+
+/*
 @property (nonatomic, strong) NSArray *campaigns;
+*/
+
 @property (nonatomic, assign) BOOL webViewInitialized;
 @property (nonatomic, assign) BOOL testModeEnabled;
 @property (nonatomic, assign) dispatch_queue_t queue;
@@ -43,6 +51,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 #pragma mark - Private
 
+/*
 - (NSString *)_queryString
 {
 	NSString *advertisingIdentifier = self.md5AdvertisingIdentifier != nil ? self.md5AdvertisingIdentifier : @"";
@@ -65,7 +74,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
   }
 
   return queryParams;
-}
+}*/
 
 - (void)_backgroundRunLoop:(id)dummy
 {
@@ -87,18 +96,21 @@ NSString * const kApplifierImpactVersion = @"1.0";
 - (void)_refreshCampaignManager
 {
 	AIAssert( ! [NSThread isMainThread]);
-	AIAssert(self.campaignManager != nil);
+	//AIAssert(self.campaignManager != nil);
 	
-	self.campaignManager.queryString = self.campaignQueryString;
-	[self.campaignManager updateCampaigns];
+	[[ApplifierImpactProperties sharedInstance] refreshCampaignQueryString];
+  //self.campaignManager.queryString = self.campaignQueryString;
+	[[ApplifierImpactCampaignManager sharedInstance] updateCampaigns];
+  //[self.campaignManager updateCampaigns];
 }
 
 - (void)_startCampaignManager
 {
 	AIAssert( ! [NSThread isMainThread]);
 	
-	self.campaignManager = [[ApplifierImpactCampaignManager alloc] init];
-	self.campaignManager.delegate = self;
+	//self.campaignManager = [[ApplifierImpactCampaignManager alloc] init];
+  [[ApplifierImpactCampaignManager sharedInstance] setDelegate:self];
+	//self.campaignManager.delegate = self;
 	[self _refreshCampaignManager];
 }
 
@@ -138,6 +150,9 @@ NSString * const kApplifierImpactVersion = @"1.0";
 			trackingString = @"view";
 		}
 		
+    // FIX
+    
+    /*
 		NSString *query = [NSString stringWithFormat:@"applicationId=%@&type=%@&trackingId=%@&providerId=%@", self.applifierID, positionString, self.gamerID, campaign.id];
 		
 		[self.analyticsUploader performSelector:@selector(sendViewReportWithQueryString:) onThread:self.backgroundThread withObject:query waitUntilDone:NO];
@@ -146,16 +161,20 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		{
 			NSString *trackingQuery = [NSString stringWithFormat:@"%@/%@/%@?gameId=%@", self.gamerID, trackingString, campaign.id, self.applifierID];
 			[self.analyticsUploader performSelector:@selector(sendTrackingCallWithQueryString:) onThread:self.backgroundThread withObject:trackingQuery waitUntilDone:NO];
-		}
+		}*/
 	});
 }
 
 - (BOOL)_adViewCanBeShown
 {
-	if (self.campaigns != nil && [self.campaigns count] > 0 && self.rewardItem != nil && self.webViewInitialized)
+	// FIX
+  
+  if ([[ApplifierImpactCampaignManager sharedInstance] campaigns] != nil && [[[ApplifierImpactCampaignManager sharedInstance] campaigns] count] > 0 && [[ApplifierImpactCampaignManager sharedInstance] rewardItem] != nil && self.webViewInitialized)
 		return YES;
 	else
 		return NO;
+  
+  return NO;
 }
 
 - (void)_notifyDelegateOfCampaignAvailability
@@ -169,24 +188,27 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (void)_trackInstall
 {
-	if (self.applifierID == nil)
+	if ([[ApplifierImpactProperties sharedInstance] impactGameId] == nil)
 	{
 		AILOG_ERROR(@"Applifier Impact has not been started properly. Launch with -startWithApplifierID: first.");
 		return;
 	}
 	
 	dispatch_async(self.queue, ^{
-		NSString *queryString = [NSString stringWithFormat:@"%@/install", self.applifierID];
-		NSString *bodyString = [NSString stringWithFormat:@"deviceId=%@", self.md5DeviceId];
-		NSDictionary *queryDictionary = @{ kApplifierImpactQueryDictionaryQueryKey : queryString, kApplifierImpactQueryDictionaryBodyKey : bodyString };
 		
-		[self.analyticsUploader performSelector:@selector(sendInstallTrackingCallWithQueryDictionary:) onThread:self.backgroundThread withObject:queryDictionary waitUntilDone:NO];
+    // FIX
+    
+    NSString *queryString = [NSString stringWithFormat:@"%@/install", [[ApplifierImpactProperties sharedInstance] impactGameId]];
+		// NSString *bodyString = [NSString stringWithFormat:@"deviceId=%@", self.md5DeviceId];
+		//NSDictionary *queryDictionary = @{ kApplifierImpactQueryDictionaryQueryKey : queryString, kApplifierImpactQueryDictionaryBodyKey : bodyString };
+		/*
+		[self.analyticsUploader performSelector:@selector(sendInstallTrackingCallWithQueryDictionary:) onThread:self.backgroundThread withObject:queryDictionary waitUntilDone:NO];*/
 	});
 }
 
 - (void)_refresh
 {
-	if (self.applifierID == nil)
+	if ([[ApplifierImpactProperties sharedInstance] impactGameId] == nil)
 	{
 		AILOG_ERROR(@"Applifier Impact has not been started properly. Launch with -startWithApplifierID: first.");
 		return;
@@ -195,9 +217,10 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	AILOG_DEBUG(@"");
 	
 	dispatch_async(self.queue, ^{
-		self.connectionType = [ApplifierImpactDevice currentConnectionType];
-		self.campaignQueryString = [self _queryString];
-		
+		//self.connectionType = [ApplifierImpactDevice currentConnectionType];
+		//self.campaignQueryString = [self _queryString];
+		[[ApplifierImpactProperties sharedInstance] refreshCampaignQueryString];
+    
 		[self performSelector:@selector(_refreshCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 		[self.analyticsUploader performSelector:@selector(retryFailedUploads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 	});
@@ -209,31 +232,35 @@ NSString * const kApplifierImpactVersion = @"1.0";
   _testModeEnabled = testModeEnabled;
 }
 
-- (void)startWithApplifierID:(NSString *)applifierID
+- (void)startWithGameId:(NSString *)gameId
 {
 	AIAssert([NSThread isMainThread]);
 	
-	if (applifierID == nil || [applifierID length] == 0)
+	if (gameId == nil || [gameId length] == 0)
 	{
 		AILOG_ERROR(@"Applifier ID empty or not set.");
 		return;
 	}
 	
-	if (self.applifierID != nil)
+	if ([[ApplifierImpactProperties sharedInstance] impactGameId] != nil)
 		return;
 	
-	self.applifierID = applifierID;
+	[[ApplifierImpactProperties sharedInstance] setImpactGameId:gameId];
 	self.queue = dispatch_queue_create("com.applifier.impact", NULL);
 	
 	dispatch_async(self.queue, ^{
-		self.machineName = [ApplifierImpactDevice analyticsMachineName];
+		
+    // FIX
+    /*
+    self.machineName = [ApplifierImpactDevice analyticsMachineName];
 		self.md5AdvertisingIdentifier = [ApplifierImpactDevice md5AdvertisingIdentifierString];
 		self.md5MACAddress = [ApplifierImpactDevice md5MACAddressString];
 		self.md5OpenUDID = [ApplifierImpactDevice md5OpenUDIDString];
 		self.connectionType = [ApplifierImpactDevice currentConnectionType];
     self.md5DeviceId = self.md5AdvertisingIdentifier != nil ? self.md5AdvertisingIdentifier : self.md5OpenUDID;
 		self.campaignQueryString = [self _queryString];
-		
+		*/
+     
 		self.backgroundThread = [[NSThread alloc] initWithTarget:self selector:@selector(_backgroundRunLoop:) object:nil];
 		[self.backgroundThread start];
 
@@ -242,11 +269,15 @@ NSString * const kApplifierImpactVersion = @"1.0";
 		
     dispatch_sync(dispatch_get_main_queue(), ^{
       [[ApplifierImpactViewManager sharedInstance] setDelegate:self];
+      
+      // FIX
+      /*
       [[ApplifierImpactViewManager sharedInstance] setMachineName:self.machineName];
       [[ApplifierImpactViewManager sharedInstance] setMd5AdvertisingIdentifier:self.md5AdvertisingIdentifier];
       [[ApplifierImpactViewManager sharedInstance] setMd5DeviceId:self.md5DeviceId];
       [[ApplifierImpactViewManager sharedInstance] setMd5MACAddress:self.md5MACAddress];
       [[ApplifierImpactViewManager sharedInstance] setMd5OpenUDID:self.md5OpenUDID];
+      */
 		});
 	});
 }
@@ -281,7 +312,8 @@ NSString * const kApplifierImpactVersion = @"1.0";
 {
 	AIAssert([NSThread isMainThread]);
 	
-	[self.campaignManager performSelector:@selector(cancelAllDownloads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+	//[self.campaignManager performSelector:@selector(cancelAllDownloads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+  [[ApplifierImpactCampaignManager sharedInstance] performSelector:@selector(cancelAllDownloads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 }
 
 - (void)trackInstall
@@ -303,7 +335,8 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 - (void)dealloc
 {
-	self.campaignManager.delegate = nil;
+	[[ApplifierImpactCampaignManager sharedInstance] setDelegate:nil];
+  //self.campaignManager.delegate = nil;
 	[[ApplifierImpactViewManager sharedInstance] setDelegate:nil];
 	
 	dispatch_release(self.queue);
@@ -317,13 +350,15 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	
 	AILOG_DEBUG(@"");
 	
-	self.campaigns = campaigns;
-	self.rewardItem = rewardItem;
-	self.gamerID = gamerID;
+	//self.campaigns = campaigns;
+	[[ApplifierImpactProperties sharedInstance] setRewardItem:rewardItem];
+	//self.gamerID = gamerID;
 	
 	[self _notifyDelegateOfCampaignAvailability];
 }
 
+
+/*
 - (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager campaignData:(NSDictionary *)data
 {
 	AIAssert([NSThread isMainThread]);
@@ -340,17 +375,25 @@ NSString * const kApplifierImpactVersion = @"1.0";
   
   // FIX (SHOULD NOT EVEN SET THE CAMPAIGN DATA)
   [[ApplifierImpactViewManager sharedInstance] setCampaignJSON:data];
+}*/
+
+- (void)campaignManagerCampaignDataReceived {
+  // FIX (remember the "update campaigns")
+  AILOG_DEBUG(@"CAMPAIGN DATA RECEIVED");
+  [[ApplifierImpactViewManager sharedInstance] campaignDataReceived];
 }
 
+ 
 #pragma mark - ApplifierImpactViewManagerDelegate
 
+/*
 -(ApplifierImpactCampaign *)viewManager:(ApplifierImpactViewManager *)viewManager campaignWithID:(NSString *)campaignID
 {
 	AIAssertV([NSThread isMainThread], nil);
 	
 	ApplifierImpactCampaign *foundCampaign = nil;
 	
-	for (ApplifierImpactCampaign *campaign in self.campaigns)
+	for (ApplifierImpactCampaign *campaign in [[ApplifierImpactCampaignManager sharedInstance] campaigns])
 	{
 		if ([campaign.id isEqualToString:campaignID])
 		{
@@ -362,15 +405,16 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	AILOG_DEBUG(@"");
 	
 	return foundCampaign;
-}
+}*/
 
+/*
 -(NSURL *)viewManager:(ApplifierImpactViewManager *)viewManager videoURLForCampaign:(ApplifierImpactCampaign *)campaign
 {
 	AIAssertV([NSThread isMainThread], nil);
 	AILOG_DEBUG(@"");
 	
-	return [self.campaignManager videoURLForCampaign:campaign];
-}
+	return [[ApplifierImpactCampaignManager sharedInstance] videoURLForCampaign:campaign];
+}*/
 
 - (void)viewManagerStartedPlayingVideo:(ApplifierImpactViewManager *)viewManager
 {
@@ -386,7 +430,7 @@ NSString * const kApplifierImpactVersion = @"1.0";
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
-	[self.delegate applifierImpact:self completedVideoWithRewardItemKey:self.rewardItem.key];
+	[self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactProperties sharedInstance] rewardItem].key];
 }
 
 - (void)viewManager:(ApplifierImpactViewManager *)viewManager loggedVideoPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign

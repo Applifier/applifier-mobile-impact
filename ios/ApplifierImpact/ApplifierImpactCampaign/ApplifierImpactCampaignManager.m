@@ -38,14 +38,26 @@ NSString * const kGamerIDKey = @"gamerId";
 @property (nonatomic, strong) NSURLConnection *urlConnection;
 @property (nonatomic, strong) NSMutableData *campaignDownloadData;
 @property (nonatomic, strong) ApplifierImpactCache *cache;
-@property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
 @property (nonatomic, strong) NSString *gamerID;
 //@property (nonatomic, strong) NSString *campaignJSON;
-@property (nonatomic, strong) NSDictionary *campaignData;
 @end
 
 @implementation ApplifierImpactCampaignManager
+
+static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
+
++ (id)sharedInstance
+{
+	@synchronized(self)
+	{
+		if (sharedImpactCampaignManager == nil)
+      sharedImpactCampaignManager = [[ApplifierImpactCampaignManager alloc] init];
+	}
+	
+	return sharedImpactCampaignManager;
+}
+
 
 #pragma mark - Private
 
@@ -76,6 +88,11 @@ NSString * const kGamerIDKey = @"gamerId";
   
   return nil;
 }*/
+
+- (void)_campaignDataReceived {
+//  [[ApplifierImpactViewManager sharedInstance] campaign]
+  [self _processCampaignDownloadData];
+}
 
 - (NSArray *)_deserializeCampaigns:(NSArray *)campaignArray
 {
@@ -220,7 +237,7 @@ NSString * const kGamerIDKey = @"gamerId";
 	[self.cache cacheCampaigns:self.campaigns];
   
   dispatch_async(dispatch_get_main_queue(), ^{
-		[self.delegate campaignManager:self campaignData:_campaignData];
+		[self.delegate campaignManagerCampaignDataReceived];
 	});
 }
 
@@ -244,9 +261,10 @@ NSString * const kGamerIDKey = @"gamerId";
 	AIAssert( ! [NSThread isMainThread]);
 	
 	NSString *urlString = [[ApplifierImpactProperties sharedInstance] campaignDataUrl];
-	if (self.queryString != nil)
-		urlString = [urlString stringByAppendingString:self.queryString];
 	
+  if ([[ApplifierImpactProperties sharedInstance] campaignQueryString] != nil)
+		urlString = [urlString stringByAppendingString:[[ApplifierImpactProperties sharedInstance] campaignQueryString]];
+  
   AILOG_DEBUG(@"UrlString %@", urlString);
 	NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlString]];
 	self.urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
@@ -270,6 +288,27 @@ NSString * const kGamerIDKey = @"gamerId";
 		return videoURL;
 	}
 }
+
+-(ApplifierImpactCampaign *)getCampaignWithId:(NSString *)campaignId
+{
+	AIAssertV([NSThread isMainThread], nil);
+	
+	ApplifierImpactCampaign *foundCampaign = nil;
+	
+	for (ApplifierImpactCampaign *campaign in self.campaigns)
+	{
+		if ([campaign.id isEqualToString:campaignId])
+		{
+			foundCampaign = campaign;
+			break;
+		}
+	}
+	
+	AILOG_DEBUG(@"");
+	
+	return foundCampaign;
+}
+
 
 - (void)cancelAllDownloads
 {
@@ -300,7 +339,7 @@ NSString * const kGamerIDKey = @"gamerId";
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-  [self _processCampaignDownloadData];
+  [self _campaignDataReceived];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error

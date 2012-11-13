@@ -37,7 +37,6 @@
 }
 
 - (void)setup:(CGRect)frame webAppParams:(NSDictionary *)webAppParams {
- 
   _webAppInitalizationParams = webAppParams;
   self.webView = [[UIWebView alloc] initWithFrame:frame];
   self.webView.delegate = self;
@@ -68,14 +67,14 @@
 
 - (void)setWebViewCurrentView:(NSString *)view data:(NSString *)data
 {
-  [self.webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"%@%@(\"%@\", \"%@\");", self.WEBVIEW_PREFIX, self.WEBVIEW_JS_CHANGEVIEW, view, data]];
+  [self.webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"%@%@(\"%@\", %@);", self.WEBVIEW_PREFIX, self.WEBVIEW_JS_CHANGEVIEW, view, data]];
 }
 
 #pragma mark - WebView
 
 - (void)initWebAppWithValues:(NSDictionary *)values {
   
-  AILOG_DEBUG(@"%@", [values JSONRepresentation]);
+  AILOG_DEBUG(@"FOOOOOOO: %@", [values JSONRepresentation]);
   
   /*
   NSMutableDictionary *deviceInformation = [[NSMutableDictionary init] alloc];
@@ -106,6 +105,7 @@
 	*/
   
 	NSString *js = [NSString stringWithFormat:@"%@%@(%@);", self.WEBVIEW_PREFIX, self.WEBVIEW_JS_INIT, [values JSONRepresentation]];
+  AILOG_DEBUG(@"%@", js);
 	[self.webView stringByEvaluatingJavaScriptFromString:js];
 }
 

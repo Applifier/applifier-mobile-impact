@@ -23,7 +23,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-	[[ApplifierImpact sharedInstance] startWithApplifierID:@"16"];
+	[[ApplifierImpact sharedInstance] startWithGameId:@"16"];
 	
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
