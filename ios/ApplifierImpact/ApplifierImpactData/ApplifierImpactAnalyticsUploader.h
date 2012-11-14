@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "../ApplifierImpactVideo/ApplifierImpactVideo.h"
 
 extern NSString * const kApplifierImpactQueryDictionaryQueryKey;
 extern NSString * const kApplifierImpactQueryDictionaryBodyKey;
@@ -19,5 +20,7 @@ extern NSString * const kApplifierImpactQueryDictionaryBodyKey;
 - (void)sendTrackingCallWithQueryString:(NSString *)queryString;
 - (void)sendInstallTrackingCallWithQueryDictionary:(NSDictionary *)queryDictionary;
 - (void)retryFailedUploads;
+- (void)logVideoAnalyticsWithPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign;
 
++ (id)sharedInstance;
 @end

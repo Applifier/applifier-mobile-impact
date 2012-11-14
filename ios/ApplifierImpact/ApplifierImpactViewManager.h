@@ -22,7 +22,7 @@
 //- (NSURL *)viewManager:(ApplifierImpactViewManager *)viewManager videoURLForCampaign:(ApplifierImpactCampaign *)campaign;
 - (void)viewManagerStartedPlayingVideo;
 - (void)viewManagerVideoEnded;
-- (void)viewManager:(ApplifierImpactViewManager *)viewManager loggedVideoPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign;
+//- (void)viewManager:(ApplifierImpactViewManager *)viewManager loggedVideoPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign;
 - (UIViewController *)viewControllerForPresentingViewControllersForViewManager:(ApplifierImpactViewManager *)viewManager;
 - (void)viewManagerWillCloseAdView;
 - (void)viewManagerWebViewInitialized;
@@ -32,6 +32,7 @@
 
 @property (nonatomic, assign) id<ApplifierImpactViewManagerDelegate> delegate;
 @property (nonatomic, assign, readonly) BOOL adViewVisible;
+@property (nonatomic) BOOL webViewInitialized;
 
 + (id)sharedInstance;
 - (UIView *)adView;
@@ -39,6 +40,7 @@
 - (void)initWebApp;
 - (void)openAppStoreWithGameId:(NSString *)gameId;
 - (void)showPlayerAndPlaySelectedVideo;
+- (void)hidePlayer;
 - (void)closeAdView;
 
 @end

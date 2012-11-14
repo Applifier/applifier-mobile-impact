@@ -21,12 +21,11 @@ typedef enum
 @protocol ApplifierImpactVideoDelegate <NSObject>
 
 @required
-- (void)videoAnalyticsPositionReached:(VideoAnalyticsPosition)analyticsPosition;
+//- (void)videoAnalyticsPositionReached:(VideoAnalyticsPosition)analyticsPosition;
 - (void)videoPlaybackStarted;
 - (void)videoPlaybackEnded;
 - (void)videoPositionChanged:(CMTime)time;
 @end
-
 
 @interface ApplifierImpactVideo : AVPlayer
 @property (nonatomic, assign) id<ApplifierImpactVideoDelegate> delegate;

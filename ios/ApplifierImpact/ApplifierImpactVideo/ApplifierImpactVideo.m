@@ -10,6 +10,8 @@
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
+#import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
+#import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 
 id timeObserver;
 id analyticsTimeObserver;
@@ -76,7 +78,8 @@ ApplifierImpactCampaign *selectedCampaign;
 - (void)_logVideoAnalytics
 {
 	videoPosition++;
-	[self.delegate videoAnalyticsPositionReached:videoPosition];
+	//[self.delegate videoAnalyticsPositionReached:videoPosition];
+  [[ApplifierImpactAnalyticsUploader sharedInstance] logVideoAnalyticsWithPosition:videoPosition campaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
 }
 
 - (Float64)_currentVideoDuration
@@ -92,6 +95,5 @@ ApplifierImpactCampaign *selectedCampaign;
 	CMTime time = CMTimeMakeWithSeconds(duration, NSEC_PER_SEC);
 	return [NSValue valueWithCMTime:time];
 }
-
 
 @end

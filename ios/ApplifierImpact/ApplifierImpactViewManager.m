@@ -24,7 +24,6 @@
 @property (nonatomic, strong) UILabel *progressLabel;
 @property (nonatomic, strong) ApplifierImpactVideo *player;
 @property (nonatomic, assign) UIViewController *storePresentingViewController;
-
 @end
 
 @implementation ApplifierImpactViewManager
@@ -246,9 +245,10 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 
 #pragma mark - ApplifierImpactVideoDelegate
 
+/*
 - (void)videoAnalyticsPositionReached:(VideoAnalyticsPosition)analyticsPosition {
   [self.delegate viewManager:self loggedVideoPosition:analyticsPosition campaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
-}
+}*/
 
 - (void)videoPositionChanged:(CMTime)time {
   [self _updateTimeRemainingLabelWithTime:time];
@@ -261,12 +261,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 
 - (void)videoPlaybackEnded {
 	[self.delegate viewManagerVideoEnded];
-	
-	self.progressLabel.hidden = YES;
-	
-	[self.player.playerLayer removeFromSuperlayer];
-	self.player.playerLayer = nil;
-	self.player = nil;
+	[self hidePlayer];
 	
   NSDictionary *data = @{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id};
   [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:data];
@@ -276,8 +271,14 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 
 #pragma mark - Video
 
-- (void)showPlayerAndPlaySelectedVideo;
-{
+- (void)hidePlayer {
+ 	self.progressLabel.hidden = YES;
+	[self.player.playerLayer removeFromSuperlayer];
+	self.player.playerLayer = nil;
+	self.player = nil;
+}
+
+- (void)showPlayerAndPlaySelectedVideo {
 	AILOG_DEBUG(@"");
 	
 	NSURL *videoURL = [[ApplifierImpactCampaignManager sharedInstance] getVideoURLForCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
@@ -301,6 +302,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 #pragma mark - WebAppController
 
 - (void)webAppReady {
+  _webViewInitialized = YES;
   [self.delegate viewManagerWebViewInitialized];
 }
 

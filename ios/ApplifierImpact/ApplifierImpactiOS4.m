@@ -17,64 +17,13 @@
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 
 @interface ApplifierImpactiOS4 () <ApplifierImpactCampaignManagerDelegate, UIWebViewDelegate, UIScrollViewDelegate, ApplifierImpactViewManagerDelegate>
-//@property (nonatomic, strong) ApplifierImpactCampaignManager *campaignManager;
-@property (nonatomic, strong) ApplifierImpactAnalyticsUploader *analyticsUploader;
-
-/*
-@property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
-@property (nonatomic, strong) NSString *applifierID;
-*/
-
-/*
-@property (nonatomic, strong) NSString *campaignJSON;
-@property (nonatomic, strong) NSString *machineName;
-@property (nonatomic, strong) NSString *md5AdvertisingIdentifier;
-@property (nonatomic, strong) NSString *md5DeviceId;
-@property (nonatomic, strong) NSString *md5MACAddress;
-@property (nonatomic, strong) NSString *md5OpenUDID;
-@property (nonatomic, strong) NSString *campaignQueryString;
-@property (nonatomic, strong) NSString *gamerID;
-@property (nonatomic, strong) NSString *connectionType;
- */
 @property (nonatomic, strong) NSThread *backgroundThread;
-
-/*
-@property (nonatomic, strong) NSArray *campaigns;
-*/
-
-@property (nonatomic, assign) BOOL webViewInitialized;
-@property (nonatomic, assign) BOOL testModeEnabled;
 @property (nonatomic, assign) dispatch_queue_t queue;
 @end
 
 @implementation ApplifierImpactiOS4
 
 #pragma mark - Private
-
-/*
-- (NSString *)_queryString
-{
-	NSString *advertisingIdentifier = self.md5AdvertisingIdentifier != nil ? self.md5AdvertisingIdentifier : @"";
-  NSString *queryParams = @"?";
-  
-  queryParams = [NSString stringWithFormat:@"%@deviceId=%@&platform=%@&gameId=%@", queryParams, self.md5DeviceId, @"ios", self.applifierID];
-  
-  if (self.md5AdvertisingIdentifier != nil)
-    queryParams = [NSString stringWithFormat:@"%@&advertisingTrackingId=%@", queryParams, advertisingIdentifier];
-
-  if ([ApplifierImpactDevice canUseTracking]) {
-    queryParams = [NSString stringWithFormat:@"%@&softwareVersion=%@&hardwareVersion=%@&deviceType=%@&apiVersion=%@&connectionType=%@", queryParams, [[UIDevice currentDevice] systemVersion], @"unknown", self.machineName, kApplifierImpactVersion, self.connectionType];
-    if (self.md5AdvertisingIdentifier == nil) {
-      queryParams = [NSString stringWithFormat:@"%@&macAddress=%@&openUdid=%@", queryParams, self.md5MACAddress, self.md5OpenUDID];
-    }
-  }
-  
-  if (_testModeEnabled) {
-    queryParams = [NSString stringWithFormat:@"%@test=true", queryParams];
-  }
-
-  return queryParams;
-}*/
 
 - (void)_backgroundRunLoop:(id)dummy
 {
@@ -117,57 +66,14 @@
 - (void)_startAnalyticsUploader
 {
 	AIAssert( ! [NSThread isMainThread]);
-	
-	self.analyticsUploader = [[ApplifierImpactAnalyticsUploader alloc] init];
-	[self.analyticsUploader retryFailedUploads];
-}
-
-- (void)_logVideoAnalyticsWithPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign
-{
-	if (campaign == nil)
-	{
-		AILOG_DEBUG(@"Campaign is nil.");
-		return;
-	}
-	
-	dispatch_async(self.queue, ^{
-		NSString *positionString = nil;
-		NSString *trackingString = nil;
-		if (videoPosition == kVideoAnalyticsPositionStart)
-		{
-			positionString = @"video_start";
-			trackingString = @"start";
-		}
-		else if (videoPosition == kVideoAnalyticsPositionFirstQuartile)
-			positionString = @"first_quartile";
-		else if (videoPosition == kVideoAnalyticsPositionMidPoint)
-			positionString = @"mid_point";
-		else if (videoPosition == kVideoAnalyticsPositionThirdQuartile)
-			positionString = @"third_quartile";
-		else if (videoPosition == kVideoAnalyticsPositionEnd)
-		{
-			positionString = @"video_end";
-			trackingString = @"view";
-		}
-		
-    // FIX
-    
-    /*
-		NSString *query = [NSString stringWithFormat:@"applicationId=%@&type=%@&trackingId=%@&providerId=%@", self.applifierID, positionString, self.gamerID, campaign.id];
-		
-		[self.analyticsUploader performSelector:@selector(sendViewReportWithQueryString:) onThread:self.backgroundThread withObject:query waitUntilDone:NO];
-		
-		if (trackingString != nil)
-		{
-			NSString *trackingQuery = [NSString stringWithFormat:@"%@/%@/%@?gameId=%@", self.gamerID, trackingString, campaign.id, self.applifierID];
-			[self.analyticsUploader performSelector:@selector(sendTrackingCallWithQueryString:) onThread:self.backgroundThread withObject:trackingQuery waitUntilDone:NO];
-		}*/
-	});
+	[[ApplifierImpactAnalyticsUploader sharedInstance] retryFailedUploads];
+	//self.analyticsUploader = [[ApplifierImpactAnalyticsUploader alloc] init];
+	//[self.analyticsUploader retryFailedUploads];
 }
 
 - (BOOL)_adViewCanBeShown
 {
-  if ([[ApplifierImpactCampaignManager sharedInstance] campaigns] != nil && [[[ApplifierImpactCampaignManager sharedInstance] campaigns] count] > 0 && [[ApplifierImpactCampaignManager sharedInstance] rewardItem] != nil && self.webViewInitialized)
+  if ([[ApplifierImpactCampaignManager sharedInstance] campaigns] != nil && [[[ApplifierImpactCampaignManager sharedInstance] campaigns] count] > 0 && [[ApplifierImpactCampaignManager sharedInstance] rewardItem] != nil && [[ApplifierImpactViewManager sharedInstance] webViewInitialized])
 		return YES;
 	else
 		return NO;
@@ -193,14 +99,11 @@
 	}
 	
 	dispatch_async(self.queue, ^{
-		
     // FIX
-    
     NSString *queryString = [NSString stringWithFormat:@"%@/install", [[ApplifierImpactProperties sharedInstance] impactGameId]];
-		// NSString *bodyString = [NSString stringWithFormat:@"deviceId=%@", self.md5DeviceId];
-		//NSDictionary *queryDictionary = @{ kApplifierImpactQueryDictionaryQueryKey : queryString, kApplifierImpactQueryDictionaryBodyKey : bodyString };
-		/*
-		[self.analyticsUploader performSelector:@selector(sendInstallTrackingCallWithQueryDictionary:) onThread:self.backgroundThread withObject:queryDictionary waitUntilDone:NO];*/
+    NSString *bodyString = [NSString stringWithFormat:@"deviceId=%@", [ApplifierImpactDevice md5DeviceId]];
+		NSDictionary *queryDictionary = @{ kApplifierImpactQueryDictionaryQueryKey : queryString, kApplifierImpactQueryDictionaryBodyKey : bodyString };
+    [[ApplifierImpactAnalyticsUploader sharedInstance] performSelector:@selector(sendInstallTrackingCallWithQueryDictionary:) onThread:self.backgroundThread withObject:queryDictionary waitUntilDone:NO];
 	});
 }
 
@@ -218,14 +121,14 @@
 		[[ApplifierImpactProperties sharedInstance] refreshCampaignQueryString];
     
 		[self performSelector:@selector(_refreshCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
-		[self.analyticsUploader performSelector:@selector(retryFailedUploads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+    [[ApplifierImpactAnalyticsUploader sharedInstance] performSelector:@selector(retryFailedUploads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 	});
 }
 
 #pragma mark - Public
 
 - (void)setTestMode:(BOOL)testModeEnabled {
-  _testModeEnabled = testModeEnabled;
+  [[ApplifierImpactProperties sharedInstance] setTestModeEnabled:testModeEnabled];
 }
 
 - (void)startWithGameId:(NSString *)gameId
@@ -353,14 +256,6 @@
  
 #pragma mark - ApplifierImpactViewManagerDelegate
 
-- (void)viewManager:(ApplifierImpactViewManager *)viewManager loggedVideoPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign
-{
-	AIAssert([NSThread isMainThread]);
-	AILOG_DEBUG(@"");
-	
-  [self _logVideoAnalyticsWithPosition:videoPosition campaign:campaign];
-}
-
 - (UIViewController *)viewControllerForPresentingViewControllersForViewManager:(ApplifierImpactViewManager *)viewManager
 {
 	AIAssertV([NSThread isMainThread], nil);
@@ -395,8 +290,7 @@
 - (void)viewManagerWebViewInitialized {
 	AIAssert([NSThread isMainThread]);	
 	AILOG_DEBUG(@"");
-	
-	self.webViewInitialized = YES;	
+
 	[self _notifyDelegateOfCampaignAvailability];
 }
 
