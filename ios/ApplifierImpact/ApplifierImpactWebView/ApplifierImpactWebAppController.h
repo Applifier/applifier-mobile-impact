@@ -9,20 +9,35 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+extern NSString * const kApplifierImpactWebViewPrefix;
+extern NSString * const kApplifierImpactWebViewJSInit;
+extern NSString * const kApplifierImpactWebViewJSChangeView;
+extern NSString * const kApplifierImpactWebViewAPIPlayVideo;
+extern NSString * const kApplifierImpactWebViewAPINavigateTo;
+extern NSString * const kApplifierImpactWebViewAPIInitComplete;
+extern NSString * const kApplifierImpactWebViewAPIClose;
+extern NSString * const kApplifierImpactWebViewAPIAppStore;
+
+extern NSString * const kApplifierImpactWebViewViewTypeCompleted;
+extern NSString * const kApplifierImpactWebViewViewTypeStart;
+
+@protocol ApplifierImpactWebAppControllerDelegate <NSObject>
+
+@required
+- (void)webAppReady;
+@end
+
 @interface ApplifierImpactWebAppController : NSObject <UIWebViewDelegate, UIScrollViewDelegate>
-@property (nonatomic, assign) NSString* WEBVIEW_PREFIX;
-@property (nonatomic, assign) NSString* WEBVIEW_JS_INIT;
-@property (nonatomic, assign) NSString* WEBVIEW_JS_CHANGEVIEW;
-@property (nonatomic, assign) NSString* WEBVIEW_API_PLAYVIDEO;
-@property (nonatomic, assign) NSString* WEBVIEW_API_CLOSE;
-@property (nonatomic, assign) NSString* WEBVIEW_API_NAVIGATETO;
-@property (nonatomic, assign) NSString* WEBVIEW_API_INITCOMPLETE;
-@property (nonatomic, assign) NSString* WEBVIEW_API_APPSTORE;
 
 @property (nonatomic, strong) UIWebView* webView;
 @property (nonatomic, assign) BOOL webViewLoaded;
 @property (nonatomic, assign) BOOL webViewInitialized;
+@property (nonatomic, assign) id<ApplifierImpactWebAppControllerDelegate> delegate;
 
-- (void)setWebViewCurrentView:(NSString *)view data:(NSString *)data;
+- (void)setWebViewCurrentView:(NSString *)view data:(NSDictionary *)data;
 - (void)setup:(CGRect)frame webAppParams:(NSDictionary *)webAppParams;
+- (void)openExternalUrl:(NSString *)urlString;
+- (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data;
+
++ (id)sharedInstance;
 @end

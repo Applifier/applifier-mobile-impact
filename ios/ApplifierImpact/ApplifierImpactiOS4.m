@@ -167,8 +167,6 @@
 
 - (BOOL)_adViewCanBeShown
 {
-	// FIX
-  
   if ([[ApplifierImpactCampaignManager sharedInstance] campaigns] != nil && [[[ApplifierImpactCampaignManager sharedInstance] campaigns] count] > 0 && [[ApplifierImpactCampaignManager sharedInstance] rewardItem] != nil && self.webViewInitialized)
 		return YES;
 	else
@@ -217,8 +215,6 @@
 	AILOG_DEBUG(@"");
 	
 	dispatch_async(self.queue, ^{
-		//self.connectionType = [ApplifierImpactDevice currentConnectionType];
-		//self.campaignQueryString = [self _queryString];
 		[[ApplifierImpactProperties sharedInstance] refreshCampaignQueryString];
     
 		[self performSelector:@selector(_refreshCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
@@ -249,18 +245,6 @@
 	self.queue = dispatch_queue_create("com.applifier.impact", NULL);
 	
 	dispatch_async(self.queue, ^{
-		
-    // FIX
-    /*
-    self.machineName = [ApplifierImpactDevice analyticsMachineName];
-		self.md5AdvertisingIdentifier = [ApplifierImpactDevice md5AdvertisingIdentifierString];
-		self.md5MACAddress = [ApplifierImpactDevice md5MACAddressString];
-		self.md5OpenUDID = [ApplifierImpactDevice md5OpenUDIDString];
-		self.connectionType = [ApplifierImpactDevice currentConnectionType];
-    self.md5DeviceId = self.md5AdvertisingIdentifier != nil ? self.md5AdvertisingIdentifier : self.md5OpenUDID;
-		self.campaignQueryString = [self _queryString];
-		*/
-     
 		self.backgroundThread = [[NSThread alloc] initWithTarget:self selector:@selector(_backgroundRunLoop:) object:nil];
 		[self.backgroundThread start];
 
@@ -269,15 +253,6 @@
 		
     dispatch_sync(dispatch_get_main_queue(), ^{
       [[ApplifierImpactViewManager sharedInstance] setDelegate:self];
-      
-      // FIX
-      /*
-      [[ApplifierImpactViewManager sharedInstance] setMachineName:self.machineName];
-      [[ApplifierImpactViewManager sharedInstance] setMd5AdvertisingIdentifier:self.md5AdvertisingIdentifier];
-      [[ApplifierImpactViewManager sharedInstance] setMd5DeviceId:self.md5DeviceId];
-      [[ApplifierImpactViewManager sharedInstance] setMd5MACAddress:self.md5MACAddress];
-      [[ApplifierImpactViewManager sharedInstance] setMd5OpenUDID:self.md5OpenUDID];
-      */
 		});
 	});
 }
@@ -304,22 +279,18 @@
 - (BOOL)canShowImpact
 {
 	AIAssertV([NSThread mainThread], NO);
-	
 	return [self _adViewCanBeShown];
 }
 
 - (void)stopAll
 {
 	AIAssert([NSThread isMainThread]);
-	
-	//[self.campaignManager performSelector:@selector(cancelAllDownloads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
   [[ApplifierImpactCampaignManager sharedInstance] performSelector:@selector(cancelAllDownloads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 }
 
 - (void)trackInstall
 {
 	AIAssert([NSThread isMainThread]);
-	
 	[self _trackInstall];
 }
 
@@ -336,8 +307,8 @@
 - (void)dealloc
 {
 	[[ApplifierImpactCampaignManager sharedInstance] setDelegate:nil];
-  //self.campaignManager.delegate = nil;
 	[[ApplifierImpactViewManager sharedInstance] setDelegate:nil];
+  [[ApplifierImpactWebAppController sharedInstance] setDelegate:nil];
 	
 	dispatch_release(self.queue);
 }
@@ -347,13 +318,9 @@
 - (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID
 {
 	AIAssert([NSThread isMainThread]);
-	
 	AILOG_DEBUG(@"");
 	
-	//self.campaigns = campaigns;
 	[[ApplifierImpactProperties sharedInstance] setRewardItem:rewardItem];
-	//self.gamerID = gamerID;
-	
 	[self _notifyDelegateOfCampaignAvailability];
 }
 
@@ -380,65 +347,18 @@
 - (void)campaignManagerCampaignDataReceived {
   // FIX (remember the "update campaigns")
   AILOG_DEBUG(@"CAMPAIGN DATA RECEIVED");
-  [[ApplifierImpactViewManager sharedInstance] campaignDataReceived];
+  [[ApplifierImpactViewManager sharedInstance] initWebApp];
 }
 
  
 #pragma mark - ApplifierImpactViewManagerDelegate
-
-/*
--(ApplifierImpactCampaign *)viewManager:(ApplifierImpactViewManager *)viewManager campaignWithID:(NSString *)campaignID
-{
-	AIAssertV([NSThread isMainThread], nil);
-	
-	ApplifierImpactCampaign *foundCampaign = nil;
-	
-	for (ApplifierImpactCampaign *campaign in [[ApplifierImpactCampaignManager sharedInstance] campaigns])
-	{
-		if ([campaign.id isEqualToString:campaignID])
-		{
-			foundCampaign = campaign;
-			break;
-		}
-	}
-	
-	AILOG_DEBUG(@"");
-	
-	return foundCampaign;
-}*/
-
-/*
--(NSURL *)viewManager:(ApplifierImpactViewManager *)viewManager videoURLForCampaign:(ApplifierImpactCampaign *)campaign
-{
-	AIAssertV([NSThread isMainThread], nil);
-	AILOG_DEBUG(@"");
-	
-	return [[ApplifierImpactCampaignManager sharedInstance] videoURLForCampaign:campaign];
-}*/
-
-- (void)viewManagerStartedPlayingVideo:(ApplifierImpactViewManager *)viewManager
-{
-	AIAssert([NSThread isMainThread]);
-	AILOG_DEBUG(@"");
-	
-	if ([self.delegate respondsToSelector:@selector(applifierImpactVideoStarted:)])
-		[self.delegate applifierImpactVideoStarted:self];
-}
-
-- (void)viewManagerVideoEnded:(ApplifierImpactViewManager *)viewManager
-{
-	AIAssert([NSThread isMainThread]);
-	AILOG_DEBUG(@"");
-	
-	[self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactProperties sharedInstance] rewardItem].key];
-}
 
 - (void)viewManager:(ApplifierImpactViewManager *)viewManager loggedVideoPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign
 {
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
-	[self _logVideoAnalyticsWithPosition:videoPosition campaign:campaign];
+  [self _logVideoAnalyticsWithPosition:videoPosition campaign:campaign];
 }
 
 - (UIViewController *)viewControllerForPresentingViewControllersForViewManager:(ApplifierImpactViewManager *)viewManager
@@ -449,8 +369,22 @@
 	return [self.delegate viewControllerForPresentingViewControllersForImpact:self];
 }
 
-- (void)viewManagerWillCloseAdView:(ApplifierImpactViewManager *)viewManager
-{
+- (void)viewManagerStartedPlayingVideo {
+	AIAssert([NSThread isMainThread]);
+	AILOG_DEBUG(@"");
+	
+	if ([self.delegate respondsToSelector:@selector(applifierImpactVideoStarted:)])
+		[self.delegate applifierImpactVideoStarted:self];
+}
+
+- (void)viewManagerVideoEnded {
+	AIAssert([NSThread isMainThread]);
+	AILOG_DEBUG(@"");
+	
+	[self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactProperties sharedInstance] rewardItem].key];
+}
+
+- (void)viewManagerWillCloseAdView {
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
@@ -458,13 +392,11 @@
 		[self.delegate applifierImpactWillClose:self];
 }
 
-- (void)viewManagerWebViewInitialized:(ApplifierImpactViewManager *)viewManager
-{
+- (void)viewManagerWebViewInitialized {
 	AIAssert([NSThread isMainThread]);	
 	AILOG_DEBUG(@"");
 	
-	self.webViewInitialized = YES;
-	
+	self.webViewInitialized = YES;	
 	[self _notifyDelegateOfCampaignAvailability];
 }
 

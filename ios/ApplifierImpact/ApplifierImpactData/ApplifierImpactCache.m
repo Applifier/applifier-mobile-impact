@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Applifier. All rights reserved.
 //
 
-#import "ApplifierImpact.h"
+#import "../ApplifierImpact.h"
 #import "ApplifierImpactCache.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 
@@ -334,6 +334,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 		AILOG_DEBUG(@"Not removing any downloads from the queue.");
 }
 
+
 #pragma mark - Public
 
 - (id)init
@@ -416,6 +417,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	
 	[self.downloadQueue removeAllObjects];
 }
+
 
 #pragma mark - NSURLConnectionDelegate
 

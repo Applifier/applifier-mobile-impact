@@ -7,7 +7,7 @@
 //
 
 #import "ApplifierImpactURLProtocol.h"
-#import "../ApplifierImpactViewManager.h"
+#import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 
 static const NSString *kApplifierImpactURLProtocolHostname = @"client.impact.applifier.com";
 
@@ -93,7 +93,7 @@ static const NSString *kApplifierImpactURLProtocolHostname = @"client.impact.app
   
   if (dictData != nil) {
     dispatch_async(dispatch_get_main_queue(), ^{
-      [[ApplifierImpactViewManager sharedInstance] handleWebEvent:type data:dictData];
+      [[ApplifierImpactWebAppController sharedInstance] handleWebEvent:type data:dictData];
     });
   }
 }
