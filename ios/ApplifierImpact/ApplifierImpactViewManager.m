@@ -229,11 +229,11 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 - (void)videoPlaybackStarted {
   [self _displayProgressLabel];
   [self.delegate viewManagerStartedPlayingVideo];
-  [[ApplifierImpactWebAppController sharedInstance] webView].hidden = YES;
+  [[ApplifierImpactWebAppController sharedInstance] webView].userInteractionEnabled = NO;
 }
 
 - (void)videoPlaybackEnded {
-  [[ApplifierImpactWebAppController sharedInstance] webView].hidden = NO;
+  [[ApplifierImpactWebAppController sharedInstance] webView].userInteractionEnabled = YES;
 	[self.delegate viewManagerVideoEnded];
 	[self hidePlayer];
 	
