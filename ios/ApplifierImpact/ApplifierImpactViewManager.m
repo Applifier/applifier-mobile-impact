@@ -235,6 +235,9 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 	[self hidePlayer];
 	
   NSDictionary *data = @{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id};
+  
+  AILOG_DEBUG(@"PLAYBACK ENDED: %@", data);
+  
   [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:data];
 	[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed = YES;
 }
@@ -251,7 +254,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 
 - (void)showPlayerAndPlaySelectedVideo {
 	AILOG_DEBUG(@"");
-	
+	//[self.]
 	NSURL *videoURL = [[ApplifierImpactCampaignManager sharedInstance] getVideoURLForCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
 	if (videoURL == nil)
 	{

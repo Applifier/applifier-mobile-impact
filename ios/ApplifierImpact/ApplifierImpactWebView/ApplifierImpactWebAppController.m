@@ -80,7 +80,11 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 
 - (void)setWebViewCurrentView:(NSString *)view data:(NSDictionary *)data
 {
-  [self.webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSChangeView, view, [data JSONRepresentation]]];
+	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSChangeView, view, [data JSONRepresentation]];
+  AILOG_DEBUG(@"SETWEBVIEWCURRENTVIEW: %@", js);
+	[self.webView stringByEvaluatingJavaScriptFromString:js];
+  /*
+  [self.webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSChangeView, view, [data JSONRepresentation]]];*/
 }
 
 - (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data {
