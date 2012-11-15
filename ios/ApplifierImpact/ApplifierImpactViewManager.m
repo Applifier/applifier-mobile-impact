@@ -31,7 +31,7 @@
 
 - (void)closeAdView {
 	[self.delegate viewManagerWillCloseAdView];
-	
+	[[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{}];
 	[self.window addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];
 	[self.adContainerView removeFromSuperview];
 }
