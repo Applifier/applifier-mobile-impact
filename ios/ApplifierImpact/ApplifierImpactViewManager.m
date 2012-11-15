@@ -13,7 +13,6 @@
 #import "ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "ApplifierImpactVideo/ApplifierImpactVideo.h"
 #import "ApplifierImpactWebView/ApplifierImpactWebAppController.h"
-#import "ApplifierImpactUtils/ApplifierImpactUtils.h"
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
@@ -84,7 +83,6 @@
 	{
 		AILOG_DEBUG(@"Cannot open store product view controller, falling back to click URL.");
 		[[ApplifierImpactWebAppController sharedInstance] openExternalUrl:[[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].clickURL absoluteString]];
-    //[self _openURL:[self.selectedCampaign.clickURL absoluteString]];
 		return;
 	}
 
@@ -103,23 +101,6 @@
 	}];
 #endif
 }
-
-// FIX
-
-/*
-- (void)_webViewInitComplete
-{
-	_webApp.webViewInitialized = YES;
-	[self.delegate viewManagerWebViewInitialized:self];
-}*/
-
-// FIX
-
-/*
-- (void)_webViewShow
-{
-  [_webApp setWebViewCurrentView:@"start" data:@""];
-}*/
 
 
 #pragma mark - Public
@@ -145,11 +126,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 	{
 		_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [ApplifierImpactWebAppController sharedInstance];
-		//_webApp = [[ApplifierImpactWebAppController alloc] init];
-
-    // FIX
     [_window addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];
-		//[_window addSubview:_webApp.webView];
 	}
 	
 	return self;

@@ -40,10 +40,8 @@ NSString * const kApplifierImpactWebViewViewTypeStart = @"start";
 
 static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 
-+ (id)sharedInstance
-{
-	@synchronized(self)
-	{
++ (id)sharedInstance {
+	@synchronized(self) {
 		if (sharedImpactWebAppController == nil)
       sharedImpactWebAppController = [[ApplifierImpactWebAppController alloc] init];
 	}
@@ -85,39 +83,33 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
   [self.webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSChangeView, view, [data JSONRepresentation]]];
 }
 
-- (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data
-{
+- (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data {
   AILOG_DEBUG(@"Gotevent: %@  widthData: %@", type, data);
   
   if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo] || [type isEqualToString:kApplifierImpactWebViewAPINavigateTo] || [type isEqualToString:kApplifierImpactWebViewAPIAppStore])
 	{
-		if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo])
-		{
+		if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo]) {
       if ([data objectForKey:@"campaignId"] != nil) {
         [self _selectCampaignWithID:[data objectForKey:@"campaignId"]];
         [[ApplifierImpactViewManager sharedInstance] showPlayerAndPlaySelectedVideo];
       }
 		}
-		else if ([type isEqualToString:kApplifierImpactWebViewAPINavigateTo])
-		{
+		else if ([type isEqualToString:kApplifierImpactWebViewAPINavigateTo]) {
       if ([data objectForKey:@"clickUrl"] != nil) {
         [self openExternalUrl:[data objectForKey:@"clickUrl"]];
       }
     
 		}
-		else if ([type isEqualToString:kApplifierImpactWebViewAPIAppStore])
-		{
+		else if ([type isEqualToString:kApplifierImpactWebViewAPIAppStore]) {
       if ([data objectForKey:@"clickUrl"] != nil) {
         [[ApplifierImpactViewManager sharedInstance] openAppStoreWithGameId:[data objectForKey:@"clickUrl"]];
       }    
 		}
 	}
-	else if ([type isEqualToString:kApplifierImpactWebViewAPIClose])
-	{
+	else if ([type isEqualToString:kApplifierImpactWebViewAPIClose]) {
     [[ApplifierImpactViewManager sharedInstance] closeAdView];
 	}
-	else if ([type isEqualToString:kApplifierImpactWebViewAPIInitComplete])
-	{
+	else if ([type isEqualToString:kApplifierImpactWebViewAPIInitComplete]) {
     self.webViewInitialized = YES;
     
     if (self.delegate != nil) {
@@ -126,30 +118,25 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 	}
 }
 
-- (void)_selectCampaignWithID:(NSString *)campaignId
-{
+- (void)_selectCampaignWithID:(NSString *)campaignId {
 	[[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:nil];
 	
-	if (campaignId == nil)
-	{
+	if (campaignId == nil) {
 		AILOG_DEBUG(@"Input is nil.");
 		return;
 	}
   
 	ApplifierImpactCampaign *campaign = [[ApplifierImpactCampaignManager sharedInstance] getCampaignWithId:campaignId];
 	
-	if (campaign != nil)
-	{
+	if (campaign != nil) {
 		[[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:campaign];
 	}
 	else
 		AILOG_DEBUG(@"No campaign with id '%@' found.", campaignId);
 }
 
-- (void)openExternalUrl:(NSString *)urlString
-{
-	if (urlString == nil)
-	{
+- (void)openExternalUrl:(NSString *)urlString {
+	if (urlString == nil) {
 		AILOG_DEBUG(@"No URL set.");
 		return;
 	}
@@ -169,26 +156,22 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 
 #pragma mark - UIWebViewDelegate
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 	NSURL *url = [request URL];
 	AILOG_DEBUG(@"url %@", url);
 	
-  if ([[url scheme] isEqualToString:@"itms-apps"])
-	{
+  if ([[url scheme] isEqualToString:@"itms-apps"]) {
 		return NO;
 	}
 	
 	return YES;
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)webView
-{
+- (void)webViewDidStartLoad:(UIWebView *)webView {
 	AILOG_DEBUG(@"");
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
 	AILOG_DEBUG(@"%@", _webAppInitalizationParams);
 	
 	self.webViewLoaded = YES;
@@ -197,16 +180,14 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 		[self initWebAppWithValues:_webAppInitalizationParams];
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
 	AILOG_DEBUG(@"%@", error);
 }
 
 
 #pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, 0);
 }
 

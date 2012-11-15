@@ -16,8 +16,7 @@
 
 - (id)initApplifierInstance
 {
-	if ((self = [super init]))
-	{
+	if ((self = [super init])) {
 	}
 	
 	return self;
@@ -27,8 +26,7 @@
 
 static ApplifierImpact *sharedApplifierInstance = nil;
 
-- (id)init
-{
+- (id)init {
 	AILOG_ERROR(@"Use the +sharedInstance singleton instead of initializing this class directly.");
 	
 	[self doesNotRecognizeSelector:_cmd];
@@ -36,12 +34,9 @@ static ApplifierImpact *sharedApplifierInstance = nil;
 	return nil;
 }
 
-+ (id)sharedInstance
-{
-	@synchronized(self)
-	{
-		if (sharedApplifierInstance == nil)
-		{
++ (id)sharedInstance {
+	@synchronized(self) {
+		if (sharedApplifierInstance == nil) {
 			// check if we're on at least iOS 4.0
       if ([self respondsToSelector:@selector(autoContentAccessingProxy)]) {
         sharedApplifierInstance = [[ApplifierImpactiOS4 alloc] initApplifierInstance];
@@ -63,32 +58,27 @@ static ApplifierImpact *sharedApplifierInstance = nil;
   AILOG_DEBUG(@"Disabled on older versions of iOS.");
 }
 
-- (UIView *)impactAdView
-{
+- (UIView *)impactAdView {
 	AILOG_DEBUG(@"Disabled on older versions of iOS.");
 
 	return nil;
 }
 
-- (BOOL)canShowImpact
-{
+- (BOOL)canShowImpact {
 	AILOG_DEBUG(@"Disabled on older versions of iOS.");
 
 	return NO;
 }
 
-- (void)stopAll
-{
+- (void)stopAll {
 	AILOG_DEBUG(@"Disabled on older versions of iOS.");
 }
 
-- (void)trackInstall
-{
+- (void)trackInstall {
 	AILOG_DEBUG(@"Disabled on older versions of iOS.");
 }
 
-- (void)refresh
-{
+- (void)refresh {
 	AILOG_DEBUG(@"Disabled on older versions of iOS.");
 }
 

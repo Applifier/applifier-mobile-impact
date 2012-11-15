@@ -78,7 +78,6 @@ ApplifierImpactCampaign *selectedCampaign;
 - (void)_logVideoAnalytics
 {
 	videoPosition++;
-	//[self.delegate videoAnalyticsPositionReached:videoPosition];
   [[ApplifierImpactAnalyticsUploader sharedInstance] logVideoAnalyticsWithPosition:videoPosition campaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
 }
 

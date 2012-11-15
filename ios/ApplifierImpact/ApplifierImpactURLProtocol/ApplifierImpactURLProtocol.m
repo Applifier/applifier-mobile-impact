@@ -13,8 +13,7 @@ static const NSString *kApplifierImpactURLProtocolHostname = @"client.impact.app
 
 @implementation ApplifierImpactURLProtocol
 
-+ (BOOL)canInitWithRequest:(NSURLRequest *)request
-{
++ (BOOL)canInitWithRequest:(NSURLRequest *)request {
   NSURL *url = [request URL];
   
   if ([[url scheme] isEqualToString:@"http"]) {
@@ -28,15 +27,13 @@ static const NSString *kApplifierImpactURLProtocolHostname = @"client.impact.app
   return FALSE;
 }
 
-+ (NSString *)stringWithUriEncoding:(NSString *)string;
-{
++ (NSString *)stringWithUriEncoding:(NSString *)string; {
   NSString *result = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
                                                                                   (__bridge CFStringRef)string, NULL,(CFStringRef)@":/?#[]@!$&’()*+,;=", kCFStringEncodingUTF8);
   return result;
 }
 
-+ (NSString *)stringWithoutUriEncoding:(NSString *)string;
-{
++ (NSString *)stringWithoutUriEncoding:(NSString *)string; {
   NSString *result = (__bridge NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault, (__bridge CFStringRef)string, CFSTR(""), kCFStringEncodingUTF8);
   return result;
 }
@@ -45,8 +42,7 @@ static const NSString *kApplifierImpactURLProtocolHostname = @"client.impact.app
   return request;
 }
 
-- (void)startLoading
-{
+- (void)startLoading {
   NSURLRequest *request = [self request];
   NSData *reqData = [request HTTPBody];
   
@@ -74,12 +70,10 @@ static const NSString *kApplifierImpactURLProtocolHostname = @"client.impact.app
 	[client URLProtocolDidFinishLoading:self];
 }
 
-- (void)stopLoading
-{
+- (void)stopLoading {
 }
 
-- (void)actOnJSONResults:(NSData *)jsonData
-{
+- (void)actOnJSONResults:(NSData *)jsonData {
   NSError *myError = nil;
   NSDictionary *results = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&myError];
   

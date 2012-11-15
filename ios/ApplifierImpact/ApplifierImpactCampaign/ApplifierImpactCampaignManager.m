@@ -15,8 +15,6 @@
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "../ApplifierImpactSBJSON/NSObject+ApplifierImpactSBJson.h"
 
-//NSString * const kApplifierImpactBackendURL = @"https://impact.applifier.com/mobile/campaigns";
-
 NSString * const kCampaignEndScreenKey = @"endScreen";
 NSString * const kCampaignClickURLKey = @"clickUrl";
 NSString * const kCampaignPictureKey = @"picture";
@@ -40,7 +38,6 @@ NSString * const kGamerIDKey = @"gamerId";
 @property (nonatomic, strong) ApplifierImpactCache *cache;
 @property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
 @property (nonatomic, strong) NSString *gamerID;
-//@property (nonatomic, strong) NSString *campaignJSON;
 @end
 
 @implementation ApplifierImpactCampaignManager
@@ -60,7 +57,6 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 #pragma mark - Private
 
 - (void)_campaignDataReceived {
-  //  [[ApplifierImpactViewManager sharedInstance] campaign]
   [self _processCampaignDownloadData];
 }
 

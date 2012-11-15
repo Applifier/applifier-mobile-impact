@@ -16,10 +16,8 @@ NSString * const kApplifierImpactVersion = @"1.0";
 
 static ApplifierImpactProperties *sharedImpactProperties = nil;
 
-+ (id)sharedInstance
-{
-	@synchronized(self)
-	{
++ (id)sharedInstance {
+	@synchronized(self) {
 		if (sharedImpactProperties == nil)
       sharedImpactProperties = [[ApplifierImpactProperties alloc] init];
 	}
@@ -29,7 +27,6 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
 
 - (ApplifierImpactProperties *)init {
   if (self = [super init]) {
-    ///src/
     //[self setCampaignDataUrl:@"https://impact.applifier.com/mobile/campaigns"];
     [self setCampaignDataUrl:@"http://192.168.1.152:3500/mobile/campaigns"];
     [self setCampaignQueryString:[self _createCampaignQueryString]];
@@ -38,9 +35,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   return self;
 }
 
-- (NSString *)_createCampaignQueryString
-{
-	//NSString *advertisingIdentifier = self.md5AdvertisingIdentifier != nil ? self.md5AdvertisingIdentifier : @"";
+- (NSString *)_createCampaignQueryString {
   NSString *queryParams = @"?";
   
   queryParams = [NSString stringWithFormat:@"%@deviceId=%@&platform=%@&gameId=%@", queryParams, [ApplifierImpactDevice md5DeviceId], @"ios", [self impactGameId]];
