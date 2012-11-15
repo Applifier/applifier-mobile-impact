@@ -7,6 +7,7 @@
 //
 
 #import "ApplifierImpactProperties.h"
+#import "../ApplifierImpact.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 
 NSString * const kApplifierImpactVersion = @"1.0";
@@ -29,8 +30,8 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
 - (ApplifierImpactProperties *)init {
   if (self = [super init]) {
     ///src/
-    [self setCampaignDataUrl:@"https://impact.applifier.com/mobile/campaigns"];
-    //[self setCampaignDataUrl:@"http://192.168.1.152:3500/mobile/campaigns"];
+    //[self setCampaignDataUrl:@"https://impact.applifier.com/mobile/campaigns"];
+    [self setCampaignDataUrl:@"http://192.168.1.152:3500/mobile/campaigns"];
     [self setCampaignQueryString:[self _createCampaignQueryString]];
   }
   
@@ -50,7 +51,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   if ([ApplifierImpactDevice canUseTracking]) {
     queryParams = [NSString stringWithFormat:@"%@&softwareVersion=%@&hardwareVersion=%@&deviceType=%@&apiVersion=%@&connectionType=%@", queryParams, [ApplifierImpactDevice softwareVersion], @"unknown", [ApplifierImpactDevice analyticsMachineName], kApplifierImpactVersion, [ApplifierImpactDevice currentConnectionType]];
     if ([ApplifierImpactDevice md5AdvertisingIdentifierString] == nil) {
-      queryParams = [NSString stringWithFormat:@"%@&macAddress=%@&openUdid=%@", queryParams, [ApplifierImpactDevice md5MACAddressString], [ApplifierImpactDevice md5OpenUDIDString]];
+      queryParams = [NSString stringWithFormat:@"%@&openUdid=%@", queryParams, [ApplifierImpactDevice md5OpenUDIDString]];
     }
   }
   

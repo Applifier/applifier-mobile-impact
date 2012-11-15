@@ -121,14 +121,6 @@
   [_webApp setWebViewCurrentView:@"start" data:@""];
 }*/
 
-/*
-- (void)_webViewVideoComplete
-{
-	NSString *data = [NSString stringWithFormat:@"{\"campaignId\":\"%@\"}", [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id];
-  
-  // FIX
- // [_webApp setWebViewCurrentView:@"completed" data:[ApplifierImpactUtils escapedStringFromString:data]];
-}*/
 
 #pragma mark - Public
 
@@ -210,11 +202,18 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 
 - (void)initWebApp {
 	AIAssert([NSThread isMainThread]);
+ 
+  NSDictionary *persistingData = @{@"campaignData":[[ApplifierImpactCampaignManager sharedInstance] campaignData], @"platform":@"ios", @"deviceId":[ApplifierImpactDevice md5DeviceId]};
   
-  NSDictionary *values = @{@"advertisingTrackingId":[ApplifierImpactDevice md5AdvertisingIdentifierString], @"iOSVersion":[ApplifierImpactDevice softwareVersion], @"deviceType":[ApplifierImpactDevice analyticsMachineName], @"deviceId":[ApplifierImpactDevice md5DeviceId], @"macAddress":[ApplifierImpactDevice md5MACAddressString], @"openUdid":[ApplifierImpactDevice md5OpenUDIDString], @"campaignData":[[ApplifierImpactCampaignManager sharedInstance] campaignData]};
+  NSDictionary *trackingData = @{@"iOSVersion":[ApplifierImpactDevice softwareVersion], @"deviceType":[ApplifierImpactDevice analyticsMachineName]};
+  NSMutableDictionary *webAppValues = [NSMutableDictionary dictionaryWithDictionary:persistingData];
+  
+  if ([ApplifierImpactDevice canUseTracking]) {
+    [webAppValues addEntriesFromDictionary:trackingData];
+  }
   
   [[ApplifierImpactWebAppController sharedInstance] setDelegate:self];
-  [[ApplifierImpactWebAppController sharedInstance] setup:_window.bounds webAppParams:values];
+  [[ApplifierImpactWebAppController sharedInstance] setup:_window.bounds webAppParams:webAppValues];
 }
 
 - (BOOL)adViewVisible
@@ -244,11 +243,6 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 
 
 #pragma mark - ApplifierImpactVideoDelegate
-
-/*
-- (void)videoAnalyticsPositionReached:(VideoAnalyticsPosition)analyticsPosition {
-  [self.delegate viewManager:self loggedVideoPosition:analyticsPosition campaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
-}*/
 
 - (void)videoPositionChanged:(CMTime)time {
   [self _updateTimeRemainingLabelWithTime:time];

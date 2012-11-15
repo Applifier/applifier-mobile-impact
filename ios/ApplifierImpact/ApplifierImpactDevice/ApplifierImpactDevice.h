@@ -14,13 +14,11 @@
 + (BOOL)canUseTracking;
 + (NSString *)machineName;
 + (NSString *)analyticsMachineName;
-+ (NSString *)macAddress;
 + (NSString *)currentConnectionType;
 + (NSString *)softwareVersion;
 
 + (NSString *)md5DeviceId;
 + (NSString *)md5OpenUDIDString;
-+ (NSString *)md5MACAddressString;
 + (NSString *)md5AdvertisingIdentifierString;
 
 + (int)getIOSMajorVersion;

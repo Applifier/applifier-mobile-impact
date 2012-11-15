@@ -23,6 +23,7 @@
 
 @implementation ApplifierImpactiOS4
 
+
 #pragma mark - Private
 
 - (void)_backgroundRunLoop:(id)dummy
@@ -45,21 +46,15 @@
 - (void)_refreshCampaignManager
 {
 	AIAssert( ! [NSThread isMainThread]);
-	//AIAssert(self.campaignManager != nil);
-	
 	[[ApplifierImpactProperties sharedInstance] refreshCampaignQueryString];
-  //self.campaignManager.queryString = self.campaignQueryString;
 	[[ApplifierImpactCampaignManager sharedInstance] updateCampaigns];
-  //[self.campaignManager updateCampaigns];
 }
 
 - (void)_startCampaignManager
 {
 	AIAssert( ! [NSThread isMainThread]);
 	
-	//self.campaignManager = [[ApplifierImpactCampaignManager alloc] init];
   [[ApplifierImpactCampaignManager sharedInstance] setDelegate:self];
-	//self.campaignManager.delegate = self;
 	[self _refreshCampaignManager];
 }
 
@@ -67,8 +62,6 @@
 {
 	AIAssert( ! [NSThread isMainThread]);
 	[[ApplifierImpactAnalyticsUploader sharedInstance] retryFailedUploads];
-	//self.analyticsUploader = [[ApplifierImpactAnalyticsUploader alloc] init];
-	//[self.analyticsUploader retryFailedUploads];
 }
 
 - (BOOL)_adViewCanBeShown
@@ -133,19 +126,20 @@
 
 - (void)startWithGameId:(NSString *)gameId
 {
-	AIAssert([NSThread isMainThread]);
+  AIAssert([NSThread isMainThread]);
 	
 	if (gameId == nil || [gameId length] == 0)
 	{
 		AILOG_ERROR(@"Applifier ID empty or not set.");
 		return;
 	}
-	
+  
 	if ([[ApplifierImpactProperties sharedInstance] impactGameId] != nil)
 		return;
-	
+	  
 	[[ApplifierImpactProperties sharedInstance] setImpactGameId:gameId];
-	self.queue = dispatch_queue_create("com.applifier.impact", NULL);
+	
+  self.queue = dispatch_queue_create("com.applifier.impact", NULL);
 	
 	dispatch_async(self.queue, ^{
 		self.backgroundThread = [[NSThread alloc] initWithTarget:self selector:@selector(_backgroundRunLoop:) object:nil];
@@ -228,24 +222,23 @@
 }
 
 
-/*
-- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager campaignData:(NSDictionary *)data
-{
-	AIAssert([NSThread isMainThread]);
+//- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager campaignData:(NSDictionary *)data
+//{
+//	AIAssert([NSThread isMainThread]);
 
   // If the view manager already has campaign JSON data, it means that
 	// campaigns were updated, and we might want to update the webapp.
-	if ([[ApplifierImpactViewManager sharedInstance] campaignJSON] != nil) {
-		self.webViewInitialized = NO;
-	}
+//	if ([[ApplifierImpactViewManager sharedInstance] campaignJSON] != nil) {
+//		self.webViewInitialized = NO;
+//	}
   
-  if (self.webViewInitialized == NO) {
-    [[ApplifierImpactViewManager sharedInstance] loadWebView];
-  }
+//  if (self.webViewInitialized == NO) {
+//    [[ApplifierImpactViewManager sharedInstance] loadWebView];
+//  }
   
   // FIX (SHOULD NOT EVEN SET THE CAMPAIGN DATA)
-  [[ApplifierImpactViewManager sharedInstance] setCampaignJSON:data];
-}*/
+//  [[ApplifierImpactViewManager sharedInstance] setCampaignJSON:data];
+//}
 
 - (void)campaignManagerCampaignDataReceived {
   // FIX (remember the "update campaigns")

@@ -18,11 +18,8 @@
 @protocol ApplifierImpactViewManagerDelegate <NSObject>
 
 @required
-//- (ApplifierImpactCampaign *)viewManager:(ApplifierImpactViewManager *)viewManager campaignWithID:(NSString *)campaignID;
-//- (NSURL *)viewManager:(ApplifierImpactViewManager *)viewManager videoURLForCampaign:(ApplifierImpactCampaign *)campaign;
 - (void)viewManagerStartedPlayingVideo;
 - (void)viewManagerVideoEnded;
-//- (void)viewManager:(ApplifierImpactViewManager *)viewManager loggedVideoPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign;
 - (UIViewController *)viewControllerForPresentingViewControllersForViewManager:(ApplifierImpactViewManager *)viewManager;
 - (void)viewManagerWillCloseAdView;
 - (void)viewManagerWebViewInitialized;
@@ -34,7 +31,7 @@
 @property (nonatomic, assign, readonly) BOOL adViewVisible;
 @property (nonatomic) BOOL webViewInitialized;
 
-+ (id)sharedInstance;
++ (ApplifierImpactViewManager *)sharedInstance;
 - (UIView *)adView;
 - (void)loadWebView;
 - (void)initWebApp;

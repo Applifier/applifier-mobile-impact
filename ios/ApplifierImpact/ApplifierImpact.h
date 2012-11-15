@@ -25,12 +25,6 @@
 #define AIAssertV(condition, value) do { if ( ! (condition)) { AILOG_ERROR(@"Expected condition '%s' to be true.", #condition); return value; } } while(0)
 #endif
 
-
-//
-//  All delegate methods and public methods in this header are based on the tentative iOS specification document,
-//  and will probably change during development.
-//
-
 @class ApplifierImpact;
 @class SKStoreProductViewController;
 

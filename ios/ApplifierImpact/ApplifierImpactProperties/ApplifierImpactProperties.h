@@ -20,7 +20,7 @@
   @property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
   @property (nonatomic) BOOL testModeEnabled;
 
-+ (id)sharedInstance;
++ (ApplifierImpactProperties *)sharedInstance;
 - (void)refreshCampaignQueryString;
 
 @end

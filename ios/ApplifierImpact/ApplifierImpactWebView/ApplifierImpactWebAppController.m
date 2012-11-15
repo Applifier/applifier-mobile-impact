@@ -8,7 +8,6 @@
 
 #import "ApplifierImpactWebAppController.h"
 #import "../ApplifierImpact.h"
-#import "../ApplifierImpactUtils/ApplifierImpactUtils.h"
 #import "../ApplifierImpactURLProtocol/ApplifierImpactURLProtocol.h"
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "../ApplifierImpactSBJSON/ApplifierImpactSBJsonWriter.h"
@@ -119,6 +118,8 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 	}
 	else if ([type isEqualToString:kApplifierImpactWebViewAPIInitComplete])
 	{
+    self.webViewInitialized = YES;
+    
     if (self.delegate != nil) {
       [self.delegate webAppReady];
     }

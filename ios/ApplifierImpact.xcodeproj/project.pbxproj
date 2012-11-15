@@ -37,8 +37,6 @@
 		786F5D65163142BB00FD34C4 /* ApplifierImpactDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 786F5D63163142BB00FD34C4 /* ApplifierImpactDevice.m */; };
 		786F5D6F1635359500FD34C4 /* ApplifierImpactVideo.h in Headers */ = {isa = PBXBuildFile; fileRef = 786F5D6B1635359400FD34C4 /* ApplifierImpactVideo.h */; };
 		786F5D701635359500FD34C4 /* ApplifierImpactVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 786F5D6C1635359400FD34C4 /* ApplifierImpactVideo.m */; };
-		786F5D921636A82200FD34C4 /* ApplifierImpactUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 786F5D8E1636A82100FD34C4 /* ApplifierImpactUtils.h */; };
-		786F5D931636A82200FD34C4 /* ApplifierImpactUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 786F5D8F1636A82100FD34C4 /* ApplifierImpactUtils.m */; };
 		786F5D981636AF9600FD34C4 /* ApplifierImpactWebAppController.h in Headers */ = {isa = PBXBuildFile; fileRef = 786F5D961636AF9600FD34C4 /* ApplifierImpactWebAppController.h */; };
 		786F5D991636AF9600FD34C4 /* ApplifierImpactWebAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 786F5D971636AF9600FD34C4 /* ApplifierImpactWebAppController.m */; };
 		78AC201A1622EFEA007DE419 /* ApplifierImpactOpenUDID.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */; };
@@ -95,8 +93,6 @@
 		786F5D63163142BB00FD34C4 /* ApplifierImpactDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactDevice.m; sourceTree = "<group>"; };
 		786F5D6B1635359400FD34C4 /* ApplifierImpactVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactVideo.h; sourceTree = "<group>"; };
 		786F5D6C1635359400FD34C4 /* ApplifierImpactVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactVideo.m; sourceTree = "<group>"; };
-		786F5D8E1636A82100FD34C4 /* ApplifierImpactUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactUtils.h; sourceTree = "<group>"; };
-		786F5D8F1636A82100FD34C4 /* ApplifierImpactUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactUtils.m; sourceTree = "<group>"; };
 		786F5D961636AF9600FD34C4 /* ApplifierImpactWebAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactWebAppController.h; sourceTree = "<group>"; };
 		786F5D971636AF9600FD34C4 /* ApplifierImpactWebAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactWebAppController.m; sourceTree = "<group>"; };
 		78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactOpenUDID.h; sourceTree = "<group>"; };
@@ -172,15 +168,6 @@
 			path = ApplifierImpactWebView;
 			sourceTree = "<group>";
 		};
-		786F5D8D1636A82100FD34C4 /* ApplifierImpactUtils */ = {
-			isa = PBXGroup;
-			children = (
-				786F5D8E1636A82100FD34C4 /* ApplifierImpactUtils.h */,
-				786F5D8F1636A82100FD34C4 /* ApplifierImpactUtils.m */,
-			);
-			path = ApplifierImpactUtils;
-			sourceTree = "<group>";
-		};
 		78AC200E1622EE4D007DE419 /* ApplifierImpactCampaign */ = {
 			isa = PBXGroup;
 			children = (
@@ -249,7 +236,6 @@
 				CC496CAF15078AB000AF335E /* ApplifierImpactSBJSON */,
 				786F5D6A1635359400FD34C4 /* ApplifierImpactVideo */,
 				78CB842C16255EB200E94915 /* ApplifierImpactURLProtocol */,
-				786F5D8D1636A82100FD34C4 /* ApplifierImpactUtils */,
 				786F5D801636860100FD34C4 /* ApplifierImpactWebView */,
 				CC15890D150789ED00B3D188 /* Supporting Files */,
 			);
@@ -325,7 +311,6 @@
 				78CB843A16255FAA00E94915 /* ApplifierImpactURLProtocol.h in Headers */,
 				786F5D64163142BB00FD34C4 /* ApplifierImpactDevice.h in Headers */,
 				786F5D6F1635359500FD34C4 /* ApplifierImpactVideo.h in Headers */,
-				786F5D921636A82200FD34C4 /* ApplifierImpactUtils.h in Headers */,
 				786F5D981636AF9600FD34C4 /* ApplifierImpactWebAppController.h in Headers */,
 				78057A121643CADB005EF487 /* ApplifierImpactProperties.h in Headers */,
 				784E9314165245DC009667F6 /* ApplifierImpactSBJsonParser.h in Headers */,
@@ -463,7 +448,6 @@
 				78CB843B16255FAA00E94915 /* ApplifierImpactURLProtocol.m in Sources */,
 				786F5D65163142BB00FD34C4 /* ApplifierImpactDevice.m in Sources */,
 				786F5D701635359500FD34C4 /* ApplifierImpactVideo.m in Sources */,
-				786F5D931636A82200FD34C4 /* ApplifierImpactUtils.m in Sources */,
 				786F5D991636AF9600FD34C4 /* ApplifierImpactWebAppController.m in Sources */,
 				78057A131643CADB005EF487 /* ApplifierImpactProperties.m in Sources */,
 				784E9315165245DC009667F6 /* ApplifierImpactSBJsonParser.m in Sources */,
