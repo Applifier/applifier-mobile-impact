@@ -150,6 +150,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 		if (self.adContainerView == nil)
 		{
 			self.adContainerView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+      [self.adContainerView setBackgroundColor:[UIColor blackColor]];
 			
 			self.progressLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 			self.progressLabel.backgroundColor = [UIColor clearColor];
@@ -228,15 +229,15 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 - (void)videoPlaybackStarted {
   [self _displayProgressLabel];
   [self.delegate viewManagerStartedPlayingVideo];
+  [[ApplifierImpactWebAppController sharedInstance] webView].hidden = YES;
 }
 
 - (void)videoPlaybackEnded {
+  [[ApplifierImpactWebAppController sharedInstance] webView].hidden = NO;
 	[self.delegate viewManagerVideoEnded];
 	[self hidePlayer];
 	
   NSDictionary *data = @{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id};
-  
-  AILOG_DEBUG(@"PLAYBACK ENDED: %@", data);
   
   [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:data];
 	[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed = YES;
@@ -254,7 +255,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 
 - (void)showPlayerAndPlaySelectedVideo {
 	AILOG_DEBUG(@"");
-	//[self.]
+  
 	NSURL *videoURL = [[ApplifierImpactCampaignManager sharedInstance] getVideoURLForCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
 	if (videoURL == nil)
 	{
