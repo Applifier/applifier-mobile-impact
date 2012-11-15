@@ -203,7 +203,7 @@
 
 - (void)dealloc
 {
-	[[ApplifierImpactCampaignManager sharedInstance] setDelegate:nil];
+  [[ApplifierImpactCampaignManager sharedInstance] setDelegate:nil];
 	[[ApplifierImpactViewManager sharedInstance] setDelegate:nil];
   [[ApplifierImpactWebAppController sharedInstance] setDelegate:nil];
 	
