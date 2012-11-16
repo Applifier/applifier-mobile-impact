@@ -73,7 +73,9 @@
 
 - (void)openAppStoreWithGameId:(NSString *)gameId
 {
-	if (gameId == nil || [gameId length] == 0)
+	AILOG_DEBUG(@"");
+  
+  if (gameId == nil || [gameId length] == 0)
 	{
 		AILOG_DEBUG(@"Game ID not set or empty.");
 		return;
@@ -87,6 +89,7 @@
 	}
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_5_1
+  AILOG_DEBUG(@"Running SKStoreProducViewController: %i", [NSThread isMainThread]);
 	SKStoreProductViewController *storeController = [[SKStoreProductViewController alloc] init];
 	storeController.delegate = (id)self;
 	NSDictionary *productParameters = @{ SKStoreProductParameterITunesItemIdentifier : gameId};
@@ -143,7 +146,12 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
   
   if ([name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
     [[ApplifierImpactWebAppController sharedInstance] webView].userInteractionEnabled = YES;
-    [self hidePlayer];
+    if (self.player != nil) {
+      AILOG_DEBUG(@"Destroying player");
+      [self.player destroyPlayer];
+      [self hidePlayer];
+    }
+    
     [self closeAdView];
   }
 }

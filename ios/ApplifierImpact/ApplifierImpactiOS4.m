@@ -134,6 +134,9 @@
 		return;
 	}
   
+  NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+  [notificationCenter addObserver:self selector:@selector(notificationHandler:) name:UIApplicationWillEnterForegroundNotification object:nil];
+  
 	if ([[ApplifierImpactProperties sharedInstance] impactGameId] != nil)
 		return;
 	  
@@ -152,6 +155,16 @@
       [[ApplifierImpactViewManager sharedInstance] setDelegate:self];
 		});
 	});
+}
+
+- (void)notificationHandler: (id) notification {
+  NSString *name = [notification name];
+  
+  AILOG_DEBUG(@"notification: %@", name);
+  
+  if ([name isEqualToString:UIApplicationWillEnterForegroundNotification]) {
+    [self _refresh];
+  }
 }
 
 - (UIView *)impactAdView
@@ -206,7 +219,7 @@
   [[ApplifierImpactCampaignManager sharedInstance] setDelegate:nil];
 	[[ApplifierImpactViewManager sharedInstance] setDelegate:nil];
   [[ApplifierImpactWebAppController sharedInstance] setDelegate:nil];
-	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	dispatch_release(self.queue);
 }
 
@@ -220,25 +233,6 @@
 	[[ApplifierImpactProperties sharedInstance] setRewardItem:rewardItem];
 	[self _notifyDelegateOfCampaignAvailability];
 }
-
-
-//- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager campaignData:(NSDictionary *)data
-//{
-//	AIAssert([NSThread isMainThread]);
-
-  // If the view manager already has campaign JSON data, it means that
-	// campaigns were updated, and we might want to update the webapp.
-//	if ([[ApplifierImpactViewManager sharedInstance] campaignJSON] != nil) {
-//		self.webViewInitialized = NO;
-//	}
-  
-//  if (self.webViewInitialized == NO) {
-//    [[ApplifierImpactViewManager sharedInstance] loadWebView];
-//  }
-  
-  // FIX (SHOULD NOT EVEN SET THE CAMPAIGN DATA)
-//  [[ApplifierImpactViewManager sharedInstance] setCampaignJSON:data];
-//}
 
 - (void)campaignManagerCampaignDataReceived {
   // FIX (remember the "update campaigns")

@@ -25,6 +25,14 @@ ApplifierImpactCampaign *selectedCampaign;
 	self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 }
 
+- (void)destroyPlayer {
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+  [self removeTimeObserver:timeObserver];
+	timeObserver = nil;
+	[self removeTimeObserver:analyticsTimeObserver];
+	analyticsTimeObserver = nil;
+}
+
 - (void)playSelectedVideo {
   __block ApplifierImpactVideo *blockSelf = self;
   if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:@"iosUnknown"]) {
@@ -54,20 +62,15 @@ ApplifierImpactCampaign *selectedCampaign;
 
 - (void)_videoPlaybackEnded:(NSNotification *)notification
 {
-	AILOG_DEBUG(@"");
+  AILOG_DEBUG(@"");
 	
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-
+  [self destroyPlayer];
+  
   if ([[ApplifierImpactDevice analyticsMachineName] isEqualToString:@"iosUnknown"]) {
     videoPosition = kVideoAnalyticsPositionThirdQuartile;
   }
   
   [self _logVideoAnalytics];
-	[self removeTimeObserver:timeObserver];
-	timeObserver = nil;
-	[self removeTimeObserver:analyticsTimeObserver];
-	analyticsTimeObserver = nil;
-  
   [self.delegate videoPlaybackEnded];
 }
 

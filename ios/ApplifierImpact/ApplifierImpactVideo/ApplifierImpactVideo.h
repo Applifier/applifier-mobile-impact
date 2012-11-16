@@ -31,4 +31,5 @@ typedef enum
 @property (nonatomic, strong) AVPlayerLayer *playerLayer;
 - (void)playSelectedVideo;
 - (void)createPlayerLayer;
+- (void)destroyPlayer;
 @end

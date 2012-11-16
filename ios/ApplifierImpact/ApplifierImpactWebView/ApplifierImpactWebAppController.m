@@ -132,7 +132,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
   NSString *returnValue = nil;
   
   if (javaScriptString != nil) {
-    AILOG_DEBUG(@"Runnig JavaScript: %@", javaScriptString);
+    AILOG_DEBUG(@"Running JavaScriptString: %@", javaScriptString);
     returnValue = [self.webView stringByEvaluatingJavaScriptFromString:javaScriptString];
   }
   
@@ -162,8 +162,9 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 	if (campaign != nil) {
 		[[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:campaign];
 	}
-	else
-		AILOG_DEBUG(@"No campaign with id '%@' found.", campaignId);
+	else {
+    AILOG_DEBUG(@"No campaign with id '%@' found.", campaignId);
+  }		
 }
 
 - (void)openExternalUrl:(NSString *)urlString {
@@ -180,7 +181,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 
 - (void)initWebAppWithValues:(NSDictionary *)values {
 	NSString *js = [NSString stringWithFormat:@"%@%@(%@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSInit, [values JSONRepresentation]];
-  AILOG_DEBUG(@"%@", js);
+  AILOG_DEBUG(@"");
   [self runJavascript:js];
 }
 
@@ -203,7 +204,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-	AILOG_DEBUG(@"%@", _webAppInitalizationParams);
+	AILOG_DEBUG(@"");
 	
 	self.webViewLoaded = YES;
 	
