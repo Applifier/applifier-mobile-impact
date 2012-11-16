@@ -33,7 +33,6 @@
 
 + (ApplifierImpactViewManager *)sharedInstance;
 - (UIView *)adView;
-- (void)loadWebView;
 - (void)initWebApp;
 - (void)openAppStoreWithGameId:(NSString *)gameId;
 - (void)showPlayerAndPlaySelectedVideo;

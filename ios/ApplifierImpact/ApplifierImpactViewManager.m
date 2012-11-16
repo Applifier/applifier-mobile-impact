@@ -23,6 +23,8 @@
 @property (nonatomic, strong) UILabel *progressLabel;
 @property (nonatomic, strong) ApplifierImpactVideo *player;
 @property (nonatomic, assign) UIViewController *storePresentingViewController;
+@property (nonatomic, strong) NSDictionary *productParams;
+@property (nonatomic, strong) SKStoreProductViewController *storeController;
 @end
 
 @implementation ApplifierImpactViewManager
@@ -90,18 +92,38 @@
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_5_1
   AILOG_DEBUG(@"Running SKStoreProducViewController: %i", [NSThread isMainThread]);
-	SKStoreProductViewController *storeController = [[SKStoreProductViewController alloc] init];
-	storeController.delegate = (id)self;
-	NSDictionary *productParameters = @{ SKStoreProductParameterITunesItemIdentifier : gameId};
-	[storeController loadProductWithParameters:productParameters completionBlock:^(BOOL result, NSError *error) {
+	self.storeController = [[SKStoreProductViewController alloc] init];
+	self.storeController.delegate = (id)self;
+	self.productParams = @{SKStoreProductParameterITunesItemIdentifier:@"457446957"};
+  AILOG_DEBUG(@"Trying to open with gameId: %@", gameId);
+	//[self.storeController loadProductWithParameters:self.productParams completionBlock:nil];
+  
+  void (^storeControllerComplete)(BOOL result, NSError *error) = ^(BOOL result, NSError *error){
+        if (result) {
+          self.storePresentingViewController = [self.delegate viewControllerForPresentingViewControllersForViewManager:self];
+          [self.storePresentingViewController presentModalViewController:self.storeController animated:YES];
+        }
+        else {
+          AILOG_DEBUG(@"Loading product information failed: %@", error);
+        }
+  };
+  
+  [self.storeController loadProductWithParameters:self.productParams completionBlock:storeControllerComplete];
+  
+  /*
+  [self.storeController loadProductWithParameters:self.productParams completionBlock:nil];
+  self.storePresentingViewController = [self.delegate viewControllerForPresentingViewControllersForViewManager:self];
+  AILOG_DEBUG(@"%@", self.storePresentingViewController);
+  [self.storePresentingViewController presentModalViewController:self.storeController animated:YES];
+  */
+   /*
+    ^(BOOL result, NSError *error) {
 		if (result)
 		{
-			self.storePresentingViewController = [self.delegate viewControllerForPresentingViewControllersForViewManager:self];
-			[self.storePresentingViewController presentModalViewController:storeController animated:YES];
 		}
 		else
-			AILOG_DEBUG(@"Loading product information failed: %@", error);
-	}];
+    AILOG_DEBUG(@"Loading product information failed: %@", error);
+    }];*/
 #endif
 }
 
@@ -156,12 +178,6 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
   }
 }
 
-
-- (void)loadWebView
-{
-	AIAssert([NSThread isMainThread]);
-  //[_webApp setup:_window.bounds webAppParams:valueDictionary];
-}
 
 // FIX: Rename this method to something more descriptive
 - (UIView *)adView
@@ -232,7 +248,8 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 
 - (void)dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	AILOG_DEBUG(@"");
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -240,7 +257,8 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 
 - (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController
 {
-	[self.storePresentingViewController dismissViewControllerAnimated:YES completion:nil];
+	AILOG_DEBUG(@"");
+  [self.storePresentingViewController dismissViewControllerAnimated:YES completion:nil];
 
 	self.storePresentingViewController = nil;
 }

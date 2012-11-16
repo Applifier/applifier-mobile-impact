@@ -216,6 +216,7 @@
 
 - (void)dealloc
 {
+  AILOG_DEBUG(@"");
   [[ApplifierImpactCampaignManager sharedInstance] setDelegate:nil];
 	[[ApplifierImpactViewManager sharedInstance] setDelegate:nil];
   [[ApplifierImpactWebAppController sharedInstance] setDelegate:nil];

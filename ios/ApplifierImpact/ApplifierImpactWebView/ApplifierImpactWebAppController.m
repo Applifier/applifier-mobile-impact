@@ -65,7 +65,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
     self.webView = [[UIWebView alloc] initWithFrame:frame];
     self.webView.delegate = self;
     self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
+    self.webView.scalesPageToFit = NO;
     UIScrollView *scrollView = nil;
     
     if ([self.webView respondsToSelector:@selector(scrollView)]) {
