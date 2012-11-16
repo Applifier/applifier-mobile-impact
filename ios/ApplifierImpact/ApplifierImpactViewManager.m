@@ -144,7 +144,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
   if ([name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
     [[ApplifierImpactWebAppController sharedInstance] webView].userInteractionEnabled = YES;
     [self hidePlayer];
-    //[self closeAdView];
+    [self closeAdView];
   }
 }
 
@@ -208,7 +208,8 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
   }
   
   [[ApplifierImpactWebAppController sharedInstance] setDelegate:self];
-  [[ApplifierImpactWebAppController sharedInstance] setup:_window.bounds webAppParams:webAppValues];
+  [[ApplifierImpactWebAppController sharedInstance] setupWebApp:_window.bounds];
+  [[ApplifierImpactWebAppController sharedInstance] loadWebApp:webAppValues];
 }
 
 - (BOOL)adViewVisible

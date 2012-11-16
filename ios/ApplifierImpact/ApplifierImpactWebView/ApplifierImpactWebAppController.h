@@ -35,7 +35,8 @@ extern NSString * const kApplifierImpactWebViewViewTypeStart;
 @property (nonatomic, assign) id<ApplifierImpactWebAppControllerDelegate> delegate;
 
 - (void)setWebViewCurrentView:(NSString *)view data:(NSDictionary *)data;
-- (void)setup:(CGRect)frame webAppParams:(NSDictionary *)webAppParams;
+- (void)loadWebApp:(NSDictionary *)webAppParams;
+- (void)setupWebApp:(CGRect)frame;
 - (void)openExternalUrl:(NSString *)urlString;
 - (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data;
 

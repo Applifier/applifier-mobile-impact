@@ -242,8 +242,16 @@
 
 - (void)campaignManagerCampaignDataReceived {
   // FIX (remember the "update campaigns")
+  AIAssert([NSThread isMainThread]);
   AILOG_DEBUG(@"CAMPAIGN DATA RECEIVED");
-  [[ApplifierImpactViewManager sharedInstance] initWebApp];
+  
+  if ([[ApplifierImpactCampaignManager sharedInstance] campaignData] != nil) {
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewInitialized:NO];
+  }
+  
+  if (![[ApplifierImpactWebAppController sharedInstance] webViewInitialized]) {
+    [[ApplifierImpactViewManager sharedInstance] initWebApp];
+  }
 }
 
  
