@@ -18,6 +18,21 @@
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactOpenUDID/ApplifierImpactOpenUDID.h"
 
+NSString * const kApplifierImpactDeviceIphone = @"iphone";
+NSString * const kApplifierImpactDeviceIphone3g = @"iphone3g";
+NSString * const kApplifierImpactDeviceIphone3gs = @"iphone3gs";
+NSString * const kApplifierImpactDeviceIphone4 = @"iphone4";
+NSString * const kApplifierImpactDeviceIphone4s = @"iphone4s";
+NSString * const kApplifierImpactDeviceIphone5 = @"iphone5";
+NSString * const kApplifierImpactDeviceIpodTouch1gen = @"ipodtouch1gen";
+NSString * const kApplifierImpactDeviceIpodTouch2gen = @"ipodtouch2gen";
+NSString * const kApplifierImpactDeviceIpodTouch3gen = @"ipodtouch3gen";
+NSString * const kApplifierImpactDeviceIpodTouch4gen = @"ipodtouch4gen";
+NSString * const kApplifierImpactDeviceIpad1 = @"ipad1";
+NSString * const kApplifierImpactDeviceIpad2 = @"ipad2";
+NSString * const kApplifierImpactDeviceIpad3 = @"ipad3";
+NSString * const kApplifierImpactDeviceIosUnknown = @"iosUnknown";
+
 @implementation ApplifierImpactDevice
 
 + (NSString *)_substringOfString:(NSString *)string toIndex:(NSInteger)index
@@ -102,43 +117,40 @@
 	return result;
 }
 
-+ (NSString *)analyticsMachineName
-{
++ (NSString *)analyticsMachineName {
 	NSString *machine = [self machineName];
 	if ([machine isEqualToString:@"iPhone1,1"])
-		return @"iphone";
+		return kApplifierImpactDeviceIphone;
 	else if ([machine isEqualToString:@"iPhone1,2"])
-		return @"iphone3g";
+		return kApplifierImpactDeviceIphone3g;
 	else if ([machine isEqualToString:@"iPhone2,1"])
-		return @"iphone3gs";
+		return kApplifierImpactDeviceIphone3gs;
 	else if ([machine length] > 6 && [[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone3"])
-		return @"iphone4";
+		return kApplifierImpactDeviceIphone4;
 	else if ([machine length] > 6 && [[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone4"])
-		return @"iphone4s";
+		return kApplifierImpactDeviceIphone4s;
 	else if ([machine length] > 6 && [[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone5"])
-		return @"iphone5";
+		return kApplifierImpactDeviceIphone5;
 	else if ([machine isEqualToString:@"iPod1,1"])
-		return @"ipodtouch1gen";
+		return kApplifierImpactDeviceIpodTouch1gen;
 	else if ([machine isEqualToString:@"iPod2,1"])
-		return @"ipodtouch2gen";
+		return kApplifierImpactDeviceIpodTouch2gen;
 	else if ([machine isEqualToString:@"iPod3,1"])
-		return @"ipodtouch3gen";
+		return kApplifierImpactDeviceIpodTouch3gen;
 	else if ([machine isEqualToString:@"iPod4,1"])
-		return @"ipodtouch4gen";
+		return kApplifierImpactDeviceIpodTouch4gen;
 	else if ([machine length] > 4 && [[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad1"])
-		return @"ipad1";
+		return kApplifierImpactDeviceIpad1;
 	else if ([machine length] > 4 && [[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad2"])
-		return @"ipad2";
+		return kApplifierImpactDeviceIpad2;
 	else if ([machine length] > 4 && [[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad3"])
-		return @"ipad3";
+		return kApplifierImpactDeviceIpad3;
   
-	return @"iosUnknown";
+	return kApplifierImpactDeviceIosUnknown;
 }
 
-+ (NSString *)_md5StringFromString:(NSString *)string
-{
-	if (string == nil)
-	{
++ (NSString *)_md5StringFromString:(NSString *)string {
+	if (string == nil) {
 		AILOG_DEBUG(@"Input is nil.");
 		return nil;
 	}
@@ -153,16 +165,13 @@
 	return output;
 }
 
-+ (NSString *)md5OpenUDIDString
-{
++ (NSString *)md5OpenUDIDString {
 	return [ApplifierImpactDevice _md5StringFromString:[ApplifierImpactOpenUDID value]];
 }
 
-+ (NSString *)md5AdvertisingIdentifierString
-{
++ (NSString *)md5AdvertisingIdentifierString {
 	NSString *adId = [self advertisingIdentifier];
-	if (adId == nil)
-	{
+	if (adId == nil) {
 		AILOG_DEBUG(@"Advertising identifier not available.");
 		return nil;
 	}
@@ -170,20 +179,16 @@
 	return [self _md5StringFromString:adId];
 }
 
-+ (NSString *)currentConnectionType
-{
++ (NSString *)currentConnectionType {
 	NSString *wifiString = @"wifi";
 	NSString *cellularString = @"cellular";
 	NSString *connectionString = nil;
 	
 	SCNetworkReachabilityRef reachabilityRef = SCNetworkReachabilityCreateWithName(NULL, "applifier.com");
-	if (reachabilityRef != NULL)
-	{
+	if (reachabilityRef != NULL) {
 		SCNetworkReachabilityFlags flags;
-		if (SCNetworkReachabilityGetFlags(reachabilityRef, &flags))
-		{
-			if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0)
-			{
+		if (SCNetworkReachabilityGetFlags(reachabilityRef, &flags)) {
+			if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0) {
 				// if target host is reachable and no connection is required
 				//  then we'll assume (for now) that you're on Wi-Fi
 				connectionString = wifiString;

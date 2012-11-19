@@ -35,7 +35,7 @@ ApplifierImpactCampaign *selectedCampaign;
 
 - (void)playSelectedVideo {
   __block ApplifierImpactVideo *blockSelf = self;
-  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:@"iosUnknown"]) {
+  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
     timeObserver = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
       [blockSelf _videoPositionChanged:time];
     }];
@@ -48,7 +48,7 @@ ApplifierImpactCampaign *selectedCampaign;
 	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .5]];
 	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .75]];
   
-  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:@"iosUnknown"]) {
+  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
     analyticsTimeObserver = [self addBoundaryTimeObserverForTimes:analyticsTimeValues queue:nil usingBlock:^{
       [blockSelf _logVideoAnalytics];
     }];
@@ -66,7 +66,7 @@ ApplifierImpactCampaign *selectedCampaign;
 	
   [self destroyPlayer];
   
-  if ([[ApplifierImpactDevice analyticsMachineName] isEqualToString:@"iosUnknown"]) {
+  if ([[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
     videoPosition = kVideoAnalyticsPositionThirdQuartile;
   }
   
