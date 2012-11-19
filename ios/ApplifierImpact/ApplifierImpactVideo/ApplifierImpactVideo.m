@@ -12,11 +12,12 @@
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
+#import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 
 id timeObserver;
 id analyticsTimeObserver;
 VideoAnalyticsPosition videoPosition;
-ApplifierImpactCampaign *selectedCampaign;
+//ApplifierImpactCampaign *selectedCampaign;
 
 @implementation ApplifierImpactVideo
 
@@ -55,7 +56,7 @@ ApplifierImpactCampaign *selectedCampaign;
   }
     
 	[self play];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];  
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
   [self.delegate videoPlaybackStarted];
 	[self _logVideoAnalytics];
 }
@@ -71,6 +72,7 @@ ApplifierImpactCampaign *selectedCampaign;
   }
   
   [self _logVideoAnalytics];
+  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"videoCompleted" data:@{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
   [self.delegate videoPlaybackEnded];
 }
 

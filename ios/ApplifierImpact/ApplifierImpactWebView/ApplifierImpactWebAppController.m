@@ -19,6 +19,7 @@
 NSString * const kApplifierImpactWebViewPrefix = @"applifierimpact.";
 NSString * const kApplifierImpactWebViewJSInit = @"init";
 NSString * const kApplifierImpactWebViewJSChangeView = @"setView";
+NSString * const kApplifierImpactWebViewJSHandleNativeEvent = @"handleNativeEvent";
 NSString * const kApplifierImpactWebViewAPIPlayVideo = @"playVideo";
 NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateTo";
 NSString * const kApplifierImpactWebViewAPIInitComplete = @"initComplete";
@@ -87,6 +88,13 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 - (void)setWebViewCurrentView:(NSString *)view data:(NSDictionary *)data
 {
 	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSChangeView, view, [data JSONRepresentation]];
+  
+  AILOG_DEBUG(@"");
+  [self runJavascript:js];
+}
+
+- (void)sendNativeEventToWebApp:(NSString *)eventType data:(NSDictionary *)data {
+ 	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSHandleNativeEvent, eventType, [data JSONRepresentation]];
   
   AILOG_DEBUG(@"");
   [self runJavascript:js];

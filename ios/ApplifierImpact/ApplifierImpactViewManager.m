@@ -97,6 +97,7 @@
     void (^storeControllerComplete)(BOOL result, NSError *error) = ^(BOOL result, NSError *error) {
       AILOG_DEBUG(@"RESULT: %i", result);
       if (result) {
+        [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"appStoreLoaded" data:@{@"campaignId":gameId}];
         self.storePresentingViewController = [self.delegate viewControllerForPresentingViewControllersForViewManager:self];
         [self.storePresentingViewController presentModalViewController:self.storeController animated:YES];
       }
@@ -105,6 +106,7 @@
       }
     };
     
+    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"appStoreLoading" data:@{@"campaignId":gameId, @"text":@"Loading AppStore..."}];
     SEL loadProduct = @selector(loadProductWithParameters:completionBlock:);
     if ([self.storeController respondsToSelector:loadProduct]) {
 #pragma clang diagnostic push
