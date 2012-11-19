@@ -111,7 +111,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 		}
 		else if ([type isEqualToString:kApplifierImpactWebViewAPIAppStore]) {
       if ([data objectForKey:@"clickUrl"] != nil) {
-        [[ApplifierImpactViewManager sharedInstance] openAppStoreWithGameId:[data objectForKey:@"clickUrl"]];
+        [[ApplifierImpactViewManager sharedInstance] openAppStoreWithData:data];
       }    
 		}
 	}

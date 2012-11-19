@@ -24,7 +24,7 @@
 @property (nonatomic, strong) ApplifierImpactVideo *player;
 @property (nonatomic, assign) UIViewController *storePresentingViewController;
 @property (nonatomic, strong) NSDictionary *productParams;
-@property (nonatomic, strong) SKStoreProductViewController *storeController;
+@property (nonatomic, strong) UIViewController *storeController;
 @end
 
 @implementation ApplifierImpactViewManager
@@ -67,38 +67,39 @@
 	[self.adContainerView bringSubviewToFront:self.progressLabel];
 }
 
-- (NSValue *)_valueWithDuration:(Float64)duration
-{
+- (NSValue *)_valueWithDuration:(Float64)duration {
 	CMTime time = CMTimeMakeWithSeconds(duration, NSEC_PER_SEC);
 	return [NSValue valueWithCMTime:time];
 }
 
-- (void)openAppStoreWithGameId:(NSString *)gameId
-{
+- (void)openAppStoreWithData:(NSDictionary *)data {
 	AILOG_DEBUG(@"");
-  
-  if (gameId == nil || [gameId length] == 0)
-	{
-		AILOG_DEBUG(@"Game ID not set or empty.");
-		return;
-	}
 	
-	if ( ! [self _canOpenStoreProductViewController])
-	{
-		AILOG_DEBUG(@"Cannot open store product view controller, falling back to click URL.");
-		[[ApplifierImpactWebAppController sharedInstance] openExternalUrl:[[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].clickURL absoluteString]];
+  if ( ! [self _canOpenStoreProductViewController]) {
+		NSString *clickUrl = [data objectForKey:@"clickUrl"];
+    if (clickUrl == nil) return;
+    
+    AILOG_DEBUG(@"Cannot open store product view controller, falling back to click URL.");
+		[[ApplifierImpactWebAppController sharedInstance] openExternalUrl:clickUrl];
 		return;
 	}
-
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_5_1
-  AILOG_DEBUG(@"Running SKStoreProducViewController: %i", [NSThread isMainThread]);
-	self.storeController = [[SKStoreProductViewController alloc] init];
-	self.storeController.delegate = (id)self;
-	self.productParams = @{SKStoreProductParameterITunesItemIdentifier:@"457446957"};
-  AILOG_DEBUG(@"Trying to open with gameId: %@", gameId);
-	//[self.storeController loadProductWithParameters:self.productParams completionBlock:nil];
   
-  void (^storeControllerComplete)(BOOL result, NSError *error) = ^(BOOL result, NSError *error){
+  Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
+  if ([storeProductViewControllerClass instancesRespondToSelector:@selector(loadProductWithParameters:completionBlock:)] == YES) {
+    NSString *gameId = [data objectForKey:@"iTunesId"];
+    if (gameId == nil || [gameId length] < 1) return;
+    self.productParams = @{SKStoreProductParameterITunesItemIdentifier:gameId};
+    self.storeController = [[storeProductViewControllerClass alloc] init];
+    
+    if ([self.storeController respondsToSelector:@selector(setDelegate:)]) {
+      [self.storeController performSelector:@selector(setDelegate:) withObject:self];
+    }
+    
+    SEL loadProduct = @selector(loadProductWithParameters:completionBlock:);
+    if ([self.storeController respondsToSelector:loadProduct]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+      [self.storeController performSelector:loadProduct withObject:self.productParams withObject:^(BOOL result, NSError *error) {
         if (result) {
           self.storePresentingViewController = [self.delegate viewControllerForPresentingViewControllersForViewManager:self];
           [self.storePresentingViewController presentModalViewController:self.storeController animated:YES];
@@ -106,25 +107,10 @@
         else {
           AILOG_DEBUG(@"Loading product information failed: %@", error);
         }
-  };
-  
-  [self.storeController loadProductWithParameters:self.productParams completionBlock:storeControllerComplete];
-  
-  /*
-  [self.storeController loadProductWithParameters:self.productParams completionBlock:nil];
-  self.storePresentingViewController = [self.delegate viewControllerForPresentingViewControllersForViewManager:self];
-  AILOG_DEBUG(@"%@", self.storePresentingViewController);
-  [self.storePresentingViewController presentModalViewController:self.storeController animated:YES];
-  */
-   /*
-    ^(BOOL result, NSError *error) {
-		if (result)
-		{
-		}
-		else
-    AILOG_DEBUG(@"Loading product information failed: %@", error);
-    }];*/
-#endif
+      }];
+#pragma clang diagnostic pop
+    }
+  }
 }
 
 
