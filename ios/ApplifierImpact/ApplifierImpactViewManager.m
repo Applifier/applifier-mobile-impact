@@ -94,19 +94,22 @@
       [self.storeController performSelector:@selector(setDelegate:) withObject:self];
     }
     
+    void (^storeControllerComplete)(BOOL result, NSError *error) = ^(BOOL result, NSError *error) {
+      AILOG_DEBUG(@"RESULT: %i", result);
+      if (result) {
+        self.storePresentingViewController = [self.delegate viewControllerForPresentingViewControllersForViewManager:self];
+        [self.storePresentingViewController presentModalViewController:self.storeController animated:YES];
+      }
+      else {
+        AILOG_DEBUG(@"Loading product information failed: %@", error);
+      }
+    };
+    
     SEL loadProduct = @selector(loadProductWithParameters:completionBlock:);
     if ([self.storeController respondsToSelector:loadProduct]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-      [self.storeController performSelector:loadProduct withObject:self.productParams withObject:^(BOOL result, NSError *error) {
-        if (result) {
-          self.storePresentingViewController = [self.delegate viewControllerForPresentingViewControllersForViewManager:self];
-          [self.storePresentingViewController presentModalViewController:self.storeController animated:YES];
-        }
-        else {
-          AILOG_DEBUG(@"Loading product information failed: %@", error);
-        }
-      }];
+      [self.storeController performSelector:loadProduct withObject:self.productParams withObject:storeControllerComplete];
 #pragma clang diagnostic pop
     }
   }
