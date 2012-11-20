@@ -163,6 +163,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 	AIAssertV(keyValue != nil && ([keyValue isKindOfClass:[NSString class]] || [keyValue isKindOfClass:[NSNumber class]]), nil);
 	NSString *key = [keyValue isKindOfClass:[NSNumber class]] ? [keyValue stringValue] : keyValue;
 	AIAssertV(key != nil && [key length] > 0, nil);
+  if (key == nil || [key length] == 0) return nil;
 	item.key = key;
 	
 	id nameValue = [itemDictionary objectForKey:kRewardNameKey];
@@ -170,6 +171,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 	AIAssertV(nameValue != nil && ([nameValue isKindOfClass:[NSString class]] || [nameValue isKindOfClass:[NSNumber class]]), nil);
 	NSString *name = [nameValue isKindOfClass:[NSNumber class]] ? [nameValue stringValue] : nameValue;
 	AIAssertV(name != nil && [name length] > 0, nil);
+  if (name == nil || [name length] == 0) return nil;
 	item.name = name;
 	
 	NSString *pictureURLString = [itemDictionary objectForKey:kRewardPictureKey];
@@ -177,6 +179,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 	AIAssertV([pictureURLString isKindOfClass:[NSString class]], nil);
 	NSURL *pictureURL = [NSURL URLWithString:pictureURLString];
 	AIAssertV(pictureURL != nil, nil);
+  if (pictureURL == nil) return nil;
 	item.pictureURL = pictureURL;
 	
 	return item;
