@@ -122,10 +122,8 @@
 
 static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 
-+ (id)sharedInstance
-{
-	@synchronized(self)
-	{
++ (id)sharedInstance {
+	@synchronized(self) {
 		if (sharedImpactViewManager == nil)
 				sharedImpactViewManager = [[ApplifierImpactViewManager alloc] init];
 	}
@@ -133,12 +131,10 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 	return sharedImpactViewManager;
 }
 
-- (id)init
-{
+- (id)init {
 	AIAssertV([NSThread isMainThread], nil);
 	
-	if ((self = [super init]))
-	{
+	if ((self = [super init])) {
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [notificationCenter addObserver:self selector:@selector(notificationHandler:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -249,7 +245,6 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 {
 	AILOG_DEBUG(@"");
   [self.storePresentingViewController dismissViewControllerAnimated:YES completion:nil];
-
 	self.storePresentingViewController = nil;
 }
 
