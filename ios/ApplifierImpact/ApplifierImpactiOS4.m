@@ -236,7 +236,6 @@
 }
 
 - (void)campaignManagerCampaignDataReceived {
-  // FIX (remember the "update campaigns")
   AIAssert([NSThread isMainThread]);
   AILOG_DEBUG(@"CAMPAIGN DATA RECEIVED");
   
