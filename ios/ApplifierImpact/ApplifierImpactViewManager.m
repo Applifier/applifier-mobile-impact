@@ -284,10 +284,10 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
   }
 }
 
-- (void)showPlayerAndPlaySelectedVideo {
+- (void)showPlayerAndPlaySelectedVideo:(BOOL)checkIfWatched {
 	AILOG_DEBUG(@"");
   
-  if ([[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed) {
+  if ([[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed && checkIfWatched) {
     AILOG_DEBUG(@"Trying to watch a campaign that is already viewed!");
     return;
   }

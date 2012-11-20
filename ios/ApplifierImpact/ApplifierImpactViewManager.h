@@ -35,7 +35,7 @@
 - (UIView *)adView;
 - (void)initWebApp;
 - (void)openAppStoreWithData:(NSDictionary *)data;
-- (void)showPlayerAndPlaySelectedVideo;
+- (void)showPlayerAndPlaySelectedVideo:(BOOL)checkIfWatched;
 - (void)hidePlayer;
 - (void)closeAdView;
 

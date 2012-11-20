@@ -108,7 +108,12 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 		if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo]) {
       if ([data objectForKey:@"campaignId"] != nil) {
         [self _selectCampaignWithID:[data objectForKey:@"campaignId"]];
-        [[ApplifierImpactViewManager sharedInstance] showPlayerAndPlaySelectedVideo];
+        BOOL checkIfWatched = YES;
+        if ([data objectForKey:@"rewatch"] != nil && [[data valueForKey:@"rewatch"] boolValue] == true) {
+          checkIfWatched = NO;
+        }
+        
+        [[ApplifierImpactViewManager sharedInstance] showPlayerAndPlaySelectedVideo:checkIfWatched];
       }
 		}
 		else if ([type isEqualToString:kApplifierImpactWebViewAPINavigateTo]) {
