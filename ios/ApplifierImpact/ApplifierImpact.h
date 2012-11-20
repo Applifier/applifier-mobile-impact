@@ -53,6 +53,5 @@
 - (BOOL)canShowImpact;
 - (void)stopAll;
 - (void)trackInstall;
-- (void)refresh;
 
 @end

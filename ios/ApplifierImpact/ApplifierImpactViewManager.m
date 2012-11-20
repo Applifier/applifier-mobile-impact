@@ -292,13 +292,18 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 - (void)showPlayerAndPlaySelectedVideo {
 	AILOG_DEBUG(@"");
   
+  if ([[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed) {
+    AILOG_DEBUG(@"Trying to watch a campaign that is already viewed!");
+    return;
+  }
+  
 	NSURL *videoURL = [[ApplifierImpactCampaignManager sharedInstance] getVideoURLForCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
-	if (videoURL == nil)
-	{
+  
+	if (videoURL == nil) {
 		AILOG_DEBUG(@"Video not found!");
 		return;
 	}
-	
+  
 	AVPlayerItem *item = [AVPlayerItem playerItemWithURL:videoURL];
   
   self.player = [[ApplifierImpactVideo alloc] initWithPlayerItem:item];

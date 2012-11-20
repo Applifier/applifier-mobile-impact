@@ -26,46 +26,38 @@
 
 #pragma mark - Private
 
-- (void)_backgroundRunLoop:(id)dummy
-{
-	@autoreleasepool
-	{
+- (void)_backgroundRunLoop:(id)dummy {
+	@autoreleasepool {
 		NSPort *port = [[NSPort alloc] init];
 		[port scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 		
-		while([[NSThread currentThread] isCancelled] == NO)
-		{
-			@autoreleasepool
-			{
+		while([[NSThread currentThread] isCancelled] == NO) {
+			@autoreleasepool {
 				[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:3.0]];
 			}
 		}
 	}
 }
 
-- (void)_refreshCampaignManager
-{
-	AIAssert( ! [NSThread isMainThread]);
+- (void)_refreshCampaignManager {
+	AIAssert(![NSThread isMainThread]);
 	[[ApplifierImpactProperties sharedInstance] refreshCampaignQueryString];
 	[[ApplifierImpactCampaignManager sharedInstance] updateCampaigns];
 }
 
-- (void)_startCampaignManager
-{
-	AIAssert( ! [NSThread isMainThread]);
+- (void)_startCampaignManager {
+	AIAssert(![NSThread isMainThread]);
 	
   [[ApplifierImpactCampaignManager sharedInstance] setDelegate:self];
 	[self _refreshCampaignManager];
 }
 
-- (void)_startAnalyticsUploader
-{
-	AIAssert( ! [NSThread isMainThread]);
+- (void)_startAnalyticsUploader {
+	AIAssert(![NSThread isMainThread]);
 	[[ApplifierImpactAnalyticsUploader sharedInstance] retryFailedUploads];
 }
 
-- (BOOL)_adViewCanBeShown
-{
+- (BOOL)_adViewCanBeShown {
   if ([[ApplifierImpactCampaignManager sharedInstance] campaigns] != nil && [[[ApplifierImpactCampaignManager sharedInstance] campaigns] count] > 0 && [[ApplifierImpactCampaignManager sharedInstance] rewardItem] != nil && [[ApplifierImpactViewManager sharedInstance] webViewInitialized])
 		return YES;
 	else
@@ -74,19 +66,15 @@
   return NO;
 }
 
-- (void)_notifyDelegateOfCampaignAvailability
-{
-	if ([self _adViewCanBeShown])
-	{
+- (void)_notifyDelegateOfCampaignAvailability {
+	if ([self _adViewCanBeShown]) {
 		if ([self.delegate respondsToSelector:@selector(applifierImpactCampaignsAreAvailable:)])
 			[self.delegate applifierImpactCampaignsAreAvailable:self];
 	}
 }
 
-- (void)_trackInstall
-{
-	if ([[ApplifierImpactProperties sharedInstance] impactGameId] == nil)
-	{
+- (void)_trackInstall {
+	if ([[ApplifierImpactProperties sharedInstance] impactGameId] == nil) {
 		AILOG_ERROR(@"Applifier Impact has not been started properly. Launch with -startWithApplifierID: first.");
 		return;
 	}
@@ -100,10 +88,8 @@
 	});
 }
 
-- (void)_refresh
-{
-	if ([[ApplifierImpactProperties sharedInstance] impactGameId] == nil)
-	{
+- (void)_refresh {
+	if ([[ApplifierImpactProperties sharedInstance] impactGameId] == nil) {
 		AILOG_ERROR(@"Applifier Impact has not been started properly. Launch with -startWithApplifierID: first.");
 		return;
 	}
@@ -124,12 +110,10 @@
   [[ApplifierImpactProperties sharedInstance] setTestModeEnabled:testModeEnabled];
 }
 
-- (void)startWithGameId:(NSString *)gameId
-{
+- (void)startWithGameId:(NSString *)gameId {
   AIAssert([NSThread isMainThread]);
 	
-	if (gameId == nil || [gameId length] == 0)
-	{
+	if (gameId == nil || [gameId length] == 0) {
 		AILOG_ERROR(@"Applifier ID empty or not set.");
 		return;
 	}
@@ -137,9 +121,10 @@
   NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
   [notificationCenter addObserver:self selector:@selector(notificationHandler:) name:UIApplicationWillEnterForegroundNotification object:nil];
   
-	if ([[ApplifierImpactProperties sharedInstance] impactGameId] != nil)
-		return;
-	  
+	if ([[ApplifierImpactProperties sharedInstance] impactGameId] != nil) {
+    return;
+  }
+
 	[[ApplifierImpactProperties sharedInstance] setImpactGameId:gameId];
 	
   self.queue = dispatch_queue_create("com.applifier.impact", NULL);
@@ -163,19 +148,23 @@
   AILOG_DEBUG(@"notification: %@", name);
   
   if ([name isEqualToString:UIApplicationWillEnterForegroundNotification]) {
-    [self _refresh];
+    AIAssert([NSThread isMainThread]);
+    
+    if ([[ApplifierImpactViewManager sharedInstance] adViewVisible]) {
+      AILOG_DEBUG(@"Ad view visible, not refreshing.");
+    }
+    else {
+      [self _refresh];
+    }
   }
 }
 
-- (UIView *)impactAdView
-{
+- (UIView *)impactAdView {
 	AIAssertV([NSThread mainThread], nil);
 	
-	if ([self _adViewCanBeShown])
-	{
+	if ([self _adViewCanBeShown]) {
 		UIView *adView = [[ApplifierImpactViewManager sharedInstance] adView];
-		if (adView != nil)
-		{
+		if (adView != nil) {
 			if ([self.delegate respondsToSelector:@selector(applifierImpactWillOpen:)])
 				[self.delegate applifierImpactWillOpen:self];
 
@@ -186,36 +175,22 @@
 	return nil;
 }
 
-- (BOOL)canShowImpact
-{
+- (BOOL)canShowImpact {
 	AIAssertV([NSThread mainThread], NO);
 	return [self _adViewCanBeShown];
 }
 
-- (void)stopAll
-{
+- (void)stopAll{
 	AIAssert([NSThread isMainThread]);
   [[ApplifierImpactCampaignManager sharedInstance] performSelector:@selector(cancelAllDownloads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 }
 
-- (void)trackInstall
-{
+- (void)trackInstall{
 	AIAssert([NSThread isMainThread]);
 	[self _trackInstall];
 }
 
-- (void)refresh
-{
-	AIAssert([NSThread isMainThread]);
-	
-	if ([[ApplifierImpactViewManager sharedInstance] adViewVisible])
-		AILOG_DEBUG(@"Ad view visible, not refreshing.");
-	else
-		[self _refresh];
-}
-
-- (void)dealloc
-{
+- (void)dealloc {
   AILOG_DEBUG(@"");
   [[ApplifierImpactCampaignManager sharedInstance] setDelegate:nil];
 	[[ApplifierImpactViewManager sharedInstance] setDelegate:nil];
@@ -226,8 +201,7 @@
 
 #pragma mark - ApplifierImpactCampaignManagerDelegate
 
-- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID
-{
+- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID {
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
@@ -237,7 +211,7 @@
 
 - (void)campaignManagerCampaignDataReceived {
   AIAssert([NSThread isMainThread]);
-  AILOG_DEBUG(@"CAMPAIGN DATA RECEIVED");
+  AILOG_DEBUG(@"Campaign data received.");
   
   if ([[ApplifierImpactCampaignManager sharedInstance] campaignData] != nil) {
     [[ApplifierImpactWebAppController sharedInstance] setWebViewInitialized:NO];
@@ -251,8 +225,7 @@
  
 #pragma mark - ApplifierImpactViewManagerDelegate
 
-- (UIViewController *)viewControllerForPresentingViewControllersForViewManager:(ApplifierImpactViewManager *)viewManager
-{
+- (UIViewController *)viewControllerForPresentingViewControllersForViewManager:(ApplifierImpactViewManager *)viewManager {
 	AIAssertV([NSThread isMainThread], nil);
 	AILOG_DEBUG(@"");
 	

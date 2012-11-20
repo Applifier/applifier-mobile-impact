@@ -14,8 +14,7 @@
 
 #pragma mark - Private
 
-- (id)initApplifierInstance
-{
+- (id)initApplifierInstance {
 	if ((self = [super init])) {
 	}
 	
@@ -75,10 +74,6 @@ static ApplifierImpact *sharedApplifierInstance = nil;
 }
 
 - (void)trackInstall {
-	AILOG_DEBUG(@"Disabled on older versions of iOS.");
-}
-
-- (void)refresh {
 	AILOG_DEBUG(@"Disabled on older versions of iOS.");
 }
 

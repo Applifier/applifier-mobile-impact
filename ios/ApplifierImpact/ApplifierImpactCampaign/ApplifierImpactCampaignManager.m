@@ -245,8 +245,13 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 		}
 		
 		NSURL *videoURL = [self.cache localVideoURLForCampaign:campaign];
-		if (videoURL == nil)
-			videoURL = campaign.trailerStreamingURL;
+    AILOG_DEBUG(@"%@ and %i", videoURL.absoluteString, [self.cache campaignExistsInQueue:campaign]);
+		if (videoURL == nil || [self.cache campaignExistsInQueue:campaign]) {
+      AILOG_DEBUG(@"Campaign is not cached!");
+      videoURL = campaign.trailerStreamingURL;
+    }
+    
+    AILOG_DEBUG(@"%@", videoURL);
     
 		return videoURL;
 	}
@@ -254,7 +259,6 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 
 - (ApplifierImpactCampaign *)getCampaignWithId:(NSString *)campaignId {
 	AIAssertV([NSThread isMainThread], nil);
-	
 	ApplifierImpactCampaign *foundCampaign = nil;
 	
 	for (ApplifierImpactCampaign *campaign in self.campaigns) {
@@ -265,7 +269,6 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 	}
 	
 	AILOG_DEBUG(@"");
-	
 	return foundCampaign;
 }
 
