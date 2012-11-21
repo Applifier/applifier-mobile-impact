@@ -38,6 +38,7 @@
 	}
 	
     [self.window makeKeyAndVisible];
+    [[ApplifierImpact sharedInstance] setTestMode:YES];
 	[[ApplifierImpact sharedInstance] startWithGameId:@"16" andViewController:self.viewController];
     return YES;
 }

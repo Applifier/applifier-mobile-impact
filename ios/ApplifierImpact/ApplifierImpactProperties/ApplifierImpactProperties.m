@@ -27,7 +27,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
 
 - (ApplifierImpactProperties *)init {
   if (self = [super init]) {
-    //[self setCampaignDataUrl:@"https://impact.applifier.com/mobile/campaigns"];
+    //[self setCampaignDataUrl:@"https://staging-impact.applifier.com/mobile/campaigns"];
     [self setCampaignDataUrl:@"http://192.168.1.152:3500/mobile/campaigns"];
     [self setCampaignQueryString:[self _createCampaignQueryString]];
   }
@@ -51,7 +51,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   }
   
   if ([self testModeEnabled]) {
-    queryParams = [NSString stringWithFormat:@"&%@test=true", queryParams];
+    queryParams = [NSString stringWithFormat:@"%@&test=true", queryParams];
   }
   
   return queryParams;

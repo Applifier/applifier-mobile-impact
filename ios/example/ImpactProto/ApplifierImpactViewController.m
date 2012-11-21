@@ -43,7 +43,8 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+    //return (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+    return YES;
 }
 
 #pragma mark - ApplifierImpactDelegate

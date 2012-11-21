@@ -16,6 +16,7 @@
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
+#import "ApplifierImpactVideo/ApplifierImpactVideoView.h"
 
 @interface ApplifierImpactViewManager () <UIWebViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, strong) UIWindow *window;
@@ -25,6 +26,7 @@
 @property (nonatomic, assign) UIViewController *storePresentingViewController;
 @property (nonatomic, strong) NSDictionary *productParams;
 @property (nonatomic, strong) UIViewController *storeController;
+@property (nonatomic, strong) ApplifierImpactVideoView *videoView;
 @end
 
 @implementation ApplifierImpactViewManager
@@ -231,9 +233,7 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 - (void)hidePlayer {
   if (self.player != nil) {
     self.progressLabel.hidden = YES;
-    [self.player.playerLayer removeFromSuperlayer];
-    self.player.playerLayer = nil;
-    self.player = nil;
+    [self.adContainerView sendSubviewToBack:self.videoView];
   }
 }
 
@@ -254,11 +254,16 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
   
 	AVPlayerItem *item = [AVPlayerItem playerItemWithURL:videoURL];
   
-  self.player = [[ApplifierImpactVideo alloc] initWithPlayerItem:item];
-  self.player.delegate = self;
-  [self.player createPlayerLayer];
-  self.player.playerLayer.frame = self.adContainerView.bounds;
-	[self.adContainerView.layer addSublayer:self.player.playerLayer];
+  if (self.player == nil) {
+    self.player = [[ApplifierImpactVideo alloc] initWithPlayerItem:item];
+    self.player.delegate = self;
+    [_videoView setPlayer:self.player];
+  }
+  else {
+    [self.player replaceCurrentItemWithPlayerItem:item];
+  }
+  
+  [self.adContainerView bringSubviewToFront:self.videoView];
   [self.player playSelectedVideo];
 }
 
@@ -308,6 +313,11 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 		
 		if (self.adContainerView == nil) {
 			self.adContainerView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+      self.videoView = [[ApplifierImpactVideoView alloc] initWithFrame:self.adContainerView.bounds];
+      [self.videoView setBackgroundColor:[UIColor blackColor]];
+      [self.adContainerView addSubview:self.videoView];
+      self.videoView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+      [self.adContainerView sendSubviewToBack:self.videoView];
       [self.adContainerView setBackgroundColor:[UIColor blackColor]];
 			
 			self.progressLabel = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -319,10 +329,13 @@ static ApplifierImpactViewManager *sharedImpactViewManager = nil;
 			self.progressLabel.shadowOffset = CGSizeMake(0, 1.0);
 			self.progressLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
 			[self.adContainerView addSubview:self.progressLabel];
+      self.adContainerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+      self.adContainerView.autoresizesSubviews = true;
 		}
 		
 		if ([[ApplifierImpactWebAppController sharedInstance] webView].superview != self.adContainerView) {
 			[[[ApplifierImpactWebAppController sharedInstance] webView] setBounds:self.adContainerView.bounds];
+      [[ApplifierImpactWebAppController sharedInstance] webView].autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth; 
 			[self.adContainerView addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];
 		}
 		
