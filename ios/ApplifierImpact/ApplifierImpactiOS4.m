@@ -204,8 +204,6 @@
 - (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID {
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
-	
-	[[ApplifierImpactProperties sharedInstance] setRewardItem:rewardItem];
 	[self _notifyDelegateOfCampaignAvailability];
 }
 
@@ -244,7 +242,7 @@
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
-	[self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactProperties sharedInstance] rewardItem].key];
+	[self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] rewardItem].key];
 }
 
 - (void)viewManagerWillCloseAdView {

@@ -26,6 +26,7 @@
 @property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, strong) NSDictionary *campaignData;
 @property (nonatomic, strong) ApplifierImpactCampaign *selectedCampaign;
+@property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
 
 - (void)updateCampaigns;
 - (NSURL *)getVideoURLForCampaign:(ApplifierImpactCampaign *)campaign;

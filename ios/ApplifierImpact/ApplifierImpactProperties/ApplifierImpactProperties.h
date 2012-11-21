@@ -17,7 +17,7 @@
   @property (nonatomic, strong) NSString *campaignQueryString;
   @property (nonatomic, strong) NSString *impactGameId;
   @property (nonatomic, strong) NSString *gamerId;
-  @property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
+//  @property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
   @property (nonatomic) BOOL testModeEnabled;
 
 + (ApplifierImpactProperties *)sharedInstance;

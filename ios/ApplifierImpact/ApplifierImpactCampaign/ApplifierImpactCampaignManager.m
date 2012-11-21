@@ -36,8 +36,6 @@ NSString * const kGamerIDKey = @"gamerId";
 @property (nonatomic, strong) NSURLConnection *urlConnection;
 @property (nonatomic, strong) NSMutableData *campaignDownloadData;
 @property (nonatomic, strong) ApplifierImpactCache *cache;
-@property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
-@property (nonatomic, strong) NSString *gamerID;
 @end
 
 @implementation ApplifierImpactCampaignManager
@@ -194,17 +192,25 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 	
   if (_campaignData != nil && [_campaignData isKindOfClass:[NSDictionary class]]) {
     NSDictionary *jsonDictionary = [(NSDictionary *)_campaignData objectForKey:@"data"];
+    
+    if ([jsonDictionary objectForKey:@"webViewUrl"] == nil) return;
+    if ([jsonDictionary objectForKey:@"analyticsUrl"] == nil) return;
+    if ([jsonDictionary objectForKey:@"impactUrl"] == nil) return;
+    if ([jsonDictionary objectForKey:kGamerIDKey] == nil) return;
+    if ([jsonDictionary objectForKey:@"campaigns"] == nil) return;
+    if ([jsonDictionary objectForKey:@"item"] == nil) return;
+    
     self.campaigns = [self _deserializeCampaigns:[jsonDictionary objectForKey:@"campaigns"]];
     self.rewardItem = [self _deserializeRewardItem:[jsonDictionary objectForKey:@"item"]];
-    
+
     [[ApplifierImpactProperties sharedInstance] setWebViewBaseUrl:(NSString *)[jsonDictionary objectForKey:@"webViewUrl"]];
     [[ApplifierImpactProperties sharedInstance] setAnalyticsBaseUrl:(NSString *)[jsonDictionary objectForKey:@"analyticsUrl"]];
     [[ApplifierImpactProperties sharedInstance] setImpactBaseUrl:(NSString *)[jsonDictionary objectForKey:@"impactUrl"]];
     
-    NSString *gamerID = [jsonDictionary objectForKey:kGamerIDKey];
-    AIAssert(gamerID != nil);
-    self.gamerID = gamerID;
+    NSString *gamerId = [jsonDictionary objectForKey:kGamerIDKey];
+    AIAssert(gamerId != nil);
     
+    [[ApplifierImpactProperties sharedInstance] setGamerId:gamerId];
     [self.cache cacheCampaigns:self.campaigns];
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -328,7 +334,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 
 - (void)cacheFinishedCachingCampaigns:(ApplifierImpactCache *)cache {
 	dispatch_async(dispatch_get_main_queue(), ^{
-		[self.delegate campaignManager:self updatedWithCampaigns:self.campaigns rewardItem:self.rewardItem gamerID:self.gamerID];
+		[self.delegate campaignManager:self updatedWithCampaigns:self.campaigns rewardItem:self.rewardItem gamerID:[[ApplifierImpactProperties sharedInstance] gamerId]];
 	});
 }
 
