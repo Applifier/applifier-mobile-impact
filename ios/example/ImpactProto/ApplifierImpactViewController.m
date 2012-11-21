@@ -24,8 +24,7 @@
 @synthesize avAsset;
 @synthesize avPlayerItem;
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 	
 	[[ApplifierImpact sharedInstance] setDelegate:self];
@@ -34,58 +33,40 @@
 	[self.buttonView setImage:[UIImage imageNamed:@"impact-waiting"] forState:UIControlStateNormal];
 }
 
-- (void)nextPhase
-{
-	if ([[ApplifierImpact sharedInstance] canShowImpact])
-	{
-		NSLog(@"Showing Impact.");
-		UIView *adView = [[ApplifierImpact sharedInstance] impactAdView];
-		adView.frame = self.view.bounds;
-		[self.view addSubview:adView];
+- (void)nextPhase {
+	if ([[ApplifierImpact sharedInstance] canShowImpact]) {
+        [[ApplifierImpact sharedInstance] showImpact];
 	}
-	else
-		NSLog(@"Impact cannot be shown.");
+	else {
+        NSLog(@"Impact cannot be shown.");
+    }
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 
 #pragma mark - ApplifierImpactDelegate
 
-- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey
-{
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey {
 	NSLog(@"applifierImpact:completedVideoWithRewardItem: -- key: %@", rewardItemKey);
 }
 
-- (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact
-{
+- (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact {
 	NSLog(@"applifierImpactWillOpen");
 }
 
-- (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact
-{
+- (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact {
 	NSLog(@"applifierImpactWillClose");
 }
 
-- (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact
-{
+- (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact {
 	NSLog(@"applifierImpactVideoStarted");
 }
 
-- (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact
-{
+- (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact {
 	NSLog(@"applifierImpactCampaignsAreAvailable");
-
 	[self.buttonView setImage:[UIImage imageNamed:@"impact-ready"] forState:UIControlStateNormal];
-}
-
-- (UIViewController *)viewControllerForPresentingViewControllersForImpact:(ApplifierImpact *)applifierImpact
-{
-	NSLog(@"viewControllerForPresentingViewControllersForImpact");
-	
-	return self;
 }
 
 @end

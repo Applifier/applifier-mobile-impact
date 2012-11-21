@@ -53,19 +53,35 @@ static ApplifierImpact *sharedApplifierInstance = nil;
 	AILOG_DEBUG(@"Disabled on older versions of iOS.");
 }
 
-- (void)startWithGameId:(NSString *)gameId {	
+- (void)startWithGameId:(NSString *)gameId {
+  AILOG_DEBUG(@"Disabled on older versions of iOS.");
+}
+
+- (void)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController {
+  AILOG_DEBUG(@"Disabled on older versions of iOS.");
+}
+
+- (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact {
   AILOG_DEBUG(@"Disabled on older versions of iOS.");
 }
 
 - (UIView *)impactAdView {
 	AILOG_DEBUG(@"Disabled on older versions of iOS.");
-
 	return nil;
 }
 
 - (BOOL)canShowImpact {
 	AILOG_DEBUG(@"Disabled on older versions of iOS.");
+	return NO;
+}
 
+- (BOOL)showImpact {
+	AILOG_DEBUG(@"Disabled on older versions of iOS.");
+	return NO;
+}
+
+- (BOOL)hideImpact {
+	AILOG_DEBUG(@"Disabled on older versions of iOS.");
 	return NO;
 }
 

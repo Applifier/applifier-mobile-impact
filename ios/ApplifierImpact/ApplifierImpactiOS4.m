@@ -111,6 +111,10 @@
 }
 
 - (void)startWithGameId:(NSString *)gameId {
+  [self startWithGameId:gameId andViewController:nil];
+}
+
+- (void)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController {
   AIAssert([NSThread isMainThread]);
 	
 	if (gameId == nil || [gameId length] == 0) {
@@ -118,13 +122,14 @@
 		return;
 	}
   
-  NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-  [notificationCenter addObserver:self selector:@selector(notificationHandler:) name:UIApplicationWillEnterForegroundNotification object:nil];
-  
-	if ([[ApplifierImpactProperties sharedInstance] impactGameId] != nil) {
+  if ([[ApplifierImpactProperties sharedInstance] impactGameId] != nil) {
     return;
   }
-
+  
+  [[ApplifierImpactProperties sharedInstance] setCurrentViewController:viewController];
+  
+  NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+  [notificationCenter addObserver:self selector:@selector(notificationHandler:) name:UIApplicationWillEnterForegroundNotification object:nil];
 	[[ApplifierImpactProperties sharedInstance] setImpactGameId:gameId];
 	
   self.queue = dispatch_queue_create("com.applifier.impact", NULL);
@@ -180,6 +185,25 @@
 	return [self _adViewCanBeShown];
 }
 
+- (BOOL)showImpact {
+  AIAssertV([NSThread mainThread], NO);
+  return [[ApplifierImpactViewManager sharedInstance] applyAdViewToCurrentViewController];
+}
+
+- (BOOL)hideImpact {
+  AIAssertV([NSThread mainThread], NO);
+  return [[ApplifierImpactViewManager sharedInstance] removeAdViewFromCurrentViewController];
+}
+
+- (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact {
+  [[ApplifierImpactViewManager sharedInstance] removeAdViewFromCurrentViewController];
+  [[ApplifierImpactProperties sharedInstance] setCurrentViewController:viewController];
+  
+  if (applyImpact) {
+    [[ApplifierImpactViewManager sharedInstance] applyAdViewToCurrentViewController];
+  }
+}
+
 - (void)stopAll{
 	AIAssert([NSThread isMainThread]);
   [[ApplifierImpactCampaignManager sharedInstance] performSelector:@selector(cancelAllDownloads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
@@ -198,6 +222,7 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	dispatch_release(self.queue);
 }
+
 
 #pragma mark - ApplifierImpactCampaignManagerDelegate
 
@@ -222,13 +247,6 @@
 
  
 #pragma mark - ApplifierImpactViewManagerDelegate
-
-- (UIViewController *)viewControllerForPresentingViewControllersForViewManager:(ApplifierImpactViewManager *)viewManager {
-	AIAssertV([NSThread isMainThread], nil);
-	AILOG_DEBUG(@"");
-	
-	return [self.delegate viewControllerForPresentingViewControllersForImpact:self];
-}
 
 - (void)viewManagerStartedPlayingVideo {
 	AIAssert([NSThread isMainThread]);

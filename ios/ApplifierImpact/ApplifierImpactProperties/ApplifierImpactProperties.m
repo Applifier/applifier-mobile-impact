@@ -51,7 +51,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   }
   
   if ([self testModeEnabled]) {
-    queryParams = [NSString stringWithFormat:@"%@test=true", queryParams];
+    queryParams = [NSString stringWithFormat:@"&%@test=true", queryParams];
   }
   
   return queryParams;

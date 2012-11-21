@@ -23,8 +23,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-	[[ApplifierImpact sharedInstance] startWithGameId:@"16"];
-	
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
 	if ([self.window respondsToSelector:@selector(setRootViewController:)])
@@ -40,6 +38,7 @@
 	}
 	
     [self.window makeKeyAndVisible];
+	[[ApplifierImpact sharedInstance] startWithGameId:@"16" andViewController:self.viewController];
     return YES;
 }
 

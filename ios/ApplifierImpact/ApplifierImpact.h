@@ -32,7 +32,6 @@
 
 @required
 - (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey;
-- (UIViewController *)viewControllerForPresentingViewControllersForImpact:(ApplifierImpact *)applifierImpact;
 
 @optional
 - (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact;
@@ -48,9 +47,13 @@
 
 + (id)sharedInstance;
 - (void)setTestMode:(BOOL)testModeEnabled;
+- (void)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController;
 - (void)startWithGameId:(NSString *)gameId;
+- (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact;
 - (UIView *)impactAdView;
 - (BOOL)canShowImpact;
+- (BOOL)showImpact;
+- (BOOL)hideImpact;
 - (void)stopAll;
 - (void)trackInstall;
 

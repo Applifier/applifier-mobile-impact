@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "../ApplifierImpactCampaign/ApplifierImpactRewardItem.h"
 
 @interface ApplifierImpactProperties : NSObject
@@ -17,8 +18,8 @@
   @property (nonatomic, strong) NSString *campaignQueryString;
   @property (nonatomic, strong) NSString *impactGameId;
   @property (nonatomic, strong) NSString *gamerId;
-//  @property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
   @property (nonatomic) BOOL testModeEnabled;
+  @property (nonatomic, assign) UIViewController *currentViewController;
 
 + (ApplifierImpactProperties *)sharedInstance;
 - (void)refreshCampaignQueryString;

@@ -20,7 +20,6 @@
 @required
 - (void)viewManagerStartedPlayingVideo;
 - (void)viewManagerVideoEnded;
-- (UIViewController *)viewControllerForPresentingViewControllersForViewManager:(ApplifierImpactViewManager *)viewManager;
 - (void)viewManagerWillCloseAdView;
 - (void)viewManagerWebViewInitialized;
 @end
@@ -36,6 +35,8 @@
 - (void)initWebApp;
 - (void)openAppStoreWithData:(NSDictionary *)data;
 - (void)showPlayerAndPlaySelectedVideo:(BOOL)checkIfWatched;
+- (BOOL)applyAdViewToCurrentViewController;
+- (BOOL)removeAdViewFromCurrentViewController;
 - (void)hidePlayer;
 - (void)closeAdView;
 
