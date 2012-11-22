@@ -12,11 +12,13 @@
 #import "ApplifierImpactCampaign/ApplifierImpactRewardItem.h"
 #import "ApplifierImpactOpenUDID/ApplifierImpactOpenUDID.h"
 #import "ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
-#import "ApplifierImpactViewManager.h"
+//#import "ApplifierImpactViewManager.h"
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 
-@interface ApplifierImpactiOS4 () <ApplifierImpactCampaignManagerDelegate, UIWebViewDelegate, UIScrollViewDelegate, ApplifierImpactViewManagerDelegate>
+#import "ApplifierImpactMainViewController.h"
+
+@interface ApplifierImpactiOS4 () <ApplifierImpactCampaignManagerDelegate, UIWebViewDelegate, UIScrollViewDelegate, ApplifierImpactMainViewControllerDelegate>
 @property (nonatomic, strong) NSThread *backgroundThread;
 @property (nonatomic, assign) dispatch_queue_t queue;
 @end
@@ -58,7 +60,7 @@
 }
 
 - (BOOL)_adViewCanBeShown {
-  if ([[ApplifierImpactCampaignManager sharedInstance] campaigns] != nil && [[[ApplifierImpactCampaignManager sharedInstance] campaigns] count] > 0 && [[ApplifierImpactCampaignManager sharedInstance] rewardItem] != nil && [[ApplifierImpactViewManager sharedInstance] webViewInitialized])
+  if ([[ApplifierImpactCampaignManager sharedInstance] campaigns] != nil && [[[ApplifierImpactCampaignManager sharedInstance] campaigns] count] > 0 && [[ApplifierImpactCampaignManager sharedInstance] rewardItem] != nil && [[ApplifierImpactWebAppController sharedInstance] webViewInitialized])
 		return YES;
 	else
 		return NO;
@@ -116,7 +118,7 @@
 
 - (void)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController {
   AIAssert([NSThread isMainThread]);
-	
+  
 	if (gameId == nil || [gameId length] == 0) {
 		AILOG_ERROR(@"Applifier ID empty or not set.");
 		return;
@@ -142,7 +144,7 @@
 		[self performSelector:@selector(_startAnalyticsUploader) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 		
     dispatch_sync(dispatch_get_main_queue(), ^{
-      [[ApplifierImpactViewManager sharedInstance] setDelegate:self];
+      [[ApplifierImpactMainViewController sharedInstance] setDelegate:self];
 		});
 	});
 }
@@ -155,7 +157,7 @@
   if ([name isEqualToString:UIApplicationWillEnterForegroundNotification]) {
     AIAssert([NSThread isMainThread]);
     
-    if ([[ApplifierImpactViewManager sharedInstance] adViewVisible]) {
+    if ([[ApplifierImpactMainViewController sharedInstance] mainControllerVisible]) {
       AILOG_DEBUG(@"Ad view visible, not refreshing.");
     }
     else {
@@ -164,9 +166,13 @@
   }
 }
 
+/*
 - (UIView *)impactAdView {
 	AIAssertV([NSThread mainThread], nil);
 	
+  ApplifierImpactMainViewController *adViewController = nil;
+  adViewController = [[ApplifierImpactMainViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
+  [[[ApplifierImpactProperties sharedInstance] currentViewController].view.window.rootViewController presentViewController:adViewController animated:NO completion:nil];
 	if ([self _adViewCanBeShown]) {
 		UIView *adView = [[ApplifierImpactViewManager sharedInstance] adView];
 		if (adView != nil) {
@@ -178,7 +184,7 @@
 	}
 	
 	return nil;
-}
+}*/
 
 - (BOOL)canShowImpact {
 	AIAssertV([NSThread mainThread], NO);
@@ -187,20 +193,27 @@
 
 - (BOOL)showImpact {
   AIAssertV([NSThread mainThread], NO);
+  /*
   return [[ApplifierImpactViewManager sharedInstance] applyAdViewToCurrentViewController];
+  */
+  /*
+  [[[ApplifierImpactProperties sharedInstance] currentViewController].view.window.rootViewController presentViewController:[ApplifierImpactMainViewController sharedInstance] animated:NO completion:nil];*/
+  [[ApplifierImpactMainViewController sharedInstance] openImpact];
+  
+  return YES;
 }
 
 - (BOOL)hideImpact {
   AIAssertV([NSThread mainThread], NO);
-  return [[ApplifierImpactViewManager sharedInstance] removeAdViewFromCurrentViewController];
+  return [[ApplifierImpactMainViewController sharedInstance] closeImpact];
 }
 
 - (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact {
-  [[ApplifierImpactViewManager sharedInstance] removeAdViewFromCurrentViewController];
+  [[ApplifierImpactMainViewController sharedInstance] closeImpact];
   [[ApplifierImpactProperties sharedInstance] setCurrentViewController:viewController];
   
   if (applyImpact) {
-    [[ApplifierImpactViewManager sharedInstance] applyAdViewToCurrentViewController];
+    [[ApplifierImpactMainViewController sharedInstance] openImpact];
   }
 }
 
@@ -217,7 +230,8 @@
 - (void)dealloc {
   AILOG_DEBUG(@"");
   [[ApplifierImpactCampaignManager sharedInstance] setDelegate:nil];
-	[[ApplifierImpactViewManager sharedInstance] setDelegate:nil];
+  [[ApplifierImpactMainViewController sharedInstance] setDelegate:nil];
+	//[[ApplifierImpactViewManager sharedInstance] setDelegate:nil];
   [[ApplifierImpactWebAppController sharedInstance] setDelegate:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	dispatch_release(self.queue);
@@ -241,14 +255,14 @@
   }
   
   if (![[ApplifierImpactWebAppController sharedInstance] webViewInitialized]) {
-    [[ApplifierImpactViewManager sharedInstance] initWebApp];
+    [[ApplifierImpactWebAppController sharedInstance] initWebApp];
   }
 }
 
  
 #pragma mark - ApplifierImpactViewManagerDelegate
 
-- (void)viewManagerStartedPlayingVideo {
+- (void)mainControllerStartedPlayingVideo {
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
@@ -256,14 +270,14 @@
 		[self.delegate applifierImpactVideoStarted:self];
 }
 
-- (void)viewManagerVideoEnded {
+- (void)mainControllerVideoEnded {
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
 	[self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] rewardItem].key];
 }
 
-- (void)viewManagerWillCloseAdView {
+- (void)mainControllerWillCloseAdView {
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
@@ -271,7 +285,7 @@
 		[self.delegate applifierImpactWillClose:self];
 }
 
-- (void)viewManagerWebViewInitialized {
+- (void)mainControllerWebViewInitialized {
 	AIAssert([NSThread isMainThread]);	
 	AILOG_DEBUG(@"");
 

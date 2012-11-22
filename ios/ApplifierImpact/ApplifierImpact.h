@@ -50,7 +50,6 @@
 - (void)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController;
 - (void)startWithGameId:(NSString *)gameId;
 - (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact;
-- (UIView *)impactAdView;
 - (BOOL)canShowImpact;
 - (BOOL)showImpact;
 - (BOOL)hideImpact;

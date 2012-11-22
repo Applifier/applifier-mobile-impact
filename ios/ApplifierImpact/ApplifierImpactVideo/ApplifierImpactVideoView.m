@@ -15,6 +15,7 @@
   AILOG_DEBUG(@"");
   self = [super initWithFrame:frame];
   if (self) {
+    [self setBackgroundColor:[UIColor blackColor]];
     // Initialization code
   }
   return self;

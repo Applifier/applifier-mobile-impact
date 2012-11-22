@@ -14,7 +14,9 @@
 #import "../ApplifierImpactSBJSON/NSObject+ApplifierImpactSBJson.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
-#import "../ApplifierImpactViewManager.h"
+//#import "../ApplifierImpactViewManager.h"
+#import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
+#import "../ApplifierImpactMainViewController.h"
 
 NSString * const kApplifierImpactWebViewPrefix = @"applifierimpact.";
 NSString * const kApplifierImpactWebViewJSInit = @"init";
@@ -31,12 +33,16 @@ NSString * const kApplifierImpactWebViewViewTypeStart = @"start";
 
 @interface ApplifierImpactWebAppController ()
   @property (nonatomic, strong) NSDictionary* webAppInitalizationParams;
+  //@property (nonatomic, strong) UIWindow *window;
 @end
 
 @implementation ApplifierImpactWebAppController
 
 - (ApplifierImpactWebAppController *)init {
-  return [super init];
+  if (self = [super init]) {
+    //_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+  }
+  return self;
 }
 
 static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
@@ -64,6 +70,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 - (void)setupWebApp:(CGRect)frame {  
   if (self.webView == nil) {
     self.webView = [[UIWebView alloc] initWithFrame:frame];
+    //[_window addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];
     self.webView.delegate = self;
     self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.webView.scalesPageToFit = NO;
@@ -85,8 +92,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
   }
 }
 
-- (void)setWebViewCurrentView:(NSString *)view data:(NSDictionary *)data
-{
+- (void)setWebViewCurrentView:(NSString *)view data:(NSDictionary *)data {
 	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSChangeView, view, [data JSONRepresentation]];
   
   AILOG_DEBUG(@"");
@@ -113,7 +119,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
           checkIfWatched = NO;
         }
         
-        [[ApplifierImpactViewManager sharedInstance] showPlayerAndPlaySelectedVideo:checkIfWatched];
+        [[ApplifierImpactMainViewController sharedInstance] showPlayerAndPlaySelectedVideo:checkIfWatched];
       }
 		}
 		else if ([type isEqualToString:kApplifierImpactWebViewAPINavigateTo]) {
@@ -124,12 +130,12 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 		}
 		else if ([type isEqualToString:kApplifierImpactWebViewAPIAppStore]) {
       if ([data objectForKey:@"clickUrl"] != nil) {
-        [[ApplifierImpactViewManager sharedInstance] openAppStoreWithData:data];
+        [[ApplifierImpactMainViewController sharedInstance] openAppStoreWithData:data];
       }    
 		}
 	}
 	else if ([type isEqualToString:kApplifierImpactWebViewAPIClose]) {
-    [[ApplifierImpactViewManager sharedInstance] closeAdView];
+    [[ApplifierImpactMainViewController sharedInstance] closeImpact];
 	}
 	else if ([type isEqualToString:kApplifierImpactWebViewAPIInitComplete]) {
     self.webViewInitialized = YES;
@@ -189,6 +195,22 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
 }
 
+
+- (void)initWebApp {
+	AIAssert([NSThread isMainThread]);
+  
+  NSDictionary *persistingData = @{@"campaignData":[[ApplifierImpactCampaignManager sharedInstance] campaignData], @"platform":@"ios", @"deviceId":[ApplifierImpactDevice md5DeviceId]};
+  
+  NSDictionary *trackingData = @{@"iOSVersion":[ApplifierImpactDevice softwareVersion], @"deviceType":[ApplifierImpactDevice analyticsMachineName]};
+  NSMutableDictionary *webAppValues = [NSMutableDictionary dictionaryWithDictionary:persistingData];
+  
+  if ([ApplifierImpactDevice canUseTracking]) {
+    [webAppValues addEntriesFromDictionary:trackingData];
+  }
+  
+  [self setupWebApp:[[UIScreen mainScreen] bounds]];
+  [self loadWebApp:webAppValues];
+}
 
 #pragma mark - WebView
 

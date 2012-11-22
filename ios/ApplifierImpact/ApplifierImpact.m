@@ -65,11 +65,6 @@ static ApplifierImpact *sharedApplifierInstance = nil;
   AILOG_DEBUG(@"Disabled on older versions of iOS.");
 }
 
-- (UIView *)impactAdView {
-	AILOG_DEBUG(@"Disabled on older versions of iOS.");
-	return nil;
-}
-
 - (BOOL)canShowImpact {
 	AILOG_DEBUG(@"Disabled on older versions of iOS.");
 	return NO;
