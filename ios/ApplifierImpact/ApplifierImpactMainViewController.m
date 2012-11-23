@@ -68,14 +68,14 @@
 #pragma mark - Public
 
 - (BOOL)closeImpact {
-  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
-  [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:NO completion:nil];
+  [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:YES completion:nil];
   return YES;
 }
 
 - (BOOL)openImpact {
   AILOG_DEBUG(@"");
-  [[[ApplifierImpactProperties sharedInstance] currentViewController] presentViewController:self animated:NO completion:nil];
+  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
+  [[[ApplifierImpactProperties sharedInstance] currentViewController] presentViewController:self animated:YES completion:nil];
   
   if (![self.videoView.superview isEqual:self.view]) {
     [self.view addSubview:self.videoView];
