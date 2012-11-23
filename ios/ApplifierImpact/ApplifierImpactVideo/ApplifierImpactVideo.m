@@ -14,61 +14,36 @@
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 
-id timeObserver;
-id analyticsTimeObserver;
-VideoAnalyticsPosition videoPosition;
-//ApplifierImpactCampaign *selectedCampaign;
+static void *ImpactVideoPlayerItemStatusContext = &ImpactVideoPlayerItemStatusContext;
+
+@interface ApplifierImpactVideo ()
+  @property (nonatomic, assign) id timeObserver;
+  @property (nonatomic, assign) id analyticsTimeObserver;
+  @property (nonatomic) VideoAnalyticsPosition videoPosition;
+@end
 
 @implementation ApplifierImpactVideo
 
-- (void)createPlayerLayer {
-	self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self];
-	self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+- (void)preparePlayer {
+  [self _addObservers];
 }
 
-- (void)destroyPlayer {
-  [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-  [self removeTimeObserver:timeObserver];
-	timeObserver = nil;
-	[self removeTimeObserver:analyticsTimeObserver];
-	analyticsTimeObserver = nil;
+- (void)clearPlayer {
+  [self _removeObservers];
 }
+
+#pragma mark Video Playback
 
 - (void)playSelectedVideo {
-  __block ApplifierImpactVideo *blockSelf = self;
-  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
-    timeObserver = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
-      [blockSelf _videoPositionChanged:time];
-    }];
-  }
-	
-  videoPosition = kVideoAnalyticsPositionUnplayed;
-	Float64 duration = [self _currentVideoDuration];
-	NSMutableArray *analyticsTimeValues = [NSMutableArray array];
-	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .25]];
-	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .5]];
-	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .75]];
-  
-  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
-    analyticsTimeObserver = [self addBoundaryTimeObserverForTimes:analyticsTimeValues queue:nil usingBlock:^{
-      [blockSelf _logVideoAnalytics];
-    }];
-  }
-    
-	[self play];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+  self.videoPosition = kVideoAnalyticsPositionUnplayed;
   [self.delegate videoPlaybackStarted];
 	[self _logVideoAnalytics];
 }
 
-- (void)_videoPlaybackEnded:(NSNotification *)notification
-{
+- (void)_videoPlaybackEnded:(NSNotification *)notification {
   AILOG_DEBUG(@"");
-	
-  [self destroyPlayer];
-  
   if ([[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
-    videoPosition = kVideoAnalyticsPositionThirdQuartile;
+    self.videoPosition = kVideoAnalyticsPositionThirdQuartile;
   }
   
   [self _logVideoAnalytics];
@@ -76,28 +51,104 @@ VideoAnalyticsPosition videoPosition;
   [self.delegate videoPlaybackEnded];
 }
 
+
+#pragma mark Video Observers
+
+- (void)_addObservers {
+  [self addObserver:self forKeyPath:@"self.currentItem.status" options:0 context:nil];
+  [self addObserver:self forKeyPath:@"self.currentItem.error" options:0 context:nil];
+  [self addObserver:self forKeyPath:@"self.currentItem.asset.duration" options:0 context:nil];
+  
+  __block ApplifierImpactVideo *blockSelf = self;
+  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+    self.timeObserver = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
+      [blockSelf _videoPositionChanged:time];
+    }];
+  }
+  
+	Float64 duration = [self _currentVideoDuration];
+	NSMutableArray *analyticsTimeValues = [NSMutableArray array];
+	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .25]];
+	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .5]];
+	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .75]];
+  
+  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+    self.analyticsTimeObserver = [self addBoundaryTimeObserverForTimes:analyticsTimeValues queue:nil usingBlock:^{
+      [blockSelf _logVideoAnalytics];
+    }];
+  }
+  
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
+}
+
+- (void)_removeObservers {
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+  
+  if (self.timeObserver != nil) {
+    [self removeTimeObserver:self.timeObserver];
+    self.timeObserver = nil;
+  }
+	
+  if (self.analyticsTimeObserver != nil) {
+    [self removeTimeObserver:self.analyticsTimeObserver];
+    self.analyticsTimeObserver = nil;
+  }
+  
+  [self removeObserver:self forKeyPath:@"self.currentItem.status"];
+  [self removeObserver:self forKeyPath:@"self.currentItem.error"];
+  [self removeObserver:self forKeyPath:@"self.currentItem.asset.duration"];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+  if ([keyPath isEqual:@"self.currentItem.error"]) {
+    AILOG_DEBUG(@"VIDEOPLAYER_ERROR: %@", self.currentItem.error);
+  }
+  else if ([keyPath isEqual:@"self.currentItem.asset.duration"]) {
+    AILOG_DEBUG(@"VIDEOPLAYER_DURATION: %f", CMTimeGetSeconds(self.currentItem.asset.duration));
+  }
+  else if ([keyPath isEqual:@"self.currentItem.status"]) {
+    AILOG_DEBUG(@"VIDEOPLAYER_STATUS: %i", self.currentItem.status);
+    
+    AVPlayerStatus playerStatus = self.currentItem.status;
+    if (playerStatus == AVPlayerStatusReadyToPlay) {
+      [self play];
+      [self.delegate videoStartedPlaying];
+    }
+    else if (playerStatus == AVPlayerStatusFailed) {
+      AILOG_DEBUG(@"Player failed");
+    }
+    else if (playerStatus == AVPlayerStatusUnknown) {
+      AILOG_DEBUG(@"Player in unknown state");
+    }
+  }
+}
+
+
+#pragma mark Video Duration
+
 - (void)_videoPositionChanged:(CMTime)time {
   [self.delegate videoPositionChanged:time];
 }
 
-- (void)_logVideoAnalytics
-{
-	videoPosition++;
-  [[ApplifierImpactAnalyticsUploader sharedInstance] logVideoAnalyticsWithPosition:videoPosition campaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
-}
-
-- (Float64)_currentVideoDuration
-{
+- (Float64)_currentVideoDuration {
 	CMTime durationTime = self.currentItem.asset.duration;
 	Float64 duration = CMTimeGetSeconds(durationTime);
 	
 	return duration;
 }
 
-- (NSValue *)_valueWithDuration:(Float64)duration
-{
+- (NSValue *)_valueWithDuration:(Float64)duration {
 	CMTime time = CMTimeMakeWithSeconds(duration, NSEC_PER_SEC);
 	return [NSValue valueWithCMTime:time];
 }
+
+
+#pragma mark Analytics
+
+- (void)_logVideoAnalytics {
+	self.videoPosition++;
+  [[ApplifierImpactAnalyticsUploader sharedInstance] logVideoAnalyticsWithPosition:self.videoPosition campaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
+}
+
 
 @end

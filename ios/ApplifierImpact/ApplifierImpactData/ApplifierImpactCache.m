@@ -34,34 +34,28 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 
 #pragma mark - Private
 
-- (NSString *)_cachePath
-{
+- (NSString *)_cachePath {
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
 	AIAssertV(paths != nil && [paths count] > 0, nil);
 	
 	return [[paths objectAtIndex:0] stringByAppendingPathComponent:@"applifier"];
 }
 
-- (NSString *)_videoFilenameForCampaign:(ApplifierImpactCampaign *)campaign
-{
+- (NSString *)_videoFilenameForCampaign:(ApplifierImpactCampaign *)campaign {
 	return [NSString stringWithFormat:@"%@-%@", campaign.id, [campaign.trailerDownloadableURL lastPathComponent]];
 }
 
-- (NSString *)_videoPathForCampaign:(ApplifierImpactCampaign *)campaign
-{
+- (NSString *)_videoPathForCampaign:(ApplifierImpactCampaign *)campaign {
 	return [[self _cachePath] stringByAppendingPathComponent:[self _videoFilenameForCampaign:campaign]];
 }
 
-- (long long)_cachedFilesizeForVideoFilename:(NSString *)filename
-{
+- (long long)_cachedFilesizeForVideoFilename:(NSString *)filename {
 	NSArray *index = [[NSUserDefaults standardUserDefaults] arrayForKey:kApplifierImpactCacheIndexKey];
 	long long size = 0;
 	
-	for (NSDictionary *cacheEntry in index)
-	{
+	for (NSDictionary *cacheEntry in index) {
 		NSString *indexFilename = [cacheEntry objectForKey:kApplifierImpactCacheEntryFilenameKey];
-		if ([filename isEqualToString:indexFilename])
-		{
+		if ([filename isEqualToString:indexFilename]) {
 			size = [[cacheEntry objectForKey:kApplifierImpactCacheEntryFilesizeKey] longLongValue];
 			break;
 		}
@@ -76,39 +70,42 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 		return NO;
 	}
 	
-	NSString *filePath = [self _videoPathForCampaign:campaign];
-	long long existingFilesize = [self _filesizeForPath:filePath];
-	long long filesize = [self _cachedFilesizeForVideoFilename:[self _videoFilenameForCampaign:campaign]];
-	
-	if (![self campaignExistsInQueue:campaign] && (existingFilesize < filesize || filesize == 0)) {
-		AILOG_DEBUG(@"Queueing %@, id %@", campaign.trailerDownloadableURL, campaign.id);
-		
-    // Initialize downloadque only if it's NULL
-    if (_downloadQueue == nil) {
-      _downloadQueue = [NSMutableArray array];
-    }
+  if (campaign.shouldCacheVideo) {
+    NSString *filePath = [self _videoPathForCampaign:campaign];
+    long long existingFilesize = [self _filesizeForPath:filePath];
+    long long filesize = [self _cachedFilesizeForVideoFilename:[self _videoFilenameForCampaign:campaign]];
     
-		NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:campaign.trailerDownloadableURL];
-		NSMutableDictionary *downloadDictionary = [NSMutableDictionary dictionary];
-		[downloadDictionary setObject:request forKey:kApplifierImpactCacheURLRequestKey];
-		[downloadDictionary setObject:campaign forKey:kApplifierImpactCacheCampaignKey];
-		[downloadDictionary setObject:filePath forKey:kApplifierImpactCacheFilePathKey];
-		[downloadDictionary setObject:(existingFilesize > 0 ? kApplifierImpactCacheDownloadResumeExpected : kApplifierImpactCacheDownloadNewDownload) forKey:kApplifierImpactCacheResumeKey];
-		[self.downloadQueue addObject:downloadDictionary];
-		[self _startDownload];
-		
-		return YES;
-	}
+    if (![self campaignExistsInQueue:campaign] && (existingFilesize < filesize || filesize == 0)) {
+      AILOG_DEBUG(@"Queueing %@, id %@", campaign.trailerDownloadableURL, campaign.id);
+      
+      // Initialize downloadque only if it's NULL
+      if (_downloadQueue == nil) {
+        _downloadQueue = [NSMutableArray array];
+      }
+      
+      NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:campaign.trailerDownloadableURL];
+      NSMutableDictionary *downloadDictionary = [NSMutableDictionary dictionary];
+      [downloadDictionary setObject:request forKey:kApplifierImpactCacheURLRequestKey];
+      [downloadDictionary setObject:campaign forKey:kApplifierImpactCacheCampaignKey];
+      [downloadDictionary setObject:filePath forKey:kApplifierImpactCacheFilePathKey];
+      [downloadDictionary setObject:(existingFilesize > 0 ? kApplifierImpactCacheDownloadResumeExpected : kApplifierImpactCacheDownloadNewDownload) forKey:kApplifierImpactCacheResumeKey];
+      [self.downloadQueue addObject:downloadDictionary];
+      [self _startDownload];
+      
+      return YES;
+    }
+  }
+  else {
+    AILOG_DEBUG(@"Skipping campaign video caching: cacheVideo is false");
+  }
 	
 	return NO;
 }
 
-- (long long)_filesizeForPath:(NSString *)path
-{
+- (long long)_filesizeForPath:(NSString *)path {
 	long long size = 0;
 	
-	if ([[NSFileManager defaultManager] fileExistsAtPath:path])
-	{
+	if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
 		NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
 		size = [attributes fileSize];
 	}
@@ -116,8 +113,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	return size;
 }
 
-- (BOOL)_startNextDownloadInQueue
-{
+- (BOOL)_startNextDownloadInQueue {
 	if (self.currentDownload != nil || [self.downloadQueue count] == 0)
 		return NO;
 	
@@ -126,10 +122,8 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	NSMutableURLRequest *request = [self.currentDownload objectForKey:kApplifierImpactCacheURLRequestKey];
 	NSString *filePath = [self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey];
 	
-	if ( ! [[NSFileManager defaultManager] fileExistsAtPath:filePath])
-	{
-		if ( ! [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil])
-		{
+	if ( ! [[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+		if ( ! [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil]) {
 			AILOG_DEBUG(@"Unable to create file at %@", filePath);
 			self.currentDownload = nil;
 			return NO;
@@ -153,8 +147,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	return YES;
 }
 
-- (void)_startDownload
-{
+- (void)_startDownload {
 	BOOL downloadStarted = [self _startNextDownloadInQueue];
 	if ( ! downloadStarted && self.currentDownload == nil && [self.downloadQueue count] > 0)
 		[self performSelector:@selector(_startDownload) withObject:self afterDelay:3.0];

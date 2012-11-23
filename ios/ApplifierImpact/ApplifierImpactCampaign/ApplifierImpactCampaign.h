@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSString *id;
 @property (nonatomic, strong) NSString *tagLine;
 @property (nonatomic, strong) NSString *itunesID;
+@property (nonatomic, assign) BOOL shouldCacheVideo;
 @property (nonatomic, assign) BOOL viewed;
 
 @end

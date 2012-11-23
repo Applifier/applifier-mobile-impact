@@ -140,6 +140,13 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 			AIAssertV(itunesID != nil && [itunesID length] > 0, nil);
 			campaign.itunesID = itunesID;
 			
+      campaign.shouldCacheVideo = NO;
+      if ([campaignDictionary objectForKey:@"cacheVideo"] != nil) {
+        if ([[campaignDictionary valueForKey:@"cacheVideo"] boolValue] != 0) {
+          campaign.shouldCacheVideo = YES;
+        }
+      }
+      
 			[campaigns addObject:campaign];
 		}
 		else {
@@ -254,13 +261,12 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 		}
 		
 		NSURL *videoURL = [self.cache localVideoURLForCampaign:campaign];
-    AILOG_DEBUG(@"%@ and %i", videoURL.absoluteString, [self.cache campaignExistsInQueue:campaign]);
-		if (videoURL == nil || [self.cache campaignExistsInQueue:campaign]) {
+		if (videoURL == nil || [self.cache campaignExistsInQueue:campaign] || ![campaign shouldCacheVideo]) {
       AILOG_DEBUG(@"Campaign is not cached!");
       videoURL = campaign.trailerStreamingURL;
     }
     
-    AILOG_DEBUG(@"%@", videoURL);
+    AILOG_DEBUG(@"%@ and %i", videoURL.absoluteString, [self.cache campaignExistsInQueue:campaign]);
     
 		return videoURL;
 	}

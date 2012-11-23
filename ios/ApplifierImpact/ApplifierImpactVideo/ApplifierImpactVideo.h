@@ -22,6 +22,7 @@ typedef enum
 
 @required
 - (void)videoPlaybackStarted;
+- (void)videoStartedPlaying;
 - (void)videoPlaybackEnded;
 - (void)videoPositionChanged:(CMTime)time;
 @end
@@ -30,6 +31,8 @@ typedef enum
 @property (nonatomic, assign) id<ApplifierImpactVideoDelegate> delegate;
 @property (nonatomic, strong) AVPlayerLayer *playerLayer;
 - (void)playSelectedVideo;
-- (void)createPlayerLayer;
-- (void)destroyPlayer;
+- (void)preparePlayer;
+- (void)clearPlayer;
+//- (void)createPlayerLayer;
+//- (void)destroyPlayer;
 @end
