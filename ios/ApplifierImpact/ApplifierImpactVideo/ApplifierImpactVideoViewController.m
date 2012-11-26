@@ -19,6 +19,7 @@
   @property (nonatomic, assign) ApplifierImpactCampaign *campaignToPlay;
   @property (nonatomic, strong) UILabel *progressLabel;
   @property (nonatomic, assign) dispatch_queue_t videoControllerQueue;
+  @property (nonatomic, strong) NSURL *currentPlayingVideoUrl;
 @end
 
 @implementation ApplifierImpactVideoViewController
@@ -62,6 +63,7 @@
 #pragma mark - Public
 
 - (void)playCampaign:(ApplifierImpactCampaign *)campaignToPlay {
+  AILOG_DEBUG(@"");
   NSURL *videoURL = [[ApplifierImpactCampaignManager sharedInstance] getVideoURLForCampaign:campaignToPlay];
   
 	if (videoURL == nil) {
@@ -69,8 +71,10 @@
 		return;
 	}
   
+  self.currentPlayingVideoUrl = videoURL;
+  
   dispatch_async(self.videoControllerQueue, ^{
-    AVPlayerItem *item = [AVPlayerItem playerItemWithURL:videoURL];
+    AVPlayerItem *item = [AVPlayerItem playerItemWithURL:self.currentPlayingVideoUrl];
     [self _createVideoView];
     [self _createVideoPlayer];
     [self _attachVideoPlayer];
@@ -126,6 +130,7 @@
 
 - (void)_destroyVideoPlayer {
   if (self.videoPlayer != nil) {
+    self.currentPlayingVideoUrl = nil;
     [self.videoPlayer clearPlayer];
     self.videoPlayer.delegate = nil;
     self.videoPlayer = nil;
