@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "../ApplifierImpactVideo/ApplifierImpactVideo.h"
+#import "../ApplifierImpactVideo/ApplifierImpactVideoPlayer.h"
 
 extern NSString * const kApplifierImpactQueryDictionaryQueryKey;
 extern NSString * const kApplifierImpactQueryDictionaryBodyKey;

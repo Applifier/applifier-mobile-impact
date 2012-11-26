@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Applifier. All rights reserved.
 //
 
-#import "ApplifierImpactVideo.h"
+#import "ApplifierImpactVideoPlayer.h"
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
@@ -14,15 +14,13 @@
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 
-static void *ImpactVideoPlayerItemStatusContext = &ImpactVideoPlayerItemStatusContext;
-
-@interface ApplifierImpactVideo ()
+@interface ApplifierImpactVideoPlayer ()
   @property (nonatomic, assign) id timeObserver;
   @property (nonatomic, assign) id analyticsTimeObserver;
   @property (nonatomic) VideoAnalyticsPosition videoPosition;
 @end
 
-@implementation ApplifierImpactVideo
+@implementation ApplifierImpactVideoPlayer
 
 - (void)preparePlayer {
   [self _addObservers];
@@ -31,6 +29,7 @@ static void *ImpactVideoPlayerItemStatusContext = &ImpactVideoPlayerItemStatusCo
 - (void)clearPlayer {
   [self _removeObservers];
 }
+
 
 #pragma mark Video Playback
 
@@ -59,7 +58,7 @@ static void *ImpactVideoPlayerItemStatusContext = &ImpactVideoPlayerItemStatusCo
   [self addObserver:self forKeyPath:@"self.currentItem.error" options:0 context:nil];
   [self addObserver:self forKeyPath:@"self.currentItem.asset.duration" options:0 context:nil];
   
-  __block ApplifierImpactVideo *blockSelf = self;
+  __block ApplifierImpactVideoPlayer *blockSelf = self;
   if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
     self.timeObserver = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
       [blockSelf _videoPositionChanged:time];
@@ -111,8 +110,8 @@ static void *ImpactVideoPlayerItemStatusContext = &ImpactVideoPlayerItemStatusCo
     
     AVPlayerStatus playerStatus = self.currentItem.status;
     if (playerStatus == AVPlayerStatusReadyToPlay) {
-      [self play];
       [self.delegate videoStartedPlaying];
+      [self play];
     }
     else if (playerStatus == AVPlayerStatusFailed) {
       AILOG_DEBUG(@"Player failed");
@@ -149,6 +148,5 @@ static void *ImpactVideoPlayerItemStatusContext = &ImpactVideoPlayerItemStatusCo
 	self.videoPosition++;
   [[ApplifierImpactAnalyticsUploader sharedInstance] logVideoAnalyticsWithPosition:self.videoPosition campaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
 }
-
 
 @end

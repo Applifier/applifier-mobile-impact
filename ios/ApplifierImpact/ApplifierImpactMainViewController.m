@@ -11,15 +11,12 @@
 
 #import "ApplifierImpactVideo/ApplifierImpactVideoView.h"
 #import "ApplifierImpactWebView/ApplifierImpactWebAppController.h"
-#import "ApplifierImpactVideo/ApplifierImpactVideo.h"
 #import "ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 
 @interface ApplifierImpactMainViewController ()
-  @property (nonatomic, strong) UILabel *progressLabel;
-  @property (nonatomic, strong) ApplifierImpactVideoView *videoView;
-  @property (nonatomic, strong) ApplifierImpactVideo *player;
+  @property (nonatomic, strong) ApplifierImpactVideoViewController *videoController;
   @property (nonatomic, strong) UIViewController *storeController;
 @end
 
@@ -27,6 +24,7 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+  
     if (self) {
       // Add notification listener
       NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
@@ -35,7 +33,12 @@
       // "init" WebAppController
       [ApplifierImpactWebAppController sharedInstance];
       [[ApplifierImpactWebAppController sharedInstance] setDelegate:self];
+      
+      // init VideoController
+      self.videoController = [[ApplifierImpactVideoViewController alloc] initWithNibName:nil bundle:nil];
+      self.videoController.delegate = self;
     }
+  
     return self;
 }
 
@@ -47,8 +50,6 @@
 - (void)viewDidLoad {
 	AILOG_DEBUG(@"");
   [super viewDidLoad];
-  [self _createProgressLabel];
-  [self _createVideoView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -56,7 +57,7 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-  return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+  return YES;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
@@ -68,6 +69,10 @@
 #pragma mark - Public
 
 - (BOOL)closeImpact {
+  // FIX, DOESN'T WORK ON iOS 4
+  if (self.videoController.view.superview != nil) {
+    [self dismissViewControllerAnimated:NO completion:nil];
+  }
   [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:YES completion:nil];
   return YES;
 }
@@ -75,18 +80,9 @@
 - (BOOL)openImpact {
   AILOG_DEBUG(@"");
   [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
+  
+  // FIX, DOESN'T WORK ON iOS 4
   [[[ApplifierImpactProperties sharedInstance] currentViewController] presentViewController:self animated:YES completion:nil];
-  
-  if (![self.videoView.superview isEqual:self.view]) {
-    [self.view addSubview:self.videoView];
-    [self.videoView setFrame:self.view.bounds];
-    self.videoView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-  }
-  
-  if (![self.progressLabel.superview isEqual:self.view]) {
-    [self.view addSubview:self.progressLabel];
-    [self.progressLabel setFrame:self.view.bounds];
-  }
   
   if (![[[[ApplifierImpactWebAppController sharedInstance] webView] superview] isEqual:self.view]) {
     [self.view addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];
@@ -107,109 +103,33 @@
 
 #pragma mark - Video
 
+- (void)videoPlayerStartedPlaying {
+  [self presentViewController:self.videoController animated:NO completion:nil];
+  [self.delegate mainControllerStartedPlayingVideo];
+  
+  // FIX, DOESN'T WORK ON iOS 4
+  NSDictionary *data = @{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id};
+  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id, @"text":@"Buffering..."}];
+  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:data];  
+}
+
+- (void)videoPlayerPlaybackEnded {
+  [self.delegate mainControllerVideoEnded];
+  
+  // FIX DOESN'T WORK ON iOS 4
+  [self dismissViewControllerAnimated:NO completion:nil];
+}
+
 - (void)showPlayerAndPlaySelectedVideo:(BOOL)checkIfWatched {
 	AILOG_DEBUG(@"");
-  
+    
   if ([[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed && checkIfWatched) {
     AILOG_DEBUG(@"Trying to watch a campaign that is already viewed!");
     return;
   }
-  
-	NSURL *videoURL = [[ApplifierImpactCampaignManager sharedInstance] getVideoURLForCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
-  
-	if (videoURL == nil) {
-		AILOG_DEBUG(@"Video not found!");
-		return;
-	}
-  
-	AVPlayerItem *item = [AVPlayerItem playerItemWithURL:videoURL];
 
-  if (self.player == nil) {
-    self.player = [[ApplifierImpactVideo alloc] initWithPlayerItem:nil];
-    self.player.delegate = self;
-    [_videoView setPlayer:self.player];
-  }
-  
-  [self.player preparePlayer];
-  [self.player replaceCurrentItemWithPlayerItem:item];
-  
-  [self.view bringSubviewToFront:self.videoView];
-  [self.player playSelectedVideo];
-}
-
-- (void)_hidePlayer {
-  if (self.player != nil) {
-    self.progressLabel.hidden = YES;
-    [self.view sendSubviewToBack:self.progressLabel];
-    [self.view sendSubviewToBack:self.videoView];
-  }
-}
-
-- (void)_clearPlayer {
-  [self.player clearPlayer];
-  [self.videoView setPlayer:nil];
-  self.player.delegate = nil;
-  self.player = nil;
-}
-
-- (Float64)_currentVideoDuration {
-	CMTime durationTime = self.player.currentItem.asset.duration;
-	Float64 duration = CMTimeGetSeconds(durationTime);
-	
-	return duration;
-}
-
-- (NSValue *)_valueWithDuration:(Float64)duration {
-	CMTime time = CMTimeMakeWithSeconds(duration, NSEC_PER_SEC);
-	return [NSValue valueWithCMTime:time];
-}
-
-
-#pragma mark - ApplifierImpactVideoDelegate
-
-- (void)videoPositionChanged:(CMTime)time {
-  [self _updateTimeRemainingLabelWithTime:time];
-}
-
-- (void)videoPlaybackStarted {
-  [self.delegate mainControllerStartedPlayingVideo];
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"showSpinner" data:@{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id, @"text":@"Buffering..."}];
-  [[ApplifierImpactWebAppController sharedInstance] webView].userInteractionEnabled = NO;
-}
-
-- (void)videoStartedPlaying {
-  NSDictionary *data = @{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id};
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id, @"text":@"Buffering..."}];
-  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:data];
-  [self _displayProgressLabel];
-}
-
-- (void)videoPlaybackEnded {
-  [[ApplifierImpactWebAppController sharedInstance] webView].userInteractionEnabled = YES;
-  [self.delegate mainControllerVideoEnded];
-  [self _hidePlayer];
-  [self _clearPlayer];
-	
-	[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed = YES;
-}
-
-
-#pragma mark - Video Progress Label
-
-- (void)_updateTimeRemainingLabelWithTime:(CMTime)currentTime {
-	Float64 duration = [self _currentVideoDuration];
-	Float64 current = CMTimeGetSeconds(currentTime);
-	NSString *descriptionText = [NSString stringWithFormat:NSLocalizedString(@"This video ends in %.0f seconds.", nil), duration - current];
-	self.progressLabel.text = descriptionText;
-}
-
-- (void)_displayProgressLabel {
-	CGFloat padding = 10.0;
-	CGFloat height = 30.0;
-	CGRect labelFrame = CGRectMake(padding, self.view.frame.size.height - height, self.view.frame.size.width - (padding * 2.0), height);
-	self.progressLabel.frame = labelFrame;
-	self.progressLabel.hidden = NO;
-	[self.view bringSubviewToFront:self.progressLabel];
+  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"showSpinner" data:@{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id, @"text":@"Buffering your video..."}];
+  [self.videoController playCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
 }
 
 
@@ -221,13 +141,7 @@
   AILOG_DEBUG(@"notification: %@", name);
   
   if ([name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
-    [[ApplifierImpactWebAppController sharedInstance] webView].userInteractionEnabled = YES;
-    if (self.player != nil) {
-      AILOG_DEBUG(@"Destroying player");
-      [self _hidePlayer];
-      [self _clearPlayer];
-    }
-    
+    [self.videoController forceStopVideoPlayer];
     [self closeImpact];
   }
 }
@@ -312,25 +226,6 @@ static ApplifierImpactMainViewController *sharedImpactMainViewController = nil;
 	}
 	
 	return sharedImpactMainViewController;
-}
-
-
-#pragma mark - Private view creations
-
-- (void)_createProgressLabel {
-  self.progressLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-  self.progressLabel.backgroundColor = [UIColor clearColor];
-  self.progressLabel.textColor = [UIColor whiteColor];
-  self.progressLabel.font = [UIFont systemFontOfSize:12.0];
-  self.progressLabel.textAlignment = UITextAlignmentRight;
-  self.progressLabel.shadowColor = [UIColor blackColor];
-  self.progressLabel.shadowOffset = CGSizeMake(0, 1.0);
-  self.progressLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
-  [self.view addSubview:self.progressLabel];
-}
-
-- (void)_createVideoView {
-  self.videoView = [[ApplifierImpactVideoView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 }
 
 @end

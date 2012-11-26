@@ -18,7 +18,7 @@ typedef enum
 	kVideoAnalyticsPositionEnd = 4,
 } VideoAnalyticsPosition;
 
-@protocol ApplifierImpactVideoDelegate <NSObject>
+@protocol ApplifierImpactVideoPlayerDelegate <NSObject>
 
 @required
 - (void)videoPlaybackStarted;
@@ -27,12 +27,10 @@ typedef enum
 - (void)videoPositionChanged:(CMTime)time;
 @end
 
-@interface ApplifierImpactVideo : AVPlayer
-@property (nonatomic, assign) id<ApplifierImpactVideoDelegate> delegate;
+@interface ApplifierImpactVideoPlayer : AVPlayer
+@property (nonatomic, assign) id<ApplifierImpactVideoPlayerDelegate> delegate;
 @property (nonatomic, strong) AVPlayerLayer *playerLayer;
 - (void)playSelectedVideo;
 - (void)preparePlayer;
 - (void)clearPlayer;
-//- (void)createPlayerLayer;
-//- (void)destroyPlayer;
 @end

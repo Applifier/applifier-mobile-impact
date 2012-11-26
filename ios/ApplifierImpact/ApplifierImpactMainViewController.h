@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ApplifierImpactVideo/ApplifierImpactVideo.h"
 #import "ApplifierImpactWebView/ApplifierImpactWebAppController.h"
+#import "ApplifierImpactVideo/ApplifierImpactVideoViewController.h"
 
 @protocol ApplifierImpactMainViewControllerDelegate <NSObject>
 
@@ -19,7 +19,7 @@
 - (void)mainControllerWebViewInitialized;
 @end
 
-@interface ApplifierImpactMainViewController : UIViewController <ApplifierImpactVideoDelegate, ApplifierImpactWebAppControllerDelegate>
+@interface ApplifierImpactMainViewController : UIViewController <ApplifierImpactVideoControllerDelegate, ApplifierImpactWebAppControllerDelegate>
 
 @property (nonatomic, assign) id<ApplifierImpactMainViewControllerDelegate> delegate;
 //@property (nonatomic) BOOL webViewInitialized;

@@ -12,7 +12,6 @@
 #import "ApplifierImpactCampaign/ApplifierImpactRewardItem.h"
 #import "ApplifierImpactOpenUDID/ApplifierImpactOpenUDID.h"
 #import "ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
-//#import "ApplifierImpactViewManager.h"
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 
@@ -166,26 +165,6 @@
   }
 }
 
-/*
-- (UIView *)impactAdView {
-	AIAssertV([NSThread mainThread], nil);
-	
-  ApplifierImpactMainViewController *adViewController = nil;
-  adViewController = [[ApplifierImpactMainViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
-  [[[ApplifierImpactProperties sharedInstance] currentViewController].view.window.rootViewController presentViewController:adViewController animated:NO completion:nil];
-	if ([self _adViewCanBeShown]) {
-		UIView *adView = [[ApplifierImpactViewManager sharedInstance] adView];
-		if (adView != nil) {
-			if ([self.delegate respondsToSelector:@selector(applifierImpactWillOpen:)])
-				[self.delegate applifierImpactWillOpen:self];
-
-			return adView;
-		}
-	}
-	
-	return nil;
-}*/
-
 - (BOOL)canShowImpact {
 	AIAssertV([NSThread mainThread], NO);
 	return [self _adViewCanBeShown];
@@ -193,13 +172,7 @@
 
 - (BOOL)showImpact {
   AIAssertV([NSThread mainThread], NO);
-  /*
-  return [[ApplifierImpactViewManager sharedInstance] applyAdViewToCurrentViewController];
-  */
-  /*
-  [[[ApplifierImpactProperties sharedInstance] currentViewController].view.window.rootViewController presentViewController:[ApplifierImpactMainViewController sharedInstance] animated:NO completion:nil];*/
   [[ApplifierImpactMainViewController sharedInstance] openImpact];
-  
   return YES;
 }
 
@@ -231,7 +204,6 @@
   AILOG_DEBUG(@"");
   [[ApplifierImpactCampaignManager sharedInstance] setDelegate:nil];
   [[ApplifierImpactMainViewController sharedInstance] setDelegate:nil];
-	//[[ApplifierImpactViewManager sharedInstance] setDelegate:nil];
   [[ApplifierImpactWebAppController sharedInstance] setDelegate:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	dispatch_release(self.queue);
