@@ -8,9 +8,7 @@
 
 #import "ApplifierImpactMainViewController.h"
 #import "ApplifierImpact.h"
-
 #import "ApplifierImpactVideo/ApplifierImpactVideoView.h"
-#import "ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 #import "ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
@@ -56,6 +54,9 @@
     [super didReceiveMemoryWarning];
 }
 
+
+#pragma mark - Orientation handling
+// FIX: not following developers orientations
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
   return YES;
 }
@@ -69,7 +70,7 @@
 #pragma mark - Public
 
 - (BOOL)closeImpact {
-  // FIX, DOESN'T WORK ON iOS 4
+  AILOG_DEBUG(@"");
   if (self.videoController.view.superview != nil) {
     [self dismissViewControllerAnimated:NO completion:nil];
   }
@@ -80,8 +81,6 @@
 - (BOOL)openImpact {
   AILOG_DEBUG(@"");
   [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
-  
-  // FIX, DOESN'T WORK ON iOS 4
   [[[ApplifierImpactProperties sharedInstance] currentViewController] presentViewController:self animated:YES completion:nil];
   
   if (![[[[ApplifierImpactWebAppController sharedInstance] webView] superview] isEqual:self.view]) {

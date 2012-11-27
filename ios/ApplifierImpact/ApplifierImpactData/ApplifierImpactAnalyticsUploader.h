@@ -18,6 +18,7 @@ extern NSString * const kApplifierImpactQueryDictionaryBodyKey;
 - (void)sendInstallTrackingCallWithQueryDictionary:(NSDictionary *)queryDictionary;
 - (void)retryFailedUploads;
 - (void)logVideoAnalyticsWithPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign;
+- (void)sendManualInstallTrackingCall;
 
-+ (id)sharedInstance;
++ (ApplifierImpactAnalyticsUploader *)sharedInstance;
 @end

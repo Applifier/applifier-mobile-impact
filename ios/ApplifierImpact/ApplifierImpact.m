@@ -128,36 +128,18 @@ static ApplifierImpact *sharedImpact = nil;
   [[ApplifierImpactCampaignManager sharedInstance] performSelector:@selector(cancelAllDownloads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 }
 
+- (void)trackInstall{
+	AIAssert([NSThread isMainThread]);
+  if (![ApplifierImpact isSupported]) return;
+	[[ApplifierImpactAnalyticsUploader sharedInstance] sendManualInstallTrackingCall];
+}
+
 - (void)dealloc {
   [[ApplifierImpactCampaignManager sharedInstance] setDelegate:nil];
   [[ApplifierImpactMainViewController sharedInstance] setDelegate:nil];
   [[ApplifierImpactWebAppController sharedInstance] setDelegate:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	dispatch_release(self.queue);
-}
-
-
-#pragma mark - Install tracking
-
-- (void)trackInstall{
-	AIAssert([NSThread isMainThread]);
-  if (![ApplifierImpact isSupported]) return;
-	[self _trackInstall];
-}
-
-- (void)_trackInstall {
-	if ([[ApplifierImpactProperties sharedInstance] impactGameId] == nil) {
-		AILOG_ERROR(@"Applifier Impact has not been started properly. Launch with -startWithApplifierID: first.");
-		return;
-	}
-	
-	dispatch_async(self.queue, ^{
-    // FIX
-    NSString *queryString = [NSString stringWithFormat:@"%@/install", [[ApplifierImpactProperties sharedInstance] impactGameId]];
-    NSString *bodyString = [NSString stringWithFormat:@"deviceId=%@", [ApplifierImpactDevice md5DeviceId]];
-		NSDictionary *queryDictionary = @{ kApplifierImpactQueryDictionaryQueryKey : queryString, kApplifierImpactQueryDictionaryBodyKey : bodyString };
-    [[ApplifierImpactAnalyticsUploader sharedInstance] performSelector:@selector(sendInstallTrackingCallWithQueryDictionary:) onThread:self.backgroundThread withObject:queryDictionary waitUntilDone:NO];
-	});
 }
 
 
