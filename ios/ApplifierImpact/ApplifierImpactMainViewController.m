@@ -56,13 +56,11 @@
 
 
 #pragma mark - Orientation handling
-// FIX: not following developers orientations
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
   return YES;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-  AILOG_DEBUG(@"");
   return UIInterfaceOrientationMaskLandscape | UIInterfaceOrientationMaskPortrait;
 }
 
