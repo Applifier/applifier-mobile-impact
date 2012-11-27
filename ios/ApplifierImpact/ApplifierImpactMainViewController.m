@@ -104,13 +104,10 @@
 #pragma mark - Video
 
 - (void)videoPlayerStartedPlaying {
-  [self presentViewController:self.videoController animated:NO completion:nil];
   [self.delegate mainControllerStartedPlayingVideo];
-  
-  // FIX, DOESN'T WORK ON iOS 4
-  NSDictionary *data = @{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id};
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id, @"text":@"Buffering..."}];
-  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:data];  
+  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"textKey":@"buffering"}];
+  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{}];
+  [self presentViewController:self.videoController animated:NO completion:nil];
 }
 
 - (void)videoPlayerPlaybackEnded {
@@ -128,7 +125,7 @@
     return;
   }
 
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"showSpinner" data:@{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id, @"text":@"Buffering your video..."}];
+  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"showSpinner" data:@{@"textKey":@"buffering"}];
   [self.videoController playCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
 }
 
@@ -179,7 +176,7 @@
     void (^storeControllerComplete)(BOOL result, NSError *error) = ^(BOOL result, NSError *error) {
       AILOG_DEBUG(@"RESULT: %i", result);
       if (result) {
-        [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+        [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"textKey":@"loading"}];
         [[ApplifierImpactMainViewController sharedInstance] presentModalViewController:self.storeController animated:YES];
       }
       else {
@@ -187,7 +184,7 @@
       }
     };
     
-    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"showSpinner" data:@{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"showSpinner" data:@{@"textKey":@"loading"}];
     SEL loadProduct = @selector(loadProductWithParameters:completionBlock:);
     if ([self.storeController respondsToSelector:loadProduct]) {
 #pragma clang diagnostic push

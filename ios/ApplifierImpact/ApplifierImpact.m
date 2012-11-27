@@ -165,8 +165,7 @@ static ApplifierImpact *sharedImpact = nil;
 
 - (void)_notificationHandler: (id) notification {
   NSString *name = [notification name];
-  
-  AILOG_DEBUG(@"notification: %@", name);
+  AILOG_DEBUG(@"Got notification from notificationCenter: %@", name);
   
   if ([name isEqualToString:UIApplicationWillEnterForegroundNotification]) {
     AIAssert([NSThread isMainThread]);
