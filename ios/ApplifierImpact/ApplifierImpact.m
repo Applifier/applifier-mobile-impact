@@ -13,7 +13,6 @@
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "ApplifierImpactMainViewController.h"
 
-
 @interface ApplifierImpact () <ApplifierImpactCampaignManagerDelegate, UIWebViewDelegate, UIScrollViewDelegate, ApplifierImpactMainViewControllerDelegate>
 @property (nonatomic, strong) NSThread *backgroundThread;
 @property (nonatomic, assign) dispatch_queue_t queue;
@@ -61,15 +60,8 @@ static ApplifierImpact *sharedImpact = nil;
   AIAssert([NSThread isMainThread]);
   AILOG_DEBUG(@"");
   if (![ApplifierImpact isSupported]) return;
-  
-	if (gameId == nil || [gameId length] == 0) {
-		AILOG_ERROR(@"Applifier ID empty or not set.");
-		return;
-	}
-  
-  if ([[ApplifierImpactProperties sharedInstance] impactGameId] != nil) {
-    return;
-  }
+  if ([[ApplifierImpactProperties sharedInstance] impactGameId]) return;
+	if (gameId == nil || [gameId length] == 0) return;
   
   [[ApplifierImpactProperties sharedInstance] setCurrentViewController:viewController];
   
