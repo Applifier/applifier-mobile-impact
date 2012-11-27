@@ -112,8 +112,6 @@
 
 - (void)videoPlayerPlaybackEnded {
   [self.delegate mainControllerVideoEnded];
-  
-  // FIX DOESN'T WORK ON iOS 4
   [self dismissViewControllerAnimated:NO completion:nil];
 }
 
@@ -177,7 +175,7 @@
       AILOG_DEBUG(@"RESULT: %i", result);
       if (result) {
         [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"textKey":@"loading"}];
-        [[ApplifierImpactMainViewController sharedInstance] presentModalViewController:self.storeController animated:YES];
+        [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.storeController animated:YES completion:nil];
       }
       else {
         AILOG_DEBUG(@"Loading product information failed: %@", error);
