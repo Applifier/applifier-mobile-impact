@@ -60,7 +60,7 @@ static ApplifierImpact *sharedImpact = nil;
   AIAssert([NSThread isMainThread]);
   AILOG_DEBUG(@"");
   if (![ApplifierImpact isSupported]) return;
-  if ([[ApplifierImpactProperties sharedInstance] impactGameId]) return;
+  if ([[ApplifierImpactProperties sharedInstance] impactGameId] != nil) return;
 	if (gameId == nil || [gameId length] == 0) return;
   
   [[ApplifierImpactProperties sharedInstance] setCurrentViewController:viewController];
