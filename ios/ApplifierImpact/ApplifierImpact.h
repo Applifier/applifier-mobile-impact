@@ -1,8 +1,5 @@
 //
 //  ApplifierImpact.h
-//  ApplifierImpact
-//
-//  Created by Johan Halin on 9/4/12.
 //  Copyright (c) 2012 Applifier. All rights reserved.
 //
 
@@ -45,7 +42,8 @@
 
 @property (nonatomic, assign) id<ApplifierImpactDelegate> delegate;
 
-+ (id)sharedInstance;
++ (ApplifierImpact *)sharedInstance;
++ (BOOL)isSupported;
 - (void)setTestMode:(BOOL)testModeEnabled;
 - (void)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController;
 - (void)startWithGameId:(NSString *)gameId;

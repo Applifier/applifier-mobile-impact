@@ -8,7 +8,6 @@
 
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
-
 #import "ApplifierImpactVideoViewController.h"
 #import "ApplifierImpactVideoPlayer.h"
 #import "ApplifierImpactVideoView.h"
@@ -112,11 +111,13 @@
 #pragma mark - Video player
 
 - (void)forceStopVideoPlayer {
+  AILOG_DEBUG(@"");
   [self _destroyVideoPlayer];
 }
 
 - (void)_createVideoPlayer {
   if (self.videoPlayer == nil) {
+    AILOG_DEBUG(@"");
     self.videoPlayer = [[ApplifierImpactVideoPlayer alloc] initWithPlayerItem:nil];
     self.videoPlayer.delegate = self;
   }
@@ -130,6 +131,7 @@
 
 - (void)_destroyVideoPlayer {
   if (self.videoPlayer != nil) {
+    AILOG_DEBUG(@"");
     self.currentPlayingVideoUrl = nil;
     [self.videoPlayer clearPlayer];
     self.videoPlayer.delegate = nil;
@@ -167,6 +169,7 @@
 
 - (void)_createProgressLabel {
   if (self.progressLabel == nil) {
+    AILOG_DEBUG(@"");
     self.progressLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.progressLabel.backgroundColor = [UIColor clearColor];
     self.progressLabel.textColor = [UIColor whiteColor];
