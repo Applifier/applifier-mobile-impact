@@ -1,8 +1,5 @@
 //
 //  ApplifierImpact.h
-//  ApplifierImpact
-//
-//  Created by Johan Halin on 9/4/12.
 //  Copyright (c) 2012 Applifier. All rights reserved.
 //
 
@@ -25,12 +22,6 @@
 #define AIAssertV(condition, value) do { if ( ! (condition)) { AILOG_ERROR(@"Expected condition '%s' to be true.", #condition); return value; } } while(0)
 #endif
 
-
-//
-//  All delegate methods and public methods in this header are based on the tentative iOS specification document,
-//  and will probably change during development.
-//
-
 @class ApplifierImpact;
 @class SKStoreProductViewController;
 
@@ -38,7 +29,6 @@
 
 @required
 - (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey;
-- (UIViewController *)viewControllerForPresentingViewControllersForImpact:(ApplifierImpact *)applifierImpact;
 
 @optional
 - (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact;
@@ -52,13 +42,16 @@
 
 @property (nonatomic, assign) id<ApplifierImpactDelegate> delegate;
 
-+ (id)sharedInstance;
++ (ApplifierImpact *)sharedInstance;
++ (BOOL)isSupported;
 - (void)setTestMode:(BOOL)testModeEnabled;
-- (void)startWithApplifierID:(NSString *)applifierID;
-- (UIView *)impactAdView;
+- (void)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController;
+- (void)startWithGameId:(NSString *)gameId;
+- (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact;
 - (BOOL)canShowImpact;
+- (BOOL)showImpact;
+- (BOOL)hideImpact;
 - (void)stopAll;
 - (void)trackInstall;
-- (void)refresh;
 
 @end
