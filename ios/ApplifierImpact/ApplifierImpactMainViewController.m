@@ -50,6 +50,7 @@
 
 - (void)viewDidLoad {
 	AILOG_DEBUG(@"");
+  [self.view setBackgroundColor:[UIColor blackColor]];
   [super viewDidLoad];
 }
 
