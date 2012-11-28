@@ -51,13 +51,18 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     NSLog(@"Rotate");
-    return (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+    return YES;
 }
 
 - (NSUInteger) supportedInterfaceOrientations {
     NSLog(@"Rotate");
-    return UIInterfaceOrientationMaskLandscape | UIInterfaceOrientationMaskPortrait;
+    return UIInterfaceOrientationMaskPortrait;
 }
+
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
 
 #pragma mark - ApplifierImpactDelegate
 

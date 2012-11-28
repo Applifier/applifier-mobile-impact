@@ -27,6 +27,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
       self.videoControllerQueue = dispatch_queue_create("com.applifier.impact.videocontroller", NULL);
+      self.isPlaying = NO;
     }
     return self;
 }
@@ -40,8 +41,23 @@
   dispatch_release(self.videoControllerQueue);
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+  [super viewWillDisappear:animated];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
+  [self _makeOrientation];
+}
+
+- (void)_makeOrientation {
+  if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+    double maxValue = fmax(self.view.superview.bounds.size.width, self.view.superview.bounds.size.height);
+    double minValue = fmin(self.view.superview.bounds.size.width, self.view.superview.bounds.size.height);
+    self.view.bounds = CGRectMake(0, 0, maxValue, minValue);
+    self.view.transform = CGAffineTransformMakeRotation(M_PI / 2);
+  }
+  
   [self.videoView setFrame:self.view.bounds];
 }
 
@@ -50,13 +66,16 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-  return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+  return NO;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-  return UIInterfaceOrientationMaskLandscape;
+  return UIInterfaceOrientationMaskAll;
 }
 
+- (BOOL) shouldAutorotate {
+  return NO;
+}
 
 #pragma mark - Public
 
@@ -152,6 +171,7 @@
 
 - (void)videoStartedPlaying {
   AILOG_DEBUG(@"");
+  self.isPlaying = YES;
   [self.delegate videoPlayerStartedPlaying];
 }
 
@@ -161,6 +181,7 @@
   [self.delegate videoPlayerPlaybackEnded];
   [self _detachVideoPlayer];
   [self _destroyVideoPlayer];
+  self.isPlaying = NO;
 }
 
 
