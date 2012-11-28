@@ -41,8 +41,15 @@
   dispatch_release(self.videoControllerQueue);
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-  [super viewWillDisappear:animated];
+- (void)viewDidDisappear:(BOOL)animated {
+  if (kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1) {
+    AILOG_DEBUG(@"Destroying videPlayer and videoView for iOS5 compatibility");
+    [self _detachVideoPlayer];
+    [self _detachVideoView];
+    [self _destroyVideoPlayer];
+    [self _destroyVideoView];
+  }
+  [super viewDidDisappear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -56,6 +63,7 @@
     double minValue = fmin(self.view.superview.bounds.size.width, self.view.superview.bounds.size.height);
     self.view.bounds = CGRectMake(0, 0, maxValue, minValue);
     self.view.transform = CGAffineTransformMakeRotation(M_PI / 2);
+    AILOG_DEBUG(@"NEW DIMENSIONS: %f, %f", minValue, maxValue);
   }
   
   [self.videoView setFrame:self.view.bounds];
@@ -66,7 +74,8 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-  return NO;
+  return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+  //return YES;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
@@ -125,11 +134,19 @@
   }
 }
 
+- (void)_destroyVideoView {
+  if (self.videoView != nil) {
+    [self _detachVideoView];
+    self.videoView = nil;
+  }
+}
+
 
 #pragma mark - Video player
 
 - (void)forceStopVideoPlayer {
   AILOG_DEBUG(@"");
+  [self _detachVideoPlayer];
   [self _destroyVideoPlayer];
 }
 

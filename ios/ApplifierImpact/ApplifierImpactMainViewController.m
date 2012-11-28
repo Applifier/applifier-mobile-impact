@@ -28,13 +28,15 @@
       NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
       [notificationCenter addObserver:self selector:@selector(notificationHandler:) name:UIApplicationDidEnterBackgroundNotification object:nil];
       
-      // "init" WebAppController
+      // Start WebAppController
       [ApplifierImpactWebAppController sharedInstance];
       [[ApplifierImpactWebAppController sharedInstance] setDelegate:self];
       
-      // init VideoController
-      self.videoController = [[ApplifierImpactVideoViewController alloc] initWithNibName:nil bundle:nil];
-      self.videoController.delegate = self;
+      // Init VideoController (ios6)
+      if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1) {
+        AILOG_DEBUG(@"Initializing videoController only once in iOS6");
+        [self _createVideoController];
+      }
     }
   
     return self;
@@ -43,6 +45,7 @@
 - (void)dealloc {
 	AILOG_DEBUG(@"");
   [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [self _destroyVideoController];
 }
 
 - (void)viewDidLoad {
@@ -115,6 +118,11 @@
 - (void)videoPlayerPlaybackEnded {
   [self.delegate mainControllerVideoEnded];
   [self dismissViewControllerAnimated:NO completion:nil];
+  
+  if (kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1) {
+    AILOG_DEBUG(@"Destroying videoController for iOS5 compatibility");
+    [self _destroyVideoController];
+  }
 }
 
 - (void)showPlayerAndPlaySelectedVideo:(BOOL)checkIfWatched {
@@ -126,7 +134,23 @@
   }
 
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"showSpinner" data:@{@"textKey":@"buffering"}];
+  
+  if (kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1) {
+    AILOG_DEBUG(@"Creating videoController for iOS5 compatibility");
+    [self _createVideoController];
+  }
+  
   [self.videoController playCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
+}
+
+- (void)_createVideoController {
+  self.videoController = [[ApplifierImpactVideoViewController alloc] initWithNibName:nil bundle:nil];
+  self.videoController.delegate = self;
+}
+
+- (void)_destroyVideoController {
+  self.videoController.delegate = nil;
+  self.videoController = nil;
 }
 
 
