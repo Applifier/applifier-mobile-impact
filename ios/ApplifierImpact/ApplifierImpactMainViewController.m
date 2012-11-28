@@ -82,6 +82,8 @@
     [self dismissViewControllerAnimated:NO completion:nil];
   }
   [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:YES completion:nil];
+  [self.delegate mainControllerWillCloseAdView];
+  
   return YES;
 }
 
