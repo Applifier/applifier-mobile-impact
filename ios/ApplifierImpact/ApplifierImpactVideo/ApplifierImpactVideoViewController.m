@@ -17,8 +17,10 @@
   @property (nonatomic, strong) ApplifierImpactVideoPlayer *videoPlayer;
   @property (nonatomic, assign) ApplifierImpactCampaign *campaignToPlay;
   @property (nonatomic, strong) UILabel *progressLabel;
+  @property (nonatomic, strong) UIView *progressView;
   @property (nonatomic, assign) dispatch_queue_t videoControllerQueue;
   @property (nonatomic, strong) NSURL *currentPlayingVideoUrl;
+  @property (nonatomic, assign) int orientation;
 @end
 
 @implementation ApplifierImpactVideoViewController
@@ -28,6 +30,7 @@
     if (self) {
       self.videoControllerQueue = dispatch_queue_create("com.applifier.impact.videocontroller", NULL);
       self.isPlaying = NO;
+      self.orientation = 0;
     }
     return self;
 }
@@ -42,31 +45,36 @@
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-  if (kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1) {
-    AILOG_DEBUG(@"Destroying videPlayer and videoView for iOS5 compatibility");
-    [self _detachVideoPlayer];
-    [self _detachVideoView];
-    [self _destroyVideoPlayer];
-    [self _destroyVideoView];
-  }
+  [self _detachVideoPlayer];
+  [self _detachVideoView];
+  [self _destroyVideoPlayer];
+  [self _destroyVideoView];
+  [self _destroyProgressLabel];
+  
   [super viewDidDisappear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
   [self _makeOrientation];
+  [self _createProgressLabel];
+  [self.view bringSubviewToFront:self.progressView];
 }
 
 - (void)_makeOrientation {
+
   if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
     double maxValue = fmax(self.view.superview.bounds.size.width, self.view.superview.bounds.size.height);
     double minValue = fmin(self.view.superview.bounds.size.width, self.view.superview.bounds.size.height);
     self.view.bounds = CGRectMake(0, 0, maxValue, minValue);
     self.view.transform = CGAffineTransformMakeRotation(M_PI / 2);
     AILOG_DEBUG(@"NEW DIMENSIONS: %f, %f", minValue, maxValue);
+    self.orientation = 1;
   }
   
-  [self.videoView setFrame:self.view.bounds];
+  if (self.videoView != nil) {
+    [self.videoView setFrame:self.view.bounds];
+  }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -81,7 +89,7 @@
   return UIInterfaceOrientationMaskAll;
 }
 
-- (BOOL) shouldAutorotate {
+- (BOOL)shouldAutorotate {
   return NO;
 }
 
@@ -107,7 +115,7 @@
     [self.videoPlayer replaceCurrentItemWithPlayerItem:item];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.videoPlayer playSelectedVideo];
+      [self.videoPlayer playSelectedVideo];
     });
   });
 }
@@ -178,6 +186,7 @@
 }
 
 - (void)videoPositionChanged:(CMTime)time {
+  AILOG_DEBUG(@"");
   [self _updateTimeRemainingLabelWithTime:time];
 }
 
@@ -188,15 +197,16 @@
 - (void)videoStartedPlaying {
   AILOG_DEBUG(@"");
   self.isPlaying = YES;
-  [self.delegate videoPlayerStartedPlaying];
+  
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self.delegate videoPlayerStartedPlaying];
+  });
 }
 
 - (void)videoPlaybackEnded {
   AILOG_DEBUG(@"");
   self.campaignToPlay.viewed = YES;
   [self.delegate videoPlayerPlaybackEnded];
-  [self _detachVideoPlayer];
-  [self _destroyVideoPlayer];
   self.isPlaying = NO;
 }
 
@@ -204,21 +214,44 @@
 #pragma mark - Video Progress Label
 
 - (void)_createProgressLabel {
+  AILOG_DEBUG(@"");
+
+  if (self.progressView == nil) {
+    self.progressView = [[UIView alloc] initWithFrame:self.view.bounds];
+    [self.progressView setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.progressView];
+    [self.view bringSubviewToFront:self.progressView];
+  }
+  
   if (self.progressLabel == nil) {
-    AILOG_DEBUG(@"");
-    self.progressLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 20)];
     self.progressLabel.backgroundColor = [UIColor clearColor];
     self.progressLabel.textColor = [UIColor whiteColor];
     self.progressLabel.font = [UIFont systemFontOfSize:12.0];
     self.progressLabel.textAlignment = UITextAlignmentRight;
     self.progressLabel.shadowColor = [UIColor blackColor];
     self.progressLabel.shadowOffset = CGSizeMake(0, 1.0);
-    self.progressLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview:self.progressLabel];
+    [self.progressView addSubview:self.progressLabel];
+    self.progressLabel.transform = CGAffineTransformMakeTranslation(self.view.bounds.size.width - 303, self.view.bounds.size.height - 23);
+    [self.progressView bringSubviewToFront:self.progressLabel];
+    self.progressLabel.hidden = NO;
+    self.progressView.hidden = NO;
+  }
+}
+
+- (void)_destroyProgressLabel {
+  if (self.progressLabel != nil) {
+    [self.progressLabel removeFromSuperview];
+    self.progressLabel = nil;
+  }
+  if (self.progressView != nil) {
+    [self.progressView removeFromSuperview];
+    self.progressView = nil;
   }
 }
 
 - (void)_updateTimeRemainingLabelWithTime:(CMTime)currentTime {
+  AILOG_DEBUG(@"");
 	Float64 duration = [self _currentVideoDuration];
 	Float64 current = CMTimeGetSeconds(currentTime);
 	NSString *descriptionText = [NSString stringWithFormat:NSLocalizedString(@"This video ends in %.0f seconds.", nil), duration - current];
@@ -226,23 +259,18 @@
 }
 
 - (void)_displayProgressLabel {
-	CGFloat padding = 10.0;
-	CGFloat height = 30.0;
-	CGRect labelFrame = CGRectMake(padding, self.view.frame.size.height - height, self.view.frame.size.width - (padding * 2.0), height);
-	self.progressLabel.frame = labelFrame;
 	self.progressLabel.hidden = NO;
-	[self.view bringSubviewToFront:self.progressLabel];
 }
 
 - (Float64)_currentVideoDuration {
-	CMTime durationTime = self.videoPlayer.currentItem.asset.duration;
+  CMTime durationTime = self.videoPlayer.currentItem.asset.duration;
 	Float64 duration = CMTimeGetSeconds(durationTime);
 	
 	return duration;
 }
 
 - (NSValue *)_valueWithDuration:(Float64)duration {
-	CMTime time = CMTimeMakeWithSeconds(duration, NSEC_PER_SEC);
+  CMTime time = CMTimeMakeWithSeconds(duration, NSEC_PER_SEC);
 	return [NSValue valueWithCMTime:time];
 }
 

@@ -12,7 +12,7 @@
 		785829E616676A2D00605539 /* impact-loaded.png in Resources */ = {isa = PBXBuildFile; fileRef = 785829E516676A2D00605539 /* impact-loaded.png */; };
 		785829E81667762600605539 /* impact-open.png in Resources */ = {isa = PBXBuildFile; fileRef = 785829E71667762600605539 /* impact-open.png */; };
 		785829EA16677A9D00605539 /* impact-reward.png in Resources */ = {isa = PBXBuildFile; fileRef = 785829E916677A9D00605539 /* impact-reward.png */; };
-		78AC205C1622F688007DE419 /* ApplifierImpact.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC205B1622F688007DE419 /* ApplifierImpact.framework */; };
+		785829EC166790EC00605539 /* ApplifierImpact.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 785829EB166790EC00605539 /* ApplifierImpact.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		78CC133815D3D84A00972EA6 /* icon_57.png in Resources */ = {isa = PBXBuildFile; fileRef = 78CC133715D3D84A00972EA6 /* icon_57.png */; };
 		78CC133A15D3D85400972EA6 /* icon_114.png in Resources */ = {isa = PBXBuildFile; fileRef = 78CC133915D3D85400972EA6 /* icon_114.png */; };
 		78ED794E15C66FC6007C5BD5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78ED794D15C66FC6007C5BD5 /* UIKit.framework */; };
@@ -37,7 +37,7 @@
 		785829E516676A2D00605539 /* impact-loaded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impact-loaded.png"; sourceTree = "<group>"; };
 		785829E71667762600605539 /* impact-open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impact-open.png"; sourceTree = "<group>"; };
 		785829E916677A9D00605539 /* impact-reward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impact-reward.png"; sourceTree = "<group>"; };
-		78AC205B1622F688007DE419 /* ApplifierImpact.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplifierImpact.framework; path = "../build/Debug-iphoneos/ApplifierImpact.framework"; sourceTree = "<group>"; };
+		785829EB166790EC00605539 /* ApplifierImpact.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplifierImpact.framework; path = "../build/Release-iphoneos/ApplifierImpact.framework"; sourceTree = "<group>"; };
 		78CC133715D3D84A00972EA6 /* icon_57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_57.png; sourceTree = "<group>"; };
 		78CC133915D3D85400972EA6 /* icon_114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_114.png; sourceTree = "<group>"; };
 		78ED794915C66FC6007C5BD5 /* ImpactProto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImpactProto.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,7 +74,7 @@
 				78ED794E15C66FC6007C5BD5 /* UIKit.framework in Frameworks */,
 				78ED795015C66FC6007C5BD5 /* Foundation.framework in Frameworks */,
 				78ED795215C66FC6007C5BD5 /* CoreGraphics.framework in Frameworks */,
-				78AC205C1622F688007DE419 /* ApplifierImpact.framework in Frameworks */,
+				785829EC166790EC00605539 /* ApplifierImpact.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,9 +104,9 @@
 		78ED794C15C66FC6007C5BD5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				785829EB166790EC00605539 /* ApplifierImpact.framework */,
 				F642682E16088B7C0005B83A /* StoreKit.framework */,
 				907454411609C20C00454427 /* AdSupport.framework */,
-				78AC205B1622F688007DE419 /* ApplifierImpact.framework */,
 				9017B0AA161086A600ACFC04 /* SystemConfiguration.framework */,
 				78ED798A15C6B04D007C5BD5 /* CoreMedia.framework */,
 				78ED798215C6962C007C5BD5 /* AVFoundation.framework */,
@@ -319,6 +319,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../build/Debug-iphoneos\"",
+					"\"$(SRCROOT)/../build/Release-iphoneos\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ImpactProto/ImpactProto-Prefix.pch";
@@ -349,6 +350,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../build/Debug-iphoneos\"",
+					"\"$(SRCROOT)/../build/Release-iphoneos\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ImpactProto/ImpactProto-Prefix.pch";
@@ -402,6 +404,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../build/Debug-iphoneos\"",
+					"\"$(SRCROOT)/../build/Release-iphoneos\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ImpactProto/ImpactProto-Prefix.pch";

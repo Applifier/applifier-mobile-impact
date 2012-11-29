@@ -60,6 +60,7 @@
   
   __block ApplifierImpactVideoPlayer *blockSelf = self;
   if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+    AILOG_DEBUG(@"ADDING POSITION OBSERVER");
     self.timeObserver = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
       [blockSelf _videoPositionChanged:time];
     }];
@@ -126,7 +127,10 @@
 #pragma mark Video Duration
 
 - (void)_videoPositionChanged:(CMTime)time {
-  [self.delegate videoPositionChanged:time];
+  AILOG_DEBUG(@"");
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self.delegate videoPositionChanged:time];
+  });
 }
 
 - (Float64)_currentVideoDuration {

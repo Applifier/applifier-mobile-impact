@@ -106,7 +106,9 @@
 #pragma mark - Video
 
 - (void)videoPlayerStartedPlaying {
-  [self.delegate mainControllerStartedPlayingVideo];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self.delegate mainControllerStartedPlayingVideo];
+  });
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"textKey":@"buffering"}];
   [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{}];
   [self presentViewController:self.videoController animated:NO completion:nil];
