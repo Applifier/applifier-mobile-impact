@@ -17,6 +17,7 @@
 @implementation ApplifierImpactViewController
 
 @synthesize buttonView;
+@synthesize loadingImage;
 @synthesize contentView;
 @synthesize currentPhase;
 @synthesize avPlayer;
@@ -28,10 +29,7 @@
     [super viewDidLoad];
 	
 	[[ApplifierImpact sharedInstance] setDelegate:self];
-	
-    [self.buttonView addTarget:self action:@selector(nextPhase) forControlEvents:UIControlEventTouchUpInside];
-	[self.buttonView setImage:[UIImage imageNamed:@"impact-waiting"] forState:UIControlStateNormal];
-
+    [self.buttonView addTarget:self action:@selector(openImpact) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -40,7 +38,7 @@
 	[[ApplifierImpact sharedInstance] startWithGameId:@"16" andViewController:self];
 }
 
-- (void)nextPhase {
+- (void)openImpact {
 	if ([[ApplifierImpact sharedInstance] canShowImpact]) {
         [[ApplifierImpact sharedInstance] showImpact];
 	}
@@ -50,12 +48,10 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    NSLog(@"Rotate");
     return YES;
 }
 
 - (NSUInteger) supportedInterfaceOrientations {
-    NSLog(@"Rotate");
     return UIInterfaceOrientationMaskAll;
 }
 
@@ -68,6 +64,7 @@
 
 - (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey {
 	NSLog(@"applifierImpact:completedVideoWithRewardItem: -- key: %@", rewardItemKey);
+    [self.loadingImage setImage:[UIImage imageNamed:@"impact-reward"]];
 }
 
 - (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact {
@@ -84,7 +81,8 @@
 
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact {
 	NSLog(@"applifierImpactCampaignsAreAvailable");
-	[self.buttonView setImage:[UIImage imageNamed:@"impact-ready"] forState:UIControlStateNormal];
+    [self.loadingImage setImage:[UIImage imageNamed:@"impact-loaded"]];
+	[self.buttonView setEnabled:YES];
 }
 
 @end

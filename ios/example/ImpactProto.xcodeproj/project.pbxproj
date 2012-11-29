@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		785829E2166764AE00605539 /* impact-main.png in Resources */ = {isa = PBXBuildFile; fileRef = 785829E1166764AE00605539 /* impact-main.png */; };
+		785829E41667693400605539 /* impact-loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 785829E31667693400605539 /* impact-loading.png */; };
+		785829E616676A2D00605539 /* impact-loaded.png in Resources */ = {isa = PBXBuildFile; fileRef = 785829E516676A2D00605539 /* impact-loaded.png */; };
+		785829E81667762600605539 /* impact-open.png in Resources */ = {isa = PBXBuildFile; fileRef = 785829E71667762600605539 /* impact-open.png */; };
+		785829EA16677A9D00605539 /* impact-reward.png in Resources */ = {isa = PBXBuildFile; fileRef = 785829E916677A9D00605539 /* impact-reward.png */; };
 		78AC205C1622F688007DE419 /* ApplifierImpact.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78AC205B1622F688007DE419 /* ApplifierImpact.framework */; };
 		78CC133815D3D84A00972EA6 /* icon_57.png in Resources */ = {isa = PBXBuildFile; fileRef = 78CC133715D3D84A00972EA6 /* icon_57.png */; };
 		78CC133A15D3D85400972EA6 /* icon_114.png in Resources */ = {isa = PBXBuildFile; fileRef = 78CC133915D3D85400972EA6 /* icon_114.png */; };
@@ -24,11 +29,14 @@
 		907454421609C20C00454427 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907454411609C20C00454427 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		90B1F7DC1601AC900080A74C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 90B1F7DB1601AC900080A74C /* Default-568h@2x.png */; };
 		F642682F16088B7C0005B83A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F642682E16088B7C0005B83A /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F64268381608A0D70005B83A /* impact-waiting.png in Resources */ = {isa = PBXBuildFile; fileRef = F64268361608A0D70005B83A /* impact-waiting.png */; };
-		F64268391608A0D70005B83A /* impact-ready.png in Resources */ = {isa = PBXBuildFile; fileRef = F64268371608A0D70005B83A /* impact-ready.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		785829E1166764AE00605539 /* impact-main.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impact-main.png"; sourceTree = "<group>"; };
+		785829E31667693400605539 /* impact-loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impact-loading.png"; sourceTree = "<group>"; };
+		785829E516676A2D00605539 /* impact-loaded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impact-loaded.png"; sourceTree = "<group>"; };
+		785829E71667762600605539 /* impact-open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impact-open.png"; sourceTree = "<group>"; };
+		785829E916677A9D00605539 /* impact-reward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impact-reward.png"; sourceTree = "<group>"; };
 		78AC205B1622F688007DE419 /* ApplifierImpact.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplifierImpact.framework; path = "../build/Debug-iphoneos/ApplifierImpact.framework"; sourceTree = "<group>"; };
 		78CC133715D3D84A00972EA6 /* icon_57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_57.png; sourceTree = "<group>"; };
 		78CC133915D3D85400972EA6 /* icon_114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_114.png; sourceTree = "<group>"; };
@@ -51,8 +59,6 @@
 		907454411609C20C00454427 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		90B1F7DB1601AC900080A74C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		F642682E16088B7C0005B83A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		F64268361608A0D70005B83A /* impact-waiting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impact-waiting.png"; sourceTree = "<group>"; };
-		F64268371608A0D70005B83A /* impact-ready.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impact-ready.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,8 +145,11 @@
 		78ED797315C67398007C5BD5 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				F64268361608A0D70005B83A /* impact-waiting.png */,
-				F64268371608A0D70005B83A /* impact-ready.png */,
+				785829E916677A9D00605539 /* impact-reward.png */,
+				785829E71667762600605539 /* impact-open.png */,
+				785829E516676A2D00605539 /* impact-loaded.png */,
+				785829E31667693400605539 /* impact-loading.png */,
+				785829E1166764AE00605539 /* impact-main.png */,
 			);
 			name = Assets;
 			path = ImpactProto;
@@ -203,8 +212,11 @@
 				78CC133815D3D84A00972EA6 /* icon_57.png in Resources */,
 				78CC133A15D3D85400972EA6 /* icon_114.png in Resources */,
 				90B1F7DC1601AC900080A74C /* Default-568h@2x.png in Resources */,
-				F64268381608A0D70005B83A /* impact-waiting.png in Resources */,
-				F64268391608A0D70005B83A /* impact-ready.png in Resources */,
+				785829E2166764AE00605539 /* impact-main.png in Resources */,
+				785829E41667693400605539 /* impact-loading.png in Resources */,
+				785829E616676A2D00605539 /* impact-loaded.png in Resources */,
+				785829E81667762600605539 /* impact-open.png in Resources */,
+				785829EA16677A9D00605539 /* impact-reward.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
