@@ -100,13 +100,13 @@ static ApplifierImpact *sharedImpact = nil;
 - (BOOL)hideImpact {
   AIAssertV([NSThread mainThread], NO);
   if (![ApplifierImpact isSupported]) NO;
-  return [[ApplifierImpactMainViewController sharedInstance] closeImpact];
+  return [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES];
 }
 
 - (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact {
 	AIAssert([NSThread isMainThread]);
   if (![ApplifierImpact isSupported]) return;
-  [[ApplifierImpactMainViewController sharedInstance] closeImpact];
+  [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES];
   [[ApplifierImpactProperties sharedInstance] setCurrentViewController:viewController];
   
   if (applyImpact) {

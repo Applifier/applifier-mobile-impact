@@ -94,7 +94,9 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSChangeView, view, [data JSONRepresentation]];
   
   AILOG_DEBUG(@"");
-  [self runJavascript:js];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self runJavascript:js];
+  });
 }
 
 - (void)sendNativeEventToWebApp:(NSString *)eventType data:(NSDictionary *)data {
@@ -135,7 +137,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 		}
 	}
 	else if ([type isEqualToString:kApplifierImpactWebViewAPIClose]) {
-    [[ApplifierImpactMainViewController sharedInstance] closeImpact];
+    [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES];
 	}
 	else if ([type isEqualToString:kApplifierImpactWebViewAPIInitComplete]) {
     self.webViewInitialized = YES;
@@ -192,7 +194,9 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 		return;
 	}
 	
-	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
+  });
 }
 
 

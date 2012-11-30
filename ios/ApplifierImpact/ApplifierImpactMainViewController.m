@@ -71,26 +71,51 @@
 
 #pragma mark - Public
 
-- (BOOL)closeImpact {
+- (BOOL)closeImpact:(BOOL)forceMainThread {
   AILOG_DEBUG(@"");
-  if (self.videoController.view.superview != nil) {
-    [self dismissViewControllerAnimated:NO completion:nil];
+  
+  if (forceMainThread) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self _dismissMainViewController:forceMainThread];
+    });
   }
-  [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:YES completion:nil];
-  [self.delegate mainControllerWillCloseAdView];
+  else {
+    [self _dismissMainViewController:forceMainThread];
+  }
   
   return YES;
 }
 
+- (void)_dismissMainViewController:(BOOL)forcedToMainThread {
+  if (self.videoController.view.superview != nil) {
+    [self dismissViewControllerAnimated:NO completion:nil];
+  }
+  
+  if (!forcedToMainThread) {
+    AILOG_DEBUG(@"Setting startview right now. No time for block completion");
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
+  }
+  
+  [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:YES completion:^(void){
+    AILOG_DEBUG(@"Setting start view after close");
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
+  }];
+  
+  [self.delegate mainControllerWillCloseAdView];
+}
+
 - (BOOL)openImpact {
   AILOG_DEBUG(@"");
-  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
-  [[[ApplifierImpactProperties sharedInstance] currentViewController] presentViewController:self animated:YES completion:nil];
   
-  if (![[[[ApplifierImpactWebAppController sharedInstance] webView] superview] isEqual:self.view]) {
-    [self.view addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];
-    [[[ApplifierImpactWebAppController sharedInstance] webView] setFrame:self.view.bounds];
-  }
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
+    [[[ApplifierImpactProperties sharedInstance] currentViewController] presentViewController:self animated:YES completion:nil];
+    
+    if (![[[[ApplifierImpactWebAppController sharedInstance] webView] superview] isEqual:self.view]) {
+      [self.view addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];
+      [[[ApplifierImpactWebAppController sharedInstance] webView] setFrame:self.view.bounds];
+    }
+  });
   
   return YES;
 }
@@ -165,7 +190,7 @@
   if ([name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
     [[ApplifierImpactWebAppController sharedInstance] setWebViewInitialized:NO];
     [self.videoController forceStopVideoPlayer];
-    [self closeImpact];
+    [self closeImpact:NO];
   }
 }
 
@@ -203,7 +228,9 @@
       AILOG_DEBUG(@"RESULT: %i", result);
       if (result) {
         [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"textKey":@"loading"}];
-        [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.storeController animated:YES completion:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+          [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.storeController animated:YES completion:nil];
+        });
       }
       else {
         AILOG_DEBUG(@"Loading product information failed: %@", error);
@@ -234,6 +261,9 @@
 
 - (void)webAppReady {
   [self.delegate mainControllerWebViewInitialized];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
+  });
 }
 
 

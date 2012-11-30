@@ -70,22 +70,11 @@
     }];
   }
   
-	Float64 duration = [self _currentVideoDuration];
-	NSMutableArray *analyticsTimeValues = [NSMutableArray array];
-	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .25]];
-	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .5]];
-	[analyticsTimeValues addObject:[self _valueWithDuration:duration * .75]];
-  
-  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
-    self.analyticsTimeObserver = [self addBoundaryTimeObserverForTimes:analyticsTimeValues queue:nil usingBlock:^{
-      [blockSelf _logVideoAnalytics];
-    }];
-  }
-  
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
 }
 
 - (void)_removeObservers {
+  AILOG_DEBUG(@"");
   [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
   
   if (self.timeObserver != nil) {
@@ -121,6 +110,20 @@
       dispatch_async(dispatch_get_main_queue(), ^{
         [self.delegate videoStartedPlaying];
       });
+      
+       __block ApplifierImpactVideoPlayer *blockSelf = self;
+      Float64 duration = [self _currentVideoDuration];
+      NSMutableArray *analyticsTimeValues = [NSMutableArray array];
+      [analyticsTimeValues addObject:[self _valueWithDuration:duration * .25]];
+      [analyticsTimeValues addObject:[self _valueWithDuration:duration * .5]];
+      [analyticsTimeValues addObject:[self _valueWithDuration:duration * .75]];
+      
+      if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+        self.analyticsTimeObserver = [self addBoundaryTimeObserverForTimes:analyticsTimeValues queue:nil usingBlock:^{
+          [blockSelf _logVideoAnalytics];
+        }];
+      }
+      
       [self play];
     }
     else if (playerStatus == AVPlayerStatusFailed) {

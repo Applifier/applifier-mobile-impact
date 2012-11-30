@@ -27,7 +27,7 @@
 + (id)sharedInstance;
 
 - (BOOL)openImpact;
-- (BOOL)closeImpact;
+- (BOOL)closeImpact:(BOOL)forceMainThread;
 - (BOOL)mainControllerVisible;
 - (void)showPlayerAndPlaySelectedVideo:(BOOL)checkIfWatched;
 - (void)openAppStoreWithData:(NSDictionary *)data;
