@@ -24,6 +24,7 @@ typedef enum
 - (void)videoPlaybackStarted;
 - (void)videoStartedPlaying;
 - (void)videoPlaybackEnded;
+- (void)videoPlaybackError;
 - (void)videoPositionChanged:(CMTime)time;
 @end
 

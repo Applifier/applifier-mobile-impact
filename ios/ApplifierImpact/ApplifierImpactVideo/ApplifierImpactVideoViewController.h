@@ -15,6 +15,7 @@
 @required
 - (void)videoPlayerStartedPlaying;
 - (void)videoPlayerPlaybackEnded;
+- (void)videoPlayerEncounteredError;
 @end
 
 @interface ApplifierImpactVideoViewController : UIViewController <ApplifierImpactVideoPlayerDelegate>

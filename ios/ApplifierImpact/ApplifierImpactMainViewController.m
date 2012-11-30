@@ -49,7 +49,7 @@
 }
 
 - (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
+  [super didReceiveMemoryWarning];
 }
 
 
@@ -67,6 +67,7 @@
 - (BOOL) shouldAutorotate {
   return YES;
 }
+
 
 #pragma mark - Public
 
@@ -114,10 +115,15 @@
   [self presentViewController:self.videoController animated:NO completion:nil];
 }
 
+- (void)videoPlayerEncounteredError {
+  AILOG_DEBUG(@"");
+  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"textKey":@"buffering"}];
+  [self _dismissVideoController];
+}
+
 - (void)videoPlayerPlaybackEnded {
   [self.delegate mainControllerVideoEnded];
-  [self dismissViewControllerAnimated:NO completion:nil];
-  [self _destroyVideoController];
+  [self _dismissVideoController];
 }
 
 - (void)showPlayerAndPlaySelectedVideo:(BOOL)checkIfWatched {
@@ -141,6 +147,11 @@
 - (void)_destroyVideoController {
   self.videoController.delegate = nil;
   self.videoController = nil;
+}
+
+- (void)_dismissVideoController {
+  [self dismissViewControllerAnimated:NO completion:nil];
+  [self _destroyVideoController];
 }
 
 

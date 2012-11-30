@@ -101,7 +101,9 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
  	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSHandleNativeEvent, eventType, [data JSONRepresentation]];
   
   AILOG_DEBUG(@"");
-  [self runJavascript:js];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self runJavascript:js];
+  });
 }
 
 - (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data {
@@ -150,9 +152,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
   
   if (javaScriptString != nil) {
     AILOG_DEBUG(@"Running JavaScriptString: %@", javaScriptString);
-    //dispatch_sync(dispatch_get_main_queue(), ^{
-      returnValue = [self.webView stringByEvaluatingJavaScriptFromString:javaScriptString];
-    //});
+    returnValue = [self.webView stringByEvaluatingJavaScriptFromString:javaScriptString];
   }
   
   if (returnValue != nil) {
