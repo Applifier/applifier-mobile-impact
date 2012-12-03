@@ -94,18 +94,14 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSChangeView, view, [data JSONRepresentation]];
   
   AILOG_DEBUG(@"");
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [self runJavascript:js];
-  });
+  [self runJavascriptDependingOnPlatform:js];
 }
 
 - (void)sendNativeEventToWebApp:(NSString *)eventType data:(NSDictionary *)data {
  	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSHandleNativeEvent, eventType, [data JSONRepresentation]];
   
   AILOG_DEBUG(@"");
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [self runJavascript:js];
-  });
+  [self runJavascriptDependingOnPlatform:js];
 }
 
 - (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data {
@@ -148,9 +144,19 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 	}
 }
 
+- (void)runJavascriptDependingOnPlatform:(NSString *)javaScriptString {
+  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self runJavascript:javaScriptString];
+    });
+  }
+  else {
+    [self runJavascript:javaScriptString];
+  }
+}
+
 - (void)runJavascript:(NSString *)javaScriptString {
-  
-  __block NSString *returnValue = nil;
+  NSString *returnValue = nil;
   
   if (javaScriptString != nil) {
     AILOG_DEBUG(@"Running JavaScriptString: %@", javaScriptString);

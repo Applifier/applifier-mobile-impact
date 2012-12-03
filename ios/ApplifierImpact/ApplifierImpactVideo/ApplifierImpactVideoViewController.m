@@ -105,15 +105,14 @@
 	}
   
   self.currentPlayingVideoUrl = videoURL;
+  [self _createVideoView];
+  [self _createVideoPlayer];
+  __block AVPlayerItem *item = [AVPlayerItem playerItemWithURL:self.currentPlayingVideoUrl];
+  [self _attachVideoPlayer];
+  [self.videoPlayer preparePlayer];
   
   dispatch_async(self.videoControllerQueue, ^{
-    AVPlayerItem *item = [AVPlayerItem playerItemWithURL:self.currentPlayingVideoUrl];
-    [self _createVideoView];
-    [self _createVideoPlayer];
-    [self _attachVideoPlayer];
-    [self.videoPlayer preparePlayer];
     [self.videoPlayer replaceCurrentItemWithPlayerItem:item];
-    
     dispatch_async(dispatch_get_main_queue(), ^{
       [self.videoPlayer playSelectedVideo];
     });

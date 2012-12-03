@@ -36,6 +36,7 @@
     [super viewDidAppear:animated];
     //[[ApplifierImpact sharedInstance] setTestMode:YES];
 	[[ApplifierImpact sharedInstance] startWithGameId:@"16" andViewController:self];
+    //[[ApplifierImpact sharedInstance] setViewController:self showImmediatelyInNewController:YES];
 }
 
 - (void)openImpact {

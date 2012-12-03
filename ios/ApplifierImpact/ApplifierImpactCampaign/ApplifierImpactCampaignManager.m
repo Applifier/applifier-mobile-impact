@@ -219,14 +219,12 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
     [[ApplifierImpactProperties sharedInstance] setGamerId:gamerId];
     [self.cache cacheCampaigns:self.campaigns];
     
-    //self.testQueue = dispatch_queue_create("com.applifier.impact.testqueue", NULL);
-    
     dispatch_async(dispatch_get_main_queue(), ^(void) {
-      //AILOG_DEBUG(@"Dispatching campaigndatareceived");
       [self.delegate campaignManagerCampaignDataReceived];
     });
   }
 }
+
 
 #pragma mark - Public
 
@@ -303,6 +301,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 	self.cache.delegate = nil;
 }
 
+
 #pragma mark - NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -334,6 +333,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 	else
 		AILOG_DEBUG(@"Not retrying campaign download.");
 }
+
 
 #pragma mark - ApplifierImpactCacheDelegate
 

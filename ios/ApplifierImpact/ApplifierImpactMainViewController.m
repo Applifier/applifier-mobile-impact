@@ -12,10 +12,12 @@
 #import "ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
+#import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 
 @interface ApplifierImpactMainViewController ()
   @property (nonatomic, strong) ApplifierImpactVideoViewController *videoController;
   @property (nonatomic, strong) UIViewController *storeController;
+  @property (nonatomic, strong) void (^closeHandler)(void);
 @end
 
 @implementation ApplifierImpactMainViewController
@@ -96,11 +98,16 @@
     [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
   }
   
-  [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:YES completion:^(void){
-    AILOG_DEBUG(@"Setting start view after close");
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
-  }];
+  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+    if (self.closeHandler == nil) {
+      self.closeHandler = ^(void) {
+        AILOG_DEBUG(@"Setting start view after close");
+        [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
+      };
+    }
+  }
   
+  [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:YES completion:self.closeHandler];
   [self.delegate mainControllerWillCloseAdView];
 }
 
@@ -154,12 +161,14 @@
 - (void)showPlayerAndPlaySelectedVideo:(BOOL)checkIfWatched {
 	AILOG_DEBUG(@"");
     
+  
   if ([[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed && checkIfWatched) {
     AILOG_DEBUG(@"Trying to watch a campaign that is already viewed!");
     return;
   }
 
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"showSpinner" data:@{@"textKey":@"buffering"}];
+  
   [self _createVideoController];
   [self.videoController playCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
 }
