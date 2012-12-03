@@ -93,24 +93,31 @@ static ApplifierImpact *sharedImpact = nil;
 - (BOOL)showImpact {
   AIAssertV([NSThread mainThread], NO);
   if (![ApplifierImpact isSupported]) return NO;
-  [[ApplifierImpactMainViewController sharedInstance] openImpact];
+  if (![self canShowImpact]) return NO;
+  [[ApplifierImpactMainViewController sharedInstance] openImpact:YES];
   return YES;
 }
 
 - (BOOL)hideImpact {
   AIAssertV([NSThread mainThread], NO);
   if (![ApplifierImpact isSupported]) NO;
-  return [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES];
+  return [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:YES];
 }
 
 - (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact {
 	AIAssert([NSThread isMainThread]);
   if (![ApplifierImpact isSupported]) return;
-  [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES];
+  
+  BOOL openAnimated = NO;
+  if ([[ApplifierImpactProperties sharedInstance] currentViewController] == nil) {
+    openAnimated = YES;
+  }
+  
+  [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:NO];
   [[ApplifierImpactProperties sharedInstance] setCurrentViewController:viewController];
   
-  if (applyImpact) {
-    [[ApplifierImpactMainViewController sharedInstance] openImpact];
+  if (applyImpact && [self canShowImpact]) {
+    [[ApplifierImpactMainViewController sharedInstance] openImpact:openAnimated];
   }
 }
 

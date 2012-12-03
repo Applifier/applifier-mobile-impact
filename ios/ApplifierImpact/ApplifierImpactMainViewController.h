@@ -22,12 +22,11 @@
 @interface ApplifierImpactMainViewController : UIViewController <ApplifierImpactVideoControllerDelegate, ApplifierImpactWebAppControllerDelegate>
 
 @property (nonatomic, assign) id<ApplifierImpactMainViewControllerDelegate> delegate;
-//@property (nonatomic) BOOL webViewInitialized;
 
 + (id)sharedInstance;
 
-- (BOOL)openImpact;
-- (BOOL)closeImpact:(BOOL)forceMainThread;
+- (BOOL)openImpact:(BOOL)animated;
+- (BOOL)closeImpact:(BOOL)forceMainThread withAnimations:(BOOL)animated;
 - (BOOL)mainControllerVisible;
 - (void)showPlayerAndPlaySelectedVideo:(BOOL)checkIfWatched;
 - (void)openAppStoreWithData:(NSDictionary *)data;

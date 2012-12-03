@@ -14,7 +14,6 @@
 #import "../ApplifierImpactSBJSON/NSObject+ApplifierImpactSBJson.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
-//#import "../ApplifierImpactViewManager.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "../ApplifierImpactMainViewController.h"
 
@@ -133,7 +132,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 		}
 	}
 	else if ([type isEqualToString:kApplifierImpactWebViewAPIClose]) {
-    [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES];
+    [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:YES];
 	}
 	else if ([type isEqualToString:kApplifierImpactWebViewAPIInitComplete]) {
     self.webViewInitialized = YES;

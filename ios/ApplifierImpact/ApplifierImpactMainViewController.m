@@ -73,22 +73,24 @@
 
 #pragma mark - Public
 
-- (BOOL)closeImpact:(BOOL)forceMainThread {
+- (BOOL)closeImpact:(BOOL)forceMainThread withAnimations:(BOOL)animated {
   AILOG_DEBUG(@"");
+  
+  if ([[ApplifierImpactProperties sharedInstance] currentViewController] == nil) return NO;
   
   if (forceMainThread) {
     dispatch_async(dispatch_get_main_queue(), ^{
-      [self _dismissMainViewController:forceMainThread];
+      [self _dismissMainViewController:forceMainThread withAnimations:animated];
     });
   }
   else {
-    [self _dismissMainViewController:forceMainThread];
+    [self _dismissMainViewController:forceMainThread withAnimations:animated];
   }
   
   return YES;
 }
 
-- (void)_dismissMainViewController:(BOOL)forcedToMainThread {
+- (void)_dismissMainViewController:(BOOL)forcedToMainThread withAnimations:(BOOL)animated {
   if (self.videoController.view.superview != nil) {
     [self dismissViewControllerAnimated:NO completion:nil];
   }
@@ -107,16 +109,18 @@
     }
   }
   
-  [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:YES completion:self.closeHandler];
+  [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:animated completion:self.closeHandler];
   [self.delegate mainControllerWillCloseAdView];
 }
 
-- (BOOL)openImpact {
+- (BOOL)openImpact:(BOOL)animated {
   AILOG_DEBUG(@"");
+  
+  if ([[ApplifierImpactProperties sharedInstance] currentViewController] == nil) return NO;
   
   dispatch_async(dispatch_get_main_queue(), ^{
     [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
-    [[[ApplifierImpactProperties sharedInstance] currentViewController] presentViewController:self animated:YES completion:nil];
+    [[[ApplifierImpactProperties sharedInstance] currentViewController] presentViewController:self animated:animated completion:nil];
     
     if (![[[[ApplifierImpactWebAppController sharedInstance] webView] superview] isEqual:self.view]) {
       [self.view addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];
@@ -139,9 +143,7 @@
 #pragma mark - Video
 
 - (void)videoPlayerStartedPlaying {
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [self.delegate mainControllerStartedPlayingVideo];
-  });
+  [self.delegate mainControllerStartedPlayingVideo];
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"textKey":@"buffering"}];
   [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{}];
   [self presentViewController:self.videoController animated:NO completion:nil];
@@ -161,7 +163,6 @@
 - (void)showPlayerAndPlaySelectedVideo:(BOOL)checkIfWatched {
 	AILOG_DEBUG(@"");
     
-  
   if ([[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed && checkIfWatched) {
     AILOG_DEBUG(@"Trying to watch a campaign that is already viewed!");
     return;
@@ -199,7 +200,7 @@
   if ([name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
     [[ApplifierImpactWebAppController sharedInstance] setWebViewInitialized:NO];
     [self.videoController forceStopVideoPlayer];
-    [self closeImpact:NO];
+    [self closeImpact:NO withAnimations:NO];
   }
 }
 
