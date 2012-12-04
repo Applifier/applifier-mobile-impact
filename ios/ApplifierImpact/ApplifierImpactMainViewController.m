@@ -225,7 +225,9 @@
   
   Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
   if ([storeProductViewControllerClass instancesRespondToSelector:@selector(loadProductWithParameters:completionBlock:)] == YES) {
-    NSString *gameId = [data objectForKey:@"iTunesId"];
+    if (![[data objectForKey:@"iTunesId"] isKindOfClass:[NSString class]]) return;
+    NSString *gameId = nil;
+    gameId = [data valueForKey:@"iTunesId"];
     if (gameId == nil || [gameId length] < 1) return;
     NSDictionary *productParams = @{SKStoreProductParameterITunesItemIdentifier:gameId};
     self.storeController = [[storeProductViewControllerClass alloc] init];

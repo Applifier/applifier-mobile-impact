@@ -24,7 +24,14 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
 	if ([self.window respondsToSelector:@selector(setRootViewController:)]) {
-		self.viewController = [[ApplifierImpactViewController alloc] initWithNibName:@"ApplifierImpactViewController" bundle:nil];
+        NSString *xibName = @"ApplifierImpactViewController";
+        
+        /*
+        if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+            xibName = @"ApplifierImpact_iPad";
+        }*/
+        
+		self.viewController = [[ApplifierImpactViewController alloc] initWithNibName:xibName bundle:nil];
 		self.window.rootViewController = self.viewController;
 	}
 	else {
