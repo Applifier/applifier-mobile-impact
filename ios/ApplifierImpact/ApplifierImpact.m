@@ -7,7 +7,6 @@
 #import "ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "ApplifierImpactCampaign/ApplifierImpactRewardItem.h"
-#import "ApplifierImpactOpenUDID/ApplifierImpactOpenUDID.h"
 #import "ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
