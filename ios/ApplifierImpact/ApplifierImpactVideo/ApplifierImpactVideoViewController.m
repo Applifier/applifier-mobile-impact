@@ -37,6 +37,7 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+  [self.view setBackgroundColor:[UIColor blackColor]];
   [self _attachVideoView];
 }
 
