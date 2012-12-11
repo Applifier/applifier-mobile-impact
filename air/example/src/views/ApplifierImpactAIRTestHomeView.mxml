@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="HomeView"
+		creationComplete="view1_activateHandler(event);">
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.applifier.impact.ApplifierImpactMobileAIRWrapper;
+			import com.applifier.impact.ApplifierImpactMobileEvent;
+			
+			private var _impact:ApplifierImpactMobileAIRWrapper;
+			public function view1_activateHandler(event:Event):void
+			{
+				_impact = new ApplifierImpactMobileAIRWrapper();				
+				_impact.init("16");
+				_impact.addEventListener(ApplifierImpactMobileEvent.IMPACT_INIT_COMPLETE, onInitComplete);
+				_impact.addEventListener(ApplifierImpactMobileEvent.IMPACT_VIDEO_COMPLETED_WITH_REWARD, onVideoCompletedWithReward);
+			}
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				if (_impact.isSupported() && _impact.canShowImpact()) 
+				{
+					_impact.showImpact();
+				}
+			}
+			
+			private function onInitComplete (event:ApplifierImpactMobileEvent) : void
+			{
+				openImpactButton.visible = true;
+			}
+			
+			private function onVideoCompletedWithReward (event:ApplifierImpactMobileEvent) : void
+			{
+				status.text = event.data as String;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Button click="button1_clickHandler(event);" visible="false" id="openImpactButton">
+		<s:label>Open Impact</s:label>
+	</s:Button>
+	<s:Label text="" id="status" />
+</s:View>

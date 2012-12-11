@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+							xmlns:s="library://ns.adobe.com/flex/spark" 
+							firstView="views.ApplifierImpactAIRTestHomeView" 
+							applicationDPI="160">
+	<fx:Script>
+		<![CDATA[
+			import views.ApplifierImpactAIRTestHomeView;
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+</s:ViewNavigatorApplication>
