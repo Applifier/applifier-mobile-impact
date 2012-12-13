@@ -34,7 +34,11 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    //[[ApplifierImpact sharedInstance] setTestMode:YES];
+    
+    // TEST MODE: Do not use in production apps
+    [[ApplifierImpact sharedInstance] setTestMode:YES];
+    
+    // Initialize Applifier Impact
 	[[ApplifierImpact sharedInstance] startWithGameId:@"16" andViewController:self];
 }
 
@@ -66,10 +70,6 @@
 - (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey {
 	NSLog(@"applifierImpact:completedVideoWithRewardItem: -- key: %@", rewardItemKey);
     [self.loadingImage setImage:[UIImage imageNamed:@"impact-reward"]];
-}
-
-- (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact {
-	NSLog(@"applifierImpactWillOpen");
 }
 
 - (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact {

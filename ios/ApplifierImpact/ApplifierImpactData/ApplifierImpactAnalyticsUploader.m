@@ -82,8 +82,6 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 	if (body != nil)
 		[request setHTTPBody:body];
 	
-	AILOG_DEBUG(@"queueing %@", [request URL]);
-	
 	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
 	NSDictionary *uploadDictionary = @{ kApplifierImpactAnalyticsUploaderRequestKey : request, kApplifierImpactAnalyticsUploaderConnectionKey : connection };
 	[self.uploadQueue addObject:uploadDictionary];
@@ -97,7 +95,7 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 	NSData *body = nil;
 	if (queryString != nil)
 		body = [queryString dataUsingEncoding:NSUTF8StringEncoding];
-
+  
 	[self _queueURL:url body:body httpMethod:httpMethod];
 }
 
@@ -177,7 +175,7 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 		AILOG_DEBUG(@"Invalid input.");
 		return;
 	}
-	
+
 	[self _queueWithURLString:[[ApplifierImpactProperties sharedInstance] analyticsBaseUrl] queryString:queryString httpMethod:@"POST"];
 }
 
@@ -189,7 +187,7 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 		return;
 	}
   
-	[self _queueWithURLString:[NSString stringWithFormat:@"%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactTrackingPath] queryString:nil httpMethod:@"GET"];
+	[self _queueWithURLString:[NSString stringWithFormat:@"%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactTrackingPath] queryString:queryString httpMethod:@"GET"];
 }
 
 
