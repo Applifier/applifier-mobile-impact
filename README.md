@@ -10,6 +10,18 @@ In any issues, please file in issue with us in this Github repository, or log a 
 Applifier Impact SDK Release Notes
 ==================================
 
+v1.0.2 "AirHead" - December 11, 2012
+--------------------------
+
+*Adobe AIR:*
+
+- Support for Adobe AIR when running on iOS platforms
+
+*iOS:*
+
+- Better fallbacks in some cases if data is not received correctly
+
+
 v1.0.1 - November 28, 2012
 --------------------------
 
