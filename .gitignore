@@ -13,3 +13,7 @@ ios/ApplifierImpact.xcodeproj/project.xcworkspace/xcuserdata
 ios/ApplifierImpact.xcodeproj/xcuserdata
 ios/ApplifierImpact.xcworkspace/project.xcworkspace/xcuserdata
 ios/ApplifierImpact.xcworkspace/xcuserdata
+bin-debug/
+xcuserdata/
+Release-iphonesimulator/
+.fake_fw_testing.framework/
