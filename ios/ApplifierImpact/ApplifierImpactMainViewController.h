@@ -13,10 +13,13 @@
 @protocol ApplifierImpactMainViewControllerDelegate <NSObject>
 
 @required
+- (void)mainControllerWebViewInitialized;
+- (void)mainControllerWillOpen;
+- (void)mainControllerDidOpen;
+- (void)mainControllerWillClose;
+- (void)mainControllerDidClose;
 - (void)mainControllerStartedPlayingVideo;
 - (void)mainControllerVideoEnded;
-- (void)mainControllerWillCloseAdView;
-- (void)mainControllerWebViewInitialized;
 @end
 
 @interface ApplifierImpactMainViewController : UIViewController <ApplifierImpactVideoControllerDelegate, ApplifierImpactWebAppControllerDelegate>

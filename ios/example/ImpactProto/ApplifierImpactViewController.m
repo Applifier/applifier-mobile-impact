@@ -67,23 +67,35 @@
 
 #pragma mark - ApplifierImpactDelegate
 
-- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey {
-	NSLog(@"applifierImpact:completedVideoWithRewardItem: -- key: %@", rewardItemKey);
-    [self.loadingImage setImage:[UIImage imageNamed:@"impact-reward"]];
+- (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact {
+	NSLog(@"applifierImpactCampaignsAreAvailable");
+    [self.loadingImage setImage:[UIImage imageNamed:@"impact-loaded"]];
+	[self.buttonView setEnabled:YES];
+}
+
+- (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact {
+	NSLog(@"applifierImpactWillOpen");
+}
+
+- (void)applifierImpactDidOpen:(ApplifierImpact *)applifierImpact {
+	NSLog(@"applifierImpactDidOpen");
 }
 
 - (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact {
 	NSLog(@"applifierImpactWillClose");
 }
 
+- (void)applifierImpactDidClose:(ApplifierImpact *)applifierImpact {
+	NSLog(@"applifierImpactDidClose");
+}
+
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact {
 	NSLog(@"applifierImpactVideoStarted");
 }
 
-- (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact {
-	NSLog(@"applifierImpactCampaignsAreAvailable");
-    [self.loadingImage setImage:[UIImage imageNamed:@"impact-loaded"]];
-	[self.buttonView setEnabled:YES];
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey {
+	NSLog(@"applifierImpact:completedVideoWithRewardItem: -- key: %@", rewardItemKey);
+    [self.loadingImage setImage:[UIImage imageNamed:@"impact-reward"]];
 }
 
 @end

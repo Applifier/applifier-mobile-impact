@@ -32,7 +32,9 @@
 
 @optional
 - (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact;
+- (void)applifierImpactDidOpen:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact;
+- (void)applifierImpactDidClose:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact;
 

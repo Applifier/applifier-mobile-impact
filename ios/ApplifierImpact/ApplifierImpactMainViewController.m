@@ -18,6 +18,7 @@
   @property (nonatomic, strong) ApplifierImpactVideoViewController *videoController;
   @property (nonatomic, strong) UIViewController *storeController;
   @property (nonatomic, strong) void (^closeHandler)(void);
+  @property (nonatomic, strong) void (^openHandler)(void);
 @end
 
 @implementation ApplifierImpactMainViewController
@@ -66,7 +67,7 @@
   return UIInterfaceOrientationMaskAll;
 }
 
-- (BOOL) shouldAutorotate {
+- (BOOL)shouldAutorotate {
   return YES;
 }
 
@@ -100,17 +101,22 @@
     [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
   }
   
+  [self.delegate mainControllerWillClose];
+
   if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
     if (self.closeHandler == nil) {
       self.closeHandler = ^(void) {
         AILOG_DEBUG(@"Setting start view after close");
         [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
+        [self.delegate mainControllerDidClose];
       };
     }
   }
+  else {
+    [self.delegate mainControllerDidClose];
+  }
   
   [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:animated completion:self.closeHandler];
-  [self.delegate mainControllerWillCloseAdView];
 }
 
 - (BOOL)openImpact:(BOOL)animated {
@@ -119,8 +125,22 @@
   if ([[ApplifierImpactProperties sharedInstance] currentViewController] == nil) return NO;
   
   dispatch_async(dispatch_get_main_queue(), ^{
+    [self.delegate mainControllerWillOpen];
     [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{}];
-    [[[ApplifierImpactProperties sharedInstance] currentViewController] presentViewController:self animated:animated completion:nil];
+    
+    if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+      if (self.openHandler == nil) {
+        self.openHandler = ^(void) {
+          AILOG_DEBUG(@"Running openhandler after opening view");
+          [self.delegate mainControllerDidOpen];
+        };
+      }
+    }
+    else {
+      [self.delegate mainControllerDidOpen];
+    }
+    
+    [[[ApplifierImpactProperties sharedInstance] currentViewController] presentViewController:self animated:animated completion:self.openHandler];
     
     if (![[[[ApplifierImpactWebAppController sharedInstance] webView] superview] isEqual:self.view]) {
       [self.view addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];

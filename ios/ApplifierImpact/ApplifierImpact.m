@@ -245,6 +245,45 @@ static ApplifierImpact *sharedImpact = nil;
  
 #pragma mark - ApplifierImpactViewManagerDelegate
 
+- (void)mainControllerWebViewInitialized {
+	AIAssert([NSThread isMainThread]);
+	AILOG_DEBUG(@"");
+  
+	[self _notifyDelegateOfCampaignAvailability];
+}
+
+- (void)mainControllerWillClose {
+	AIAssert([NSThread isMainThread]);
+	AILOG_DEBUG(@"");
+	
+	if ([self.delegate respondsToSelector:@selector(applifierImpactWillClose:)])
+		[self.delegate applifierImpactWillClose:self];
+}
+
+- (void)mainControllerDidClose {
+	AIAssert([NSThread isMainThread]);
+	AILOG_DEBUG(@"");
+  
+  if ([self.delegate respondsToSelector:@selector(applifierImpactDidClose:)])
+		[self.delegate applifierImpactDidClose:self];
+}
+
+- (void)mainControllerWillOpen {
+	AIAssert([NSThread isMainThread]);
+	AILOG_DEBUG(@"");
+  
+  if ([self.delegate respondsToSelector:@selector(applifierImpactWillOpen:)])
+		[self.delegate applifierImpactWillOpen:self];
+}
+
+- (void)mainControllerDidOpen {
+	AIAssert([NSThread isMainThread]);
+	AILOG_DEBUG(@"");
+  
+  if ([self.delegate respondsToSelector:@selector(applifierImpactDidOpen:)])
+		[self.delegate applifierImpactDidOpen:self];
+}
+
 - (void)mainControllerStartedPlayingVideo {
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
@@ -258,21 +297,6 @@ static ApplifierImpact *sharedImpact = nil;
 	AILOG_DEBUG(@"");
 	
 	[self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] rewardItem].key];
-}
-
-- (void)mainControllerWillCloseAdView {
-	AIAssert([NSThread isMainThread]);
-	AILOG_DEBUG(@"");
-	
-	if ([self.delegate respondsToSelector:@selector(applifierImpactWillClose:)])
-		[self.delegate applifierImpactWillClose:self];
-}
-
-- (void)mainControllerWebViewInitialized {
-	AIAssert([NSThread isMainThread]);	
-	AILOG_DEBUG(@"");
-
-	[self _notifyDelegateOfCampaignAvailability];
 }
 
 
