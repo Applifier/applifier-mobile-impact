@@ -41,5 +41,9 @@ package com.applifier.impact
 		public function stopAll () : void
 		{
 		}
+		
+		public function setTestMode (mode:Boolean) : void
+		{
+		}
 	}
 }

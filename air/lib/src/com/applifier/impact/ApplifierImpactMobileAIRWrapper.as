@@ -62,6 +62,12 @@ package com.applifier.impact
 			if (!canUseExtensionContext()) return;
 			_extensionContext.call("stopAll");
 		}
+		
+		public function setTestMode (mode:Boolean) : void
+		{
+			if (!canUseExtensionContext()) return;
+			_extensionContext.call("setTestMode", mode);
+		}
 
 		
 		/* Private funtions */
