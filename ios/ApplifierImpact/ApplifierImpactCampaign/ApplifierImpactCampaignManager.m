@@ -198,30 +198,40 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 	
   if (_campaignData != nil && [_campaignData isKindOfClass:[NSDictionary class]]) {
     NSDictionary *jsonDictionary = [(NSDictionary *)_campaignData objectForKey:@"data"];
+    BOOL validData = YES;
     
-    if ([jsonDictionary objectForKey:@"webViewUrl"] == nil) return;
-    if ([jsonDictionary objectForKey:@"analyticsUrl"] == nil) return;
-    if ([jsonDictionary objectForKey:@"impactUrl"] == nil) return;
-    if ([jsonDictionary objectForKey:kGamerIDKey] == nil) return;
-    if ([jsonDictionary objectForKey:@"campaigns"] == nil) return;
-    if ([jsonDictionary objectForKey:@"item"] == nil) return;
+    if ([jsonDictionary objectForKey:@"webViewUrl"] == nil) validData = NO;
+    if ([jsonDictionary objectForKey:@"analyticsUrl"] == nil) validData = NO;
+    if ([jsonDictionary objectForKey:@"impactUrl"] == nil) validData = NO;
+    if ([jsonDictionary objectForKey:kGamerIDKey] == nil) validData = NO;
+    if ([jsonDictionary objectForKey:@"campaigns"] == nil) validData = NO;
+    if ([jsonDictionary objectForKey:@"item"] == nil) validData = NO;
     
     self.campaigns = [self _deserializeCampaigns:[jsonDictionary objectForKey:@"campaigns"]];
+    if (self.campaigns == nil || [self.campaigns count] == 0) validData = NO;
+    
     self.rewardItem = [self _deserializeRewardItem:[jsonDictionary objectForKey:@"item"]];
+    if (self.rewardItem == nil) validData = NO;
 
-    [[ApplifierImpactProperties sharedInstance] setWebViewBaseUrl:(NSString *)[jsonDictionary objectForKey:@"webViewUrl"]];
-    [[ApplifierImpactProperties sharedInstance] setAnalyticsBaseUrl:(NSString *)[jsonDictionary objectForKey:@"analyticsUrl"]];
-    [[ApplifierImpactProperties sharedInstance] setImpactBaseUrl:(NSString *)[jsonDictionary objectForKey:@"impactUrl"]];
-    
-    NSString *gamerId = [jsonDictionary objectForKey:kGamerIDKey];
-    AIAssert(gamerId != nil);
-    
-    [[ApplifierImpactProperties sharedInstance] setGamerId:gamerId];
-    [self.cache cacheCampaigns:self.campaigns];
-    
-    dispatch_async(dispatch_get_main_queue(), ^(void) {
-      [self.delegate campaignManagerCampaignDataReceived];
-    });
+    if (validData) {
+      [[ApplifierImpactProperties sharedInstance] setWebViewBaseUrl:(NSString *)[jsonDictionary objectForKey:@"webViewUrl"]];
+      [[ApplifierImpactProperties sharedInstance] setAnalyticsBaseUrl:(NSString *)[jsonDictionary objectForKey:@"analyticsUrl"]];
+      [[ApplifierImpactProperties sharedInstance] setImpactBaseUrl:(NSString *)[jsonDictionary objectForKey:@"impactUrl"]];
+      
+      NSString *gamerId = [jsonDictionary objectForKey:kGamerIDKey];
+      
+      [[ApplifierImpactProperties sharedInstance] setGamerId:gamerId];
+      [self.cache cacheCampaigns:self.campaigns];
+      
+      dispatch_async(dispatch_get_main_queue(), ^(void) {
+        [self.delegate campaignManagerCampaignDataReceived];
+      });
+    }
+    else {
+      dispatch_async(dispatch_get_main_queue(), ^(void) {
+        [self.delegate campaignManagerCampaignDataFailed];
+      });
+    }
   }
 }
 
@@ -229,7 +239,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 #pragma mark - Public
 
 - (id)init {
-	AIAssertV( ! [NSThread isMainThread], nil);
+	AIAssertV(![NSThread isMainThread], nil);
 	
 	if ((self = [super init])) {
 		_cache = [[ApplifierImpactCache alloc] init];
@@ -240,7 +250,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 }
 
 - (void)updateCampaigns {
-	AIAssert( ! [NSThread isMainThread]);
+	AIAssert(![NSThread isMainThread]);
 	
 	NSString *urlString = [[ApplifierImpactProperties sharedInstance] campaignDataUrl];
 	
@@ -289,7 +299,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 
 
 - (void)cancelAllDownloads {
-	AIAssert( ! [NSThread isMainThread]);
+	AIAssert(![NSThread isMainThread]);
 	
 	[self.urlConnection cancel];
 	self.urlConnection = nil;
@@ -315,6 +325,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
   [self _campaignDataReceived];
 }
+
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	self.campaignDownloadData = nil;
 	self.urlConnection = nil;
@@ -330,8 +341,10 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 		AILOG_DEBUG(@"Retrying campaign download.");
 		[self updateCampaigns];
 	}
-	else
+	else {
 		AILOG_DEBUG(@"Not retrying campaign download.");
+    [self.delegate campaignManagerCampaignDataFailed];
+  }
 }
 
 

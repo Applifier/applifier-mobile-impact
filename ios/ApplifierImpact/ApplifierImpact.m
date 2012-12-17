@@ -242,7 +242,15 @@ static ApplifierImpact *sharedImpact = nil;
   }
 }
 
- 
+- (void)campaignManagerCampaignDataFailed {
+  AIAssert([NSThread isMainThread]);
+  AILOG_DEBUG(@"Campaign data failed.");
+  
+  if ([self.delegate respondsToSelector:@selector(applifierImpactCampaignsFetchFailed:)])
+		[self.delegate applifierImpactCampaignsFetchFailed:self];
+}
+
+
 #pragma mark - ApplifierImpactViewManagerDelegate
 
 - (void)mainControllerWebViewInitialized {

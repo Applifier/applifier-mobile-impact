@@ -14,6 +14,7 @@
 @required
 - (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID;
 - (void)campaignManagerCampaignDataReceived;
+- (void)campaignManagerCampaignDataFailed;
 
 @end
 
