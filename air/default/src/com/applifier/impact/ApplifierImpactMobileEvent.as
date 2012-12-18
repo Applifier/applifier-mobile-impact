@@ -5,6 +5,7 @@ package com.applifier.impact
 	public class ApplifierImpactMobileEvent extends Event
 	{
 		public static const IMPACT_INIT_COMPLETE:String = "impactInitComplete";
+		public static const IMPACT_INIT_FAILED:String = "impactInitFailed";
 		
 		public static const IMPACT_WILL_OPEN:String = "impactWillOpen";
 		public static const IMPACT_DID_OPEN:String = "impactDidOpen";

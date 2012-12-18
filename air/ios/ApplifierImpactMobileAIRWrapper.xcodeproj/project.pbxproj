@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		783331F61680630A00A9FE9C /* ApplifierImpact.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 783331F51680630A00A9FE9C /* ApplifierImpact.framework */; };
 		783626C816761DC400E02D0D /* ApplifierImpactMobileAIRWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 783626C716761DC400E02D0D /* ApplifierImpactMobileAIRWrapper.m */; };
-		784B4E6F167B2CCD00363606 /* ApplifierImpact.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 784B4E6E167B2CCD00363606 /* ApplifierImpact.framework */; };
 		789B4EEC166E353400FE1E44 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 789B4EEB166E353400FE1E44 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -25,9 +25,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		783331F51680630A00A9FE9C /* ApplifierImpact.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplifierImpact.framework; path = "../../ios/build/Release-iphoneos/ApplifierImpact.framework"; sourceTree = "<group>"; };
 		783626C616761DC400E02D0D /* ApplifierImpactMobileAIRWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactMobileAIRWrapper.h; sourceTree = "<group>"; };
 		783626C716761DC400E02D0D /* ApplifierImpactMobileAIRWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactMobileAIRWrapper.m; sourceTree = "<group>"; };
-		784B4E6E167B2CCD00363606 /* ApplifierImpact.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplifierImpact.framework; path = "../../ios/build/Release-iphoneos/ApplifierImpact.framework"; sourceTree = "<group>"; };
 		789B4EE8166E353400FE1E44 /* libApplifierImpactMobileAIRWrapper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libApplifierImpactMobileAIRWrapper.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		789B4EEB166E353400FE1E44 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		789B4EEF166E353400FE1E44 /* ApplifierImpactMobileAIRWrapper-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ApplifierImpactMobileAIRWrapper-Prefix.pch"; sourceTree = "<group>"; };
@@ -40,7 +40,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				789B4EEC166E353400FE1E44 /* Foundation.framework in Frameworks */,
-				784B4E6F167B2CCD00363606 /* ApplifierImpact.framework in Frameworks */,
+				783331F61680630A00A9FE9C /* ApplifierImpact.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,7 +67,7 @@
 		789B4EEA166E353400FE1E44 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				784B4E6E167B2CCD00363606 /* ApplifierImpact.framework */,
+				783331F51680630A00A9FE9C /* ApplifierImpact.framework */,
 				789B4EEB166E353400FE1E44 /* Foundation.framework */,
 			);
 			name = Frameworks;

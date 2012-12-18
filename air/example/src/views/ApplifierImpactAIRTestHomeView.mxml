@@ -25,6 +25,8 @@
 				_impact.init("16");
 				
 				_impact.addEventListener(ApplifierImpactMobileEvent.IMPACT_INIT_COMPLETE, onInitComplete);
+				_impact.addEventListener(ApplifierImpactMobileEvent.IMPACT_INIT_FAILED, onInitFailed);
+								
 				_impact.addEventListener(ApplifierImpactMobileEvent.IMPACT_VIDEO_COMPLETED_WITH_REWARD, onVideoCompletedWithReward);
 				_impact.addEventListener(ApplifierImpactMobileEvent.IMPACT_VIDEO_STARTED, onVideoStarted);
 				
@@ -46,6 +48,10 @@
 			private function onInitComplete (event:ApplifierImpactMobileEvent) : void
 			{
 				openImpactButton.visible = true;
+			}
+			
+			private function onInitFailed (event:ApplifierImpactMobileEvent) : void
+			{				
 			}
 			
 			private function onImpactWillOpen (event:ApplifierImpactMobileEvent) : void

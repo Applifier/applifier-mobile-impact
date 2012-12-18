@@ -52,6 +52,13 @@ ApplifierImpactMobileAIRWrapper *applifierImpactWrapperSharedInstance = nil;
     FREDispatchStatusEventAsync(applifierImpactFREContext, eventType, value);
 }
 
+- (void)applifierImpactCampaignsFetchFailed:(ApplifierImpact *)applifierImpact {
+	NSLog(@"applifierImpactCampaignsFetchFailed");
+    const uint8_t* eventType = (const uint8_t*) [@"impactInitFailed" UTF8String];
+    const uint8_t* value = (const uint8_t*) [@"no campaigns" UTF8String];
+    FREDispatchStatusEventAsync(applifierImpactFREContext, eventType, value);
+}
+
 - (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact {
 	NSLog(@"applifierImpactWillClose");
     const uint8_t* eventType = (const uint8_t*) [@"impactWillClose" UTF8String];

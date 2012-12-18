@@ -88,6 +88,11 @@ package com.applifier.impact
 					case ApplifierImpactMobileEvent.IMPACT_INIT_COMPLETE:
 						dispatchEvent(new ApplifierImpactMobileEvent(ApplifierImpactMobileEvent.IMPACT_INIT_COMPLETE));
 						break;
+					case ApplifierImpactMobileEvent.IMPACT_INIT_FAILED:
+						newEvent = new ApplifierImpactMobileEvent(ApplifierImpactMobileEvent.IMPACT_INIT_FAILED);
+						newEvent.data = event.level;
+						dispatchEvent(newEvent);
+						break;
 					case ApplifierImpactMobileEvent.IMPACT_VIDEO_STARTED:
 						dispatchEvent(new ApplifierImpactMobileEvent(ApplifierImpactMobileEvent.IMPACT_VIDEO_STARTED));
 						break;
@@ -95,9 +100,18 @@ package com.applifier.impact
 						newEvent = new ApplifierImpactMobileEvent(ApplifierImpactMobileEvent.IMPACT_VIDEO_COMPLETED_WITH_REWARD);
 						newEvent.data = event.level;
 						dispatchEvent(newEvent);
-						break;
+						break;					
 					case ApplifierImpactMobileEvent.IMPACT_WILL_CLOSE:
 						dispatchEvent(new ApplifierImpactMobileEvent(ApplifierImpactMobileEvent.IMPACT_WILL_CLOSE));
+						break;
+					case ApplifierImpactMobileEvent.IMPACT_DID_CLOSE:
+						dispatchEvent(new ApplifierImpactMobileEvent(ApplifierImpactMobileEvent.IMPACT_DID_CLOSE));
+						break;					
+					case ApplifierImpactMobileEvent.IMPACT_WILL_OPEN:
+						dispatchEvent(new ApplifierImpactMobileEvent(ApplifierImpactMobileEvent.IMPACT_WILL_OPEN));
+						break;
+					case ApplifierImpactMobileEvent.IMPACT_DID_OPEN:
+						dispatchEvent(new ApplifierImpactMobileEvent(ApplifierImpactMobileEvent.IMPACT_DID_OPEN));
 						break;
 				}
 			}
