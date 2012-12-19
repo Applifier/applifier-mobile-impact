@@ -8,6 +8,7 @@
 
 #import "ApplifierImpactURLProtocol.h"
 #import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
+#import "../ApplifierImpactSBJSON/NSObject+ApplifierImpactSBJson.h"
 
 static const NSString *kApplifierImpactURLProtocolHostname = @"client.impact.applifier.com";
 
@@ -45,7 +46,7 @@ static const NSString *kApplifierImpactURLProtocolHostname = @"client.impact.app
 - (void)startLoading {
   NSURLRequest *request = [self request];
   NSData *reqData = [request HTTPBody];
-  
+
   [self actOnJSONResults: reqData];
   
   // Create the response
@@ -74,21 +75,27 @@ static const NSString *kApplifierImpactURLProtocolHostname = @"client.impact.app
 }
 
 - (void)actOnJSONResults:(NSData *)jsonData {
-  NSError *myError = nil;
-  NSDictionary *results = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&myError];
-  
-  __block NSString *type = [results objectForKey:@"type"];
-  __block NSDictionary *dictData = nil;
-
-  id data = [results objectForKey:@"data"];
-  if ([data isKindOfClass:[NSDictionary class]]) {
-    dictData = (NSDictionary *)data;
+  if (![[jsonData JSONValue] isKindOfClass:[NSDictionary class]]) {
+    AILOG_DEBUG(@"Wrong type of return value");
+    return;
   }
   
-  if (dictData != nil) {
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [[ApplifierImpactWebAppController sharedInstance] handleWebEvent:type data:dictData];
-    });
+  NSDictionary *results = [jsonData JSONValue];
+  
+  if (results != nil) {
+    __block NSString *type = [results objectForKey:@"type"];
+    __block NSDictionary *dictData = nil;
+    
+    id data = [results objectForKey:@"data"];
+    if ([data isKindOfClass:[NSDictionary class]]) {
+      dictData = (NSDictionary *)data;
+    }
+    
+    if (dictData != nil) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [[ApplifierImpactWebAppController sharedInstance] handleWebEvent:type data:dictData];
+      });
+    }
   }
 }
 

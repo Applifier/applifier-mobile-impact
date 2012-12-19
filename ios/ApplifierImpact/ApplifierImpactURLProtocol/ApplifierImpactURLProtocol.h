@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreFoundation/CoreFoundation.h>
 #import <UIKit/UIKit.h>
-#import <Foundation/NSJSONSerialization.h>
 #import <CoreFoundation/CFString.h>
 #import "ApplifierImpact.h"
 

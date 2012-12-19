@@ -46,9 +46,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   
   if ([ApplifierImpactDevice canUseTracking]) {
     queryParams = [NSString stringWithFormat:@"%@&softwareVersion=%@&hardwareVersion=%@&deviceType=%@&apiVersion=%@&connectionType=%@", queryParams, [ApplifierImpactDevice softwareVersion], @"unknown", [ApplifierImpactDevice analyticsMachineName], kApplifierImpactVersion, [ApplifierImpactDevice currentConnectionType]];
-    if ([ApplifierImpactDevice md5AdvertisingIdentifierString] == nil) {
-      queryParams = [NSString stringWithFormat:@"%@&openUdid=%@", queryParams, [ApplifierImpactDevice md5OpenUDIDString]];
-    }
+    queryParams = [NSString stringWithFormat:@"%@&openUdid=%@", queryParams, [ApplifierImpactDevice md5OpenUDIDString]];
   }
   
   if ([self testModeEnabled]) {
