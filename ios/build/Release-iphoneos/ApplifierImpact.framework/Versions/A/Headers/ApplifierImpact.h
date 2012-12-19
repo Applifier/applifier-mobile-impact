@@ -37,6 +37,7 @@
 - (void)applifierImpactDidClose:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact;
+- (void)applifierImpactCampaignsFetchFailed:(ApplifierImpact *)applifierImpact;
 
 @end
 
