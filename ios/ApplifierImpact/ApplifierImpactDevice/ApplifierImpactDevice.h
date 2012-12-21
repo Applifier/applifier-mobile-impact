@@ -35,6 +35,7 @@ extern NSString * const kApplifierImpactDeviceIosUnknown;
 + (NSString *)md5DeviceId;
 + (NSString *)md5OpenUDIDString;
 + (NSString *)md5AdvertisingIdentifierString;
++ (NSString *)md5MACAddressString;
 
 + (int)getIOSMajorVersion;
 + (NSNumber *)getIOSExactVersion;
