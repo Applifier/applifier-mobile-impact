@@ -20,7 +20,6 @@
   @property (nonatomic, strong) UIView *progressView;
   @property (nonatomic, assign) dispatch_queue_t videoControllerQueue;
   @property (nonatomic, strong) NSURL *currentPlayingVideoUrl;
-  @property (nonatomic, assign) int orientation;
 @end
 
 @implementation ApplifierImpactVideoViewController
@@ -30,7 +29,6 @@
     if (self) {
       self.videoControllerQueue = dispatch_queue_create("com.applifier.impact.videocontroller", NULL);
       self.isPlaying = NO;
-      self.orientation = 0;
     }
     return self;
 }
@@ -70,7 +68,6 @@
     self.view.bounds = CGRectMake(0, 0, maxValue, minValue);
     self.view.transform = CGAffineTransformMakeRotation(M_PI / 2);
     AILOG_DEBUG(@"NEW DIMENSIONS: %f, %f", minValue, maxValue);
-    self.orientation = 1;
   }
   
   if (self.videoView != nil) {
@@ -105,6 +102,7 @@
 		return;
 	}
   
+  self.campaignToPlay = campaignToPlay;
   self.currentPlayingVideoUrl = videoURL;
   [self _createVideoView];
   [self _createVideoPlayer];
@@ -204,6 +202,7 @@
   self.campaignToPlay.viewed = YES;
   [self.delegate videoPlayerPlaybackEnded];
   self.isPlaying = NO;
+  self.campaignToPlay = nil;
 }
 
 - (void)videoPlaybackError {

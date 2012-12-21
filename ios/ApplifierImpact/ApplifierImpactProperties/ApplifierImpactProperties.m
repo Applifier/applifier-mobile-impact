@@ -10,7 +10,7 @@
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 
-NSString * const kApplifierImpactVersion = @"1.0";
+NSString * const kApplifierImpactVersion = @"1.0.2";
 
 @implementation ApplifierImpactProperties
 
@@ -34,6 +34,10 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   }
   
   return self;
+}
+
+- (NSString *)impactVersion {
+  return kApplifierImpactVersion;
 }
 
 - (NSString *)_createCampaignQueryString {

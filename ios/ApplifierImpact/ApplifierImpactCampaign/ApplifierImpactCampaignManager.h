@@ -30,6 +30,7 @@
 - (NSURL *)getVideoURLForCampaign:(ApplifierImpactCampaign *)campaign;
 - (void)cancelAllDownloads;
 - (ApplifierImpactCampaign *)getCampaignWithId:(NSString *)campaignId;
+- (NSArray *)getViewableCampaigns;
 
 + (id)sharedInstance;
 

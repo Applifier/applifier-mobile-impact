@@ -50,17 +50,16 @@ static ApplifierImpact *sharedImpact = nil;
   [[ApplifierImpactProperties sharedInstance] setTestModeEnabled:testModeEnabled];
 }
 
-- (void)startWithGameId:(NSString *)gameId {
-  if (![ApplifierImpact isSupported]) return;
-  [self startWithGameId:gameId andViewController:nil];
+- (BOOL)startWithGameId:(NSString *)gameId {
+  if (![ApplifierImpact isSupported]) return false;
+  return [self startWithGameId:gameId andViewController:nil];
 }
 
-- (void)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController {
-  AIAssert([NSThread isMainThread]);
+- (BOOL)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController {
   AILOG_DEBUG(@"");
-  if (![ApplifierImpact isSupported]) return;
-  if ([[ApplifierImpactProperties sharedInstance] impactGameId] != nil) return;
-	if (gameId == nil || [gameId length] == 0) return;
+  if (![ApplifierImpact isSupported]) return false;
+  if ([[ApplifierImpactProperties sharedInstance] impactGameId] != nil) return false;
+	if (gameId == nil || [gameId length] == 0) return false;
   
   [[ApplifierImpactProperties sharedInstance] setCurrentViewController:viewController];
   
@@ -81,6 +80,16 @@ static ApplifierImpact *sharedImpact = nil;
       [[ApplifierImpactMainViewController sharedInstance] setDelegate:self];
 		});
 	});
+  
+  return true;
+}
+
+- (BOOL)canShowAds {
+  if ([self canShowImpact] && [[[ApplifierImpactCampaignManager sharedInstance] getViewableCampaigns] count] > 0) {
+    return YES;
+  }
+  
+  return NO;
 }
 
 - (BOOL)canShowImpact {
@@ -124,12 +133,6 @@ static ApplifierImpact *sharedImpact = nil;
 	AIAssert([NSThread isMainThread]);
   if (![ApplifierImpact isSupported]) return;
   [[ApplifierImpactCampaignManager sharedInstance] performSelector:@selector(cancelAllDownloads) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
-}
-
-- (void)trackInstall{
-	AIAssert([NSThread isMainThread]);
-  if (![ApplifierImpact isSupported]) return;
-	[[ApplifierImpactAnalyticsUploader sharedInstance] sendManualInstallTrackingCall];
 }
 
 - (void)dealloc {

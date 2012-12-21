@@ -23,5 +23,6 @@
 
 + (ApplifierImpactProperties *)sharedInstance;
 - (void)refreshCampaignQueryString;
+- (NSString *)impactVersion;
 
 @end

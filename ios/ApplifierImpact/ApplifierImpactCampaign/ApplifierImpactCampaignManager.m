@@ -67,6 +67,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 	for (id campaignDictionary in campaignArray) {
 		if ([campaignDictionary isKindOfClass:[NSDictionary class]]) {
 			ApplifierImpactCampaign *campaign = [[ApplifierImpactCampaign alloc] init];
+      campaign.viewed = NO;
 			
 			NSString *endScreenURLString = [campaignDictionary objectForKey:kCampaignEndScreenKey];
       if (endScreenURLString == nil) continue;
@@ -283,6 +284,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 }
 
 - (ApplifierImpactCampaign *)getCampaignWithId:(NSString *)campaignId {
+	AILOG_DEBUG(@"");
 	AIAssertV([NSThread isMainThread], nil);
 	ApplifierImpactCampaign *foundCampaign = nil;
 	
@@ -293,10 +295,23 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 		}
 	}
 	
-	AILOG_DEBUG(@"");
 	return foundCampaign;
 }
 
+- (NSArray *)getViewableCampaigns {
+	AILOG_DEBUG(@"");
+  NSMutableArray *retAr = [[NSMutableArray alloc] init];
+  
+  if (self.campaigns != nil) {
+    for (ApplifierImpactCampaign* campaign in self.campaigns) {
+      if (!campaign.viewed) {
+        [retAr addObject:campaign];
+      }
+    }
+  }
+  
+  return retAr;
+}
 
 - (void)cancelAllDownloads {
 	AIAssert(![NSThread isMainThread]);

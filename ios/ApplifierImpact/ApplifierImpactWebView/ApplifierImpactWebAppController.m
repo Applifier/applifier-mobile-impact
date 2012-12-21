@@ -208,7 +208,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 - (void)initWebApp {
 	AIAssert([NSThread isMainThread]);
   
-  NSDictionary *persistingData = @{@"campaignData":[[ApplifierImpactCampaignManager sharedInstance] campaignData], @"platform":@"ios", @"deviceId":[ApplifierImpactDevice md5DeviceId]};
+  NSDictionary *persistingData = @{@"campaignData":[[ApplifierImpactCampaignManager sharedInstance] campaignData], @"platform":@"ios", @"deviceId":[ApplifierImpactDevice md5DeviceId], @"sdkVersion":[[ApplifierImpactProperties sharedInstance] impactVersion]};
   
   NSDictionary *trackingData = @{@"iOSVersion":[ApplifierImpactDevice softwareVersion], @"deviceType":[ApplifierImpactDevice analyticsMachineName]};
   NSMutableDictionary *webAppValues = [NSMutableDictionary dictionaryWithDictionary:persistingData];
