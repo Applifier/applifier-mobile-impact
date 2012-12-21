@@ -48,13 +48,13 @@
 + (ApplifierImpact *)sharedInstance;
 + (BOOL)isSupported;
 - (void)setTestMode:(BOOL)testModeEnabled;
-- (void)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController;
-- (void)startWithGameId:(NSString *)gameId;
+- (BOOL)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController;
+- (BOOL)startWithGameId:(NSString *)gameId;
 - (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact;
+- (BOOL)canShowAds;
 - (BOOL)canShowImpact;
 - (BOOL)showImpact;
 - (BOOL)hideImpact;
 - (void)stopAll;
-- (void)trackInstall;
 
 @end
