@@ -105,8 +105,7 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 
 + (id)sharedInstance {
-	@synchronized(self)
-	{
+	@synchronized(self) {
 		if (sharedImpactAnalyticsUploader == nil)
       sharedImpactAnalyticsUploader = [[ApplifierImpactAnalyticsUploader alloc] init];
 	}
@@ -127,6 +126,17 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 
 - (void)dealloc {
   dispatch_release(self.analyticsQueue);
+}
+
+
+#pragma mark - Click track
+
+- (void)sendOpenAppStoreRequest:(ApplifierImpactCampaign *)campaign {
+  if (campaign != nil) {
+    NSString *query = [NSString stringWithFormat:@"gameId=%@&type=%@&trackingId=%@&providerId=%@", [[ApplifierImpactProperties sharedInstance] impactGameId], @"openAppStore", [[ApplifierImpactProperties sharedInstance] gamerId], campaign.id];
+    
+    [self performSelector:@selector(sendAnalyticsRequestWithQueryString:) onThread:self.backgroundThread withObject:query waitUntilDone:NO];
+  }
 }
 
 
@@ -157,9 +167,9 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 			trackingString = @"view";
 		}
 		
-     NSString *query = [NSString stringWithFormat:@"gameId=%@&type=%@&trackingId=%@&providerId=%@", [[ApplifierImpactProperties sharedInstance] impactGameId], positionString, [[ApplifierImpactProperties sharedInstance] gamerId], campaign.id];
+    NSString *query = [NSString stringWithFormat:@"gameId=%@&type=%@&trackingId=%@&providerId=%@", [[ApplifierImpactProperties sharedInstance] impactGameId], positionString, [[ApplifierImpactProperties sharedInstance] gamerId], campaign.id];
     
-    [self performSelector:@selector(sendViewReportWithQueryString:) onThread:self.backgroundThread withObject:query waitUntilDone:NO];
+    [self performSelector:@selector(sendAnalyticsRequestWithQueryString:) onThread:self.backgroundThread withObject:query waitUntilDone:NO];
      
      if (trackingString != nil) {
        NSString *trackingQuery = [NSString stringWithFormat:@"%@/%@/%@?gameId=%@", [[ApplifierImpactProperties sharedInstance] gamerId], trackingString, campaign.id, [[ApplifierImpactProperties sharedInstance] impactGameId]];
@@ -168,21 +178,20 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 	});
 }
 
-- (void)sendViewReportWithQueryString:(NSString *)queryString {
-	AIAssert( ! [NSThread isMainThread]);
+- (void)sendAnalyticsRequestWithQueryString:(NSString *)queryString {
+	AIAssert(![NSThread isMainThread]);
 	
 	if (queryString == nil || [queryString length] == 0) {
 		AILOG_DEBUG(@"Invalid input.");
 		return;
 	}
 
-  AILOG_DEBUG(@"View report: %@%@", [[ApplifierImpactProperties sharedInstance] analyticsBaseUrl], queryString);
-  
+  AILOG_DEBUG(@"View report: %@?%@", [[ApplifierImpactProperties sharedInstance] analyticsBaseUrl], queryString);
 	[self _queueWithURLString:[[ApplifierImpactProperties sharedInstance] analyticsBaseUrl] queryString:queryString httpMethod:@"POST"];
 }
 
 - (void)sendTrackingCallWithQueryString:(NSString *)queryString {
-	AIAssert( ! [NSThread isMainThread]);
+	AIAssert(![NSThread isMainThread]);
 	
 	if (queryString == nil || [queryString length] == 0) {
 		AILOG_DEBUG(@"Invalid input.");

@@ -47,8 +47,10 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   queryParams = [NSString stringWithFormat:@"%@&openUdid=%@", queryParams, [ApplifierImpactDevice md5OpenUDIDString]];
   queryParams = [NSString stringWithFormat:@"%@&macAddress=%@", queryParams, [ApplifierImpactDevice md5MACAddressString]];
   
-  if ([ApplifierImpactDevice md5AdvertisingIdentifierString] != nil)
+  if ([ApplifierImpactDevice md5AdvertisingIdentifierString] != nil) {
     queryParams = [NSString stringWithFormat:@"%@&advertisingTrackingId=%@", queryParams, [ApplifierImpactDevice md5AdvertisingIdentifierString]];
+    queryParams = [NSString stringWithFormat:@"%@&trackingEnabled=%i", queryParams, [ApplifierImpactDevice canUseTracking]];
+  }
   
   if ([ApplifierImpactDevice canUseTracking]) {
     queryParams = [NSString stringWithFormat:@"%@&softwareVersion=%@&hardwareVersion=%@&deviceType=%@&apiVersion=%@&connectionType=%@", queryParams, [ApplifierImpactDevice softwareVersion], @"unknown", [ApplifierImpactDevice analyticsMachineName], kApplifierImpactVersion, [ApplifierImpactDevice currentConnectionType]];

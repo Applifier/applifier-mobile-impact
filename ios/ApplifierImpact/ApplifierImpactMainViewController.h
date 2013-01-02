@@ -20,6 +20,7 @@
 - (void)mainControllerDidClose;
 - (void)mainControllerStartedPlayingVideo;
 - (void)mainControllerVideoEnded;
+- (void)mainControllerWillLeaveApplication;
 @end
 
 @interface ApplifierImpactMainViewController : UIViewController <ApplifierImpactVideoControllerDelegate, ApplifierImpactWebAppControllerDelegate>

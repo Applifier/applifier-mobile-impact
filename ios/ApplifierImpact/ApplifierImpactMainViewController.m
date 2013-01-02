@@ -13,6 +13,7 @@
 #import "ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
+#import "ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 
 @interface ApplifierImpactMainViewController ()
   @property (nonatomic, strong) ApplifierImpactVideoViewController *videoController;
@@ -239,6 +240,12 @@
 		NSString *clickUrl = [data objectForKey:@"clickUrl"];
     if (clickUrl == nil) return;
     AILOG_DEBUG(@"Cannot open store product view controller, falling back to click URL.");
+    [[ApplifierImpactAnalyticsUploader sharedInstance] sendOpenAppStoreRequest:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
+    
+    if (self.delegate != nil) {
+      [self.delegate mainControllerWillLeaveApplication];
+    }
+    
 		[[ApplifierImpactWebAppController sharedInstance] openExternalUrl:clickUrl];
 		return;
 	}
@@ -275,6 +282,7 @@
         [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"textKey":@"loading"}];
         dispatch_async(dispatch_get_main_queue(), ^{
           [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.storeController animated:YES completion:nil];
+          [[ApplifierImpactAnalyticsUploader sharedInstance] sendOpenAppStoreRequest:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
         });
       }
       else {

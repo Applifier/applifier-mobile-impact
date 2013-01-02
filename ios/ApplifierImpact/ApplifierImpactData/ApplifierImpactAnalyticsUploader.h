@@ -13,7 +13,7 @@ extern NSString * const kApplifierImpactQueryDictionaryBodyKey;
 
 @interface ApplifierImpactAnalyticsUploader : NSObject
 
-- (void)sendViewReportWithQueryString:(NSString *)queryString;
+- (void)sendOpenAppStoreRequest:(ApplifierImpactCampaign *)campaign;
 - (void)sendTrackingCallWithQueryString:(NSString *)queryString;
 - (void)sendInstallTrackingCallWithQueryDictionary:(NSDictionary *)queryDictionary;
 - (void)retryFailedUploads;

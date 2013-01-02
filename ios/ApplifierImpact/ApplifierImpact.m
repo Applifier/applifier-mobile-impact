@@ -310,6 +310,13 @@ static ApplifierImpact *sharedImpact = nil;
 	[self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] rewardItem].key];
 }
 
+- (void)mainControllerWillLeaveApplication {
+	AIAssert([NSThread isMainThread]);
+	AILOG_DEBUG(@"");
+  
+  if ([self.delegate respondsToSelector:@selector(applifierImpactWillLeaveApplication:)])
+		[self.delegate applifierImpactWillLeaveApplication:self];
+}
 
 #pragma mark - ApplifierImpactDelegate calling methods
 
