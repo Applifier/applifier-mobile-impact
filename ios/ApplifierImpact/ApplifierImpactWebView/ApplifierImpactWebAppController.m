@@ -104,7 +104,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 }
 
 - (void)handleWebEvent:(NSString *)type data:(NSDictionary *)data {
-  AILOG_DEBUG(@"Gotevent: %@  widthData: %@", type, data);
+  AILOG_DEBUG(@"Gotevent: %@ withData: %@", type, data);
   
   if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo] || [type isEqualToString:kApplifierImpactWebViewAPINavigateTo] || [type isEqualToString:kApplifierImpactWebViewAPIAppStore])
 	{

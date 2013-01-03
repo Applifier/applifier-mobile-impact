@@ -35,6 +35,7 @@
 - (void)applifierImpactDidOpen:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactDidClose:(ApplifierImpact *)applifierImpact;
+- (void)applifierImpactWillLeaveApplication:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactCampaignsFetchFailed:(ApplifierImpact *)applifierImpact;

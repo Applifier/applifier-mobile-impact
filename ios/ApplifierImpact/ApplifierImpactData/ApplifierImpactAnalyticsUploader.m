@@ -198,9 +198,9 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 		return;
 	}
   
-  AILOG_DEBUG(@"Tracking report: %@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], queryString);
+  AILOG_DEBUG(@"Tracking report: %@%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactTrackingPath, queryString);
   
-	[self _queueWithURLString:[NSString stringWithFormat:@"%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactTrackingPath] queryString:queryString httpMethod:@"GET"];
+	[self _queueWithURLString:[NSString stringWithFormat:@"%@%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactTrackingPath, queryString] queryString:nil httpMethod:@"GET"];
 }
 
 
