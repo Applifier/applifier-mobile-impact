@@ -39,7 +39,7 @@
     [[ApplifierImpact sharedInstance] setTestMode:YES];
     
     // Initialize Applifier Impact
-	[[ApplifierImpact sharedInstance] startWithGameId:@"16" andViewController:self];
+	[[ApplifierImpact sharedInstance] startWithGameId:@"11006" andViewController:self];
 }
 
 - (void)openImpact {
