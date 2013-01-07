@@ -211,10 +211,33 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
     self.campaigns = [self _deserializeCampaigns:[jsonDictionary objectForKey:@"campaigns"]];
     if (self.campaigns == nil || [self.campaigns count] == 0) validData = NO;
     
-    self.rewardItem = [self _deserializeRewardItem:[jsonDictionary objectForKey:@"item"]];
-    if (self.rewardItem == nil) validData = NO;
+    self.defaultRewardItem = [self _deserializeRewardItem:[jsonDictionary objectForKey:@"item"]];
+    if (self.defaultRewardItem == nil) validData = NO;
+    
+    if ([jsonDictionary objectForKey:@"items"] != nil) {
+      NSArray *rewardItems = [jsonDictionary objectForKey:@"items"];
+      AILOG_DEBUG(@"Found multiple rewards: %i", [rewardItems count]);
+      NSMutableArray *deserializedRewardItems = [NSMutableArray array];
+      NSMutableArray *tempRewardItemKeys = [NSMutableArray array];
+      ApplifierImpactRewardItem *rewardItem = nil;
+      
+      for (NSDictionary *itemData in rewardItems) {
+        AILOG_DEBUG(@"%@", itemData);
+        rewardItem = [self _deserializeRewardItem:itemData];
+        if (rewardItem != nil) {
+          [deserializedRewardItems addObject:rewardItem];
+          [tempRewardItemKeys addObject:rewardItem.key];
+        }
+      }
+      
+      self.rewardItems = [[NSMutableArray alloc] initWithArray:deserializedRewardItems];
+      self.rewardItemKeys = [[NSArray alloc] initWithArray:tempRewardItemKeys];
+      AILOG_DEBUG(@"Parsed total of %i reward items, with keys: %@", [self.rewardItems count], self.rewardItemKeys);
+    }
 
     if (validData) {
+      self.currentRewardItemKey = self.defaultRewardItem.key;
+      
       [[ApplifierImpactProperties sharedInstance] setWebViewBaseUrl:(NSString *)[jsonDictionary objectForKey:@"webViewUrl"]];
       [[ApplifierImpactProperties sharedInstance] setAnalyticsBaseUrl:(NSString *)[jsonDictionary objectForKey:@"analyticsUrl"]];
       [[ApplifierImpactProperties sharedInstance] setImpactBaseUrl:(NSString *)[jsonDictionary objectForKey:@"impactUrl"]];
@@ -313,6 +336,31 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
   return retAr;
 }
 
+- (BOOL)setSelectedRewardItemKey:(NSString *)rewardItemKey {
+  if (self.rewardItems != nil && [self.rewardItems count] > 0) {
+    for (ApplifierImpactRewardItem *rewardItem in self.rewardItems) {
+      if ([rewardItem.key isEqualToString:rewardItemKey]) {
+        self.currentRewardItemKey = rewardItemKey;
+        return YES;
+      }
+    }
+  }
+  
+  return NO;
+}
+
+- (ApplifierImpactRewardItem *)getCurrentRewardItem {
+  if (self.currentRewardItemKey != nil) {
+    for (ApplifierImpactRewardItem *rewardItem in self.rewardItems) {
+      if ([rewardItem.key isEqualToString:self.currentRewardItemKey]) {
+        return rewardItem;
+      }
+    }
+  }
+  
+  return nil;
+}
+
 - (void)cancelAllDownloads {
 	AIAssert(![NSThread isMainThread]);
 	
@@ -370,7 +418,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 
 - (void)cacheFinishedCachingCampaigns:(ApplifierImpactCache *)cache {
 	dispatch_async(dispatch_get_main_queue(), ^{
-		[self.delegate campaignManager:self updatedWithCampaigns:self.campaigns rewardItem:self.rewardItem gamerID:[[ApplifierImpactProperties sharedInstance] gamerId]];
+		[self.delegate campaignManager:self updatedWithCampaigns:self.campaigns rewardItem:self.defaultRewardItem gamerID:[[ApplifierImpactProperties sharedInstance] gamerId]];
 	});
 }
 

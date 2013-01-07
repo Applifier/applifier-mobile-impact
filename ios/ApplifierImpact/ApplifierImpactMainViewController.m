@@ -20,6 +20,7 @@
   @property (nonatomic, strong) UIViewController *storeController;
   @property (nonatomic, strong) void (^closeHandler)(void);
   @property (nonatomic, strong) void (^openHandler)(void);
+  @property (nonatomic, assign) BOOL isOpen;
 @end
 
 @implementation ApplifierImpactMainViewController
@@ -109,11 +110,13 @@
       self.closeHandler = ^(void) {
         AILOG_DEBUG(@"Setting start view after close");
         [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{@"action":@"close"}];
+        self.isOpen = NO;
         [self.delegate mainControllerDidClose];
       };
     }
   }
   else {
+    self.isOpen = NO;
     [self.delegate mainControllerDidClose];
   }
   
@@ -127,7 +130,7 @@
   
   dispatch_async(dispatch_get_main_queue(), ^{
     [self.delegate mainControllerWillOpen];
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{@"action":@"open"}];
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{@"action":@"open", @"itemKey":[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
     
     if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
       if (self.openHandler == nil) {
@@ -149,11 +152,12 @@
     }
   });
   
+  self.isOpen = YES;
   return YES;
 }
 
 - (BOOL)mainControllerVisible {
-  if (self.view.superview != nil) {
+  if (self.view.superview != nil || self.isOpen) {
     return YES;
   }
   
@@ -166,7 +170,7 @@
 - (void)videoPlayerStartedPlaying {
   [self.delegate mainControllerStartedPlayingVideo];
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"textKey":@"buffering"}];
-  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{@"action":@"video_started_playing"}];
+  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{@"action":@"video_started_playing", @"itemKey":[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
   [self presentViewController:self.videoController animated:NO completion:nil];
 }
 
@@ -315,7 +319,7 @@
 - (void)webAppReady {
   [self.delegate mainControllerWebViewInitialized];
   dispatch_async(dispatch_get_main_queue(), ^{
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{@"action":@"initComplete"}];
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{@"action":@"initComplete", @"itemKey":[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
   });
 }
 

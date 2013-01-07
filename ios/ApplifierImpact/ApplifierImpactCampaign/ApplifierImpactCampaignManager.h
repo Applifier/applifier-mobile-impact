@@ -24,13 +24,18 @@
 @property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, strong) NSDictionary *campaignData;
 @property (nonatomic, strong) ApplifierImpactCampaign *selectedCampaign;
-@property (nonatomic, strong) ApplifierImpactRewardItem *rewardItem;
+@property (nonatomic, strong) ApplifierImpactRewardItem *defaultRewardItem;
+@property (nonatomic, strong) NSArray *rewardItems;
+@property (nonatomic, strong) NSArray *rewardItemKeys;
+@property (nonatomic, strong) NSString *currentRewardItemKey;
 
 - (void)updateCampaigns;
 - (NSURL *)getVideoURLForCampaign:(ApplifierImpactCampaign *)campaign;
 - (void)cancelAllDownloads;
 - (ApplifierImpactCampaign *)getCampaignWithId:(NSString *)campaignId;
 - (NSArray *)getViewableCampaigns;
+- (BOOL)setSelectedRewardItemKey:(NSString *)rewardItemKey;
+- (ApplifierImpactRewardItem *)getCurrentRewardItem;
 
 + (id)sharedInstance;
 
