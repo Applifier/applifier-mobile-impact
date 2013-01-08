@@ -27,7 +27,6 @@ v1.0.1 - November 28, 2012
 
 *iOS:*
 
-- MAC address tracking removed to Apple policies
 - Refactored view logic for easier integration
 - Bug fixes, improved cache policies for video ad caching
 
