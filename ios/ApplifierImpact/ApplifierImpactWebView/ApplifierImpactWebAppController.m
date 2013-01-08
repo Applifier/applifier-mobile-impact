@@ -144,7 +144,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 }
 
 - (void)runJavascriptDependingOnPlatform:(NSString *)javaScriptString {
-  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+  if (![ApplifierImpactDevice isSimulator]) {
     dispatch_async(dispatch_get_main_queue(), ^{
       [self runJavascript:javaScriptString];
     });

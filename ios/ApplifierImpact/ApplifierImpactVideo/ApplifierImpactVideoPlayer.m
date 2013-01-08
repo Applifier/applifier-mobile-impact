@@ -43,7 +43,7 @@
 
 - (void)_videoPlaybackEnded:(NSNotification *)notification {
   AILOG_DEBUG(@"");
-  if ([[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+  if ([ApplifierImpactDevice isSimulator]) {
     self.videoPosition = kVideoAnalyticsPositionThirdQuartile;
   }
   
@@ -64,7 +64,7 @@
   [self addObserver:self forKeyPath:@"self.currentItem.asset.duration" options:0 context:nil];
   
   __block ApplifierImpactVideoPlayer *blockSelf = self;
-  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+  if (![ApplifierImpactDevice isSimulator]) {
     self.timeObserver = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
       [blockSelf _videoPositionChanged:time];
     }];
@@ -118,7 +118,7 @@
       [analyticsTimeValues addObject:[self _valueWithDuration:duration * .5]];
       [analyticsTimeValues addObject:[self _valueWithDuration:duration * .75]];
       
-      if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+      if (![ApplifierImpactDevice isSimulator]) {
         self.analyticsTimeObserver = [self addBoundaryTimeObserverForTimes:analyticsTimeValues queue:nil usingBlock:^{
           [blockSelf _logVideoAnalytics];
         }];

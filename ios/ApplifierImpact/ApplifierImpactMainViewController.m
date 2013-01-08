@@ -104,8 +104,8 @@
   }
   
   [self.delegate mainControllerWillClose];
-
-  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+  
+  if (![ApplifierImpactDevice isSimulator]) {
     if (self.closeHandler == nil) {
       self.closeHandler = ^(void) {
         AILOG_DEBUG(@"Setting start view after close");
@@ -132,7 +132,7 @@
     [self.delegate mainControllerWillOpen];
     [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{@"action":@"open", @"itemKey":[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
     
-    if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+    if (![ApplifierImpactDevice isSimulator]) {
       if (self.openHandler == nil) {
         self.openHandler = ^(void) {
           AILOG_DEBUG(@"Running openhandler after opening view");
