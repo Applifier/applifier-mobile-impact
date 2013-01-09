@@ -12,11 +12,16 @@
 extern NSString * const kApplifierImpactWebViewPrefix;
 extern NSString * const kApplifierImpactWebViewJSInit;
 extern NSString * const kApplifierImpactWebViewJSChangeView;
+
+extern NSString * const kApplifierImpactWebViewAPIActionKey;
 extern NSString * const kApplifierImpactWebViewAPIPlayVideo;
 extern NSString * const kApplifierImpactWebViewAPINavigateTo;
 extern NSString * const kApplifierImpactWebViewAPIInitComplete;
 extern NSString * const kApplifierImpactWebViewAPIClose;
+extern NSString * const kApplifierImpactWebViewAPIOpen;
 extern NSString * const kApplifierImpactWebViewAPIAppStore;
+extern NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying;
+
 
 extern NSString * const kApplifierImpactWebViewViewTypeCompleted;
 extern NSString * const kApplifierImpactWebViewViewTypeStart;

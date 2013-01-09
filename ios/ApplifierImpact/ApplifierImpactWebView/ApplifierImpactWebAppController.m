@@ -18,14 +18,19 @@
 #import "../ApplifierImpactMainViewController.h"
 
 NSString * const kApplifierImpactWebViewPrefix = @"applifierimpact.";
+
 NSString * const kApplifierImpactWebViewJSInit = @"init";
 NSString * const kApplifierImpactWebViewJSChangeView = @"setView";
 NSString * const kApplifierImpactWebViewJSHandleNativeEvent = @"handleNativeEvent";
+
+NSString * const kApplifierImpactWebViewAPIActionKey = @"action";
 NSString * const kApplifierImpactWebViewAPIPlayVideo = @"playVideo";
 NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateTo";
 NSString * const kApplifierImpactWebViewAPIInitComplete = @"initComplete";
 NSString * const kApplifierImpactWebViewAPIClose = @"close";
+NSString * const kApplifierImpactWebViewAPIOpen = @"open";
 NSString * const kApplifierImpactWebViewAPIAppStore = @"appStore";
+NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying = @"video_started_playing";
 
 NSString * const kApplifierImpactWebViewViewTypeCompleted = @"completed";
 NSString * const kApplifierImpactWebViewViewTypeStart = @"start";

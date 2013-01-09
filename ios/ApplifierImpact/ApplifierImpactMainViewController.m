@@ -15,6 +15,15 @@
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 
+NSString * const kApplifierImpactNativeEventHideSpinner = @"hideSpinner";
+NSString * const kApplifierImpactNativeEventShowSpinner = @"showSpinner";
+
+NSString * const kApplifierImpactTextKeyKey = @"textKey";
+NSString * const kApplifierImpactTextKeyBuffering = @"buffering";
+NSString * const kApplifierImpactTextKeyLoading = @"loading";
+
+NSString * const kApplifierImpactItemKeyKey = @"itemKey";
+
 @interface ApplifierImpactMainViewController ()
   @property (nonatomic, strong) ApplifierImpactVideoViewController *videoController;
   @property (nonatomic, strong) UIViewController *storeController;
@@ -100,7 +109,7 @@
   
   if (!forcedToMainThread) {
     AILOG_DEBUG(@"Setting startview right now. No time for block completion");
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{@"action":@"close"}];
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIClose}];
   }
   
   [self.delegate mainControllerWillClose];
@@ -109,7 +118,7 @@
     if (self.closeHandler == nil) {
       self.closeHandler = ^(void) {
         AILOG_DEBUG(@"Setting start view after close");
-        [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{@"action":@"close"}];
+        [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIClose}];
         self.isOpen = NO;
         [self.delegate mainControllerDidClose];
       };
@@ -130,7 +139,7 @@
   
   dispatch_async(dispatch_get_main_queue(), ^{
     [self.delegate mainControllerWillOpen];
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{@"action":@"open", @"itemKey":[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen, kApplifierImpactTextKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
     
     if (![ApplifierImpactDevice isSimulator]) {
       if (self.openHandler == nil) {
@@ -169,14 +178,14 @@
 
 - (void)videoPlayerStartedPlaying {
   [self.delegate mainControllerStartedPlayingVideo];
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"textKey":@"buffering"}];
-  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{@"action":@"video_started_playing", @"itemKey":[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
+  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
+  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIActionVideoStartedPlaying, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
   [self presentViewController:self.videoController animated:NO completion:nil];
 }
 
 - (void)videoPlayerEncounteredError {
   AILOG_DEBUG(@"");
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"textKey":@"buffering"}];
+  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
   [self _dismissVideoController];
 }
 
@@ -193,7 +202,7 @@
     return;
   }
 
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"showSpinner" data:@{@"textKey":@"buffering"}];
+  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
   
   [self _createVideoController];
   [self.videoController playCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
@@ -220,7 +229,7 @@
 - (void)notificationHandler: (id) notification {
   NSString *name = [notification name];
 
-  AILOG_DEBUG(@"notification: %@", name);
+  AILOG_DEBUG(@"Notification: %@", name);
   
   if ([name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
     [[ApplifierImpactWebAppController sharedInstance] setWebViewInitialized:NO];
@@ -283,7 +292,7 @@
     void (^storeControllerComplete)(BOOL result, NSError *error) = ^(BOOL result, NSError *error) {
       AILOG_DEBUG(@"RESULT: %i", result);
       if (result) {
-        [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"hideSpinner" data:@{@"textKey":@"loading"}];
+        [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyLoading}];
         dispatch_async(dispatch_get_main_queue(), ^{
           [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.storeController animated:YES completion:nil];
           [[ApplifierImpactAnalyticsUploader sharedInstance] sendOpenAppStoreRequest:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
@@ -294,7 +303,7 @@
       }
     };
     
-    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"showSpinner" data:@{@"textKey":@"loading"}];
+    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyLoading}];
     SEL loadProduct = @selector(loadProductWithParameters:completionBlock:);
     if ([self.storeController respondsToSelector:loadProduct]) {
 #pragma clang diagnostic push
@@ -319,7 +328,7 @@
 - (void)webAppReady {
   [self.delegate mainControllerWebViewInitialized];
   dispatch_async(dispatch_get_main_queue(), ^{
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:@"start" data:@{@"action":@"initComplete", @"itemKey":[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIInitComplete, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
   });
 }
 
