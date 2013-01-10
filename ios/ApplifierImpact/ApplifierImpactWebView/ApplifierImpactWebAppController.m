@@ -9,31 +9,14 @@
 #import "ApplifierImpactWebAppController.h"
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactURLProtocol/ApplifierImpactURLProtocol.h"
-#import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "../ApplifierImpactSBJSON/ApplifierImpactSBJsonWriter.h"
 #import "../ApplifierImpactSBJSON/NSObject+ApplifierImpactSBJson.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "../ApplifierImpactMainViewController.h"
-
-NSString * const kApplifierImpactWebViewPrefix = @"applifierimpact.";
-
-NSString * const kApplifierImpactWebViewJSInit = @"init";
-NSString * const kApplifierImpactWebViewJSChangeView = @"setView";
-NSString * const kApplifierImpactWebViewJSHandleNativeEvent = @"handleNativeEvent";
-
-NSString * const kApplifierImpactWebViewAPIActionKey = @"action";
-NSString * const kApplifierImpactWebViewAPIPlayVideo = @"playVideo";
-NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateTo";
-NSString * const kApplifierImpactWebViewAPIInitComplete = @"initComplete";
-NSString * const kApplifierImpactWebViewAPIClose = @"close";
-NSString * const kApplifierImpactWebViewAPIOpen = @"open";
-NSString * const kApplifierImpactWebViewAPIAppStore = @"appStore";
-NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying = @"video_started_playing";
-
-NSString * const kApplifierImpactWebViewViewTypeCompleted = @"completed";
-NSString * const kApplifierImpactWebViewViewTypeStart = @"start";
+#import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
+#import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 
 @interface ApplifierImpactWebAppController ()
   @property (nonatomic, strong) NSDictionary* webAppInitalizationParams;
@@ -95,14 +78,14 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 }
 
 - (void)setWebViewCurrentView:(NSString *)view data:(NSDictionary *)data {
-	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSChangeView, view, [data JSONRepresentation]];
+	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewJSPrefix, kApplifierImpactWebViewJSChangeView, view, [data JSONRepresentation]];
   
   AILOG_DEBUG(@"");
   [self runJavascriptDependingOnPlatform:js];
 }
 
 - (void)sendNativeEventToWebApp:(NSString *)eventType data:(NSDictionary *)data {
- 	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSHandleNativeEvent, eventType, [data JSONRepresentation]];
+ 	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewJSPrefix, kApplifierImpactWebViewJSHandleNativeEvent, eventType, [data JSONRepresentation]];
   
   AILOG_DEBUG(@"");
   [self runJavascriptDependingOnPlatform:js];
@@ -229,7 +212,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 #pragma mark - WebView
 
 - (void)initWebAppWithValues:(NSDictionary *)values {
-	NSString *js = [NSString stringWithFormat:@"%@%@(%@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSInit, [values JSONRepresentation]];
+	NSString *js = [NSString stringWithFormat:@"%@%@(%@);", kApplifierImpactWebViewJSPrefix, kApplifierImpactWebViewJSInit, [values JSONRepresentation]];
   AILOG_DEBUG(@"");
   [self runJavascript:js];
 }

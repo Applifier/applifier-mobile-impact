@@ -17,23 +17,7 @@
 #import "ApplifierImpactDevice.h"
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactOpenUDID/ApplifierImpactOpenUDID.h"
-
-NSString * const kApplifierImpactDeviceIphone = @"iphone";
-NSString * const kApplifierImpactDeviceIphone3g = @"iphone3g";
-NSString * const kApplifierImpactDeviceIphone3gs = @"iphone3gs";
-NSString * const kApplifierImpactDeviceIphone4 = @"iphone4";
-NSString * const kApplifierImpactDeviceIphone4s = @"iphone4s";
-NSString * const kApplifierImpactDeviceIphone5 = @"iphone5";
-NSString * const kApplifierImpactDeviceIpodTouch1gen = @"ipodtouch1gen";
-NSString * const kApplifierImpactDeviceIpodTouch2gen = @"ipodtouch2gen";
-NSString * const kApplifierImpactDeviceIpodTouch3gen = @"ipodtouch3gen";
-NSString * const kApplifierImpactDeviceIpodTouch4gen = @"ipodtouch4gen";
-NSString * const kApplifierImpactDeviceIpad = @"ipad";
-NSString * const kApplifierImpactDeviceIpad1 = @"ipad1";
-NSString * const kApplifierImpactDeviceIpad2 = @"ipad2";
-NSString * const kApplifierImpactDeviceIpad3 = @"ipad3";
-NSString * const kApplifierImpactDeviceIosUnknown = @"iosUnknown";
-NSString * const kApplifierImpactSimulator = @"simulator";
+#import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 
 @implementation ApplifierImpactDevice
 
@@ -189,7 +173,7 @@ NSString * const kApplifierImpactSimulator = @"simulator";
   NSArray *components = [ApplifierImpactDevice getDeviceModelAsStringComponents];
   if (components != nil && [components count] > 0) {
     for (NSString *component in components) {
-      if ([component isEqualToString:kApplifierImpactSimulator]) {
+      if ([component isEqualToString:kApplifierImpactDeviceSimulator]) {
         return YES;
       }
     }
@@ -238,6 +222,9 @@ NSString * const kApplifierImpactSimulator = @"simulator";
       }
       if ([component isEqualToString:kApplifierImpactDeviceIphone]) {
         return kApplifierImpactDeviceIphone;
+      }
+      if ([component isEqualToString:kApplifierImpactDeviceIpod]) {
+        return kApplifierImpactDeviceIpod;
       }
     }
   }

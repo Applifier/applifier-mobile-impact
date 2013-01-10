@@ -11,18 +11,10 @@
 #import "ApplifierImpactVideo/ApplifierImpactVideoView.h"
 #import "ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "ApplifierImpactCampaign/ApplifierImpactCampaign.h"
-#import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
-
-NSString * const kApplifierImpactNativeEventHideSpinner = @"hideSpinner";
-NSString * const kApplifierImpactNativeEventShowSpinner = @"showSpinner";
-
-NSString * const kApplifierImpactTextKeyKey = @"textKey";
-NSString * const kApplifierImpactTextKeyBuffering = @"buffering";
-NSString * const kApplifierImpactTextKeyLoading = @"loading";
-
-NSString * const kApplifierImpactItemKeyKey = @"itemKey";
+#import "ApplifierImpactProperties/ApplifierImpactProperties.h"
+#import "ApplifierImpactProperties/ApplifierImpactConstants.h"
 
 @interface ApplifierImpactMainViewController ()
   @property (nonatomic, strong) ApplifierImpactVideoViewController *videoController;

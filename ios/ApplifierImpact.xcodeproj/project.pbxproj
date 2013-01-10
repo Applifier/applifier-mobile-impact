@@ -45,6 +45,8 @@
 		787893A6165CE94F00134FC3 /* ApplifierImpactVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 787893A4165CE94F00134FC3 /* ApplifierImpactVideoView.m */; };
 		787893B2165D02D600134FC3 /* ApplifierImpactMainViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 787893B0165D02D300134FC3 /* ApplifierImpactMainViewController.h */; };
 		787893B3165D02D600134FC3 /* ApplifierImpactMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 787893B1165D02D400134FC3 /* ApplifierImpactMainViewController.m */; };
+		7887E41C169EB63000D67A2A /* ApplifierImpactConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 7887E41A169EB62F00D67A2A /* ApplifierImpactConstants.h */; };
+		7887E41D169EB63000D67A2A /* ApplifierImpactConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 7887E41B169EB62F00D67A2A /* ApplifierImpactConstants.m */; };
 		78AC201A1622EFEA007DE419 /* ApplifierImpactOpenUDID.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */; };
 		78AC201B1622EFEA007DE419 /* ApplifierImpactOpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20191622EFEA007DE419 /* ApplifierImpactOpenUDID.m */; };
 		78AC20211622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */; };
@@ -103,6 +105,8 @@
 		787893A4165CE94F00134FC3 /* ApplifierImpactVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactVideoView.m; sourceTree = "<group>"; };
 		787893B0165D02D300134FC3 /* ApplifierImpactMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactMainViewController.h; sourceTree = "<group>"; };
 		787893B1165D02D400134FC3 /* ApplifierImpactMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactMainViewController.m; sourceTree = "<group>"; };
+		7887E41A169EB62F00D67A2A /* ApplifierImpactConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactConstants.h; sourceTree = "<group>"; };
+		7887E41B169EB62F00D67A2A /* ApplifierImpactConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactConstants.m; sourceTree = "<group>"; };
 		78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactOpenUDID.h; sourceTree = "<group>"; };
 		78AC20191622EFEA007DE419 /* ApplifierImpactOpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactOpenUDID.m; sourceTree = "<group>"; };
 		78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactAnalyticsUploader.h; sourceTree = "<group>"; };
@@ -141,6 +145,8 @@
 			children = (
 				78057A0E1643CADB005EF487 /* ApplifierImpactProperties.h */,
 				78057A0F1643CADB005EF487 /* ApplifierImpactProperties.m */,
+				7887E41A169EB62F00D67A2A /* ApplifierImpactConstants.h */,
+				7887E41B169EB62F00D67A2A /* ApplifierImpactConstants.m */,
 			);
 			path = ApplifierImpactProperties;
 			sourceTree = "<group>";
@@ -332,6 +338,7 @@
 				787893A5165CE94F00134FC3 /* ApplifierImpactVideoView.h in Headers */,
 				787893B2165D02D600134FC3 /* ApplifierImpactMainViewController.h in Headers */,
 				7835377B166365BB00D46B7C /* ApplifierImpactVideoViewController.h in Headers */,
+				7887E41C169EB63000D67A2A /* ApplifierImpactConstants.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,6 +477,7 @@
 				787893A6165CE94F00134FC3 /* ApplifierImpactVideoView.m in Sources */,
 				787893B3165D02D600134FC3 /* ApplifierImpactMainViewController.m in Sources */,
 				7835377C166365BB00D46B7C /* ApplifierImpactVideoViewController.m in Sources */,
+				7887E41D169EB63000D67A2A /* ApplifierImpactConstants.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
