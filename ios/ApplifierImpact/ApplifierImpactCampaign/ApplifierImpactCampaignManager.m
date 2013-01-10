@@ -175,8 +175,24 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 
 - (void)_processCampaignDownloadData {
 
+  if (self.campaignDownloadData == nil) {
+    dispatch_async(dispatch_get_main_queue(), ^(void) {
+      [self.delegate campaignManagerCampaignDataFailed];
+    });
+    AILOG_DEBUG(@"Campaign download data is NULL!");
+    return;
+  }
+  
   NSString *jsonString = [[NSString alloc] initWithData:self.campaignDownloadData encoding:NSUTF8StringEncoding];
   _campaignData = [jsonString JSONValue];
+  
+  if (_campaignData == nil) {
+    dispatch_async(dispatch_get_main_queue(), ^(void) {
+      [self.delegate campaignManagerCampaignDataFailed];
+    });
+    AILOG_DEBUG(@"Campaigndata is NULL!");
+    return;
+  }
   
   AILOG_DEBUG(@"%@", [_campaignData JSONRepresentation]);
 	AIAssert([_campaignData isKindOfClass:[NSDictionary class]]);
