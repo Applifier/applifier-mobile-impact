@@ -97,10 +97,10 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
   if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo] || [type isEqualToString:kApplifierImpactWebViewAPINavigateTo] || [type isEqualToString:kApplifierImpactWebViewAPIAppStore])
 	{
 		if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo]) {
-      if ([data objectForKey:@"campaignId"] != nil) {
-        [self _selectCampaignWithID:[data objectForKey:@"campaignId"]];
+      if ([data objectForKey:kApplifierImpactWebViewEventDataCampaignIdKey] != nil) {
+        [self _selectCampaignWithID:[data objectForKey:kApplifierImpactWebViewEventDataCampaignIdKey]];
         BOOL checkIfWatched = YES;
-        if ([data objectForKey:@"rewatch"] != nil && [[data valueForKey:@"rewatch"] boolValue] == true) {
+        if ([data objectForKey:kApplifierImpactWebViewEventDataRewatchKey] != nil && [[data valueForKey:kApplifierImpactWebViewEventDataRewatchKey] boolValue] == true) {
           checkIfWatched = NO;
         }
         
@@ -108,13 +108,13 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
       }
 		}
 		else if ([type isEqualToString:kApplifierImpactWebViewAPINavigateTo]) {
-      if ([data objectForKey:@"clickUrl"] != nil) {
-        [self openExternalUrl:[data objectForKey:@"clickUrl"]];
+      if ([data objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] != nil) {
+        [self openExternalUrl:[data objectForKey:kApplifierImpactWebViewEventDataClickUrlKey]];
       }
     
 		}
 		else if ([type isEqualToString:kApplifierImpactWebViewAPIAppStore]) {
-      if ([data objectForKey:@"clickUrl"] != nil) {
+      if ([data objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] != nil) {
         [[ApplifierImpactMainViewController sharedInstance] openAppStoreWithData:data];
       }    
 		}
@@ -196,9 +196,9 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 - (void)initWebApp {
 	AIAssert([NSThread isMainThread]);
   
-  NSDictionary *persistingData = @{@"campaignData":[[ApplifierImpactCampaignManager sharedInstance] campaignData], @"platform":@"ios", @"deviceId":[ApplifierImpactDevice md5DeviceId], @"openUdid":[ApplifierImpactDevice md5OpenUDIDString], @"macAddress":[ApplifierImpactDevice md5MACAddressString], @"sdkVersion":[[ApplifierImpactProperties sharedInstance] impactVersion]};
+  NSDictionary *persistingData = @{kApplifierImpactWebViewDataParamCampaignDataKey:[[ApplifierImpactCampaignManager sharedInstance] campaignData], kApplifierImpactWebViewDataParamPlatformKey:@"ios", kApplifierImpactWebViewDataParamDeviceIdKey:[ApplifierImpactDevice md5DeviceId], kApplifierImpactWebViewDataParamOpenUdidIdKey:[ApplifierImpactDevice md5OpenUDIDString], kApplifierImpactWebViewDataParamMacAddressKey:[ApplifierImpactDevice md5MACAddressString], kApplifierImpactWebViewDataParamSdkVersionKey:[[ApplifierImpactProperties sharedInstance] impactVersion]};
   
-  NSDictionary *trackingData = @{@"iOSVersion":[ApplifierImpactDevice softwareVersion], @"deviceType":[ApplifierImpactDevice analyticsMachineName]};
+  NSDictionary *trackingData = @{kApplifierImpactWebViewDataParamIosVersionKey:[ApplifierImpactDevice softwareVersion], kApplifierImpactWebViewDataParamDeviceTypeKey:[ApplifierImpactDevice analyticsMachineName]};
   NSMutableDictionary *webAppValues = [NSMutableDictionary dictionaryWithDictionary:persistingData];
   
   if ([ApplifierImpactDevice canUseTracking]) {

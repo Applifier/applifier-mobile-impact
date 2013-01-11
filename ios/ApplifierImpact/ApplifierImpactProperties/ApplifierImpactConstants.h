@@ -27,6 +27,20 @@ extern NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying;
 extern NSString * const kApplifierImpactWebViewViewTypeCompleted;
 extern NSString * const kApplifierImpactWebViewViewTypeStart;
 
+extern NSString * const kApplifierImpactWebViewDataParamCampaignDataKey;
+extern NSString * const kApplifierImpactWebViewDataParamPlatformKey;
+extern NSString * const kApplifierImpactWebViewDataParamDeviceIdKey;
+extern NSString * const kApplifierImpactWebViewDataParamDeviceTypeKey;
+extern NSString * const kApplifierImpactWebViewDataParamOpenUdidIdKey;
+extern NSString * const kApplifierImpactWebViewDataParamMacAddressKey;
+extern NSString * const kApplifierImpactWebViewDataParamSdkVersionKey;
+extern NSString * const kApplifierImpactWebViewDataParamIosVersionKey;
+
+extern NSString * const kApplifierImpactWebViewEventDataCampaignIdKey;
+extern NSString * const kApplifierImpactWebViewEventDataRewatchKey;
+extern NSString * const kApplifierImpactWebViewEventDataClickUrlKey;
+
+
 
 /* Native Events */
 
@@ -133,6 +147,24 @@ extern NSString * const kApplifierImpactDeviceIpad2;
 extern NSString * const kApplifierImpactDeviceIpad3;
 extern NSString * const kApplifierImpactDeviceIosUnknown;
 extern NSString * const kApplifierImpactDeviceSimulator;
+
+
+/* Init Query Params */
+
+extern NSString * const kApplifierImpactInitQueryParamDeviceIdKey;
+extern NSString * const kApplifierImpactInitQueryParamDeviceTypeKey;
+extern NSString * const kApplifierImpactInitQueryParamPlatformKey;
+extern NSString * const kApplifierImpactInitQueryParamGameIdKey;
+extern NSString * const kApplifierImpactInitQueryParamOpenUdidKey;
+extern NSString * const kApplifierImpactInitQueryParamMacAddressKey;
+extern NSString * const kApplifierImpactInitQueryParamAdvertisingTrackingIdKey;
+extern NSString * const kApplifierImpactInitQueryParamTrackingEnabledKey;
+extern NSString * const kApplifierImpactInitQueryParamSoftwareVersionKey;
+extern NSString * const kApplifierImpactInitQueryParamHardwareVersionKey;
+extern NSString * const kApplifierImpactInitQueryParamApiVersionKey;
+extern NSString * const kApplifierImpactInitQueryParamConnectionTypeKey;
+extern NSString * const kApplifierImpactInitQueryParamTestKey;
+
 
 @interface ApplifierImpactConstants : NSObject
 

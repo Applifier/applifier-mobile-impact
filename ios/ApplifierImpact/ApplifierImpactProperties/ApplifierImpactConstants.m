@@ -28,6 +28,19 @@ NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying = @"video_s
 NSString * const kApplifierImpactWebViewViewTypeCompleted = @"completed";
 NSString * const kApplifierImpactWebViewViewTypeStart = @"start";
 
+NSString * const kApplifierImpactWebViewDataParamCampaignDataKey = @"campaignData";
+NSString * const kApplifierImpactWebViewDataParamPlatformKey = @"platform";
+NSString * const kApplifierImpactWebViewDataParamDeviceIdKey = @"deviceId";
+NSString * const kApplifierImpactWebViewDataParamDeviceTypeKey = @"deviceType";
+NSString * const kApplifierImpactWebViewDataParamOpenUdidIdKey = @"openUdid";
+NSString * const kApplifierImpactWebViewDataParamMacAddressKey = @"macAddress";
+NSString * const kApplifierImpactWebViewDataParamSdkVersionKey = @"sdkVersion";
+NSString * const kApplifierImpactWebViewDataParamIosVersionKey = @"iOSVersion";
+
+NSString * const kApplifierImpactWebViewEventDataCampaignIdKey = @"campaignId";
+NSString * const kApplifierImpactWebViewEventDataRewatchKey = @"rewatch";
+NSString * const kApplifierImpactWebViewEventDataClickUrlKey = @"clickUrl";
+
 
 /* Native Events */
 
@@ -135,6 +148,23 @@ NSString * const kApplifierImpactDeviceIpad2 = @"ipad2";
 NSString * const kApplifierImpactDeviceIpad3 = @"ipad3";
 NSString * const kApplifierImpactDeviceIosUnknown = @"iosUnknown";
 NSString * const kApplifierImpactDeviceSimulator = @"simulator";
+
+
+/* Init Query Params */
+
+NSString * const kApplifierImpactInitQueryParamDeviceIdKey = @"deviceId";
+NSString * const kApplifierImpactInitQueryParamDeviceTypeKey = @"deviceType";
+NSString * const kApplifierImpactInitQueryParamPlatformKey = @"platform";
+NSString * const kApplifierImpactInitQueryParamGameIdKey = @"gameId";
+NSString * const kApplifierImpactInitQueryParamOpenUdidKey = @"openUdid";
+NSString * const kApplifierImpactInitQueryParamMacAddressKey = @"macAddress";
+NSString * const kApplifierImpactInitQueryParamAdvertisingTrackingIdKey = @"advertisingTrackingId";
+NSString * const kApplifierImpactInitQueryParamTrackingEnabledKey = @"trackingEnabled";
+NSString * const kApplifierImpactInitQueryParamSoftwareVersionKey = @"softwareVersion";
+NSString * const kApplifierImpactInitQueryParamHardwareVersionKey = @"hardwareVersion";
+NSString * const kApplifierImpactInitQueryParamApiVersionKey = @"apiVersion";
+NSString * const kApplifierImpactInitQueryParamConnectionTypeKey = @"connectionType";
+NSString * const kApplifierImpactInitQueryParamTestKey = @"test";
 
 @implementation ApplifierImpactConstants
 
