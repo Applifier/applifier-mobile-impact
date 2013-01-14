@@ -30,6 +30,7 @@ extern NSString * const kApplifierImpactWebViewViewTypeStart;
 extern NSString * const kApplifierImpactWebViewDataParamCampaignDataKey;
 extern NSString * const kApplifierImpactWebViewDataParamPlatformKey;
 extern NSString * const kApplifierImpactWebViewDataParamDeviceIdKey;
+extern NSString * const kApplifierImpactWebViewDataParamGameIdKey;
 extern NSString * const kApplifierImpactWebViewDataParamDeviceTypeKey;
 extern NSString * const kApplifierImpactWebViewDataParamOpenUdidIdKey;
 extern NSString * const kApplifierImpactWebViewDataParamMacAddressKey;

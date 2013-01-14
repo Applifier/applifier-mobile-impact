@@ -31,6 +31,7 @@ NSString * const kApplifierImpactWebViewViewTypeStart = @"start";
 NSString * const kApplifierImpactWebViewDataParamCampaignDataKey = @"campaignData";
 NSString * const kApplifierImpactWebViewDataParamPlatformKey = @"platform";
 NSString * const kApplifierImpactWebViewDataParamDeviceIdKey = @"deviceId";
+NSString * const kApplifierImpactWebViewDataParamGameIdKey = @"gameId";
 NSString * const kApplifierImpactWebViewDataParamDeviceTypeKey = @"deviceType";
 NSString * const kApplifierImpactWebViewDataParamOpenUdidIdKey = @"openUdid";
 NSString * const kApplifierImpactWebViewDataParamMacAddressKey = @"macAddress";

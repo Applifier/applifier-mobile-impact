@@ -196,7 +196,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 - (void)initWebApp {
 	AIAssert([NSThread isMainThread]);
   
-  NSDictionary *persistingData = @{kApplifierImpactWebViewDataParamCampaignDataKey:[[ApplifierImpactCampaignManager sharedInstance] campaignData], kApplifierImpactWebViewDataParamPlatformKey:@"ios", kApplifierImpactWebViewDataParamDeviceIdKey:[ApplifierImpactDevice md5DeviceId], kApplifierImpactWebViewDataParamOpenUdidIdKey:[ApplifierImpactDevice md5OpenUDIDString], kApplifierImpactWebViewDataParamMacAddressKey:[ApplifierImpactDevice md5MACAddressString], kApplifierImpactWebViewDataParamSdkVersionKey:[[ApplifierImpactProperties sharedInstance] impactVersion]};
+  NSDictionary *persistingData = @{kApplifierImpactWebViewDataParamCampaignDataKey:[[ApplifierImpactCampaignManager sharedInstance] campaignData], kApplifierImpactWebViewDataParamPlatformKey:@"ios", kApplifierImpactWebViewDataParamDeviceIdKey:[ApplifierImpactDevice md5DeviceId], kApplifierImpactWebViewDataParamOpenUdidIdKey:[ApplifierImpactDevice md5OpenUDIDString], kApplifierImpactWebViewDataParamMacAddressKey:[ApplifierImpactDevice md5MACAddressString], kApplifierImpactWebViewDataParamSdkVersionKey:[[ApplifierImpactProperties sharedInstance] impactVersion], kApplifierImpactWebViewDataParamGameIdKey:[[ApplifierImpactProperties sharedInstance] impactGameId]};
   
   NSDictionary *trackingData = @{kApplifierImpactWebViewDataParamIosVersionKey:[ApplifierImpactDevice softwareVersion], kApplifierImpactWebViewDataParamDeviceTypeKey:[ApplifierImpactDevice analyticsMachineName]};
   NSMutableDictionary *webAppValues = [NSMutableDictionary dictionaryWithDictionary:persistingData];
