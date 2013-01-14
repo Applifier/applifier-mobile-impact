@@ -163,7 +163,7 @@ NSString * const kApplifierImpactInitQueryParamAdvertisingTrackingIdKey = @"adve
 NSString * const kApplifierImpactInitQueryParamTrackingEnabledKey = @"trackingEnabled";
 NSString * const kApplifierImpactInitQueryParamSoftwareVersionKey = @"softwareVersion";
 NSString * const kApplifierImpactInitQueryParamHardwareVersionKey = @"hardwareVersion";
-NSString * const kApplifierImpactInitQueryParamApiVersionKey = @"apiVersion";
+NSString * const kApplifierImpactInitQueryParamSdkVersionKey = @"sdkVersion";
 NSString * const kApplifierImpactInitQueryParamConnectionTypeKey = @"connectionType";
 NSString * const kApplifierImpactInitQueryParamTestKey = @"test";
 

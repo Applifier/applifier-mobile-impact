@@ -162,7 +162,7 @@ extern NSString * const kApplifierImpactInitQueryParamAdvertisingTrackingIdKey;
 extern NSString * const kApplifierImpactInitQueryParamTrackingEnabledKey;
 extern NSString * const kApplifierImpactInitQueryParamSoftwareVersionKey;
 extern NSString * const kApplifierImpactInitQueryParamHardwareVersionKey;
-extern NSString * const kApplifierImpactInitQueryParamApiVersionKey;
+extern NSString * const kApplifierImpactInitQueryParamSdkVersionKey;
 extern NSString * const kApplifierImpactInitQueryParamConnectionTypeKey;
 extern NSString * const kApplifierImpactInitQueryParamTestKey;
 

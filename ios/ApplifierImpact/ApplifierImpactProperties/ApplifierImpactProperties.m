@@ -51,7 +51,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamGameIdKey, [self impactGameId]];
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamOpenUdidKey, [ApplifierImpactDevice md5OpenUDIDString]];
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamMacAddressKey, [ApplifierImpactDevice md5MACAddressString]];
-  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamApiVersionKey, kApplifierImpactVersion];
+  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamSdkVersionKey, kApplifierImpactVersion];
   
   // Add advertisingTrackingId info if identifier is available
   if ([ApplifierImpactDevice md5AdvertisingIdentifierString] != nil) {
