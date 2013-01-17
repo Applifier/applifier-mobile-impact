@@ -86,4 +86,11 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_TRACKINGID_KEY = "trackingId";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_PROVIDERID_KEY = "providerId";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY = "rewardItem";
+	
+	/* Failed URL keys */
+	public static final String IMPACT_FAILED_URL_URL_KEY = "url";
+	public static final String IMPACT_FAILED_URL_REQUESTTYPE_KEY = "requestType";
+	public static final String IMPACT_FAILED_URL_METHODTYPE_KEY = "methodType";
+	public static final String IMPACT_FAILED_URL_BODY_KEY = "body";
+	public static final String IMPACT_FAILED_URL_RETRIES_KEY = "retries";
 }

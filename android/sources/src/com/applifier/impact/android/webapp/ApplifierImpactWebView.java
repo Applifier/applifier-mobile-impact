@@ -1,7 +1,6 @@
 package com.applifier.impact.android.webapp;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -43,20 +42,33 @@ public class ApplifierImpactWebView extends WebView {
 		return _webAppLoaded;
 	}
 	
-	public void setView (String view) {
-		setView(view, null);
+	public void setWebViewCurrentView (String view) {
+		setWebViewCurrentView(view, null);
 	}
 	
-	public void setView (String view, JSONObject data) {		
+	public void setWebViewCurrentView (String view, JSONObject data) {		
 		if (isWebAppLoaded()) {
-			String dataStr = "";
-			if (data != null) {
-				dataStr = data.toString();
-				dataStr = dataStr.replace("\"", "\\\"");
-			}
-							
-			String jsCommand = ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX + "setView(\"" + view + "\", \"" + dataStr + "\")";
-			loadUrl(jsCommand);
+			String dataString = "{}";
+			
+			if (data != null)
+				dataString = data.toString();
+			
+			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_CHANGE_VIEW, view, dataString);
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Send change view to WebApp: " + javascriptString);
+			loadUrl(javascriptString);
+		}
+	}
+	
+	public void sendNativeEventToWebApp (String eventType, JSONObject data) {
+		if (isWebAppLoaded()) {
+			String dataString = "{}";
+			
+			if (data != null)
+				dataString = data.toString();
+
+			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_HANDLE_NATIVE_EVENT, eventType, dataString);
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Send native event to WebApp: " + javascriptString);
+			loadUrl(javascriptString);
 		}
 	}
 	

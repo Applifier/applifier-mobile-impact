@@ -58,6 +58,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	
 	public ApplifierImpact (Activity activity, String gameId) {
+		// FIX: Prevent second initialization
 		instance = this;
 		ApplifierImpactProperties.IMPACT_GAME_ID = gameId;
 		ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
@@ -83,7 +84,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		webdata = new ApplifierImpactWebData();
 		webdata.setWebDataListener(this);
 
-		if (webdata.initVideoPlan()) {
+		if (webdata.initCampaigns()) {
 			_initialized = true;
 		}
 	}
@@ -97,7 +98,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		if (!_showingImpact && canShowCampaigns()) {
 			ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 			focusToView(_webView);
-			_webView.setView("start");
+			_webView.setWebViewCurrentView("start");
 			_showingImpact = true;	
 			
 			if (_impactListener != null)
@@ -240,7 +241,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			Log.d(ApplifierImpactConstants.LOG_NAME, "Could not create JSON");
 		}
 		
-		_webView.setView("completed", params);
+		_webView.setWebViewCurrentView("completed", params);
 		ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 		focusToView(_webView);
 		onEventPositionReached(ApplifierVideoPosition.End);
