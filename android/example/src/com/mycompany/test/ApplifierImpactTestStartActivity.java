@@ -1,8 +1,8 @@
 package com.mycompany.test;
 
 import com.applifier.impact.android.ApplifierImpact;
-import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 import com.mycompany.test.R;
 
@@ -24,8 +24,8 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ((ImageView)findViewById(R.id.playbtn)).setAlpha(80);
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Init impact");
-		ai = new ApplifierImpact(this, "16");
+		Log.d(ApplifierImpactConstants.LOG_NAME, "Init impact");
+		ai = new ApplifierImpact(this, "11006");
 		ai.setCampaignListener(this);
 		ai.init();
     }

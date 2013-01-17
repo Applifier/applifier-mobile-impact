@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.applifier.impact.android.ApplifierImpactProperties;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 public class ApplifierImpactWebBridge {
 	private enum ApplifierImpactWebEvent { PlayVideo, PauseVideo, CloseView, InitComplete;
@@ -45,6 +45,8 @@ public class ApplifierImpactWebBridge {
 	}
 	
 	public void handleWebEvent (String data) {
+		Log.d(ApplifierImpactConstants.LOG_NAME, "handleWebEvent: " + data);
+
 		if (_listener == null || data == null) return;
 		
 		JSONObject jsonData = null;
@@ -57,7 +59,7 @@ public class ApplifierImpactWebBridge {
 			parameters = jsonData.getJSONObject("data");
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Error while parsing parameters: " + e.getMessage());
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Error while parsing parameters: " + e.getMessage());
 		}
 		
 		if (jsonData == null || event == null) return;

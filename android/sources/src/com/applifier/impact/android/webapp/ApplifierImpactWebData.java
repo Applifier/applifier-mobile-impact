@@ -6,17 +6,18 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Iterator;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
 public class ApplifierImpactWebData {
 	
@@ -112,27 +113,12 @@ public class ApplifierImpactWebData {
 	}
 
 	public boolean initVideoPlan () {
-		String url = ApplifierImpactProperties.IMPACT_BASEURL + ApplifierImpactProperties.IMPACT_MOBILEPATH + "/" + ApplifierImpactProperties.IMPACT_CAMPAIGNPATH;
-		String queryString = "gameId=" + ApplifierImpactProperties.IMPACT_APP_ID + "&openUdid=someudid&device=iphone&iosVersion=6.0";
-		String collatedProperties = "";
-		JSONObject properties = ApplifierImpactUtils.getPlatformProperties();		
-		Iterator<String> dataKeys = properties.keys();
-		String key = "";
-		
-		while (dataKeys.hasNext()) {
-			key = dataKeys.next();
-			try {
-				collatedProperties = collatedProperties + "&" + key + "=" + properties.getString(key);
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Error while creating properties");
-			}
-		}
-		
-		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(url + "?" + queryString + collatedProperties, ApplifierImpactRequestType.VideoPlan);
+		String url = ApplifierImpactProperties.getCampaignQueryUrl();
+		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(url, ApplifierImpactRequestType.VideoPlan);
+		Log.d(ApplifierImpactConstants.LOG_NAME, "VIDEOPLAN_URL: " + loader.getUrl());
 		addLoader(loader);
 		startNextLoader();
-		checkFailedUrls();
+		//checkFailedUrls();
 		
 		return true;
 	}
@@ -140,10 +126,14 @@ public class ApplifierImpactWebData {
 	public boolean sendCampaignViewProgress (ApplifierImpactCampaign campaign, ApplifierVideoPosition position) {
 		if (campaign == null) return false;
 
-		Log.d(ApplifierImpactProperties.LOG_NAME, "VP: " + position.toString() + ", " + getGamerId());
+		Log.d(ApplifierImpactConstants.LOG_NAME, "VP: " + position.toString() + ", " + getGamerId());
 		
 		if (position != null && getGamerId() != null && (position.equals(ApplifierVideoPosition.Start)  || position.equals(ApplifierVideoPosition.End))) {
-			String viewUrl = ApplifierImpactProperties.IMPACT_BASEURL + ApplifierImpactProperties.IMPACT_GAMERPATH + "/" + getGamerId() + "/" + position.toString() + "/" + campaign.getCampaignId();
+			
+			String viewUrl = String.format("%s%s", ApplifierImpactProperties.IMPACT_BASE_URL, ApplifierImpactConstants.IMPACT_ANALYTICS_TRACKING_PATH);
+			viewUrl = String.format("%s/%s/%s/%s", viewUrl, ApplifierImpactProperties.IMPACT_GAMER_ID, position.toString(), campaign.getCampaignId());
+			viewUrl = String.format("%s?%s=%s", viewUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
+			viewUrl = String.format("%s&%s=%s", viewUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, getCurrentRewardItemKey());
 			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(viewUrl, ApplifierImpactRequestType.VideoViewed);
 			addLoader(loader);
 			startNextLoader();
@@ -158,6 +148,10 @@ public class ApplifierImpactWebData {
 		
 		if (_currentLoader != null)
 			_currentLoader.cancel(true);
+	}
+	
+	public JSONObject getData () {
+		return _videoPlan;
 	}
 	
 	public String getVideoPlan () {
@@ -175,7 +169,7 @@ public class ApplifierImpactWebData {
 					dataObj = _videoPlan.getJSONObject("data");
 				}
 				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
+					Log.d(ApplifierImpactConstants.LOG_NAME, "Malformed JSON");
 					return null;
 				}
 				
@@ -184,13 +178,17 @@ public class ApplifierImpactWebData {
 						return dataObj.getString("gamerId");
 					}
 					catch (Exception e) {
-						Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
+						Log.d(ApplifierImpactConstants.LOG_NAME, "Malformed JSON");
 					}
 				}
 			}
 		}
 			
 		return null;
+	}
+	
+	public String getCurrentRewardItemKey () {
+		return "currentReward";
 	}
 	
 	
@@ -241,7 +239,7 @@ public class ApplifierImpactWebData {
 	}
 	
 	private void checkFailedUrls () {
-		File pendingRequestFile = new File(ApplifierImpactUtils.getCacheDirectory() + "/" + ApplifierImpactProperties.PENDING_REQUESTS_FILENAME);
+		File pendingRequestFile = new File(ApplifierImpactUtils.getCacheDirectory() + "/" + ApplifierImpactConstants.PENDING_REQUESTS_FILENAME);
 		
 		if (pendingRequestFile.exists()) {
 			String contents = ApplifierImpactUtils.readFile(pendingRequestFile, true);
@@ -275,39 +273,99 @@ public class ApplifierImpactWebData {
 			fileContent = fileContent.concat(failedLoader.getUrl() + "  " + failedLoader.getRequestType().toString() + "\n");
 		}
 		
-		File pendingRequestFile = new File(ApplifierImpactUtils.getCacheDirectory() + "/" + ApplifierImpactProperties.PENDING_REQUESTS_FILENAME);
+		File pendingRequestFile = new File(ApplifierImpactUtils.getCacheDirectory() + "/" + ApplifierImpactConstants.PENDING_REQUESTS_FILENAME);
 		ApplifierImpactUtils.writeFile(pendingRequestFile, fileContent);
 	}
 	
 	private void videoPlanReceived (String json) {
+		Boolean validData = true;
+		
 		try {
 			_videoPlan = new JSONObject(json);
 			JSONObject data = null;
 			
-			if (_videoPlan.has("data")) {
+			if (_videoPlan.has(ApplifierImpactConstants.IMPACT_JSON_DATA_ROOTKEY)) {
 				try {
-					data = _videoPlan.getJSONObject("data");
+					data = _videoPlan.getJSONObject(ApplifierImpactConstants.IMPACT_JSON_DATA_ROOTKEY);
 				}
 				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed data JSON");
+					Log.d(ApplifierImpactConstants.LOG_NAME, "Malformed data JSON");
 				}
 				
-				_videoPlanCampaigns = ApplifierImpactUtils.createCampaignsFromJson(data);
-			}	
+				if (!data.has(ApplifierImpactConstants.IMPACT_WEBVIEW_URL_KEY)) validData = false;
+				if (!data.has(ApplifierImpactConstants.IMPACT_ANALYTICS_URL_KEY)) validData = false;
+				if (!data.has(ApplifierImpactConstants.IMPACT_URL_KEY)) validData = false;
+				if (!data.has(ApplifierImpactConstants.IMPACT_GAMER_ID_KEY)) validData = false;
+				if (!data.has(ApplifierImpactConstants.IMPACT_CAMPAIGNS_KEY)) validData = false;
+				if (!data.has(ApplifierImpactConstants.IMPACT_REWARD_ITEM_KEY)) validData = false;
+				
+				// Parse basic properties
+				ApplifierImpactProperties.WEBVIEW_BASE_URL = data.getString(ApplifierImpactConstants.IMPACT_WEBVIEW_URL_KEY);
+				ApplifierImpactProperties.ANALYTICS_BASE_URL = data.getString(ApplifierImpactConstants.IMPACT_ANALYTICS_URL_KEY);
+				ApplifierImpactProperties.IMPACT_BASE_URL = data.getString(ApplifierImpactConstants.IMPACT_URL_KEY);
+				ApplifierImpactProperties.IMPACT_GAMER_ID = data.getString(ApplifierImpactConstants.IMPACT_GAMER_ID_KEY);
+				
+				// Parse campaigns
+				if (validData) {
+					JSONArray campaigns = data.getJSONArray(ApplifierImpactConstants.IMPACT_CAMPAIGNS_KEY);
+					if (campaigns != null)
+						_videoPlanCampaigns = deserializeCampaigns(campaigns);
+				}
+			}
+			else {
+				videoPlanFailed();
+				return;
+			}
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON!");
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Malformed JSON!");
+			videoPlanFailed();
+			return;
 		}
+			
+		if (_videoPlanCampaigns != null)
+			Log.d(ApplifierImpactConstants.LOG_NAME, _videoPlanCampaigns.toString());
 		
-		if (_listener != null)
+		if (_listener != null && validData && _videoPlanCampaigns != null && _videoPlanCampaigns.size() > 0) {
+			Log.d(ApplifierImpactConstants.LOG_NAME, "WebDataCompleted: " + json);
 			_listener.onWebDataCompleted();
-		
-		Log.d(ApplifierImpactProperties.LOG_NAME, _videoPlanCampaigns.toString());
+			return;
+		}
+		else {
+			videoPlanFailed();
+			return;
+		}
 	}
 	
 	private void videoPlanFailed () {
 		if (_listener != null)
 			_listener.onWebDataFailed();		
+	}
+	
+	private ArrayList<ApplifierImpactCampaign> deserializeCampaigns (JSONArray campaignsArray) {
+		if (campaignsArray != null && campaignsArray.length() > 0) {			
+			ApplifierImpactCampaign campaign = null;
+			ArrayList<ApplifierImpactCampaign> retList = new ArrayList<ApplifierImpactCampaign>();
+			
+			for (int i = 0; i < campaignsArray.length(); i++) {
+				try {
+					JSONObject jsonCampaign = campaignsArray.getJSONObject(i);
+					campaign = new ApplifierImpactCampaign(jsonCampaign);
+					
+					if (campaign.hasValidData()) {
+						Log.d(ApplifierImpactConstants.LOG_NAME, "Adding campaign to cache");
+						retList.add(campaign);
+					}
+				}
+				catch (Exception e) {
+					Log.d(ApplifierImpactConstants.LOG_NAME, "Problem with the campaign, skipping.");
+				}
+			}
+			
+			return retList;
+		}
+		
+		return null;
 	}
 	
 	
@@ -327,7 +385,7 @@ public class ApplifierImpactWebData {
 				_url = new URL(url);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Problems with url: " + e.getMessage());
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Problems with url: " + e.getMessage());
 			}
 			_requestType = requestType;
 		}
@@ -353,7 +411,7 @@ public class ApplifierImpactWebData {
 				_urlConnection.connect();
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Problems opening connection: " + e.getMessage());
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Problems opening connection: " + e.getMessage());
 			}
 			
 			if (_urlConnection != null) {
@@ -363,7 +421,7 @@ public class ApplifierImpactWebData {
 					_input = new BufferedInputStream(_url.openStream());
 				}
 				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Problems opening stream: " + e.getMessage());
+					Log.d(ApplifierImpactConstants.LOG_NAME, "Problems opening stream: " + e.getMessage());
 				}
 				
 				byte data[] = new byte[1024];
@@ -371,7 +429,7 @@ public class ApplifierImpactWebData {
 				int count = 0;
 				
 				try {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Reading data from: " + _url.toString());
+					Log.d(ApplifierImpactConstants.LOG_NAME, "Reading data from: " + _url.toString());
 					while ((count = _input.read(data)) != -1) {
 						total += count;
 						publishProgress((int)(total * 100 / _downloadLength));
@@ -382,7 +440,7 @@ public class ApplifierImpactWebData {
 					}
 				}
 				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Problems loading url: " + e.getMessage());
+					Log.d(ApplifierImpactConstants.LOG_NAME, "Problems loading url: " + e.getMessage());
 					cancel(true);
 					return null;
 				}
@@ -416,7 +474,7 @@ public class ApplifierImpactWebData {
 				_input.close();
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Problems closing connection: " + e.getMessage());
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Problems closing connection: " + e.getMessage());
 			}	
 		}
 	}

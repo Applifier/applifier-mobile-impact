@@ -10,6 +10,8 @@ import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.video.ApplifierImpactVideoPlayView;
 import com.applifier.impact.android.video.IApplifierImpactVideoListener;
 import com.applifier.impact.android.video.IApplifierImpactVideoPlayerListener;
@@ -55,9 +57,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private ApplifierImpactCampaign _selectedCampaign = null;	
 	
 	
-	public ApplifierImpact (Activity activity, String applifierId) {
+	public ApplifierImpact (Activity activity, String gameId) {
 		instance = this;
-		ApplifierImpactProperties.IMPACT_APP_ID = applifierId;
+		ApplifierImpactProperties.IMPACT_GAME_ID = gameId;
 		ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
 	}
 		
@@ -80,7 +82,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		cachemanager.setDownloadListener(this);
 		webdata = new ApplifierImpactWebData();
 		webdata.setWebDataListener(this);
-		
+
 		if (webdata.initVideoPlan()) {
 			_initialized = true;
 		}
@@ -116,7 +118,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	public void stopAll () {
-		Log.d(ApplifierImpactProperties.LOG_NAME, "ApplifierImpact->stopAll()");
+		Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpact->stopAll()");
 		ApplifierImpactDownloader.stopAllDownloads();
 		webdata.stopAllRequests();
 	}
@@ -127,14 +129,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	// IApplifierImpactCacheListener
 	@Override
 	public void onCampaignUpdateStarted () {	
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Campaign updates started.");
+		Log.d(ApplifierImpactConstants.LOG_NAME, "Campaign updates started.");
 	}
 	
 	@Override
 	public void onCampaignReady (ApplifierImpactCampaignHandler campaignHandler) {
 		if (campaignHandler == null || campaignHandler.getCampaign() == null) return;
 				
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Got onCampaignReady: " + campaignHandler.getCampaign().toString());
+		Log.d(ApplifierImpactConstants.LOG_NAME, "Got onCampaignReady: " + campaignHandler.getCampaign().toString());
 		
 		if (canShowCampaigns())
 			sendImpactReadyEvent();
@@ -142,7 +144,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	@Override
 	public void onAllCampaignsReady () {
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Listener got \"All campaigns ready.\"");
+		Log.d(ApplifierImpactConstants.LOG_NAME, "Listener got \"All campaigns ready.\"");
 	}
 	
 	// IApplifierImpactWebDataListener
@@ -158,7 +160,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	// IApplifierImpactWebViewListener
 	@Override
 	public void onWebAppLoaded () {
-		_webView.setAvailableCampaigns(webdata.getVideoPlan());
+		_webView.initWebApp(webdata.getData());
 	}
 	
 	// IApplifierImpactViewListener
@@ -182,7 +184,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				campaignId = data.getString("campaignId");
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Could not get campaignId");
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Could not get campaignId");
 			}
 			
 			if (campaignId != null) {
@@ -208,6 +210,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	@Override
 	public void onWebAppInitComplete (JSONObject data) {
+		Log.d(ApplifierImpactConstants.LOG_NAME, "WebAppInitComplete");
 		_webAppLoaded = true;
 
 		if (canShowCampaigns())
@@ -234,7 +237,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			params = new JSONObject("{\"campaignId\":\"" + _selectedCampaign.getCampaignId() + "\"}");
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Could not create JSON");
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Could not create JSON");
 		}
 		
 		_webView.setView("completed", params);
@@ -255,7 +258,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	private void initCache () {
 		if (_initialized) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Init cache");
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Init cache");
 			// Update cache WILL START DOWNLOADS if needed, after this method you can check getDownloadingCampaigns which ones started downloading.
 			cachemanager.updateCache(webdata.getVideoPlanCampaigns());				
 		}
@@ -270,7 +273,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
 				@Override
 				public void run() {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Impact ready!");
+					Log.d(ApplifierImpactConstants.LOG_NAME, "Impact ready!");
 					_impactReadySent = true;
 					_campaignListener.onCampaignsAvailable();
 				}
@@ -336,7 +339,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				_vp.playVideo(playUrl);
 			}			
 			else
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Campaign is null");
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Campaign is null");
 						
 			if (_videoListener != null)
 				_videoListener.onVideoStarted();

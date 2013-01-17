@@ -5,7 +5,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.applifier.impact.android.ApplifierImpactProperties;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.view.ApplifierImpactBufferingView;
 import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
@@ -56,7 +57,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		
 		_videoPlayheadPrepared = false;
 		_videoFileName = fileName;
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Playing video from: " + _videoFileName);
+		Log.d(ApplifierImpactConstants.LOG_NAME, "Playing video from: " + _videoFileName);
 		_videoView.setVideoPath(_videoFileName);
 		_timeLeftInSecondsText.setText("" + Math.round(Math.ceil(_videoView.getDuration() / 1000)));
 		startVideo();
@@ -110,7 +111,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	}
 
 	private void createView () {
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Creating custom view");
+		Log.d(ApplifierImpactConstants.LOG_NAME, "Creating custom view");
 		setBackgroundColor(0xFF000000);
 		_videoView = new VideoView(getContext());
 		RelativeLayout.LayoutParams videoLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);

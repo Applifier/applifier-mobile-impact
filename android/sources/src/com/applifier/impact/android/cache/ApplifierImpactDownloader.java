@@ -15,8 +15,9 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
 public class ApplifierImpactDownloader {
 	
@@ -54,7 +55,7 @@ public class ApplifierImpactDownloader {
 	
 	public static void stopAllDownloads () {
 		if (_cacheDownloads != null) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "ApplifierImpactDownloader->stopAllDownloads()");
+			Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactDownloader->stopAllDownloads()");
 			for (CacheDownload cd : _cacheDownloads) {
 				cd.cancel(true);
 			}
@@ -114,13 +115,13 @@ public class ApplifierImpactDownloader {
 		ConnectivityManager cm = (ConnectivityManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 	    
 		if (cm != null && cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Starting download for: " + url);
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Starting download for: " + url);
 			CacheDownload cd = new CacheDownload();
 			addToCacheDownloads(cd);
 			cd.execute(url);
 	    }
 		else {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "No WIFI detected, not downloading: " + url);
+			Log.d(ApplifierImpactConstants.LOG_NAME, "No WIFI detected, not downloading: " + url);
 			removeDownload(url.toString());
 			sendToListeners(ApplifierDownloadEventType.DownloadCancelled, url);
 			cacheNextFile(); 
@@ -133,7 +134,7 @@ public class ApplifierImpactDownloader {
 		}
 		else if (_downloadList != null) {
 			_isDownloading = false;
-			Log.d(ApplifierImpactProperties.LOG_NAME, "All downloads completed.");
+			Log.d(ApplifierImpactConstants.LOG_NAME, "All downloads completed.");
 		}
 	}
 	
@@ -146,7 +147,7 @@ public class ApplifierImpactDownloader {
 			fos = new FileOutputStream(outf);
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Problems creating FOS: " + fileName);
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Problems creating FOS: " + fileName);
 		}
 		
 		return fos;
@@ -182,7 +183,7 @@ public class ApplifierImpactDownloader {
 				_downloadUrl = new URL(sUrl[0]);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Problems with url: " + e.getMessage());
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Problems with url: " + e.getMessage());
 			}
 			
 			try {
@@ -192,7 +193,7 @@ public class ApplifierImpactDownloader {
 				_urlConnection.connect();
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Problems opening connection: " + e.getMessage());
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Problems opening connection: " + e.getMessage());
 			}
 			
 			if (_urlConnection != null) {
@@ -202,7 +203,7 @@ public class ApplifierImpactDownloader {
 					_input = new BufferedInputStream(_downloadUrl.openStream());
 				}
 				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Problems opening stream: " + e.getMessage());
+					Log.d(ApplifierImpactConstants.LOG_NAME, "Problems opening stream: " + e.getMessage());
 				}
 				
 				_targetFile = new File(sUrl[0]);
@@ -224,7 +225,7 @@ public class ApplifierImpactDownloader {
 					}
 				}
 				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Problems downloading file: " + e.getMessage());
+					Log.d(ApplifierImpactConstants.LOG_NAME, "Problems downloading file: " + e.getMessage());
 					cancelDownload();
 					cacheNextFile();
 					return null;
@@ -237,7 +238,7 @@ public class ApplifierImpactDownloader {
 		}
 		
 		protected void onCancelled (Object result) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Force stopping download!");
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Force stopping download!");
 			_cancelled = true;
 			cancelDownload();
 		}
@@ -273,12 +274,12 @@ public class ApplifierImpactDownloader {
 				_input.close();
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Problems closing connection: " + e.getMessage());
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Problems closing connection: " + e.getMessage());
 			}	    	
 	    }
 	    
 	    private void cancelDownload () {
-	    	Log.d(ApplifierImpactProperties.LOG_NAME, "Download cancelled for: " + _downloadUrl.toString());
+	    	Log.d(ApplifierImpactConstants.LOG_NAME, "Download cancelled for: " + _downloadUrl.toString());
 			closeAndFlushConnection();
 			ApplifierImpactUtils.removeFile(_targetFile.toString());
         	removeDownload(_downloadUrl.toString());

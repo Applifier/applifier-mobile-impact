@@ -4,22 +4,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Environment;
-import android.provider.Settings.Secure;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class ApplifierImpactUtils {
@@ -33,7 +26,7 @@ public class ApplifierImpactUtils {
 				receivedCampaigns = json.getJSONArray("campaigns");
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Malformed JSON");
 			}
 			
 			for (int i = 0; i < receivedCampaigns.length(); i++) {
@@ -42,7 +35,7 @@ public class ApplifierImpactUtils {
 					campaignData.add(new ApplifierImpactCampaign(currentCampaign));
 				}
 				catch (Exception e) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Malformed JSON");
+					Log.d(ApplifierImpactConstants.LOG_NAME, "Malformed JSON");
 				}
 			}
 			
@@ -51,57 +44,7 @@ public class ApplifierImpactUtils {
 		
 		return null;
 	}
-	
-	public static boolean isUsingWifi () {
-		ConnectivityManager mConnectivity = null;
-		mConnectivity = (ConnectivityManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-		if (mConnectivity == null)
-			return false;
-
-		TelephonyManager mTelephony = (TelephonyManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getSystemService(Context.TELEPHONY_SERVICE);
-		// Skip if no connection, or background data disabled
-		NetworkInfo info = mConnectivity.getActiveNetworkInfo();
-		if (info == null || !mConnectivity.getBackgroundDataSetting() || mTelephony == null) {
-		    return false;
-		}
-
-		int netType = info.getType();
-		if (netType == ConnectivityManager.TYPE_WIFI) {
-		    return info.isConnected();
-		}
-		else {
-			return false;
-		}
-	}
-
-	public static JSONObject getPlatformProperties () {
-		JSONObject params = new JSONObject();
-		String deviceType = "";
-
-		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null &&
-			ApplifierImpactProperties.CURRENT_ACTIVITY.getResources() != null &&
-			ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getConfiguration() != null) {
-			deviceType = "" + ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getConfiguration().screenLayout;
-		}
-		
-		try {
-			params.put("deviceId", getDeviceId(ApplifierImpactProperties.CURRENT_ACTIVITY));
-			params.put("softwareVersion", Build.VERSION.SDK_INT);
-			params.put("hardwareVersion", Build.MANUFACTURER + " " + Build.MODEL);
-			params.put("deviceType", deviceType);
-			params.put("apiVersion", ApplifierImpactProperties.IMPACT_API_VERSION);
-			params.put("platform", "android");
-			params.put("connectionType", isUsingWifi() ? "wifi" : "cellular");
-		}
-		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "JSON Error");
-		}
-		
-		return params;
-	}
-	
-	
 	public static String readFile (File fileToRead, boolean addLineBreaks) {
 		String fileContent = "";
 		BufferedReader br = null;
@@ -118,7 +61,7 @@ public class ApplifierImpactUtils {
 				}
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Problem reading file: " + e.getMessage());
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Problem reading file: " + e.getMessage());
 				return null;
 			}
 			
@@ -126,13 +69,13 @@ public class ApplifierImpactUtils {
 				br.close();
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Problem closing reader: " + e.getMessage());
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Problem closing reader: " + e.getMessage());
 			}
 						
 			return fileContent;
 		}
 		else {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "File did not exist or couldn't be read");
+			Log.d(ApplifierImpactConstants.LOG_NAME, "File did not exist or couldn't be read");
 		}
 		
 		return null;
@@ -148,11 +91,11 @@ public class ApplifierImpactUtils {
 			fos.close();
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Could not write file: " + e.getMessage());
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Could not write file: " + e.getMessage());
 			return false;
 		}
 		
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Wrote file: " + fileToWrite.getAbsolutePath());
+		Log.d(ApplifierImpactConstants.LOG_NAME, "Wrote file: " + fileToWrite.getAbsolutePath());
 		
 		return true;
 	}
@@ -163,12 +106,12 @@ public class ApplifierImpactUtils {
 		
 		if (cachedVideoFile.exists()) {
 			if (!cachedVideoFile.delete())
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Could not delete: " + cachedVideoFile.getAbsolutePath());
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Could not delete: " + cachedVideoFile.getAbsolutePath());
 			else
-				Log.d(ApplifierImpactProperties.LOG_NAME, "Deleted: " + cachedVideoFile.getAbsolutePath());
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Deleted: " + cachedVideoFile.getAbsolutePath());
 		}
 		else {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "File: " + cachedVideoFile.getAbsolutePath() + " doesn't exist.");
+			Log.d(ApplifierImpactConstants.LOG_NAME, "File: " + cachedVideoFile.getAbsolutePath() + " doesn't exist.");
 		}
 	}
 		
@@ -201,7 +144,7 @@ public class ApplifierImpactUtils {
 	}
 	
 	public static String getCacheDirectory () {
-		return Environment.getExternalStorageDirectory().toString() + "/" + ApplifierImpactProperties.CACHE_DIR_NAME;
+		return Environment.getExternalStorageDirectory().toString() + "/" + ApplifierImpactConstants.CACHE_DIR_NAME;
 	}
 	
 	public static File createCacheDir () {
@@ -228,59 +171,5 @@ public class ApplifierImpactUtils {
 		File targetFile = new File (fileName);
 		File testFile = new File(getCacheDirectory() + "/" + targetFile.getName());
 		return testFile.exists();
-	}
-	
-	public static String getDeviceId (Context context) {
-		String prefix = "";
-		String deviceId = null;
-		//get android id
-		
-		if  (deviceId == null || deviceId.length() < 3) {
-			//get telephony id
-			prefix = "aTUDID";
-			try {
-				TelephonyManager tmanager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-				deviceId = tmanager.getDeviceId();
-			}
-			catch (Exception e) {
-				//maybe no permissions
-			}
-		}
-		
-		if  (deviceId == null || deviceId.length() < 3) {
-			//get device serial no using private api
-			prefix = "aSNO";
-			try {
-		        Class<?> c = Class.forName("android.os.SystemProperties");
-		        Method get = c.getMethod("get", String.class);
-		        deviceId = (String) get.invoke(c, "ro.serialno");
-		    } 
-			catch (Exception e) {
-		    }
-		}
-
-		if  (deviceId == null || deviceId.length() < 3) {
-			deviceId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
-			prefix = "aID";
-		}
-		
-		if  (deviceId == null || deviceId.length() < 3) {
-			//get mac address
-			prefix = "aWMAC";
-			try {
-				WifiManager wm = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-				deviceId = wm.getConnectionInfo().getMacAddress();
-			} catch (Exception e) {
-				//maybe no permissons or wifi off
-			}
-		}
-		
-		if  (deviceId == null || deviceId.length() < 3) {
-			prefix = "aUnknown";
-			deviceId = Build.MANUFACTURER + "-" + Build.MODEL + "-"+Build.FINGERPRINT; 
-		}
-
-		//Log.d(_logName, "DeviceID : " + prefix + "_" + deviceId);
-		return prefix + "_" + deviceId;
 	}
 }
