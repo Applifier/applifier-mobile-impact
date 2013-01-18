@@ -4,10 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
@@ -16,35 +15,29 @@ import android.os.Environment;
 import android.util.Log;
 
 public class ApplifierImpactUtils {
-	public static ArrayList<ApplifierImpactCampaign> createCampaignsFromJson (JSONObject json) {
-		if (json != null && json.has("campaigns")) {
-			ArrayList<ApplifierImpactCampaign> campaignData = new ArrayList<ApplifierImpactCampaign>();
-			JSONArray receivedCampaigns = null;
-			JSONObject currentCampaign = null;
-			
-			try {
-				receivedCampaigns = json.getJSONArray("campaigns");
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Malformed JSON");
-			}
-			
-			for (int i = 0; i < receivedCampaigns.length(); i++) {
-				try {
-					currentCampaign = receivedCampaigns.getJSONObject(i);
-					campaignData.add(new ApplifierImpactCampaign(currentCampaign));
-				}
-				catch (Exception e) {
-					Log.d(ApplifierImpactConstants.LOG_NAME, "Malformed JSON");
-				}
-			}
-			
-			return campaignData;
-		}
-		
-		return null;
-	}
 
+	public static String Md5 (String input) {
+		MessageDigest m = null;
+		try {
+			m = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		m.update(input.getBytes(),0,input.length());
+		byte p_md5Data[] = m.digest();
+		
+		String mOutput = new String();
+		for (int i=0;i < p_md5Data.length;i++) {
+			int b =  (0xFF & p_md5Data[i]);
+			// if it is a single digit, make sure it have 0 in front (proper padding)
+			if (b <= 0xF) mOutput+="0";
+			// add number to string
+			mOutput+=Integer.toHexString(b);
+		}
+		// hex string to uppercase
+		return mOutput.toUpperCase();
+	}
+	
 	public static String readFile (File fileToRead, boolean addLineBreaks) {
 		String fileContent = "";
 		BufferedReader br = null;
@@ -113,34 +106,6 @@ public class ApplifierImpactUtils {
 		else {
 			Log.d(ApplifierImpactConstants.LOG_NAME, "File: " + cachedVideoFile.getAbsolutePath() + " doesn't exist.");
 		}
-	}
-		
-	public static ArrayList<ApplifierImpactCampaign> substractFromCampaignList (ArrayList<ApplifierImpactCampaign> fromList, ArrayList<ApplifierImpactCampaign> substractionList) {
-		if (fromList == null) return null;
-		if (substractionList == null) return fromList;
-		
-		ArrayList<ApplifierImpactCampaign> pruneList = null;
-		
-		for (ApplifierImpactCampaign fromCampaign : fromList) {
-			boolean match = false;
-			
-			for (ApplifierImpactCampaign substractionCampaign : substractionList) {
-				if (fromCampaign.getCampaignId().equals(substractionCampaign.getCampaignId())) {
-					match = true;
-					break;
-				}					
-			}
-			
-			if (match)
-				continue;
-			
-			if (pruneList == null)
-				pruneList = new ArrayList<ApplifierImpactCampaign>();
-			
-			pruneList.add(fromCampaign);
-		}
-		
-		return pruneList;
 	}
 	
 	public static String getCacheDirectory () {

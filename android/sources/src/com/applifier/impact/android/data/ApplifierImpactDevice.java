@@ -2,6 +2,7 @@ package com.applifier.impact.android.data;
 
 import java.lang.reflect.Method;
 
+import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
@@ -82,7 +83,8 @@ public class ApplifierImpactDevice {
 		}
 
 		//Log.d(_logName, "DeviceID : " + prefix + "_" + deviceId);
-		return prefix + "_" + deviceId;
+		//return prefix + "_" + deviceId;
+		return ApplifierImpactUtils.Md5(deviceId);
 	}
 	
 	public static String getMacAddress () {
@@ -94,17 +96,28 @@ public class ApplifierImpactDevice {
 
 		try {
 			WifiManager wm = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-			deviceId = wm.getConnectionInfo().getMacAddress();
+			
+			Boolean originalStatus = wm.isWifiEnabled();
+			if (!originalStatus)
+				wm.setWifiEnabled(true);
+			
+			deviceId = ApplifierImpactUtils.Md5(wm.getConnectionInfo().getMacAddress());
+			wm.setWifiEnabled(originalStatus);
 		} 
 		catch (Exception e) {
 			//maybe no permissons or wifi off
 		}
+		
+		if (deviceId == null)
+			deviceId = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		
 		return deviceId;
 	}
 	
 	public static String getOpenUdid () {
 		String deviceId = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
+		ApplifierImpactOpenUDID.syncContext(ApplifierImpactProperties.CURRENT_ACTIVITY);
+		deviceId = ApplifierImpactUtils.Md5(ApplifierImpactOpenUDID.getOpenUDIDInContext());
 		return deviceId;
 	}
 	

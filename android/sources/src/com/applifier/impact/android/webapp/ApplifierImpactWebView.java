@@ -130,6 +130,8 @@ public class ApplifierImpactWebView extends WebView {
 		getSettings().setLightTouchEnabled(false);
 		getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 		getSettings().setSupportMultipleWindows(false);
+		getSettings().setPluginsEnabled(false);
+		getSettings().setAllowFileAccess(false);
 		
 		setHorizontalScrollBarEnabled(false);
 		setVerticalScrollBarEnabled(false);		
@@ -171,7 +173,7 @@ public class ApplifierImpactWebView extends WebView {
 			Log.d(ApplifierImpactConstants.LOG_NAME, "Could not invoke setLayerType");
 		}
 		
-		addJavascriptInterface(_webBridge, "ApplifierWebBridge");
+		addJavascriptInterface(_webBridge, "applifierimpactnative");
 	}
 	
 	
@@ -215,6 +217,7 @@ public class ApplifierImpactWebView extends WebView {
 		
 		@Override
 		public boolean shouldOverrideUrlLoading (WebView view, String url) {
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Trying to load url: " + url);
 			return false;
 		}
 		

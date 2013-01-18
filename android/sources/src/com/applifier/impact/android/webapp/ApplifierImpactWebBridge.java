@@ -44,18 +44,17 @@ public class ApplifierImpactWebBridge {
 		_listener = listener;
 	}
 	
-	public void handleWebEvent (String data) {
+	public void handleWebEvent (String type, String data) {
 		Log.d(ApplifierImpactConstants.LOG_NAME, "handleWebEvent: " + data);
 
 		if (_listener == null || data == null) return;
 		
 		JSONObject jsonData = null;
 		JSONObject parameters = null;
-		String event = null;
+		String event = type;
 		
 		try {
 			jsonData = new JSONObject(data);
-			event = jsonData.getString("type");
 			parameters = jsonData.getJSONObject("data");
 		}
 		catch (Exception e) {
