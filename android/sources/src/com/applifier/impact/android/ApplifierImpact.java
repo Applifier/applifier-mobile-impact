@@ -96,13 +96,29 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	public boolean showImpact () {
 		if (!_showingImpact && canShowCampaigns()) {
-			ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-			focusToView(_webView);
-			_webView.setWebViewCurrentView("start");
-			_showingImpact = true;	
+			Boolean dataOk = true;			
+			JSONObject data = new JSONObject();
 			
-			if (_impactListener != null)
-				_impactListener.onImpactOpen();
+			Log.d(ApplifierImpactConstants.LOG_NAME, "dataOk: " + dataOk);
+			
+			try  {
+				data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN);
+				data.put(ApplifierImpactConstants.IMPACT_REWARD_ITEMKEY_KEY, webdata.getCurrentRewardItemKey());
+			}
+			catch (Exception e) {
+				dataOk = false;
+			}
+
+			if (dataOk) {
+				_webView.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, data);
+				ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+				focusToView(_webView);
+
+				_showingImpact = true;	
+				
+				if (_impactListener != null)
+					_impactListener.onImpactOpen();
+			}
 			
 			return _showingImpact;
 		}
@@ -213,9 +229,24 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public void onWebAppInitComplete (JSONObject data) {
 		Log.d(ApplifierImpactConstants.LOG_NAME, "WebAppInitComplete");
 		_webAppLoaded = true;
-
-		if (canShowCampaigns())
-			sendImpactReadyEvent();			
+		Boolean dataOk = true;
+		
+		if (canShowCampaigns()) {
+			JSONObject setViewData = new JSONObject();
+			
+			try {
+				setViewData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_INITCOMPLETE);
+				setViewData.put(ApplifierImpactConstants.IMPACT_REWARD_ITEMKEY_KEY, webdata.getCurrentRewardItemKey());
+			}
+			catch (Exception e) {
+				dataOk = false;
+			}
+			
+			if (dataOk) {
+				_webView.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, setViewData);
+				sendImpactReadyEvent();			
+			}
+		}
 	}
 	
 	// IApplifierImpactVideoPlayerListener

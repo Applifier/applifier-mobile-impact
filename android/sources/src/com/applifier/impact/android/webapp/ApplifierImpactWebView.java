@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 
 import org.json.JSONObject;
 
+import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
@@ -19,6 +20,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 
 public class ApplifierImpactWebView extends WebView {
 
@@ -54,8 +56,8 @@ public class ApplifierImpactWebView extends WebView {
 				dataString = data.toString();
 			
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_CHANGE_VIEW, view, dataString);
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
 			Log.d(ApplifierImpactConstants.LOG_NAME, "Send change view to WebApp: " + javascriptString);
-			loadUrl(javascriptString);
 		}
 	}
 	
@@ -68,7 +70,7 @@ public class ApplifierImpactWebView extends WebView {
 
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_HANDLE_NATIVE_EVENT, eventType, dataString);
 			Log.d(ApplifierImpactConstants.LOG_NAME, "Send native event to WebApp: " + javascriptString);
-			loadUrl(javascriptString);
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
 		}
 	}
 	
@@ -97,7 +99,7 @@ public class ApplifierImpactWebView extends WebView {
 			
 			String initString = String.format("%s%s(%s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_INIT, initData.toString());
 			Log.d(ApplifierImpactConstants.LOG_NAME, "Initializing WebView with JS call: " + initString);
-			loadUrl(initString);
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(initString));
 		}
 	}
 
@@ -231,5 +233,22 @@ public class ApplifierImpactWebView extends WebView {
 		public void onLoadResource(WebView view, String url) {
 			super.onLoadResource(view, url);
 		}	
+	}
+
+	
+	/* PRIVATE CLASSES */
+	
+	private class ApplifierImpactJavascriptRunner implements Runnable {
+		
+		private String _jsString = null;
+		
+		public ApplifierImpactJavascriptRunner (String jsString) {
+			_jsString = jsString;
+		}
+		
+		@Override
+		public void run() {
+			loadUrl(_jsString);
+		}		
 	}
 }
