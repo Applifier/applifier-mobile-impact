@@ -385,7 +385,7 @@ public class ApplifierImpactWebData {
 			}
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Malformed JSON!");
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Malformed JSON: " + json);
 			campaignDataFailed();
 			return;
 		}

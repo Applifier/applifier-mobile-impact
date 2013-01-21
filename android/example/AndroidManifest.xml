@@ -19,8 +19,7 @@
         
         <activity
             android:name=".ApplifierImpactTestStartActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="landscape">
+            android:configChanges="keyboardHidden|orientation">
             
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,8 +29,7 @@
         
   		<activity 
   		    android:name="ApplifierImpactGameActivity" 
-          	android:configChanges="keyboardHidden|orientation"
-          	android:screenOrientation="landscape"/>	
+          	android:configChanges="keyboardHidden|orientation"/>	
     </application>
 
 </manifest>

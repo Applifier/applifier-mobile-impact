@@ -141,7 +141,7 @@ public class ApplifierImpactWebView extends WebView {
 		setFocusableInTouchMode(true);
 		setInitialScale(0);
 		
-		setBackgroundColor(Color.TRANSPARENT);
+		setBackgroundColor(Color.BLACK);
 		setBackgroundDrawable(null);
 		setBackgroundResource(0);
 		
