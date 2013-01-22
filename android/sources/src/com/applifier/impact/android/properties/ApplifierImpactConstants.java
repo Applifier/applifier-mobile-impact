@@ -121,4 +121,6 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_FAILED_URL_METHODTYPE_KEY = "methodType";
 	public static final String IMPACT_FAILED_URL_BODY_KEY = "body";
 	public static final String IMPACT_FAILED_URL_RETRIES_KEY = "retries";
+	
+	public static final String IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME = "com.applifier.impact.android.view.ApplifierImpactFullscreenActivity";
 }

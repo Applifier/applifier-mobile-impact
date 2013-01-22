@@ -45,7 +45,7 @@ public class ApplifierImpactWebBridge {
 	}
 	
 	public void handleWebEvent (String type, String data) {
-		Log.d(ApplifierImpactConstants.LOG_NAME, "handleWebEvent: " + data);
+		Log.d(ApplifierImpactConstants.LOG_NAME, "handleWebEvent: "+ type + ", " + data);
 
 		if (_listener == null || data == null) return;
 		

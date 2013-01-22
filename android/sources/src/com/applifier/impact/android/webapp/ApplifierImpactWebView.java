@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 
 import org.json.JSONObject;
 
-import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
@@ -20,7 +19,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 
 public class ApplifierImpactWebView extends WebView {
 
@@ -191,7 +189,7 @@ public class ApplifierImpactWebView extends WebView {
 		}
     	
     	return false;
-    } 
+    }
 	
 	
 	/* SUBCLASSES */
@@ -213,6 +211,7 @@ public class ApplifierImpactWebView extends WebView {
 			Log.d(ApplifierImpactConstants.LOG_NAME, "Finished url: "  + url);
 			if (_listener != null && !_webAppLoaded) {
 				_webAppLoaded = true;
+				addJavascriptInterface(_webBridge, "applifierimpactnative");
 				_listener.onWebAppLoaded();
 			}
 		}

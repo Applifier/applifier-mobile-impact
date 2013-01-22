@@ -29,7 +29,12 @@
         
   		<activity 
   		    android:name="ApplifierImpactGameActivity" 
-          	android:configChanges="keyboardHidden|orientation"/>	
+          	android:configChanges="keyboardHidden|orientation"/>
+  		
+  		 <activity 
+  		    android:name="com.applifier.impact.android.view.ApplifierImpactFullscreenActivity" 
+          	android:configChanges="keyboardHidden|orientation"
+          	android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>	
     </application>
 
 </manifest>

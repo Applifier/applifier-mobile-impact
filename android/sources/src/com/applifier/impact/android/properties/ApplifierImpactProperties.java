@@ -18,6 +18,7 @@ public class ApplifierImpactProperties {
 	public static String IMPACT_GAME_ID = null;
 	public static String IMPACT_GAMER_ID = null;
 	public static Boolean TESTMODE_ENABLED = false;
+	public static Activity BASE_ACTIVITY = null;
 	public static Activity CURRENT_ACTIVITY = null;
 	public static final int MAX_NUMBER_OF_ANALYTICS_RETRIES = 5;
 	
