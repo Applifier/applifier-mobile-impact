@@ -245,6 +245,21 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	// IApplifierImpactVideoPlayerListener
 	@Override
 	public void onEventPositionReached (ApplifierVideoPosition position) {
+		if (position.equals(ApplifierVideoPosition.Start)) {
+			JSONObject params = null;
+			
+			try {
+				params = new JSONObject("{\"campaignId\":\"" + _selectedCampaign.getCampaignId() + "\"}");
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Could not create JSON");
+			}
+			
+			//_webView.setWebViewCurrentView("completed", params);
+			showVideoPlayer();
+			_webView.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_COMPLETED, params);
+		}
+		
 		if (_selectedCampaign != null && !_selectedCampaign.getCampaignStatus().equals(ApplifierImpactCampaignStatus.VIEWED))
 			webdata.sendCampaignViewProgress(_selectedCampaign, position);
 	}
@@ -259,6 +274,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		
 		_vp.setKeepScreenOn(false);
 		hideView(_vp);
+		
+		/*
 		JSONObject params = null;
 		
 		try {
@@ -269,6 +286,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		}
 		
 		_webView.setWebViewCurrentView("completed", params);
+		*/
 		ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 		focusToView(_webView);
 		onEventPositionReached(ApplifierVideoPosition.End);
@@ -338,6 +356,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		}
 	}
 
+	private void showVideoPlayer () {
+		if (_vp.getParent() == null) {
+			hideView(_webView);
+			ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_vp, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+			focusToView(_vp);
+		}
+	}
+	
 	private void hideView (View view) {
 		if (view != null) {
 			view.setFocusable(false);
@@ -393,25 +419,19 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	private class ApplifierImpactPlayVideoRunner implements Runnable {
 		@Override
-		public void run() {
-			hideView(_webView);
-			
-			if (_vp.getParent() == null) {
-				ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_vp, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-				focusToView(_vp);
-				if (_selectedCampaign != null) {
-					String playUrl = ApplifierImpactUtils.getCacheDirectory() + "/" + _selectedCampaign.getVideoFilename();
-					if (!ApplifierImpactUtils.isFileInCache(_selectedCampaign.getVideoFilename()))
-						playUrl = _selectedCampaign.getVideoStreamUrl(); 
+		public void run() {			
+			if (_selectedCampaign != null) {
+				String playUrl = ApplifierImpactUtils.getCacheDirectory() + "/" + _selectedCampaign.getVideoFilename();
+				if (!ApplifierImpactUtils.isFileInCache(_selectedCampaign.getVideoFilename()))
+					playUrl = _selectedCampaign.getVideoStreamUrl(); 
 
-					_vp.playVideo(playUrl);
-				}			
-				else
-					Log.d(ApplifierImpactConstants.LOG_NAME, "Campaign is null");
-							
-				if (_videoListener != null) {
-					_videoListener.onVideoStarted();
-				}
+				_vp.playVideo(playUrl);
+			}			
+			else
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Campaign is null");
+						
+			if (_videoListener != null) {
+				_videoListener.onVideoStarted();
 			}
 		}		
 	}

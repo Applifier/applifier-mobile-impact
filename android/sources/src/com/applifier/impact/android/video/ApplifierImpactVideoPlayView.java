@@ -91,10 +91,6 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				@Override
 				public void run() {
 					_videoView.start();
-					if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {
-						_listener.onEventPositionReached(ApplifierVideoPosition.Start);
-						_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
-					}
 					setKeepScreenOn(true);
 				}
 			});
@@ -128,6 +124,12 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			@Override
 			public void onPrepared(MediaPlayer mp) {
 				_videoPlayheadPrepared = true;
+				
+				if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {
+					_listener.onEventPositionReached(ApplifierVideoPosition.Start);
+					_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
+				}
+				
 				hideBufferingView();
 			}
 		});
@@ -285,7 +287,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {					
 					@Override
 					public void run() {
-						createAndAddBufferingView();
+						//createAndAddBufferingView();
+
 					}
 				});				
 			}
