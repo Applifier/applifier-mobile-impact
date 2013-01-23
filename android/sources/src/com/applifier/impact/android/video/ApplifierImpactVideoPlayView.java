@@ -123,9 +123,11 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {			
 			@Override
 			public void onPrepared(MediaPlayer mp) {
+				Log.d(ApplifierImpactConstants.LOG_NAME, "onPrepared");
 				_videoPlayheadPrepared = true;
-				
+				//Log.d()
 				if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {
+					Log.d(ApplifierImpactConstants.LOG_NAME, "came to event position");
 					_listener.onEventPositionReached(ApplifierVideoPosition.Start);
 					_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
 				}

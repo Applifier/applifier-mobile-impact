@@ -255,7 +255,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				Log.d(ApplifierImpactConstants.LOG_NAME, "Could not create JSON");
 			}
 			
-			//_webView.setWebViewCurrentView("completed", params);
+			if (_videoListener != null) {
+				_videoListener.onVideoStarted();
+			}
+			
 			showVideoPlayer();
 			_webView.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_COMPLETED, params);
 		}
@@ -275,18 +278,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		_vp.setKeepScreenOn(false);
 		hideView(_vp);
 		
-		/*
-		JSONObject params = null;
-		
-		try {
-			params = new JSONObject("{\"campaignId\":\"" + _selectedCampaign.getCampaignId() + "\"}");
-		}
-		catch (Exception e) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Could not create JSON");
-		}
-		
-		_webView.setWebViewCurrentView("completed", params);
-		*/
 		ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 		focusToView(_webView);
 		onEventPositionReached(ApplifierVideoPosition.End);
@@ -425,14 +416,13 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				if (!ApplifierImpactUtils.isFileInCache(_selectedCampaign.getVideoFilename()))
 					playUrl = _selectedCampaign.getVideoStreamUrl(); 
 
+				showVideoPlayer();
 				_vp.playVideo(playUrl);
 			}			
 			else
 				Log.d(ApplifierImpactConstants.LOG_NAME, "Campaign is null");
 						
-			if (_videoListener != null) {
-				_videoListener.onVideoStarted();
-			}
+
 		}		
 	}
 }

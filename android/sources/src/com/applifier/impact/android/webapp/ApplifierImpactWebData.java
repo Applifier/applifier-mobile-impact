@@ -134,7 +134,7 @@ public class ApplifierImpactWebData {
 		
 		if (position != null && getGamerId() != null && (position.equals(ApplifierVideoPosition.Start)  || position.equals(ApplifierVideoPosition.End))) {			
 			String viewUrl = String.format("%s%s", ApplifierImpactProperties.IMPACT_BASE_URL, ApplifierImpactConstants.IMPACT_ANALYTICS_TRACKING_PATH);
-			viewUrl = String.format("%s/%s/%s/%s", viewUrl, ApplifierImpactProperties.IMPACT_GAMER_ID, position.toString(), campaign.getCampaignId());
+			viewUrl = String.format("%s%s/%s/%s", viewUrl, ApplifierImpactProperties.IMPACT_GAMER_ID, position.toString(), campaign.getCampaignId());
 			viewUrl = String.format("%s?%s=%s", viewUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
 			viewUrl = String.format("%s&%s=%s", viewUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, getCurrentRewardItemKey());
 			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(viewUrl, ApplifierImpactRequestType.VideoViewed, 0);
@@ -143,14 +143,6 @@ public class ApplifierImpactWebData {
 			return true;
 		}
 		else if (position != null && getGamerId() != null) {
-		    /*
-			NSString *query = [NSString stringWithFormat:@"%@=%@&%@=%@&%@=%@&%@=%@&%@=%@", 
-		                       kApplifierImpactAnalyticsQueryParamGameIdKey, [[ApplifierImpactProperties sharedInstance] impactGameId], 
-		                       kApplifierImpactAnalyticsQueryParamEventTypeKey, positionString, 
-		                       kApplifierImpactAnalyticsQueryParamTrackingIdKey, [[ApplifierImpactProperties sharedInstance] gamerId], 
-		                       kApplifierImpactAnalyticsQueryParamProviderIdKey, campaign.id, 
-		                       kApplifierImpactAnalyticsQueryParamRewardItemKey, [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey]];*/
-			
 			String analyticsUrl = String.format("%s", ApplifierImpactProperties.ANALYTICS_BASE_URL);
 			analyticsUrl = String.format("%s?%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
 			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_EVENTTYPE_KEY, position.toString());
