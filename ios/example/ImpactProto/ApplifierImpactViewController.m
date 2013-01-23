@@ -39,24 +39,26 @@
     [[ApplifierImpact sharedInstance] setTestMode:YES];
     
     // Initialize Applifier Impact
-	[[ApplifierImpact sharedInstance] startWithGameId:@"11006" andViewController:self];
+	[[ApplifierImpact sharedInstance] startWithGameId:@"16" andViewController:self];
 }
 
 - (void)openImpact {
 	if ([[ApplifierImpact sharedInstance] canShowImpact]) {
+        /*
         NSLog(@"REWARD_ITEM_KEYS: %@", [[ApplifierImpact sharedInstance] getRewardItemKeys]);
         NSLog(@"CURRENT_REWARD_ITEM: %@", [[ApplifierImpact sharedInstance] getCurrentRewardItemKey]);
         NSLog(@"SETTING_REWARD_ITEM (wrong): %i", [[ApplifierImpact sharedInstance] setRewardItemKey:@"wrong_key"]);
         NSLog(@"CURRENT_REWARD_ITEM: %@", [[ApplifierImpact sharedInstance] getCurrentRewardItemKey]);
         NSLog(@"SETTING_REWARD_ITEM (right): %i", [[ApplifierImpact sharedInstance] setRewardItemKey:[[[ApplifierImpact sharedInstance] getRewardItemKeys] objectAtIndex:0]]);
         NSLog(@"CURRENT_REWARD_ITEM: %@", [[ApplifierImpact sharedInstance] getCurrentRewardItemKey]);
-        NSLog(@"DEFAULT_REWARD_ITEM: %@", [[ApplifierImpact sharedInstance] getDefaultRewardItemKey]);
+        NSLog(@"DEFAULT_REWARD_ITEM: %@", [[ApplifierImpact sharedInstance] getDefaultRewardItemKey]); */
 
         //[[ApplifierImpact sharedInstance] setViewController:self showImmediatelyInNewController:YES];
         [[ApplifierImpact sharedInstance] showImpact];
         
+        /*
         NSLog(@"SETTING_REWARD_ITEM (while open): %i", [[ApplifierImpact sharedInstance] setRewardItemKey:[[ApplifierImpact sharedInstance] getDefaultRewardItemKey]]);
-        NSLog(@"GETTING_REWARD_ITEM_DETAILS: %@", [[ApplifierImpact sharedInstance] getRewardItemDetailsWithKey:[[ApplifierImpact sharedInstance] getCurrentRewardItemKey]]);
+        NSLog(@"GETTING_REWARD_ITEM_DETAILS: %@", [[ApplifierImpact sharedInstance] getRewardItemDetailsWithKey:[[ApplifierImpact sharedInstance] getCurrentRewardItemKey]]); */
 	}
 	else {
         NSLog(@"Impact cannot be shown.");
