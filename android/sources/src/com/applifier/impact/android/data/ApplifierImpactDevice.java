@@ -84,7 +84,7 @@ public class ApplifierImpactDevice {
 
 		//Log.d(_logName, "DeviceID : " + prefix + "_" + deviceId);
 		//return prefix + "_" + deviceId;
-		return ApplifierImpactUtils.Md5(deviceId);
+		return ApplifierImpactUtils.Md5(deviceId).toLowerCase();
 	}
 	
 	public static String getMacAddress () {
@@ -111,14 +111,14 @@ public class ApplifierImpactDevice {
 		if (deviceId == null)
 			deviceId = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		
-		return deviceId;
+		return deviceId.toLowerCase();
 	}
 	
 	public static String getOpenUdid () {
 		String deviceId = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		ApplifierImpactOpenUDID.syncContext(ApplifierImpactProperties.CURRENT_ACTIVITY);
 		deviceId = ApplifierImpactUtils.Md5(ApplifierImpactOpenUDID.getOpenUDIDInContext());
-		return deviceId;
+		return deviceId.toLowerCase();
 	}
 	
 	public static String getConnectionType () {

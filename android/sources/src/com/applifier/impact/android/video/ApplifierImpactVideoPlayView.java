@@ -11,6 +11,7 @@ import com.applifier.impact.android.view.ApplifierImpactBufferingView;
 import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.PowerManager;
@@ -61,6 +62,9 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_videoView.setVideoPath(_videoFileName);
 		_timeLeftInSecondsText.setText("" + Math.round(Math.ceil(_videoView.getDuration() / 1000)));
 		startVideo();
+		
+		// Force landscape orientation when video starts
+		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 	}
 
 	public void pauseVideo () {

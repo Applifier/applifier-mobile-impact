@@ -79,16 +79,16 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	}
 	
 	private void checkFileAndDownloadIfNeeded (String fileUrl) {
-		if (_campaign.shouldCacheVideo() && !ApplifierImpactUtils.isFileInCache(fileUrl)) {
+		if (_campaign.shouldCacheVideo() && !ApplifierImpactUtils.isFileInCache(_campaign.getVideoFilename())) {
 			if (!hasDownloads())
 				ApplifierImpactDownloader.addListener(this);
 			
-			addToFileDownloads(fileUrl);
+			addCampaignToDownloads();
 		}
 		else if (!isFileOk(fileUrl) && _campaign.shouldCacheVideo()) {
 			ApplifierImpactUtils.removeFile(fileUrl);
 			ApplifierImpactDownloader.addListener(this);
-			addToFileDownloads(fileUrl);
+			addCampaignToDownloads();
 		}		
 	}
 	
@@ -97,12 +97,12 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 		return true;
 	}
 	
-	private void addToFileDownloads (String fileUrl) {
-		if (fileUrl == null) return;
+	private void addCampaignToDownloads () {
+		if (_campaign == null) return;
 		if (_downloadList == null) _downloadList = new ArrayList<String>();
 		
-		_downloadList.add(fileUrl);
-		ApplifierImpactDownloader.addDownload(fileUrl);
+		_downloadList.add(_campaign.getVideoUrl());
+		ApplifierImpactDownloader.addDownload(_campaign);
 	}
 
 	private void removeDownload (String downloadUrl) {

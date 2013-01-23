@@ -187,7 +187,7 @@ public class ApplifierImpactCampaign {
 		if (checkDataIntegrity()) {
 			try {
 				File videoFile = new File(_campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_DOWNLOADABLE_KEY));
-				return videoFile.getName();
+				return getCampaignId() + "-" + videoFile.getName();
 			}
 			catch (Exception e) {
 				Log.d(ApplifierImpactConstants.LOG_NAME, "getVideoFilename: This should not happen!");
