@@ -9,6 +9,13 @@ In any issues, please file in issue with us in this Github repository, or log a 
 
 Applifier Impact SDK Release Notes
 ==================================
+v1.0.3 "Cornucopia" - January 23, 2013
+--------------------------
+
+*iOS:*
+
+- Support for multiple reward items
+
 
 v1.0.2 "AirHead" - December 11, 2012
 --------------------------
