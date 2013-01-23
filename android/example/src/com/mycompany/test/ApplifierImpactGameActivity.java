@@ -1,7 +1,6 @@
 package com.mycompany.test;
 
 import com.applifier.impact.android.ApplifierImpact;
-import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.IApplifierImpactListener;
 
 import android.app.Activity;
@@ -9,11 +8,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.video.IApplifierImpactVideoListener;
 
 public class ApplifierImpactGameActivity extends Activity implements IApplifierImpactListener, IApplifierImpactVideoListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactGameActivity->onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
         
@@ -30,8 +32,10 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
     
     @Override
     public void onResume () {
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactGameActivity->onResume()");
     	super.onResume();
-		ApplifierImpact.instance.changeActivity(this);
+    	
+    	ApplifierImpact.instance.changeActivity(this);
 		ApplifierImpact.instance.setImpactListener(this);
 		ApplifierImpact.instance.setVideoListener(this);
 		
@@ -41,20 +45,21 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
     }
     
     public void onImpactClose () {
-    	Log.d(ApplifierImpactProperties.LOG_NAME, "HOST: Impact close");
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Impact close");
     }
     
     public void onImpactOpen () {   	
-    	Log.d(ApplifierImpactProperties.LOG_NAME, "HOST: Impact open");
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Impact open");
     }
     
 	public void onVideoStarted () {
-		Log.d(ApplifierImpactProperties.LOG_NAME, "HOST: Video started!");
+		Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Video started!");
 	}
 	
 	public void onVideoCompleted () {
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactGameActivity->onVideoCompleted()");
     	((ImageView)findViewById(R.id.plissken)).setAlpha(255);
     	((ImageView)findViewById(R.id.unlock)).setVisibility(View.INVISIBLE);
-    	Log.d(ApplifierImpactProperties.LOG_NAME, "HOST: Video completed!");
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Video completed!");
 	}
 }

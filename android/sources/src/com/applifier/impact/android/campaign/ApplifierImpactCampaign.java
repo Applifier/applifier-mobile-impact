@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.json.JSONObject;
 
-import com.applifier.impact.android.ApplifierImpactProperties;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 import android.util.Log;
 
@@ -28,7 +28,16 @@ public class ApplifierImpactCampaign {
 	};
 	
 	private JSONObject _campaignJson = null;
-	private String[] _requiredKeys = new String[]{"id", "gameId", "trailerDownloadable", "trailerStreaming", "clickUrl"};
+	private String[] _requiredKeys = new String[] {
+			ApplifierImpactConstants.IMPACT_CAMPAIGN_ENDSCREEN_KEY, 
+			ApplifierImpactConstants.IMPACT_CAMPAIGN_CLICKURL_KEY, 
+			ApplifierImpactConstants.IMPACT_CAMPAIGN_PICTURE_KEY, 
+			ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_DOWNLOADABLE_KEY, 
+			ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_STREAMING_KEY,
+			ApplifierImpactConstants.IMPACT_CAMPAIGN_GAME_ID_KEY,
+			ApplifierImpactConstants.IMPACT_CAMPAIGN_GAME_NAME_KEY,
+			ApplifierImpactConstants.IMPACT_CAMPAIGN_ID_KEY,
+			ApplifierImpactConstants.IMPACT_CAMPAIGN_TAGLINE_KEY};
 	private ApplifierImpactCampaignStatus _campaignStatus = ApplifierImpactCampaignStatus.READY;
 	
 	public ApplifierImpactCampaign () {		
@@ -50,20 +59,59 @@ public class ApplifierImpactCampaign {
 			retObject.put("status", getCampaignStatus().toString());
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Error creating campaign JSON");
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Error creating campaign JSON");
 			return null;
 		}
 		
 		return retObject;
 	}
 	
+	public Boolean shouldCacheVideo () {
+		Log.d(ApplifierImpactConstants.LOG_NAME, "shouldCacheVideo");
+		if (checkDataIntegrity()) {
+			try {
+				return _campaignJson.getBoolean(ApplifierImpactConstants.IMPACT_CAMPAIGN_CACHE_VIDEO_KEY);
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactConstants.LOG_NAME, "shouldCacheVideo: This should not happen!");
+			}			
+		}
+		return false;
+	}
+
+	public String getEndScreenUrl () {
+		if (checkDataIntegrity()) {
+			try {
+				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_ENDSCREEN_KEY);
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactConstants.LOG_NAME, "getEndScreenUrl: This should not happen!");
+			}
+		}
+		
+		return null;		
+	}
+	
+	public String getPicture () {
+		if (checkDataIntegrity()) {
+			try {
+				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_PICTURE_KEY);
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactConstants.LOG_NAME, "getPicture: This should not happen!");
+			}
+		}
+		
+		return null;		
+	}
+	
 	public String getCampaignId () {
 		if (checkDataIntegrity()) {
 			try {
-				return _campaignJson.getString("id");
+				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_ID_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "getCampaignId: This should not happen!");
+				Log.d(ApplifierImpactConstants.LOG_NAME, "getCampaignId: This should not happen!");
 			}
 		}
 		
@@ -73,10 +121,89 @@ public class ApplifierImpactCampaign {
 	public String getGameId () {
 		if (checkDataIntegrity()) {
 			try {
-				return _campaignJson.getString("gameId");
+				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_GAME_ID_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "getGameId: This should not happen!");
+				Log.d(ApplifierImpactConstants.LOG_NAME, "getGameId: This should not happen!");
+			}
+		}
+		
+		return null;
+	}
+	
+	public String getGameName () {
+		if (checkDataIntegrity()) {
+			try {
+				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_GAME_NAME_KEY);
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactConstants.LOG_NAME, "getGameName: This should not happen!");
+			}
+		}
+		
+		return null;
+	}
+	
+	public String getVideoUrl () {
+		if (checkDataIntegrity()) {
+			try {
+				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_DOWNLOADABLE_KEY);
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactConstants.LOG_NAME, "getVideoUrl: This should not happen!");
+			}
+		}
+		
+		return null;
+	}
+	
+	public String getVideoStreamUrl () {
+		if (checkDataIntegrity()) {
+			try {
+				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_STREAMING_KEY);
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactConstants.LOG_NAME, "getVideoStreamUrl: This should not happen!");
+			}
+		}
+		
+		return null;
+	}
+	
+	public String getClickUrl () {
+		if (checkDataIntegrity()) {
+			try {
+				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_CLICKURL_KEY);
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactConstants.LOG_NAME, "getClickUrl: This should not happen!");
+			}
+		}
+		
+		return null;
+	}
+	
+	public String getVideoFilename () {
+		if (checkDataIntegrity()) {
+			try {
+				File videoFile = new File(_campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_DOWNLOADABLE_KEY));
+				return getCampaignId() + "-" + videoFile.getName();
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactConstants.LOG_NAME, "getVideoFilename: This should not happen!");
+			}
+		}
+		
+		return null;
+	}
+	
+	public String getTagLine () {
+		if (checkDataIntegrity()) {
+			try {
+				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_TAGLINE_KEY);
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactConstants.LOG_NAME, "getTagLine: This should not happen!");
 			}
 		}
 		
@@ -89,59 +216,6 @@ public class ApplifierImpactCampaign {
 	
 	public void setCampaignStatus (ApplifierImpactCampaignStatus status) {
 		_campaignStatus = status;
-	}
-	
-	public String getVideoStreamUrl () {
-		if (checkDataIntegrity()) {
-			try {
-				return _campaignJson.getString("trailerStreaming");
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "getVideoStreamUrl: This should not happen!");
-			}
-		}
-		
-		return null;
-	}
-	
-	public String getClickUrl () {
-		if (checkDataIntegrity()) {
-			try {
-				return _campaignJson.getString("clickUrl");
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "getClickUrl: This should not happen!");
-			}
-		}
-		
-		return null;
-	}
-	
-	public String getVideoUrl () {
-		if (checkDataIntegrity()) {
-			try {
-				return _campaignJson.getString("trailerDownloadable");
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "getVideoUrl: This should not happen!");
-			}
-		}
-		
-		return null;
-	}
-	
-	public String getVideoFilename () {
-		if (checkDataIntegrity()) {
-			try {
-				File videoFile = new File(_campaignJson.getString("trailerDownloadable"));
-				return videoFile.getName();
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactProperties.LOG_NAME, "getVideoFilename: This should not happen!");
-			}
-		}
-		
-		return null;
 	}
 	
 	public boolean hasValidData () {

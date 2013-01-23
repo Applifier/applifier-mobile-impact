@@ -1,8 +1,8 @@
 package com.mycompany.test;
 
 import com.applifier.impact.android.ApplifierImpact;
-import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 import com.mycompany.test.R;
 
@@ -21,10 +21,11 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactTestStartActivity->onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ((ImageView)findViewById(R.id.playbtn)).setAlpha(80);
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Init impact");
+		Log.d(ApplifierImpactConstants.LOG_NAME, "Init impact");
 		ai = new ApplifierImpact(this, "16");
 		ai.setCampaignListener(this);
 		ai.init();
@@ -32,6 +33,7 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
     
     @Override
     public void onResume () {
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactTestStartActivity->onResume()");
     	super.onResume();
 		ApplifierImpact.instance.changeActivity(this);
     }
@@ -56,14 +58,16 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
 	
     @Override
 	protected void onDestroy() {
-    	ai.stopAll();
-    	System.runFinalizersOnExit(true);		
-		android.os.Process.killProcess(android.os.Process.myPid());
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactTestStartActivity->onDestroy()");
+    	//ai.stopAll();
+    	//System.runFinalizersOnExit(true);		
+		//android.os.Process.killProcess(android.os.Process.myPid());
     	super.onDestroy();		
 	}
 	
     @Override
 	public void onCampaignsAvailable () {
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactTestStartActivity->onCampaignsAvailable()");
     	((ImageView)findViewById(R.id.playbtn)).setAlpha(255);
     	((ImageView)findViewById(R.id.playbtn)).setOnClickListener(new View.OnClickListener() {			
 			@Override

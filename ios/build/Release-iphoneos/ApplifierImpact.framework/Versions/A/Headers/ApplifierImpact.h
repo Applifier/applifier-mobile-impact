@@ -22,6 +22,9 @@
 #define AIAssertV(condition, value) do { if ( ! (condition)) { AILOG_ERROR(@"Expected condition '%s' to be true.", #condition); return value; } } while(0)
 #endif
 
+extern NSString * const kApplifierImpactRewardItemPictureKey;
+extern NSString * const kApplifierImpactRewardItemNameKey;
+
 @class ApplifierImpact;
 @class SKStoreProductViewController;
 
@@ -57,5 +60,11 @@
 - (BOOL)showImpact;
 - (BOOL)hideImpact;
 - (void)stopAll;
-
+- (BOOL)hasMultipleRewardItems;
+- (NSArray *)getRewardItemKeys;
+- (NSString *)getDefaultRewardItemKey;
+- (NSString *)getCurrentRewardItemKey;
+- (BOOL)setRewardItemKey:(NSString *)rewardItemKey;
+- (void)setDefaultRewardItemAsRewardItem;
+- (NSDictionary *)getRewardItemDetailsWithKey:(NSString *)rewardItemKey;
 @end

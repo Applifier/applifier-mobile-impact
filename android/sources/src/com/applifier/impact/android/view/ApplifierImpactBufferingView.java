@@ -1,6 +1,6 @@
 package com.applifier.impact.android.view;
 
-import com.applifier.impact.android.ApplifierImpactProperties;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -109,7 +109,7 @@ public class ApplifierImpactBufferingView extends LinearLayout {
 	@Override
 	protected void onAttachedToWindow() {
 		super.onAttachedToWindow();
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Attached to window");
+		Log.d(ApplifierImpactConstants.LOG_NAME, "Attached to window");
 		
 		if (_ball1 != null)
 			_ball1.setAnimation(createBlinkAnimation(0));

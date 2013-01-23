@@ -12,6 +12,9 @@
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "ApplifierImpactMainViewController.h"
 
+NSString * const kApplifierImpactRewardItemPictureKey = @"picture";
+NSString * const kApplifierImpactRewardItemNameKey = @"name";
+
 @interface ApplifierImpact () <ApplifierImpactCampaignManagerDelegate, UIWebViewDelegate, UIScrollViewDelegate, ApplifierImpactMainViewControllerDelegate>
 @property (nonatomic, strong) NSThread *backgroundThread;
 @property (nonatomic, assign) dispatch_queue_t queue;
@@ -106,6 +109,47 @@ static ApplifierImpact *sharedImpact = nil;
   return YES;
 }
 
+- (BOOL)hasMultipleRewardItems {
+  if ([[ApplifierImpactCampaignManager sharedInstance] rewardItems] != nil && [[[ApplifierImpactCampaignManager sharedInstance] rewardItems] count] > 0) {
+    return YES;
+  }
+  
+  return NO;
+}
+
+- (NSArray *)getRewardItemKeys {
+  return [[ApplifierImpactCampaignManager sharedInstance] rewardItemKeys];
+}
+
+- (NSString *)getDefaultRewardItemKey {
+  return [[ApplifierImpactCampaignManager sharedInstance] defaultRewardItem].key;
+}
+
+- (NSString *)getCurrentRewardItemKey {
+  return [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey];
+}
+
+- (BOOL)setRewardItemKey:(NSString *)rewardItemKey {
+  if (![[ApplifierImpactMainViewController sharedInstance] mainControllerVisible]) {
+    return [[ApplifierImpactCampaignManager sharedInstance] setSelectedRewardItemKey:rewardItemKey];
+  }
+  
+  return NO;
+}
+
+- (void)setDefaultRewardItemAsRewardItem {
+  [[ApplifierImpactCampaignManager sharedInstance] setSelectedRewardItemKey:[self getDefaultRewardItemKey]];
+}
+
+- (NSDictionary *)getRewardItemDetailsWithKey:(NSString *)rewardItemKey {
+  if ([self hasMultipleRewardItems] && rewardItemKey != nil) {
+    return [[ApplifierImpactCampaignManager sharedInstance] getPublicRewardItemDetails:rewardItemKey];
+  }
+  
+  return nil;
+}
+
+
 - (BOOL)hideImpact {
   AIAssertV([NSThread mainThread], NO);
   if (![ApplifierImpact isSupported]) NO;
@@ -176,7 +220,7 @@ static ApplifierImpact *sharedImpact = nil;
 }
 
 - (BOOL)_adViewCanBeShown {
-  if ([[ApplifierImpactCampaignManager sharedInstance] campaigns] != nil && [[[ApplifierImpactCampaignManager sharedInstance] campaigns] count] > 0 && [[ApplifierImpactCampaignManager sharedInstance] rewardItem] != nil && [[ApplifierImpactWebAppController sharedInstance] webViewInitialized])
+  if ([[ApplifierImpactCampaignManager sharedInstance] campaigns] != nil && [[[ApplifierImpactCampaignManager sharedInstance] campaigns] count] > 0 && [[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem] != nil && [[ApplifierImpactWebAppController sharedInstance] webViewInitialized])
 		return YES;
 	else
 		return NO;
@@ -307,7 +351,7 @@ static ApplifierImpact *sharedImpact = nil;
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
-	[self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] rewardItem].key];
+	[self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key];
 }
 
 - (void)mainControllerWillLeaveApplication {

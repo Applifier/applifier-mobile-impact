@@ -8,21 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString * const kApplifierImpactDeviceIphone;
-extern NSString * const kApplifierImpactDeviceIphone3g;
-extern NSString * const kApplifierImpactDeviceIphone3gs;
-extern NSString * const kApplifierImpactDeviceIphone4;
-extern NSString * const kApplifierImpactDeviceIphone4s;
-extern NSString * const kApplifierImpactDeviceIphone5;
-extern NSString * const kApplifierImpactDeviceIpodTouch1gen;
-extern NSString * const kApplifierImpactDeviceIpodTouch2gen;
-extern NSString * const kApplifierImpactDeviceIpodTouch3gen;
-extern NSString * const kApplifierImpactDeviceIpodTouch4gen;
-extern NSString * const kApplifierImpactDeviceIpad1;
-extern NSString * const kApplifierImpactDeviceIpad2;
-extern NSString * const kApplifierImpactDeviceIpad3;
-extern NSString * const kApplifierImpactDeviceIosUnknown;
-
 @interface ApplifierImpactDevice : NSObject
 
 + (NSString *)advertisingIdentifier;
@@ -39,5 +24,7 @@ extern NSString * const kApplifierImpactDeviceIosUnknown;
 
 + (int)getIOSMajorVersion;
 + (NSNumber *)getIOSExactVersion;
+
++ (BOOL)isSimulator;
 
 @end

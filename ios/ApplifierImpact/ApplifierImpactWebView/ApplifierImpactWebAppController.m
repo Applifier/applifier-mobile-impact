@@ -9,26 +9,14 @@
 #import "ApplifierImpactWebAppController.h"
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactURLProtocol/ApplifierImpactURLProtocol.h"
-#import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "../ApplifierImpactSBJSON/ApplifierImpactSBJsonWriter.h"
 #import "../ApplifierImpactSBJSON/NSObject+ApplifierImpactSBJson.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "../ApplifierImpactMainViewController.h"
-
-NSString * const kApplifierImpactWebViewPrefix = @"applifierimpact.";
-NSString * const kApplifierImpactWebViewJSInit = @"init";
-NSString * const kApplifierImpactWebViewJSChangeView = @"setView";
-NSString * const kApplifierImpactWebViewJSHandleNativeEvent = @"handleNativeEvent";
-NSString * const kApplifierImpactWebViewAPIPlayVideo = @"playVideo";
-NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateTo";
-NSString * const kApplifierImpactWebViewAPIInitComplete = @"initComplete";
-NSString * const kApplifierImpactWebViewAPIClose = @"close";
-NSString * const kApplifierImpactWebViewAPIAppStore = @"appStore";
-
-NSString * const kApplifierImpactWebViewViewTypeCompleted = @"completed";
-NSString * const kApplifierImpactWebViewViewTypeStart = @"start";
+#import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
+#import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 
 @interface ApplifierImpactWebAppController ()
   @property (nonatomic, strong) NSDictionary* webAppInitalizationParams;
@@ -90,14 +78,14 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 }
 
 - (void)setWebViewCurrentView:(NSString *)view data:(NSDictionary *)data {
-	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSChangeView, view, [data JSONRepresentation]];
+	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewJSPrefix, kApplifierImpactWebViewJSChangeView, view, [data JSONRepresentation]];
   
   AILOG_DEBUG(@"");
   [self runJavascriptDependingOnPlatform:js];
 }
 
 - (void)sendNativeEventToWebApp:(NSString *)eventType data:(NSDictionary *)data {
- 	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSHandleNativeEvent, eventType, [data JSONRepresentation]];
+ 	NSString *js = [NSString stringWithFormat:@"%@%@(\"%@\", %@);", kApplifierImpactWebViewJSPrefix, kApplifierImpactWebViewJSHandleNativeEvent, eventType, [data JSONRepresentation]];
   
   AILOG_DEBUG(@"");
   [self runJavascriptDependingOnPlatform:js];
@@ -109,10 +97,10 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
   if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo] || [type isEqualToString:kApplifierImpactWebViewAPINavigateTo] || [type isEqualToString:kApplifierImpactWebViewAPIAppStore])
 	{
 		if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo]) {
-      if ([data objectForKey:@"campaignId"] != nil) {
-        [self _selectCampaignWithID:[data objectForKey:@"campaignId"]];
+      if ([data objectForKey:kApplifierImpactWebViewEventDataCampaignIdKey] != nil) {
+        [self _selectCampaignWithID:[data objectForKey:kApplifierImpactWebViewEventDataCampaignIdKey]];
         BOOL checkIfWatched = YES;
-        if ([data objectForKey:@"rewatch"] != nil && [[data valueForKey:@"rewatch"] boolValue] == true) {
+        if ([data objectForKey:kApplifierImpactWebViewEventDataRewatchKey] != nil && [[data valueForKey:kApplifierImpactWebViewEventDataRewatchKey] boolValue] == true) {
           checkIfWatched = NO;
         }
         
@@ -120,13 +108,13 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
       }
 		}
 		else if ([type isEqualToString:kApplifierImpactWebViewAPINavigateTo]) {
-      if ([data objectForKey:@"clickUrl"] != nil) {
-        [self openExternalUrl:[data objectForKey:@"clickUrl"]];
+      if ([data objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] != nil) {
+        [self openExternalUrl:[data objectForKey:kApplifierImpactWebViewEventDataClickUrlKey]];
       }
     
 		}
 		else if ([type isEqualToString:kApplifierImpactWebViewAPIAppStore]) {
-      if ([data objectForKey:@"clickUrl"] != nil) {
+      if ([data objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] != nil) {
         [[ApplifierImpactMainViewController sharedInstance] openAppStoreWithData:data];
       }    
 		}
@@ -144,7 +132,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 }
 
 - (void)runJavascriptDependingOnPlatform:(NSString *)javaScriptString {
-  if (![[ApplifierImpactDevice analyticsMachineName] isEqualToString:kApplifierImpactDeviceIosUnknown]) {
+  if (![ApplifierImpactDevice isSimulator]) {
     dispatch_async(dispatch_get_main_queue(), ^{
       [self runJavascript:javaScriptString];
     });
@@ -208,9 +196,9 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 - (void)initWebApp {
 	AIAssert([NSThread isMainThread]);
   
-  NSDictionary *persistingData = @{@"campaignData":[[ApplifierImpactCampaignManager sharedInstance] campaignData], @"platform":@"ios", @"deviceId":[ApplifierImpactDevice md5DeviceId], @"openUdid":[ApplifierImpactDevice md5OpenUDIDString], @"macAddress":[ApplifierImpactDevice md5MACAddressString], @"sdkVersion":[[ApplifierImpactProperties sharedInstance] impactVersion]};
+  NSDictionary *persistingData = @{kApplifierImpactWebViewDataParamCampaignDataKey:[[ApplifierImpactCampaignManager sharedInstance] campaignData], kApplifierImpactWebViewDataParamPlatformKey:@"ios", kApplifierImpactWebViewDataParamDeviceIdKey:[ApplifierImpactDevice md5DeviceId], kApplifierImpactWebViewDataParamOpenUdidIdKey:[ApplifierImpactDevice md5OpenUDIDString], kApplifierImpactWebViewDataParamMacAddressKey:[ApplifierImpactDevice md5MACAddressString], kApplifierImpactWebViewDataParamSdkVersionKey:[[ApplifierImpactProperties sharedInstance] impactVersion], kApplifierImpactWebViewDataParamGameIdKey:[[ApplifierImpactProperties sharedInstance] impactGameId]};
   
-  NSDictionary *trackingData = @{@"iOSVersion":[ApplifierImpactDevice softwareVersion], @"deviceType":[ApplifierImpactDevice analyticsMachineName]};
+  NSDictionary *trackingData = @{kApplifierImpactWebViewDataParamIosVersionKey:[ApplifierImpactDevice softwareVersion], kApplifierImpactWebViewDataParamDeviceTypeKey:[ApplifierImpactDevice analyticsMachineName]};
   NSMutableDictionary *webAppValues = [NSMutableDictionary dictionaryWithDictionary:persistingData];
   
   if ([ApplifierImpactDevice canUseTracking]) {
@@ -224,7 +212,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 #pragma mark - WebView
 
 - (void)initWebAppWithValues:(NSDictionary *)values {
-	NSString *js = [NSString stringWithFormat:@"%@%@(%@);", kApplifierImpactWebViewPrefix, kApplifierImpactWebViewJSInit, [values JSONRepresentation]];
+	NSString *js = [NSString stringWithFormat:@"%@%@(%@);", kApplifierImpactWebViewJSPrefix, kApplifierImpactWebViewJSInit, [values JSONRepresentation]];
   AILOG_DEBUG(@"");
   [self runJavascript:js];
 }

@@ -4,21 +4,12 @@
 //
 
 #import "ApplifierImpactAnalyticsUploader.h"
-#import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "../ApplifierImpact.h"
-#import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
+#import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
+#import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
-
-NSString * const kApplifierImpactTrackingPath = @"gamers/";
-NSString * const kApplifierImpactInstallTrackingPath = @"games/";
-NSString * const kApplifierImpactAnalyticsUploaderRequestKey = @"kApplifierImpactAnalyticsUploaderRequestKey";
-NSString * const kApplifierImpactAnalyticsUploaderConnectionKey = @"kApplifierImpactAnalyticsUploaderConnectionKey";
-NSString * const kApplifierImpactAnalyticsSavedUploadsKey = @"kApplifierImpactAnalyticsSavedUploadsKey";
-NSString * const kApplifierImpactAnalyticsSavedUploadURLKey = @"kApplifierImpactAnalyticsSavedUploadURLKey";
-NSString * const kApplifierImpactAnalyticsSavedUploadBodyKey = @"kApplifierImpactAnalyticsSavedUploadBodyKey";
-NSString * const kApplifierImpactAnalyticsSavedUploadHTTPMethodKey = @"kApplifierImpactAnalyticsSavedUploadHTTPMethodKey";
-NSString * const kApplifierImpactQueryDictionaryQueryKey = @"kApplifierImpactQueryDictionaryQueryKey";
-NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQueryDictionaryBodyKey";
+#import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
+#import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 
 @interface ApplifierImpactAnalyticsUploader () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSMutableArray *uploadQueue;
@@ -33,15 +24,12 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 #pragma mark - Private
 
 - (void)_backgroundRunLoop:(id)dummy {
-	@autoreleasepool
-	{
+	@autoreleasepool {
 		NSPort *port = [[NSPort alloc] init];
 		[port scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 		
-		while([[NSThread currentThread] isCancelled] == NO)
-		{
-			@autoreleasepool
-			{
+		while([[NSThread currentThread] isCancelled] == NO) {
+			@autoreleasepool {
 				[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:3.0]];
 			}
 		}
@@ -65,7 +53,7 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 	return YES;
 }
 
-- (void)_queueURL:(NSURL *)url body:(NSData *)body httpMethod:(NSString *)httpMethod {
+- (void)_queueURL:(NSURL *)url body:(NSData *)body httpMethod:(NSString *)httpMethod retries:(NSNumber *)retryCount {
 	if (url == nil) {
 		AILOG_DEBUG(@"Invalid input.");
 		return;
@@ -83,20 +71,20 @@ NSString * const kApplifierImpactQueryDictionaryBodyKey = @"kApplifierImpactQuer
 		[request setHTTPBody:body];
 	
 	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
-	NSDictionary *uploadDictionary = @{ kApplifierImpactAnalyticsUploaderRequestKey : request, kApplifierImpactAnalyticsUploaderConnectionKey : connection };
+	NSDictionary *uploadDictionary = @{kApplifierImpactAnalyticsUploaderRequestKey:request, kApplifierImpactAnalyticsUploaderConnectionKey:connection, kApplifierImpactAnalyticsUploaderRetriesKey:retryCount};
 	[self.uploadQueue addObject:uploadDictionary];
 	  
 	if ([self.uploadQueue count] == 1)
 		[self _startNextUpload];
 }
 
-- (void)_queueWithURLString:(NSString *)urlString queryString:(NSString *)queryString httpMethod:(NSString *)httpMethod {
+- (void)_queueWithURLString:(NSString *)urlString queryString:(NSString *)queryString httpMethod:(NSString *)httpMethod retries:(NSNumber *)retryCount {
 	NSURL *url = [NSURL URLWithString:urlString];
 	NSData *body = nil;
 	if (queryString != nil)
 		body = [queryString dataUsingEncoding:NSUTF8StringEncoding];
   
-	[self _queueURL:url body:body httpMethod:httpMethod];
+	[self _queueURL:url body:body httpMethod:httpMethod retries:retryCount];
 }
 
 
@@ -133,7 +121,7 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 
 - (void)sendOpenAppStoreRequest:(ApplifierImpactCampaign *)campaign {
   if (campaign != nil) {
-    NSString *query = [NSString stringWithFormat:@"gameId=%@&type=%@&trackingId=%@&providerId=%@", [[ApplifierImpactProperties sharedInstance] impactGameId], @"openAppStore", [[ApplifierImpactProperties sharedInstance] gamerId], campaign.id];
+    NSString *query = [NSString stringWithFormat:@"%@=%@&%@=%@&%@=%@&%@=%@&%@=%@", kApplifierImpactAnalyticsQueryParamGameIdKey, [[ApplifierImpactProperties sharedInstance] impactGameId], kApplifierImpactAnalyticsQueryParamEventTypeKey, kApplifierImpactAnalyticsEventTypeOpenAppStore, kApplifierImpactAnalyticsQueryParamTrackingIdKey, [[ApplifierImpactProperties sharedInstance] gamerId], kApplifierImpactAnalyticsQueryParamProviderIdKey, campaign.id, kApplifierImpactAnalyticsQueryParamRewardItemKey, [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey]];
     
     [self performSelector:@selector(sendAnalyticsRequestWithQueryString:) onThread:self.backgroundThread withObject:query waitUntilDone:NO];
   }
@@ -153,26 +141,26 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 		NSString *trackingString = nil;
     
 		if (videoPosition == kVideoAnalyticsPositionStart) {
-			positionString = @"video_start";
-			trackingString = @"start";
+			positionString = kApplifierImpactAnalyticsEventTypeVideoStart;
+			trackingString = kApplifierImpactTrackingEventTypeVideoStart;
 		}
 		else if (videoPosition == kVideoAnalyticsPositionFirstQuartile)
-			positionString = @"first_quartile";
+			positionString = kApplifierImpactAnalyticsEventTypeVideoFirstQuartile;
 		else if (videoPosition == kVideoAnalyticsPositionMidPoint)
-			positionString = @"mid_point";
+			positionString = kApplifierImpactAnalyticsEventTypeVideoMidPoint;
 		else if (videoPosition == kVideoAnalyticsPositionThirdQuartile)
-			positionString = @"third_quartile";
+			positionString = kApplifierImpactAnalyticsEventTypeVideoThirdQuartile;
 		else if (videoPosition == kVideoAnalyticsPositionEnd) {
-			positionString = @"video_end";
-			trackingString = @"view";
+			positionString = kApplifierImpactAnalyticsEventTypeVideoEnd;
+			trackingString = kApplifierImpactTrackingEventTypeVideoEnd;
 		}
 		
-    NSString *query = [NSString stringWithFormat:@"gameId=%@&type=%@&trackingId=%@&providerId=%@", [[ApplifierImpactProperties sharedInstance] impactGameId], positionString, [[ApplifierImpactProperties sharedInstance] gamerId], campaign.id];
+    NSString *query = [NSString stringWithFormat:@"%@=%@&%@=%@&%@=%@&%@=%@&%@=%@", kApplifierImpactAnalyticsQueryParamGameIdKey, [[ApplifierImpactProperties sharedInstance] impactGameId], kApplifierImpactAnalyticsQueryParamEventTypeKey, positionString, kApplifierImpactAnalyticsQueryParamTrackingIdKey, [[ApplifierImpactProperties sharedInstance] gamerId], kApplifierImpactAnalyticsQueryParamProviderIdKey, campaign.id, kApplifierImpactAnalyticsQueryParamRewardItemKey, [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey]];
     
     [self performSelector:@selector(sendAnalyticsRequestWithQueryString:) onThread:self.backgroundThread withObject:query waitUntilDone:NO];
      
      if (trackingString != nil) {
-       NSString *trackingQuery = [NSString stringWithFormat:@"%@/%@/%@?gameId=%@", [[ApplifierImpactProperties sharedInstance] gamerId], trackingString, campaign.id, [[ApplifierImpactProperties sharedInstance] impactGameId]];
+       NSString *trackingQuery = [NSString stringWithFormat:@"%@/%@/%@?%@=%@&%@=%@", [[ApplifierImpactProperties sharedInstance] gamerId], trackingString, campaign.id, kApplifierImpactAnalyticsQueryParamGameIdKey, [[ApplifierImpactProperties sharedInstance] impactGameId],kApplifierImpactAnalyticsQueryParamRewardItemKey, [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey]];
        [self performSelector:@selector(sendTrackingCallWithQueryString:) onThread:self.backgroundThread withObject:trackingQuery waitUntilDone:NO];
      }
 	});
@@ -187,7 +175,7 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 	}
 
   AILOG_DEBUG(@"View report: %@?%@", [[ApplifierImpactProperties sharedInstance] analyticsBaseUrl], queryString);
-	[self _queueWithURLString:[[ApplifierImpactProperties sharedInstance] analyticsBaseUrl] queryString:queryString httpMethod:@"POST"];
+	[self _queueWithURLString:[[ApplifierImpactProperties sharedInstance] analyticsBaseUrl] queryString:queryString httpMethod:@"POST" retries:[NSNumber numberWithInt:0]];
 }
 
 - (void)sendTrackingCallWithQueryString:(NSString *)queryString {
@@ -198,9 +186,9 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 		return;
 	}
   
-  AILOG_DEBUG(@"Tracking report: %@%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactTrackingPath, queryString);
+  AILOG_DEBUG(@"Tracking report: %@%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactAnalyticsTrackingPath, queryString);
   
-	[self _queueWithURLString:[NSString stringWithFormat:@"%@%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactTrackingPath, queryString] queryString:nil httpMethod:@"GET"];
+  [self _queueWithURLString:[NSString stringWithFormat:@"%@%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactAnalyticsTrackingPath,queryString] queryString:nil httpMethod:@"GET" retries:[NSNumber numberWithInt:0]];
 }
 
 
@@ -214,28 +202,15 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 		return;
 	}
 	
-	NSString *query = [queryDictionary objectForKey:kApplifierImpactQueryDictionaryQueryKey];
-	NSString *body = [queryDictionary objectForKey:kApplifierImpactQueryDictionaryBodyKey];
+	NSString *query = [queryDictionary objectForKey:kApplifierImpactAnalyticsQueryDictionaryQueryKey];
+	NSString *body = [queryDictionary objectForKey:kApplifierImpactAnalyticsQueryDictionaryBodyKey];
 	
 	if (query == nil || [query length] == 0 || body == nil || [body length] == 0) {
 		AILOG_DEBUG(@"Invalid parameters in query dictionary.");
 		return;
 	}
 	
-  [self _queueWithURLString:[NSString stringWithFormat:@"%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactInstallTrackingPath] queryString:nil httpMethod:@"GET"];
-}
-
-- (void)sendManualInstallTrackingCall {
-	if ([[ApplifierImpactProperties sharedInstance] impactGameId] == nil) {
-		return;
-	}
-	
-  dispatch_async(self.analyticsQueue, ^{
-    NSString *queryString = [NSString stringWithFormat:@"%@/install", [[ApplifierImpactProperties sharedInstance] impactGameId]];
-    NSString *bodyString = [NSString stringWithFormat:@"deviceId=%@", [ApplifierImpactDevice md5DeviceId]];
-		NSDictionary *queryDictionary = @{ kApplifierImpactQueryDictionaryQueryKey : queryString, kApplifierImpactQueryDictionaryBodyKey : bodyString };
-    [self performSelector:@selector(sendInstallTrackingCallWithQueryDictionary:) onThread:self.backgroundThread withObject:queryDictionary waitUntilDone:NO];
-	});
+  [self _queueWithURLString:[NSString stringWithFormat:@"%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactAnalyticsInstallTrackingPath] queryString:nil httpMethod:@"GET" retries:[NSNumber numberWithInt:0]];
 }
 
 
@@ -250,7 +225,19 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 			NSString *url = [upload objectForKey:kApplifierImpactAnalyticsSavedUploadURLKey];
 			NSString *body = [upload objectForKey:kApplifierImpactAnalyticsSavedUploadBodyKey];
 			NSString *httpMethod = [upload objectForKey:kApplifierImpactAnalyticsSavedUploadHTTPMethodKey];
-			[self _queueURL:[NSURL URLWithString:url] body:[body dataUsingEncoding:NSUTF8StringEncoding] httpMethod:httpMethod];
+      NSNumber *retries = 0;
+      
+      if ([upload objectForKey:kApplifierImpactAnalyticsUploaderRetriesKey] != nil) {
+        retries = [upload objectForKey:kApplifierImpactAnalyticsUploaderRetriesKey];
+        retries = [NSNumber numberWithInt:[retries intValue] + 1];
+      }
+      
+      // Check if too many retries
+      if ([retries intValue] > [[ApplifierImpactProperties sharedInstance] maxNumberOfAnalyticsRetries]) {
+        continue;
+      }
+      
+      [self _queueURL:[NSURL URLWithString:url] body:[body dataUsingEncoding:NSUTF8StringEncoding] httpMethod:httpMethod retries:retries];
 		}
 		
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:kApplifierImpactAnalyticsSavedUploadsKey];
@@ -275,7 +262,13 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 	
   if ([request URL] != nil) {
 		[failedUpload setObject:[[request URL] absoluteString] forKey:kApplifierImpactAnalyticsSavedUploadURLKey];
-		
+    
+    NSNumber *retries = 0;
+    if ([upload objectForKey:kApplifierImpactAnalyticsUploaderRetriesKey] != nil)
+      retries = [upload objectForKey:kApplifierImpactAnalyticsUploaderRetriesKey];
+      
+		[failedUpload setObject:retries forKey:kApplifierImpactAnalyticsUploaderRetriesKey];
+    
 		if ([request HTTPBody] != nil) {
 			NSString *bodyString = [[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding];
 			[failedUpload setObject:bodyString forKey:kApplifierImpactAnalyticsSavedUploadBodyKey];
@@ -294,20 +287,27 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 #pragma mark - NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	AILOG_DEBUG(@"");
+  NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+  
+  if ([httpResponse statusCode] >= 400) {
+    AILOG_DEBUG(@"ERROR FECTHING URL: %i", [httpResponse statusCode]);
+    [self _saveFailedUpload:self.currentUpload];
+  }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	AILOG_DEBUG(@"");
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-	AILOG_DEBUG(@"analytics upload finished");
-	
+	AILOG_DEBUG(@"");
 	self.currentUpload = nil;	
 	[self _startNextUpload];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-	AILOG_DEBUG(@"%@", error);
+	AILOG_DEBUG(@"Analytics upload connection error: %@", error);
 	
 	[self _saveFailedUpload:self.currentUpload];
 	self.currentUpload = nil;

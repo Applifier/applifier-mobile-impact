@@ -5,11 +5,13 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.applifier.impact.android.ApplifierImpactProperties;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.view.ApplifierImpactBufferingView;
 import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.PowerManager;
@@ -56,10 +58,13 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		
 		_videoPlayheadPrepared = false;
 		_videoFileName = fileName;
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Playing video from: " + _videoFileName);
+		Log.d(ApplifierImpactConstants.LOG_NAME, "Playing video from: " + _videoFileName);
 		_videoView.setVideoPath(_videoFileName);
 		_timeLeftInSecondsText.setText("" + Math.round(Math.ceil(_videoView.getDuration() / 1000)));
 		startVideo();
+		
+		// Force landscape orientation when video starts
+		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 	}
 
 	public void pauseVideo () {
@@ -86,10 +91,6 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				@Override
 				public void run() {
 					_videoView.start();
-					if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {
-						_listener.onEventPositionReached(ApplifierVideoPosition.Start);
-						_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
-					}
 					setKeepScreenOn(true);
 				}
 			});
@@ -110,7 +111,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	}
 
 	private void createView () {
-		Log.d(ApplifierImpactProperties.LOG_NAME, "Creating custom view");
+		Log.d(ApplifierImpactConstants.LOG_NAME, "Creating custom view");
 		setBackgroundColor(0xFF000000);
 		_videoView = new VideoView(getContext());
 		RelativeLayout.LayoutParams videoLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
@@ -123,6 +124,12 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			@Override
 			public void onPrepared(MediaPlayer mp) {
 				_videoPlayheadPrepared = true;
+				
+				if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {
+					_listener.onEventPositionReached(ApplifierVideoPosition.Start);
+					_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
+				}
+				
 				hideBufferingView();
 			}
 		});
@@ -280,7 +287,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {					
 					@Override
 					public void run() {
-						createAndAddBufferingView();
+						//createAndAddBufferingView();
+
 					}
 				});				
 			}

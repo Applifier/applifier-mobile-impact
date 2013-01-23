@@ -3,11 +3,11 @@ package com.applifier.impact.android.cache;
 import java.io.File;
 import java.util.ArrayList;
 
-import com.applifier.impact.android.ApplifierImpactProperties;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.IApplifierImpactCampaignHandlerListener;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 import android.util.Log;
 
@@ -22,7 +22,7 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 	
 	public ApplifierImpactCacheManager () {
 		ApplifierImpactUtils.createCacheDir();
-		Log.d(ApplifierImpactProperties.LOG_NAME, "External storagedir: " + ApplifierImpactUtils.getCacheDirectory());
+		Log.d(ApplifierImpactConstants.LOG_NAME, "External storagedir: " + ApplifierImpactUtils.getCacheDirectory());
 	}
 	
 	public void setDownloadListener (IApplifierImpactCacheListener listener) {
@@ -43,7 +43,7 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 		
 		_amountPrepared = 0;
 		
-		Log.d(ApplifierImpactProperties.LOG_NAME, activeList.toString());
+		Log.d(ApplifierImpactConstants.LOG_NAME, activeList.toString());
 		
 		// Check cache directory and delete all files that don't match the current files in campaigns
 		if (ApplifierImpactUtils.getCacheDirectory() != null) {
@@ -52,9 +52,9 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 			
 			if (fileList != null) {
 				for (File currentFile : fileList) {
-					Log.d(ApplifierImpactProperties.LOG_NAME, "Checking file: " + currentFile.getName());
-					if (!currentFile.getName().equals(ApplifierImpactProperties.PENDING_REQUESTS_FILENAME) && 
-						!currentFile.getName().equals(ApplifierImpactProperties.CACHE_MANIFEST_FILENAME) && 
+					Log.d(ApplifierImpactConstants.LOG_NAME, "Checking file: " + currentFile.getName());
+					if (!currentFile.getName().equals(ApplifierImpactConstants.PENDING_REQUESTS_FILENAME) && 
+						!currentFile.getName().equals(ApplifierImpactConstants.CACHE_MANIFEST_FILENAME) && 
 						!ApplifierImpactUtils.isFileRequiredByCampaigns(currentFile.getName(), activeList)) {
 						ApplifierImpactUtils.removeFile(currentFile.getName());
 					}
@@ -65,7 +65,7 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 		// Active -list contains campaigns that came with the videoPlan
 		if (activeList != null) {
 			_totalCampaigns = activeList.size();
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Updating cache: Going through active campaigns");			
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Updating cache: Going through active campaigns");			
 			for (ApplifierImpactCampaign campaign : activeList) {
 				ApplifierImpactCampaignHandler campaignHandler = new ApplifierImpactCampaignHandler(campaign);
 				addToUpdatingHandlers(campaignHandler);

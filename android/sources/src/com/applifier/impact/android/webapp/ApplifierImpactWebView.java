@@ -4,8 +4,9 @@ import java.lang.reflect.Method;
 
 import org.json.JSONObject;
 
-import com.applifier.impact.android.ApplifierImpactProperties;
-import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.data.ApplifierImpactDevice;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -21,14 +22,15 @@ import android.webkit.WebViewClient;
 
 public class ApplifierImpactWebView extends WebView {
 
-	private String _url = "http://quake.everyplay.fi/~bluesun/impact/android/index.html";
+	private String _url = null;
 	private IApplifierImpactWebViewListener _listener = null;
 	private boolean _webAppLoaded = false;
 	private ApplifierImpactWebBridge _webBridge = null;
 	
 	public ApplifierImpactWebView(Activity activity, IApplifierImpactWebViewListener listener, ApplifierImpactWebBridge webBridge) {
 		super(activity);
-		init(activity, _url, listener, webBridge);
+		Log.d(ApplifierImpactConstants.LOG_NAME, "Loading WebView from URL: " + ApplifierImpactProperties.WEBVIEW_BASE_URL);
+		init(activity, ApplifierImpactProperties.WEBVIEW_BASE_URL, listener, webBridge);
 	}
 
 	public ApplifierImpactWebView(Activity activity, String url, IApplifierImpactWebViewListener listener, ApplifierImpactWebBridge webBridge) {
@@ -40,31 +42,62 @@ public class ApplifierImpactWebView extends WebView {
 		return _webAppLoaded;
 	}
 	
-	public void setView (String view) {
-		setView(view, null);
+	public void setWebViewCurrentView (String view) {
+		setWebViewCurrentView(view, null);
 	}
 	
-	public void setView (String view, JSONObject data) {		
+	public void setWebViewCurrentView (String view, JSONObject data) {		
 		if (isWebAppLoaded()) {
-			String dataStr = "";
-			if (data != null) {
-				dataStr = data.toString();
-				dataStr = dataStr.replace("\"", "\\\"");
-			}
-							
-			String jsCommand = ApplifierImpactProperties.IMPACT_JS_PREFIX + "setView(\"" + view + "\", \"" + dataStr + "\")";
-			loadUrl(jsCommand);
+			String dataString = "{}";
+			
+			if (data != null)
+				dataString = data.toString();
+			
+			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_CHANGE_VIEW, view, dataString);
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Send change view to WebApp: " + javascriptString);
 		}
 	}
 	
-	public void setAvailableCampaigns (String videoPlan) {
+	public void sendNativeEventToWebApp (String eventType, JSONObject data) {
 		if (isWebAppLoaded()) {
-			videoPlan = videoPlan.replace("\"", "\\\"");
-			JSONObject params = ApplifierImpactUtils.getPlatformProperties();
-			String paramStr = "";
-			paramStr = params.toString();
-			paramStr = paramStr.replace("\"", "\\\"");
-			loadUrl(ApplifierImpactProperties.IMPACT_JS_PREFIX + "init(\"" + videoPlan + "\", \"" + paramStr + "\");");
+			String dataString = "{}";
+			
+			if (data != null)
+				dataString = data.toString();
+
+			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_HANDLE_NATIVE_EVENT, eventType, dataString);
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Send native event to WebApp: " + javascriptString);
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
+		}
+	}
+	
+	public void initWebApp (JSONObject data) {
+		if (isWebAppLoaded()) {
+			JSONObject initData = new JSONObject();
+			
+			try {				
+				// Basic data
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_CAMPAIGNDATA_KEY, data);
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_PLATFORM_KEY, "android");
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_DEVICEID_KEY, ApplifierImpactDevice.getDeviceId());
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_OPENUDID_KEY, ApplifierImpactDevice.getOpenUdid());
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_MACADDRESS_KEY, ApplifierImpactDevice.getMacAddress());
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDKVERSION_KEY, ApplifierImpactConstants.IMPACT_VERSION);
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
+				
+				// Tracking data
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SOFTWAREVERSION_KEY, ApplifierImpactDevice.getSoftwareVersion());
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_DEVICETYPE_KEY, ApplifierImpactDevice.getDeviceType());
+			}
+			catch (Exception e) {
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Error creating webview init params");
+				return;
+			}
+			
+			String initString = String.format("%s%s(%s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_INIT, initData.toString());
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Initializing WebView with JS call: " + initString);
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(initString));
 		}
 	}
 
@@ -84,7 +117,7 @@ public class ApplifierImpactWebView extends WebView {
 		
 		if (_url != null && _url.indexOf("_raw.html") != -1) {
 			getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-			Log.d(ApplifierImpactProperties.LOG_NAME, "startup() -> LOAD_NO_CACHE");
+			Log.d(ApplifierImpactConstants.LOG_NAME, "startup() -> LOAD_NO_CACHE");
 		}
 		else {
 			getSettings().setCacheMode(WebSettings.LOAD_NORMAL);
@@ -97,6 +130,8 @@ public class ApplifierImpactWebView extends WebView {
 		getSettings().setLightTouchEnabled(false);
 		getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 		getSettings().setSupportMultipleWindows(false);
+		getSettings().setPluginsEnabled(false);
+		getSettings().setAllowFileAccess(false);
 		
 		setHorizontalScrollBarEnabled(false);
 		setVerticalScrollBarEnabled(false);		
@@ -106,7 +141,7 @@ public class ApplifierImpactWebView extends WebView {
 		setFocusableInTouchMode(true);
 		setInitialScale(0);
 		
-		setBackgroundColor(Color.TRANSPARENT);
+		setBackgroundColor(Color.BLACK);
 		setBackgroundDrawable(null);
 		setBackgroundResource(0);
 		
@@ -135,10 +170,11 @@ public class ApplifierImpactWebView extends WebView {
 			layertype.invoke(this, 1, null);
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Could not invoke setLayerType");
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Could not invoke setLayerType");
 		}
 		
-		addJavascriptInterface(_webBridge, "ApplifierWebBridge");
+		Log.d(ApplifierImpactConstants.LOG_NAME, "Adding javascript interface");
+		addJavascriptInterface(_webBridge, "applifierimpactnative");
 	}
 	
 	
@@ -154,14 +190,14 @@ public class ApplifierImpactWebView extends WebView {
 		}
     	
     	return false;
-    } 
+    }
 	
 	
 	/* SUBCLASSES */
 	
 	private class ApplifierViewChromeClient extends WebChromeClient {
 		public void onConsoleMessage(String message, int lineNumber, String sourceID) {
-			Log.d(ApplifierImpactProperties.LOG_NAME, "JAVASCRIPT(" + lineNumber + "): " + message);
+			Log.d(ApplifierImpactConstants.LOG_NAME, "JAVASCRIPT(" + lineNumber + "): " + message);
 		}
 		
 		public void onReachedMaxAppCacheSize(long spaceNeeded, long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) {
@@ -173,21 +209,24 @@ public class ApplifierImpactWebView extends WebView {
 		@Override
 		public void onPageFinished (WebView webview, String url) {
 			super.onPageFinished(webview, url);
-			Log.d(ApplifierImpactProperties.LOG_NAME, "Finished url: "  + url);
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Finished url: "  + url);
 			if (_listener != null && !_webAppLoaded) {
 				_webAppLoaded = true;
+				Log.d(ApplifierImpactConstants.LOG_NAME, "Adding javascript interface");
+				addJavascriptInterface(_webBridge, "applifierimpactnative");
 				_listener.onWebAppLoaded();
 			}
 		}
 		
 		@Override
 		public boolean shouldOverrideUrlLoading (WebView view, String url) {
+			Log.d(ApplifierImpactConstants.LOG_NAME, "Trying to load url: " + url);
 			return false;
 		}
 		
 		@Override
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {		
-			Log.e(ApplifierImpactProperties.LOG_NAME, "ApplifierViewClient.onReceivedError() -> " + errorCode + " (" + failingUrl + ") " + description);
+			Log.e(ApplifierImpactConstants.LOG_NAME, "ApplifierViewClient.onReceivedError() -> " + errorCode + " (" + failingUrl + ") " + description);
 			super.onReceivedError(view, errorCode, description, failingUrl);
 		}
 
@@ -195,5 +234,22 @@ public class ApplifierImpactWebView extends WebView {
 		public void onLoadResource(WebView view, String url) {
 			super.onLoadResource(view, url);
 		}	
+	}
+
+	
+	/* PRIVATE CLASSES */
+	
+	private class ApplifierImpactJavascriptRunner implements Runnable {
+		
+		private String _jsString = null;
+		
+		public ApplifierImpactJavascriptRunner (String jsString) {
+			_jsString = jsString;
+		}
+		
+		@Override
+		public void run() {
+			loadUrl(_jsString);
+		}		
 	}
 }
