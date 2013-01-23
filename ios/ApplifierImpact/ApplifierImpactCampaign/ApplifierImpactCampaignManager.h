@@ -36,6 +36,7 @@
 - (NSArray *)getViewableCampaigns;
 - (BOOL)setSelectedRewardItemKey:(NSString *)rewardItemKey;
 - (ApplifierImpactRewardItem *)getCurrentRewardItem;
+- (NSDictionary *)getPublicRewardItemDetails:(NSString *)rewardItemKey;
 
 + (id)sharedInstance;
 

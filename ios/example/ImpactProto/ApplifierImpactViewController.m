@@ -56,7 +56,7 @@
         [[ApplifierImpact sharedInstance] showImpact];
         
         NSLog(@"SETTING_REWARD_ITEM (while open): %i", [[ApplifierImpact sharedInstance] setRewardItemKey:[[ApplifierImpact sharedInstance] getDefaultRewardItemKey]]);
-
+        NSLog(@"GETTING_REWARD_ITEM_DETAILS: %@", [[ApplifierImpact sharedInstance] getRewardItemDetailsWithKey:[[ApplifierImpact sharedInstance] getCurrentRewardItemKey]]);
 	}
 	else {
         NSLog(@"Impact cannot be shown.");

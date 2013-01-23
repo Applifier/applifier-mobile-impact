@@ -366,6 +366,19 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
   return nil;
 }
 
+- (NSDictionary *)getPublicRewardItemDetails:(NSString *)rewardItemKey {
+  if (rewardItemKey != nil) {
+    for (ApplifierImpactRewardItem *rewardItem in self.rewardItems) {
+      if ([rewardItem.key isEqualToString:rewardItemKey]) {
+        NSDictionary *retDict = @{kApplifierImpactRewardItemNameKey:rewardItem.name, kApplifierImpactRewardItemPictureKey:rewardItem.pictureURL};
+        return retDict;
+      }
+    }
+  }
+  
+  return nil;
+}
+
 - (void)cancelAllDownloads {
 	AIAssert(![NSThread isMainThread]);
 	
