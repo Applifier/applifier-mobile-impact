@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 import com.applifier.impact.android.campaign.ApplifierImpactRewardItem;
@@ -137,6 +138,26 @@ public class ApplifierImpactWebData {
 			viewUrl = String.format("%s?%s=%s", viewUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
 			viewUrl = String.format("%s&%s=%s", viewUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, getCurrentRewardItemKey());
 			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(viewUrl, ApplifierImpactRequestType.VideoViewed, 0);
+			addLoader(loader);
+			startNextLoader();
+			return true;
+		}
+		else if (position != null && getGamerId() != null) {
+		    /*
+			NSString *query = [NSString stringWithFormat:@"%@=%@&%@=%@&%@=%@&%@=%@&%@=%@", 
+		                       kApplifierImpactAnalyticsQueryParamGameIdKey, [[ApplifierImpactProperties sharedInstance] impactGameId], 
+		                       kApplifierImpactAnalyticsQueryParamEventTypeKey, positionString, 
+		                       kApplifierImpactAnalyticsQueryParamTrackingIdKey, [[ApplifierImpactProperties sharedInstance] gamerId], 
+		                       kApplifierImpactAnalyticsQueryParamProviderIdKey, campaign.id, 
+		                       kApplifierImpactAnalyticsQueryParamRewardItemKey, [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey]];*/
+			
+			String analyticsUrl = String.format("%s", ApplifierImpactProperties.ANALYTICS_BASE_URL);
+			analyticsUrl = String.format("%s?%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
+			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_EVENTTYPE_KEY, position.toString());
+			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_TRACKINGID_KEY, ApplifierImpactProperties.IMPACT_GAMER_ID);
+			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_PROVIDERID_KEY, campaign.getCampaignId());
+			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, getCurrentRewardItemKey());
+			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(analyticsUrl, ApplifierImpactRequestType.VideoViewed, 0);
 			addLoader(loader);
 			startNextLoader();
 			return true;
