@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -16,6 +17,42 @@ import android.util.Log;
 
 public class ApplifierImpactUtils {
 
+	public static void Log (String message, Object obj) {
+		Log.d(ApplifierImpactConstants.LOG_NAME, obj.getClass().getName() + " :: " +  message);
+	}
+	
+	/*
+	public static void Log (String message, Exception e, Object obj) {
+		String finalMessage = "";
+		
+		if (obj != null) {
+			finalMessage = obj.getClass().getName();
+		}
+		else {
+			finalMessage = "UNKNOWN_OBJECT";
+		}
+		
+		if (message != null) {
+			finalMessage = finalMessage + " :: " + message;
+		}
+		
+		Log(message, e);
+	}
+	
+	public static void Log (String message, Exception e) {
+		if (e != null) {
+			message = message + "\n" + e.getMessage() + "\n" + e.getStackTrace();
+		}
+		
+		Log(message);
+	}
+	
+	public static void Log (String message) {
+		if (ApplifierImpactConstants.IMPACT_DEBUG_MODE && message != null) {
+			Log.d(ApplifierImpactConstants.LOG_NAME, message);
+		}
+	}*/
+	
 	public static String Md5 (String input) {
 		MessageDigest m = null;
 		try {

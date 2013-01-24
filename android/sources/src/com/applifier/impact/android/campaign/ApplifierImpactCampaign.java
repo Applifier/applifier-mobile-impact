@@ -218,6 +218,13 @@ public class ApplifierImpactCampaign {
 		_campaignStatus = status;
 	}
 	
+	public Boolean isViewed () {
+		if (_campaignStatus == ApplifierImpactCampaignStatus.VIEWED)
+			return true;
+		
+		return false;
+	}
+	
 	public boolean hasValidData () {
 		return checkDataIntegrity();
 	}

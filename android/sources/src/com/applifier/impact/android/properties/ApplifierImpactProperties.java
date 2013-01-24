@@ -2,6 +2,7 @@ package com.applifier.impact.android.properties;
 
 import java.net.URLEncoder;
 
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
 
 import android.app.Activity;
@@ -20,6 +21,7 @@ public class ApplifierImpactProperties {
 	public static Boolean TESTMODE_ENABLED = false;
 	public static Activity BASE_ACTIVITY = null;
 	public static Activity CURRENT_ACTIVITY = null;
+	public static ApplifierImpactCampaign SELECTED_CAMPAIGN = null;
 	public static final int MAX_NUMBER_OF_ANALYTICS_RETRIES = 5;
 	
 	private static String _campaignQueryString = null; 

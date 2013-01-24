@@ -8,6 +8,7 @@ public class ApplifierImpactConstants {
 	public static final String PENDING_REQUESTS_FILENAME = "pendingrequests.dat";
 
 	/* Impact */
+	public static final Boolean IMPACT_DEBUG_MODE = true; 
 	public static final String IMPACT_VERSION = "1.0.3";
 	
 	/* JSON Data Root */	
@@ -28,22 +29,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_DATAPARAM_MACADDRESS_KEY = "macAddress";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SDKVERSION_KEY = "sdkVersion";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SOFTWAREVERSION_KEY = "softwareVersion";
-	
-	/*
-	NSString * const kApplifierImpactWebViewAPIActionKey = @"action";
-	NSString * const kApplifierImpactWebViewAPIPlayVideo = @"playVideo";
-	NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateTo";
-	NSString * const kApplifierImpactWebViewAPIInitComplete = @"initComplete";
-	NSString * const kApplifierImpactWebViewAPIClose = @"close";
-	NSString * const kApplifierImpactWebViewAPIOpen = @"open";
-	NSString * const kApplifierImpactWebViewAPIAppStore = @"appStore";
-	NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying = @"video_started_playing";
-	*/
-	
-	/*
-	NSString * const kApplifierImpactWebViewViewTypeCompleted = @"completed";
-	NSString * const kApplifierImpactWebViewViewTypeStart = @"start";
-	*/
+
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_COMPLETED = "completed";
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_START = "start";
 	
@@ -56,6 +42,15 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_API_OPEN = "open";
 	public static final String IMPACT_WEBVIEW_API_APPSTORE = "appStore";
 	public static final String IMPACT_WEBVIEW_API_ACTION_VIDEOSTARTEDPLAYING = "video_started_playing";	
+		
+	public static final String IMPACT_WEBVIEW_EVENTDATA_CAMPAIGNID_KEY = "campaignId";	
+	public static final String IMPACT_WEBVIEW_EVENTDATA_REWATCH_KEY = "rewatch";	
+	public static final String IMPACT_WEBVIEW_EVENTDATA_CLICKURL_KEY = "clickUrl";	
+	/*
+	NSString * const kApplifierImpactWebViewEventDataCampaignIdKey = @"campaignId";
+	NSString * const kApplifierImpactWebViewEventDataRewatchKey = @"rewatch";
+	NSString * const kApplifierImpactWebViewEventDataClickUrlKey = @"clickUrl";
+	*/
 
 	/* Campaign JSON Properties */
 	public static final String IMPACT_CAMPAIGNS_KEY = "campaigns";

@@ -75,7 +75,7 @@ public class ApplifierImpactWebBridge {
 				_listener.onPauseVideo(parameters);
 				break;
 			case CloseView:
-				_listener.onCloseView(parameters);
+				_listener.onCloseImpactView(parameters);
 				break;
 			case InitComplete:
 				_listener.onWebAppInitComplete(parameters);

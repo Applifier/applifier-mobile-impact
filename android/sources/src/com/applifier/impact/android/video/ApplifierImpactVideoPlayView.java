@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.view.ApplifierImpactBufferingView;
@@ -123,16 +124,19 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {			
 			@Override
 			public void onPrepared(MediaPlayer mp) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "onPrepared");
+				ApplifierImpactUtils.Log("onPrepared", this);
 				_videoPlayheadPrepared = true;
-				//Log.d()
+				
 				if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {
-					Log.d(ApplifierImpactConstants.LOG_NAME, "came to event position");
 					_listener.onEventPositionReached(ApplifierVideoPosition.Start);
 					_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
 				}
 				
 				hideBufferingView();
+				
+				// FIX: Move this to actually check buffer status before sending playback started, with streams, screen can go black
+				if (_listener != null)
+					_listener.onVideoPlaybackStarted();
 			}
 		});
 		
@@ -289,8 +293,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {					
 					@Override
 					public void run() {
-						//createAndAddBufferingView();
-
+						createAndAddBufferingView();
 					}
 				});				
 			}
