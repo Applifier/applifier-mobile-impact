@@ -117,6 +117,9 @@ static ApplifierImpact *sharedImpact = nil;
     state = kApplifierImpactViewStateVideoPlayer;
     // FIX: Select campaign or return NO
     [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:nil];
+    
+    if (![self canShowAds]) return NO;
+    
     ApplifierImpactCampaign *campaign = [[[ApplifierImpactCampaignManager sharedInstance] getViewableCampaigns] objectAtIndex:0];
     
     if (campaign != nil) {
