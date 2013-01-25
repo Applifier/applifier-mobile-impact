@@ -112,6 +112,8 @@ static ApplifierImpact *sharedImpact = nil;
   ApplifierImpactViewState state = kApplifierImpactViewStateWebView;
   
   if ([options objectForKey:kApplifierImpactOptionNoOfferscreenKey] != nil && [[options objectForKey:kApplifierImpactOptionNoOfferscreenKey] boolValue] == YES) {
+      [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
+    
     state = kApplifierImpactViewStateVideoPlayer;
     // FIX: Select campaign or return NO
     [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:nil];
