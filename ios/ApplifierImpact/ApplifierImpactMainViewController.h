@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 #import "ApplifierImpactVideo/ApplifierImpactVideoViewController.h"
+#import "ApplifierImpactProperties/ApplifierImpactConstants.h"
 
 @protocol ApplifierImpactMainViewControllerDelegate <NSObject>
 
@@ -29,7 +30,7 @@
 
 + (id)sharedInstance;
 
-- (BOOL)openImpact:(BOOL)animated;
+- (BOOL)openImpact:(BOOL)animated inState:(ApplifierImpactViewState)state;
 - (BOOL)closeImpact:(BOOL)forceMainThread withAnimations:(BOOL)animated;
 - (BOOL)mainControllerVisible;
 - (void)showPlayerAndPlaySelectedVideo:(BOOL)checkIfWatched;

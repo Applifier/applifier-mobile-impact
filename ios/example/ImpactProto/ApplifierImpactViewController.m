@@ -54,7 +54,8 @@
         NSLog(@"DEFAULT_REWARD_ITEM: %@", [[ApplifierImpact sharedInstance] getDefaultRewardItemKey]); */
 
         //[[ApplifierImpact sharedInstance] setViewController:self showImmediatelyInNewController:YES];
-        [[ApplifierImpact sharedInstance] showImpact];
+        [[ApplifierImpact sharedInstance] showImpact:@{kApplifierImpactOptionNoOfferscreenKey:@true, kApplifierImpactOptionOpenAnimatedKey:@false}];
+        //[[ApplifierImpact sharedInstance] showImpact];
         
         /*
         NSLog(@"SETTING_REWARD_ITEM (while open): %i", [[ApplifierImpact sharedInstance] setRewardItemKey:[[ApplifierImpact sharedInstance] getDefaultRewardItemKey]]);

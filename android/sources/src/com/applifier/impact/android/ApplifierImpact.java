@@ -14,7 +14,11 @@ import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.video.ApplifierImpactVideoPlayView;
 import com.applifier.impact.android.video.IApplifierImpactVideoListener;
 import com.applifier.impact.android.video.IApplifierImpactVideoPlayerListener;
+import com.applifier.impact.android.view.ApplifierImpactMainView;
+import com.applifier.impact.android.view.IApplifierImpactMainViewListener;
 import com.applifier.impact.android.view.IApplifierImpactViewListener;
+import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewAction;
+import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewState;
 import com.applifier.impact.android.webapp.*;
 import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
@@ -29,10 +33,8 @@ import android.widget.FrameLayout;
 
 public class ApplifierImpact implements IApplifierImpactCacheListener, 
 										IApplifierImpactWebDataListener, 
-										IApplifierImpactWebViewListener, 
-										IApplifierImpactVideoPlayerListener,
 										IApplifierImpactWebBrigeListener,
-										IApplifierImpactViewListener {
+										IApplifierImpactMainViewListener {
 	
 	// Impact components
 	public static ApplifierImpact instance = null;
@@ -44,18 +46,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private boolean _showingImpact = false;
 	private boolean _impactReadySent = false;
 	private boolean _webAppLoaded = false;
-	
-	// Views
-	private ApplifierImpactVideoPlayView _vp = null;
-	private ApplifierImpactWebView _webView = null;
+		
+	// Main View
+	private ApplifierImpactMainView _mainView = null;
 	
 	// Listeners
 	private IApplifierImpactListener _impactListener = null;
 	private IApplifierImpactCampaignListener _campaignListener = null;
 	private IApplifierImpactVideoListener _videoListener = null;
-	
-	// Currently Selected Campaign (for viewing)
-	private ApplifierImpactCampaign _selectedCampaign = null;	
 	
 	
 	public ApplifierImpact (Activity activity, String gameId) {
@@ -93,11 +91,13 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public void changeActivity (Activity activity) {
 		if (activity == null) return;
 		
-		ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
-				
-		if (activity.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
-			open();
-			applyImpactToActivity(ApplifierImpactProperties.CURRENT_ACTIVITY);
+		if (!activity.equals(ApplifierImpactProperties.CURRENT_ACTIVITY)) {
+			ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
+			
+			// Not the most pretty way to detect when the fullscreen activity is ready
+			if (activity.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
+				open();
+			}
 		}
 	}
 	
@@ -131,7 +131,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	public void stopAll () {
-		Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpact->stopAll()");
+		ApplifierImpactUtils.Log("stopAll()", this);
 		ApplifierImpactDownloader.stopAllDownloads();
 		webdata.stopAllRequests();
 	}
@@ -139,17 +139,35 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	/* LISTENER METHODS */
 	
+	// IApplifierImpactMainViewListener
+	public void onMainViewAction (ApplifierImpactMainViewAction action) {
+		switch (action) {
+			case BackButtonPressed:
+				close();
+				break;
+			case VideoStart:
+				if (_videoListener != null)
+					_videoListener.onVideoStarted();
+				break;
+			case VideoEnd:
+				if (_videoListener != null)
+					_videoListener.onVideoCompleted();
+				break;
+		}
+	}
+	
+	
 	// IApplifierImpactCacheListener
 	@Override
 	public void onCampaignUpdateStarted () {	
-		Log.d(ApplifierImpactConstants.LOG_NAME, "Campaign updates started.");
+		ApplifierImpactUtils.Log("Campaign updates started.", this);
 	}
 	
 	@Override
 	public void onCampaignReady (ApplifierImpactCampaignHandler campaignHandler) {
 		if (campaignHandler == null || campaignHandler.getCampaign() == null) return;
 				
-		Log.d(ApplifierImpactConstants.LOG_NAME, "Got onCampaignReady: " + campaignHandler.getCampaign().toString());
+		ApplifierImpactUtils.Log("Got onCampaignReady: " + campaignHandler.getCampaign().toString(), this);
 		
 		if (canShowCampaigns())
 			sendImpactReadyEvent();
@@ -157,7 +175,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	@Override
 	public void onAllCampaignsReady () {
-		Log.d(ApplifierImpactConstants.LOG_NAME, "Listener got \"All campaigns ready.\"");
+		ApplifierImpactUtils.Log("Listener got \"All campaigns ready.\"", this);
 	}
 	
 	// IApplifierImpactWebDataListener
@@ -170,38 +188,34 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public void onWebDataFailed () {
 	}
 	
-	// IApplifierImpactWebViewListener
-	@Override
-	public void onWebAppLoaded () {
-		_webView.initWebApp(webdata.getData());
-	}
-
-	@Override
-	public void onBackButtonClicked (View view) {
-		closeImpact();
-	}
 	
 	// IApplifierImpactWebBrigeListener
 	@Override
 	public void onPlayVideo(JSONObject data) {
-		if (data.has("campaignId")) {
+		if (data.has(ApplifierImpactConstants.IMPACT_WEBVIEW_EVENTDATA_CAMPAIGNID_KEY)) {
 			String campaignId = null;
 			
 			try {
-				campaignId = data.getString("campaignId");
+				campaignId = data.getString(ApplifierImpactConstants.IMPACT_WEBVIEW_EVENTDATA_CAMPAIGNID_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Could not get campaignId");
+				ApplifierImpactUtils.Log("Could not get campaignId", this);
 			}
 			
 			if (campaignId != null) {
-				_selectedCampaign = webdata.getCampaignById(campaignId);
+				ApplifierImpactProperties.SELECTED_CAMPAIGN = webdata.getCampaignById(campaignId);
+				Boolean rewatch = false;
 				
-				if (_selectedCampaign != null) {
+				try {
+					rewatch = data.getBoolean(ApplifierImpactConstants.IMPACT_WEBVIEW_EVENTDATA_REWATCH_KEY);
+				}
+				catch (Exception e) {
+				}
+				
+				if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null && (rewatch || !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed())) {
 					ApplifierImpactPlayVideoRunner playVideoRunner = new ApplifierImpactPlayVideoRunner();
-					Log.d(ApplifierImpactConstants.LOG_NAME, "Running threaded");
+					ApplifierImpactUtils.Log("Running threaded", this);
 					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
-
 				}
 			}
 		}
@@ -209,18 +223,16 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 
 	@Override
 	public void onPauseVideo(JSONObject data) {
-		if (_vp != null)
-			_vp.pauseVideo();
 	}
 
 	@Override
-	public void onCloseView(JSONObject data) {
+	public void onCloseImpactView(JSONObject data) {
 		closeImpact();
 	}
 	
 	@Override
 	public void onWebAppInitComplete (JSONObject data) {
-		Log.d(ApplifierImpactConstants.LOG_NAME, "WebAppInitComplete");
+		ApplifierImpactUtils.Log("WebApp init complete", this);
 		_webAppLoaded = true;
 		Boolean dataOk = true;
 		
@@ -236,65 +248,13 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			}
 			
 			if (dataOk) {
-				_webView.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, setViewData);
+				_mainView.webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, setViewData);
 				sendImpactReadyEvent();			
 			}
 		}
 	}
 	
-	// IApplifierImpactVideoPlayerListener
-	@Override
-	public void onEventPositionReached (ApplifierVideoPosition position) {
-		if (position.equals(ApplifierVideoPosition.Start)) {
-			JSONObject params = null;
-			
-			try {
-				params = new JSONObject("{\"campaignId\":\"" + _selectedCampaign.getCampaignId() + "\"}");
-			}
-			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Could not create JSON");
-			}
-			
-			//_webView.setWebViewCurrentView("completed", params);
-			showVideoPlayer();
-			_webView.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_COMPLETED, params);
-		}
-		
-		if (_selectedCampaign != null && !_selectedCampaign.getCampaignStatus().equals(ApplifierImpactCampaignStatus.VIEWED))
-			webdata.sendCampaignViewProgress(_selectedCampaign, position);
-	}
-	
-	@Override
-	public void onCompletion(MediaPlayer mp) {				
-		if (_videoListener != null)
-			_videoListener.onVideoCompleted();
-		
-		// Set unspecified orientation after video ends.
-		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-		
-		_vp.setKeepScreenOn(false);
-		hideView(_vp);
-		
-		/*
-		JSONObject params = null;
-		
-		try {
-			params = new JSONObject("{\"campaignId\":\"" + _selectedCampaign.getCampaignId() + "\"}");
-		}
-		catch (Exception e) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Could not create JSON");
-		}
-		
-		_webView.setWebViewCurrentView("completed", params);
-		*/
-		ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-		focusToView(_webView);
-		onEventPositionReached(ApplifierVideoPosition.End);
-		_selectedCampaign.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
-		_selectedCampaign = null;
-	}
-	
-	
+
 	/* PRIVATE METHODS */
 	
 	private void close () {
@@ -306,7 +266,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		Boolean dataOk = true;			
 		JSONObject data = new JSONObject();
 		
-		Log.d(ApplifierImpactConstants.LOG_NAME, "dataOk: " + dataOk);
+		ApplifierImpactUtils.Log("dataOk: " + dataOk, this);
 		
 		try  {
 			data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN);
@@ -317,15 +277,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		}
 
 		if (dataOk) {
-			_webView.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, data);
+			_mainView.openImpact(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, data);
 		}
 	}
-	
-	private void applyImpactToActivity (Activity activity) {
-		activity.addContentView(_webView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-		focusToView(_webView);
-	}
-	
+
 	private void setup () {
 		initCache();
 		setupViews();
@@ -333,14 +288,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	private void initCache () {
 		if (_initialized) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Init cache");
+			ApplifierImpactUtils.Log("Init cache", this);
 			// Update cache WILL START DOWNLOADS if needed, after this method you can check getDownloadingCampaigns which ones started downloading.
 			cachemanager.updateCache(webdata.getVideoPlanCampaigns());				
 		}
 	}
 	
 	private boolean canShowCampaigns () {
-		return _webView != null && _webView.isWebAppLoaded() && _webAppLoaded && webdata.getViewableVideoPlanCampaigns().size() > 0;
+		return _mainView != null && _mainView.webview != null && _mainView.webview.isWebAppLoaded() && _webAppLoaded && webdata.getViewableVideoPlanCampaigns().size() > 0;
 	}
 	
 	private void sendImpactReadyEvent () {
@@ -348,7 +303,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
 				@Override
 				public void run() {
-					Log.d(ApplifierImpactConstants.LOG_NAME, "Impact ready!");
+					ApplifierImpactUtils.Log("Impact ready!", this);
 					_impactReadySent = true;
 					_campaignListener.onCampaignsAvailable();
 				}
@@ -356,52 +311,24 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		}
 	}
 
-	private void showVideoPlayer () {
-		if (_vp.getParent() == null) {
-			hideView(_webView);
-			ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(_vp, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-			focusToView(_vp);
-		}
-	}
-	
-	private void hideView (View view) {
-		if (view != null) {
-			view.setFocusable(false);
-			view.setFocusableInTouchMode(false);
-		}
-		
-		ViewGroup vg = (ViewGroup)view.getParent();
-		if (vg != null)
-			vg.removeView(view);
-	}
-	
-	private void focusToView (View view) {
-		view.setFocusable(true);
-		view.setFocusableInTouchMode(true);
-		view.requestFocus();
-	}
-	
 	private void setupViews () {
-		_webView = new ApplifierImpactWebView(ApplifierImpactProperties.CURRENT_ACTIVITY, this, new ApplifierImpactWebBridge(this));	
-		_vp = new ApplifierImpactVideoPlayView(ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext(), this);	
+		_mainView = new ApplifierImpactMainView(ApplifierImpactProperties.CURRENT_ACTIVITY, this);
 	}
 
 	
 	/* INTERNAL CLASSES */
 
+	// FIX: Could these 2 classes be moved to MainView
+	
 	private class ApplifierImpactCloseRunner implements Runnable {
 		@Override
 		public void run() {
 			_showingImpact = false;
 			if (ApplifierImpactProperties.CURRENT_ACTIVITY.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
-				hideView(_webView);
-				hideView(_vp);
-				ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
-				
 				Boolean dataOk = true;			
 				JSONObject data = new JSONObject();
 				
-				Log.d(ApplifierImpactConstants.LOG_NAME, "dataOk: " + dataOk);
+				ApplifierImpactUtils.Log("dataOk: " + dataOk, this);
 				
 				try  {
 					data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_CLOSE);
@@ -411,7 +338,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				}
 
 				if (dataOk) {
-					_webView.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, data);
+					_mainView.closeImpact(data);
+					ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
 				}
 			}
 		}
@@ -420,19 +348,16 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private class ApplifierImpactPlayVideoRunner implements Runnable {
 		@Override
 		public void run() {			
-			if (_selectedCampaign != null) {
-				String playUrl = ApplifierImpactUtils.getCacheDirectory() + "/" + _selectedCampaign.getVideoFilename();
-				if (!ApplifierImpactUtils.isFileInCache(_selectedCampaign.getVideoFilename()))
-					playUrl = _selectedCampaign.getVideoStreamUrl(); 
+			if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null) {
+				String playUrl = ApplifierImpactUtils.getCacheDirectory() + "/" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getVideoFilename();
+				if (!ApplifierImpactUtils.isFileInCache(ApplifierImpactProperties.SELECTED_CAMPAIGN.getVideoFilename()))
+					playUrl = ApplifierImpactProperties.SELECTED_CAMPAIGN.getVideoStreamUrl(); 
 
-				_vp.playVideo(playUrl);
+				_mainView.setViewState(ApplifierImpactMainViewState.VideoPlayer);
+				_mainView.videoplayerview.playVideo(playUrl);
 			}			
 			else
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Campaign is null");
-						
-			if (_videoListener != null) {
-				_videoListener.onVideoStarted();
-			}
+				ApplifierImpactUtils.Log("Campaign is null", this);
 		}		
 	}
 }

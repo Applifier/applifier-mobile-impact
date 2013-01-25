@@ -2,8 +2,7 @@ package com.applifier.impact.android.campaign;
 
 import org.json.JSONObject;
 
-import android.util.Log;
-
+import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 public class ApplifierImpactRewardItem {
@@ -47,7 +46,7 @@ public class ApplifierImpactRewardItem {
 			_pictureURL = _rewardItemJSON.getString(ApplifierImpactConstants.IMPACT_REWARD_PICTURE_KEY);
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Problem parsing campaign values");
+			ApplifierImpactUtils.Log("Problem parsing campaign values", this);
 		}
 	}
 	

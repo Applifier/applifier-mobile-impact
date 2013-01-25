@@ -5,6 +5,6 @@ import org.json.JSONObject;
 public interface IApplifierImpactWebBrigeListener {
 	public void onPlayVideo (JSONObject data);
 	public void onPauseVideo (JSONObject data);
-	public void onCloseView (JSONObject data);
+	public void onCloseImpactView (JSONObject data);
 	public void onWebAppInitComplete (JSONObject data);
 }

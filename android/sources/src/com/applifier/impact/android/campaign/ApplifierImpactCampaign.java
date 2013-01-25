@@ -4,9 +4,8 @@ import java.io.File;
 
 import org.json.JSONObject;
 
+import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
-
-import android.util.Log;
 
 public class ApplifierImpactCampaign {
 	
@@ -49,7 +48,7 @@ public class ApplifierImpactCampaign {
 	
 	@Override
 	public String toString () {
-		return "(ID: " + getCampaignId() + ", STATUS: " + getCampaignStatus().toString() + ", URL: " + getVideoUrl() + ")"; 
+		return "<ID: " + getCampaignId() + ", STATUS: " + getCampaignStatus().toString() + ", URL: " + getVideoUrl() + ">"; 
 	}
 	
 	public JSONObject toJson () {
@@ -59,7 +58,7 @@ public class ApplifierImpactCampaign {
 			retObject.put("status", getCampaignStatus().toString());
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Error creating campaign JSON");
+			ApplifierImpactUtils.Log("Error creating campaign JSON", this);
 			return null;
 		}
 		
@@ -67,13 +66,12 @@ public class ApplifierImpactCampaign {
 	}
 	
 	public Boolean shouldCacheVideo () {
-		Log.d(ApplifierImpactConstants.LOG_NAME, "shouldCacheVideo");
 		if (checkDataIntegrity()) {
 			try {
 				return _campaignJson.getBoolean(ApplifierImpactConstants.IMPACT_CAMPAIGN_CACHE_VIDEO_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "shouldCacheVideo: This should not happen!");
+				ApplifierImpactUtils.Log("shouldCacheVideo: This should not happen!", this);
 			}			
 		}
 		return false;
@@ -85,7 +83,7 @@ public class ApplifierImpactCampaign {
 				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_ENDSCREEN_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "getEndScreenUrl: This should not happen!");
+				ApplifierImpactUtils.Log("getEndScreenUrl: This should not happen!", this);
 			}
 		}
 		
@@ -98,7 +96,7 @@ public class ApplifierImpactCampaign {
 				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_PICTURE_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "getPicture: This should not happen!");
+				ApplifierImpactUtils.Log("getPicture: This should not happen!", this);
 			}
 		}
 		
@@ -111,7 +109,7 @@ public class ApplifierImpactCampaign {
 				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_ID_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "getCampaignId: This should not happen!");
+				ApplifierImpactUtils.Log("getCampaignId: This should not happen!", this);
 			}
 		}
 		
@@ -124,7 +122,7 @@ public class ApplifierImpactCampaign {
 				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_GAME_ID_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "getGameId: This should not happen!");
+				ApplifierImpactUtils.Log("getGameId: This should not happen!", this);
 			}
 		}
 		
@@ -137,7 +135,7 @@ public class ApplifierImpactCampaign {
 				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_GAME_NAME_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "getGameName: This should not happen!");
+				ApplifierImpactUtils.Log("getGameName: This should not happen!", this);
 			}
 		}
 		
@@ -150,7 +148,7 @@ public class ApplifierImpactCampaign {
 				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_DOWNLOADABLE_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "getVideoUrl: This should not happen!");
+				ApplifierImpactUtils.Log("getVideoUrl: This should not happen!", this);
 			}
 		}
 		
@@ -163,7 +161,7 @@ public class ApplifierImpactCampaign {
 				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_STREAMING_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "getVideoStreamUrl: This should not happen!");
+				ApplifierImpactUtils.Log("getVideoStreamUrl: This should not happen!", this);
 			}
 		}
 		
@@ -176,7 +174,7 @@ public class ApplifierImpactCampaign {
 				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_CLICKURL_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "getClickUrl: This should not happen!");
+				ApplifierImpactUtils.Log("getClickUrl: This should not happen!", this);
 			}
 		}
 		
@@ -190,7 +188,7 @@ public class ApplifierImpactCampaign {
 				return getCampaignId() + "-" + videoFile.getName();
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "getVideoFilename: This should not happen!");
+				ApplifierImpactUtils.Log("getVideoFilename: This should not happen!", this);
 			}
 		}
 		
@@ -203,7 +201,7 @@ public class ApplifierImpactCampaign {
 				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_TAGLINE_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "getTagLine: This should not happen!");
+				ApplifierImpactUtils.Log("getTagLine: This should not happen!", this);
 			}
 		}
 		
@@ -216,6 +214,13 @@ public class ApplifierImpactCampaign {
 	
 	public void setCampaignStatus (ApplifierImpactCampaignStatus status) {
 		_campaignStatus = status;
+	}
+	
+	public Boolean isViewed () {
+		if (_campaignStatus == ApplifierImpactCampaignStatus.VIEWED)
+			return true;
+		
+		return false;
 	}
 	
 	public boolean hasValidData () {

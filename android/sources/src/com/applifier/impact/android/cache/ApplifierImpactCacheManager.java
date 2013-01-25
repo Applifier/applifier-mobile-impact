@@ -22,7 +22,7 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 	
 	public ApplifierImpactCacheManager () {
 		ApplifierImpactUtils.createCacheDir();
-		Log.d(ApplifierImpactConstants.LOG_NAME, "External storagedir: " + ApplifierImpactUtils.getCacheDirectory());
+		ApplifierImpactUtils.Log("External storagedir: " + ApplifierImpactUtils.getCacheDirectory(), this);
 	}
 	
 	public void setDownloadListener (IApplifierImpactCacheListener listener) {
@@ -43,7 +43,7 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 		
 		_amountPrepared = 0;
 		
-		Log.d(ApplifierImpactConstants.LOG_NAME, activeList.toString());
+		ApplifierImpactUtils.Log(activeList.toString(), this);
 		
 		// Check cache directory and delete all files that don't match the current files in campaigns
 		if (ApplifierImpactUtils.getCacheDirectory() != null) {
@@ -52,7 +52,7 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 			
 			if (fileList != null) {
 				for (File currentFile : fileList) {
-					Log.d(ApplifierImpactConstants.LOG_NAME, "Checking file: " + currentFile.getName());
+					ApplifierImpactUtils.Log("Checking file: " + currentFile.getName(), this);
 					if (!currentFile.getName().equals(ApplifierImpactConstants.PENDING_REQUESTS_FILENAME) && 
 						!currentFile.getName().equals(ApplifierImpactConstants.CACHE_MANIFEST_FILENAME) && 
 						!ApplifierImpactUtils.isFileRequiredByCampaigns(currentFile.getName(), activeList)) {
@@ -65,7 +65,7 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 		// Active -list contains campaigns that came with the videoPlan
 		if (activeList != null) {
 			_totalCampaigns = activeList.size();
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Updating cache: Going through active campaigns");			
+			ApplifierImpactUtils.Log("Updating cache: Going through active campaigns", this);			
 			for (ApplifierImpactCampaign campaign : activeList) {
 				ApplifierImpactCampaignHandler campaignHandler = new ApplifierImpactCampaignHandler(campaign);
 				addToUpdatingHandlers(campaignHandler);

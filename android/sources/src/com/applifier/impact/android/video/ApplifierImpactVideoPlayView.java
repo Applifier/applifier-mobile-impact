@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.view.ApplifierImpactBufferingView;
@@ -35,6 +36,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	private Map<ApplifierVideoPosition, Boolean> _sentPositionEvents = new HashMap<ApplifierVideoPosition, Boolean>();
 	private RelativeLayout _countDownText = null;
 	private TextView _timeLeftInSecondsText = null;
+	private boolean _videoPlaybackStartedSent = false;
 	
 	public ApplifierImpactVideoPlayView(Context context, IApplifierImpactVideoPlayerListener listener) {
 		super(context);
@@ -58,7 +60,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		
 		_videoPlayheadPrepared = false;
 		_videoFileName = fileName;
-		Log.d(ApplifierImpactConstants.LOG_NAME, "Playing video from: " + _videoFileName);
+		ApplifierImpactUtils.Log("Playing video from: " + _videoFileName, this);
 		_videoView.setVideoPath(_videoFileName);
 		_timeLeftInSecondsText.setText("" + Math.round(Math.ceil(_videoView.getDuration() / 1000)));
 		startVideo();
@@ -111,7 +113,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	}
 
 	private void createView () {
-		Log.d(ApplifierImpactConstants.LOG_NAME, "Creating custom view");
+		ApplifierImpactUtils.Log("Creating custom view", this);
 		setBackgroundColor(0xFF000000);
 		_videoView = new VideoView(getContext());
 		RelativeLayout.LayoutParams videoLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
@@ -123,6 +125,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {			
 			@Override
 			public void onPrepared(MediaPlayer mp) {
+				ApplifierImpactUtils.Log("onPrepared", this);
 				_videoPlayheadPrepared = true;
 				
 				if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {
@@ -287,8 +290,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {					
 					@Override
 					public void run() {
-						//createAndAddBufferingView();
-
+						createAndAddBufferingView();
 					}
 				});				
 			}
@@ -296,7 +298,17 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
+						ApplifierImpactUtils.Log("run", this);
 						hideBufferingView();
+						
+						if (!_videoPlaybackStartedSent) {
+							// FIX: Move this to actually check buffer status before sending playback started, with streams, screen can go black
+							if (_listener != null) {
+								ApplifierImpactUtils.Log("onVideoPlaybackStarted to listener", this);
+								_listener.onVideoPlaybackStarted();
+								_videoPlaybackStartedSent = true;
+							}
+						}
 					}
 				});
 			}

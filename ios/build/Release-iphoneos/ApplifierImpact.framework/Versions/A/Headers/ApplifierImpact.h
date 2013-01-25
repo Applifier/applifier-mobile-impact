@@ -25,6 +25,9 @@
 extern NSString * const kApplifierImpactRewardItemPictureKey;
 extern NSString * const kApplifierImpactRewardItemNameKey;
 
+extern NSString * const kApplifierImpactOptionNoOfferscreenKey;
+extern NSString * const kApplifierImpactOptionOpenAnimatedKey;
+
 @class ApplifierImpact;
 @class SKStoreProductViewController;
 
@@ -57,6 +60,7 @@ extern NSString * const kApplifierImpactRewardItemNameKey;
 - (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact;
 - (BOOL)canShowAds;
 - (BOOL)canShowImpact;
+- (BOOL)showImpact:(NSDictionary *)options;
 - (BOOL)showImpact;
 - (BOOL)hideImpact;
 - (void)stopAll;

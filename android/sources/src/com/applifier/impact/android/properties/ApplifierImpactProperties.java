@@ -2,15 +2,16 @@ package com.applifier.impact.android.properties;
 
 import java.net.URLEncoder;
 
+import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
 
 import android.app.Activity;
-import android.util.Log;
 
 public class ApplifierImpactProperties {
-	public static String CAMPAIGN_DATA_URL = "http://192.168.1.152:3500/mobile/campaigns";
+	//public static String CAMPAIGN_DATA_URL = "http://192.168.1.152:3500/mobile/campaigns";
 	//public static String CAMPAIGN_DATA_URL = "https://impact.applifier.com/mobile/campaigns";
-	//public static String CAMPAIGN_DATA_URL = "https://staging-impact.applifier.com/mobile/campaigns";
+	public static String CAMPAIGN_DATA_URL = "https://staging-impact.applifier.com/mobile/campaigns";
 	public static String WEBVIEW_BASE_URL = null;
 	public static String ANALYTICS_BASE_URL = null;
 	public static String IMPACT_BASE_URL = null;
@@ -20,6 +21,7 @@ public class ApplifierImpactProperties {
 	public static Boolean TESTMODE_ENABLED = false;
 	public static Activity BASE_ACTIVITY = null;
 	public static Activity CURRENT_ACTIVITY = null;
+	public static ApplifierImpactCampaign SELECTED_CAMPAIGN = null;
 	public static final int MAX_NUMBER_OF_ANALYTICS_RETRIES = 5;
 	
 	private static String _campaignQueryString = null; 
@@ -43,7 +45,7 @@ public class ApplifierImpactProperties {
 			queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_CONNECTIONTYPE_KEY, URLEncoder.encode(ApplifierImpactDevice.getConnectionType(), "UTF-8"));
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Problems creating campaigns query");
+			ApplifierImpactUtils.Log("Problems creating campaigns query", ApplifierImpactProperties.class);
 		}
 		
 		if (TESTMODE_ENABLED) {

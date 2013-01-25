@@ -2,12 +2,9 @@ package com.applifier.impact.android.campaign;
 
 import java.util.ArrayList;
 
-import android.util.Log;
-
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.cache.ApplifierImpactDownloader;
 import com.applifier.impact.android.cache.IApplifierImpactDownloadListener;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadListener {
 	
@@ -36,14 +33,14 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	@Override
 	public void onFileDownloadCompleted (String downloadUrl) {
 		if (finishDownload(downloadUrl))
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Reporting campaign download completion: " + _campaign.getCampaignId());
+			ApplifierImpactUtils.Log("Reporting campaign download completion: " + _campaign.getCampaignId(), this);
 		
 	}
 	
 	@Override
 	public void onFileDownloadCancelled (String downloadUrl) {	
 		if (finishDownload(downloadUrl)) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Download cancelled: " + _campaign.getCampaignId());
+			ApplifierImpactUtils.Log("Download cancelled: " + _campaign.getCampaignId(), this);
 			_cancelledDownloads = true;
 		}
 	}
