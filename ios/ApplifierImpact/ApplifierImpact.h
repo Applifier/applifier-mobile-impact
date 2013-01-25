@@ -6,7 +6,7 @@
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
 
-#define IMPACT_DEBUG_MODE_ENABLED 0
+#define IMPACT_DEBUG_MODE_ENABLED 1
 
 #define AILOG_LOG(levelName, fmt, ...) NSLog((@"%@ [T:0x%x %@] %s:%d " fmt), levelName, (unsigned int)[NSThread currentThread], ([[NSThread currentThread] isMainThread] ? @"M" : @"S"), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 
@@ -24,6 +24,9 @@
 
 extern NSString * const kApplifierImpactRewardItemPictureKey;
 extern NSString * const kApplifierImpactRewardItemNameKey;
+
+extern NSString * const kApplifierImpactOptionNoOfferscreenKey;
+extern NSString * const kApplifierImpactOptionOpenAnimatedKey;
 
 @class ApplifierImpact;
 @class SKStoreProductViewController;
@@ -57,6 +60,7 @@ extern NSString * const kApplifierImpactRewardItemNameKey;
 - (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact;
 - (BOOL)canShowAds;
 - (BOOL)canShowImpact;
+- (BOOL)showImpact:(NSDictionary *)options;
 - (BOOL)showImpact;
 - (BOOL)hideImpact;
 - (void)stopAll;

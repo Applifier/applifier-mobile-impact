@@ -27,6 +27,7 @@ NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying = @"video_s
 
 NSString * const kApplifierImpactWebViewViewTypeCompleted = @"completed";
 NSString * const kApplifierImpactWebViewViewTypeStart = @"start";
+NSString * const kApplifierImpactWebViewViewTypeNone = @"none";
 
 NSString * const kApplifierImpactWebViewDataParamCampaignDataKey = @"campaignData";
 NSString * const kApplifierImpactWebViewDataParamPlatformKey = @"platform";

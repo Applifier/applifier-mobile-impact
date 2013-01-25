@@ -10,6 +10,12 @@
 
 /* WebView */
 
+typedef enum {
+  kApplifierImpactViewStateWebView,
+  kApplifierImpactViewStateVideoPlayer,
+  kApplifierImpactViewStateNone
+} ApplifierImpactViewState;
+
 extern NSString * const kApplifierImpactWebViewJSPrefix;
 extern NSString * const kApplifierImpactWebViewJSInit;
 extern NSString * const kApplifierImpactWebViewJSChangeView;
@@ -26,6 +32,7 @@ extern NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying;
 
 extern NSString * const kApplifierImpactWebViewViewTypeCompleted;
 extern NSString * const kApplifierImpactWebViewViewTypeStart;
+extern NSString * const kApplifierImpactWebViewViewTypeNone;
 
 extern NSString * const kApplifierImpactWebViewDataParamCampaignDataKey;
 extern NSString * const kApplifierImpactWebViewDataParamPlatformKey;

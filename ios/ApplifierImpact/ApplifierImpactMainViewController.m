@@ -14,7 +14,6 @@
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
-#import "ApplifierImpactProperties/ApplifierImpactConstants.h"
 
 @interface ApplifierImpactMainViewController ()
   @property (nonatomic, strong) ApplifierImpactVideoViewController *videoController;
@@ -124,14 +123,18 @@
   [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:animated completion:self.closeHandler];
 }
 
-- (BOOL)openImpact:(BOOL)animated {
+- (BOOL)openImpact:(BOOL)animated inState:(ApplifierImpactViewState)state {
   AILOG_DEBUG(@"");
   
   if ([[ApplifierImpactProperties sharedInstance] currentViewController] == nil) return NO;
   
   dispatch_async(dispatch_get_main_queue(), ^{
+    NSString *openingViewForWebView = kApplifierImpactWebViewViewTypeStart;
+    if (state == kApplifierImpactViewStateVideoPlayer)
+      openingViewForWebView = kApplifierImpactWebViewViewTypeNone;
+    
     [self.delegate mainControllerWillOpen];
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:openingViewForWebView data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
     
     if (![ApplifierImpactDevice isSimulator]) {
       if (self.openHandler == nil) {
@@ -150,6 +153,10 @@
     if (![[[[ApplifierImpactWebAppController sharedInstance] webView] superview] isEqual:self.view]) {
       [self.view addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];
       [[[ApplifierImpactWebAppController sharedInstance] webView] setFrame:self.view.bounds];
+    }
+    
+    if (state == kApplifierImpactViewStateVideoPlayer) {
+      [self showPlayerAndPlaySelectedVideo:YES];
     }
   });
   
@@ -320,7 +327,7 @@
 - (void)webAppReady {
   [self.delegate mainControllerWebViewInitialized];
   dispatch_async(dispatch_get_main_queue(), ^{
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIInitComplete, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIInitComplete, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
   });
 }
 
