@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 
 import org.json.JSONObject;
 
+import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
@@ -29,7 +30,7 @@ public class ApplifierImpactWebView extends WebView {
 	
 	public ApplifierImpactWebView(Activity activity, IApplifierImpactWebViewListener listener, ApplifierImpactWebBridge webBridge) {
 		super(activity);
-		Log.d(ApplifierImpactConstants.LOG_NAME, "Loading WebView from URL: " + ApplifierImpactProperties.WEBVIEW_BASE_URL);
+		ApplifierImpactUtils.Log("Loading WebView from URL: " + ApplifierImpactProperties.WEBVIEW_BASE_URL, this);
 		init(activity, ApplifierImpactProperties.WEBVIEW_BASE_URL, listener, webBridge);
 	}
 
@@ -55,7 +56,7 @@ public class ApplifierImpactWebView extends WebView {
 			
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_CHANGE_VIEW, view, dataString);
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Send change view to WebApp: " + javascriptString);
+			ApplifierImpactUtils.Log("Send change view to WebApp: " + javascriptString, this);
 		}
 	}
 	
@@ -67,7 +68,7 @@ public class ApplifierImpactWebView extends WebView {
 				dataString = data.toString();
 
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_HANDLE_NATIVE_EVENT, eventType, dataString);
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Send native event to WebApp: " + javascriptString);
+			ApplifierImpactUtils.Log("Send native event to WebApp: " + javascriptString, this);
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
 		}
 	}
@@ -91,12 +92,12 @@ public class ApplifierImpactWebView extends WebView {
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_DEVICETYPE_KEY, ApplifierImpactDevice.getDeviceType());
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Error creating webview init params");
+				ApplifierImpactUtils.Log("Error creating webview init params", this);
 				return;
 			}
 			
 			String initString = String.format("%s%s(%s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_INIT, initData.toString());
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Initializing WebView with JS call: " + initString);
+			ApplifierImpactUtils.Log("Initializing WebView with JS call: " + initString, this);
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(initString));
 		}
 	}
@@ -117,7 +118,7 @@ public class ApplifierImpactWebView extends WebView {
 		
 		if (_url != null && _url.indexOf("_raw.html") != -1) {
 			getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-			Log.d(ApplifierImpactConstants.LOG_NAME, "startup() -> LOAD_NO_CACHE");
+			ApplifierImpactUtils.Log("startup() -> LOAD_NO_CACHE", this);
 		}
 		else {
 			getSettings().setCacheMode(WebSettings.LOAD_NORMAL);
@@ -171,10 +172,10 @@ public class ApplifierImpactWebView extends WebView {
 			layertype.invoke(this, 1, null);
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Could not invoke setLayerType");
+			ApplifierImpactUtils.Log("Could not invoke setLayerType", this);
 		}
 		
-		Log.d(ApplifierImpactConstants.LOG_NAME, "Adding javascript interface");
+		ApplifierImpactUtils.Log("Adding javascript interface", this);
 		addJavascriptInterface(_webBridge, "applifierimpactnative");
 	}
 	
@@ -198,7 +199,7 @@ public class ApplifierImpactWebView extends WebView {
 	
 	private class ApplifierViewChromeClient extends WebChromeClient {
 		public void onConsoleMessage(String message, int lineNumber, String sourceID) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "JAVASCRIPT(" + lineNumber + "): " + message);
+			ApplifierImpactUtils.Log("JavaScript (line: " + lineNumber + "): " + message, this);
 		}
 		
 		public void onReachedMaxAppCacheSize(long spaceNeeded, long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) {
@@ -210,10 +211,10 @@ public class ApplifierImpactWebView extends WebView {
 		@Override
 		public void onPageFinished (WebView webview, String url) {
 			super.onPageFinished(webview, url);
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Finished url: "  + url);
+			ApplifierImpactUtils.Log("Finished url: "  + url, this);
 			if (_listener != null && !_webAppLoaded) {
 				_webAppLoaded = true;
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Adding javascript interface");
+				ApplifierImpactUtils.Log("Adding javascript interface", this);
 				addJavascriptInterface(_webBridge, "applifierimpactnative");
 				_listener.onWebAppLoaded();
 			}
@@ -221,13 +222,13 @@ public class ApplifierImpactWebView extends WebView {
 		
 		@Override
 		public boolean shouldOverrideUrlLoading (WebView view, String url) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Trying to load url: " + url);
+			ApplifierImpactUtils.Log("Trying to load url: " + url, this);
 			return false;
 		}
 		
 		@Override
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {		
-			Log.e(ApplifierImpactConstants.LOG_NAME, "ApplifierViewClient.onReceivedError() -> " + errorCode + " (" + failingUrl + ") " + description);
+			ApplifierImpactUtils.Log("ApplifierViewClient.onReceivedError() -> " + errorCode + " (" + failingUrl + ") " + description, this);
 			super.onReceivedError(view, errorCode, description, failingUrl);
 		}
 

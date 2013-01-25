@@ -173,13 +173,15 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	// IApplifierImpactVideoPlayerListener
 	@Override
 	public void onVideoPlaybackStarted () {
+		ApplifierImpactUtils.Log("onVideoPlaybackStarted", this);
+		
 		JSONObject params = null;
 		
 		try {
 			params = new JSONObject("{\"campaignId\":\"" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId() + "\"}");
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Could not create JSON");
+			ApplifierImpactUtils.Log("Could not create JSON", this);
 		}
 		
 		sendActionToListener(ApplifierImpactMainViewAction.VideoStart);

@@ -17,41 +17,13 @@ import android.util.Log;
 
 public class ApplifierImpactUtils {
 
+	public static void Log (String message, Class cls) {
+		Log.d(ApplifierImpactConstants.LOG_NAME, cls.getName() + " :: " +  message);
+	}
+	
 	public static void Log (String message, Object obj) {
 		Log.d(ApplifierImpactConstants.LOG_NAME, obj.getClass().getName() + " :: " +  message);
 	}
-	
-	/*
-	public static void Log (String message, Exception e, Object obj) {
-		String finalMessage = "";
-		
-		if (obj != null) {
-			finalMessage = obj.getClass().getName();
-		}
-		else {
-			finalMessage = "UNKNOWN_OBJECT";
-		}
-		
-		if (message != null) {
-			finalMessage = finalMessage + " :: " + message;
-		}
-		
-		Log(message, e);
-	}
-	
-	public static void Log (String message, Exception e) {
-		if (e != null) {
-			message = message + "\n" + e.getMessage() + "\n" + e.getStackTrace();
-		}
-		
-		Log(message);
-	}
-	
-	public static void Log (String message) {
-		if (ApplifierImpactConstants.IMPACT_DEBUG_MODE && message != null) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, message);
-		}
-	}*/
 	
 	public static String Md5 (String input) {
 		MessageDigest m = null;
@@ -91,7 +63,7 @@ public class ApplifierImpactUtils {
 				}
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Problem reading file: " + e.getMessage());
+				Log("Problem reading file: " + e.getMessage(), ApplifierImpactUtils.class);
 				return null;
 			}
 			
@@ -99,13 +71,13 @@ public class ApplifierImpactUtils {
 				br.close();
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Problem closing reader: " + e.getMessage());
+				Log("Problem closing reader: " + e.getMessage(), ApplifierImpactUtils.class);
 			}
 						
 			return fileContent;
 		}
 		else {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "File did not exist or couldn't be read");
+			Log("File did not exist or couldn't be read", ApplifierImpactUtils.class);
 		}
 		
 		return null;
@@ -121,11 +93,11 @@ public class ApplifierImpactUtils {
 			fos.close();
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Could not write file: " + e.getMessage());
+			Log("Could not write file: " + e.getMessage(), ApplifierImpactUtils.class);
 			return false;
 		}
 		
-		Log.d(ApplifierImpactConstants.LOG_NAME, "Wrote file: " + fileToWrite.getAbsolutePath());
+		Log("Wrote file: " + fileToWrite.getAbsolutePath(), ApplifierImpactUtils.class);
 		
 		return true;
 	}
@@ -136,12 +108,12 @@ public class ApplifierImpactUtils {
 		
 		if (cachedVideoFile.exists()) {
 			if (!cachedVideoFile.delete())
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Could not delete: " + cachedVideoFile.getAbsolutePath());
+				Log("Could not delete: " + cachedVideoFile.getAbsolutePath(), ApplifierImpactUtils.class);
 			else
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Deleted: " + cachedVideoFile.getAbsolutePath());
+				Log("Deleted: " + cachedVideoFile.getAbsolutePath(), ApplifierImpactUtils.class);
 		}
 		else {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "File: " + cachedVideoFile.getAbsolutePath() + " doesn't exist.");
+			Log("File: " + cachedVideoFile.getAbsolutePath() + " doesn't exist.", ApplifierImpactUtils.class);
 		}
 	}
 	

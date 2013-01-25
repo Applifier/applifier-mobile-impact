@@ -56,7 +56,7 @@ public class ApplifierImpactDownloader {
 	
 	public static void stopAllDownloads () {
 		if (_cacheDownloads != null) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactDownloader->stopAllDownloads()");
+			ApplifierImpactUtils.Log("ApplifierImpactDownloader->stopAllDownloads()", ApplifierImpactDownloader.class);
 			for (CacheDownload cd : _cacheDownloads) {
 				cd.cancel(true);
 			}
@@ -116,13 +116,13 @@ public class ApplifierImpactDownloader {
 		ConnectivityManager cm = (ConnectivityManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 	    
 		if (cm != null && cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Starting download for: " + campaign.getVideoFilename());
+			ApplifierImpactUtils.Log("Starting download for: " + campaign.getVideoFilename(), ApplifierImpactDownloader.class);
 			CacheDownload cd = new CacheDownload(campaign);
 			addToCacheDownloads(cd);
 			cd.execute(campaign.getVideoUrl());
 	    }
 		else {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "No WIFI detected, not downloading: " + campaign.getVideoUrl());
+			ApplifierImpactUtils.Log("No WIFI detected, not downloading: " + campaign.getVideoUrl(), ApplifierImpactDownloader.class);
 			removeDownload(campaign);
 			sendToListeners(ApplifierDownloadEventType.DownloadCancelled, campaign.getVideoUrl());
 			cacheNextFile(); 
@@ -135,7 +135,7 @@ public class ApplifierImpactDownloader {
 		}
 		else if (_downloadList != null) {
 			_isDownloading = false;
-			Log.d(ApplifierImpactConstants.LOG_NAME, "All downloads completed.");
+			ApplifierImpactUtils.Log("All downloads completed.", ApplifierImpactDownloader.class);
 		}
 	}
 	
@@ -148,7 +148,7 @@ public class ApplifierImpactDownloader {
 			fos = new FileOutputStream(outf);
 		}
 		catch (Exception e) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Problems creating FOS: " + fileName);
+			ApplifierImpactUtils.Log("Problems creating FOS: " + fileName, ApplifierImpactDownloader.class);
 		}
 		
 		return fos;
@@ -189,7 +189,7 @@ public class ApplifierImpactDownloader {
 				_downloadUrl = new URL(sUrl[0]);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Problems with url: " + e.getMessage());
+				ApplifierImpactUtils.Log("Problems with url: " + e.getMessage(), this);
 			}
 			
 			try {
@@ -199,7 +199,7 @@ public class ApplifierImpactDownloader {
 				_urlConnection.connect();
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Problems opening connection: " + e.getMessage());
+				ApplifierImpactUtils.Log("Problems opening connection: " + e.getMessage(), this);
 			}
 			
 			if (_urlConnection != null) {
@@ -209,7 +209,7 @@ public class ApplifierImpactDownloader {
 					_input = new BufferedInputStream(_downloadUrl.openStream());
 				}
 				catch (Exception e) {
-					Log.d(ApplifierImpactConstants.LOG_NAME, "Problems opening stream: " + e.getMessage());
+					ApplifierImpactUtils.Log("Problems opening stream: " + e.getMessage(), this);
 				}
 				
 				_targetFile = new File(sUrl[0]);
@@ -231,7 +231,7 @@ public class ApplifierImpactDownloader {
 					}
 				}
 				catch (Exception e) {
-					Log.d(ApplifierImpactConstants.LOG_NAME, "Problems downloading file: " + e.getMessage());
+					ApplifierImpactUtils.Log("Problems downloading file: " + e.getMessage(), this);
 					cancelDownload();
 					cacheNextFile();
 					return null;
@@ -244,7 +244,7 @@ public class ApplifierImpactDownloader {
 		}
 		
 		protected void onCancelled (Object result) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, "Force stopping download!");
+			ApplifierImpactUtils.Log("Force stopping download!", this);
 			_cancelled = true;
 			cancelDownload();
 		}
@@ -280,12 +280,12 @@ public class ApplifierImpactDownloader {
 				_input.close();
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Problems closing connection: " + e.getMessage());
+				ApplifierImpactUtils.Log("Problems closing connection: " + e.getMessage(), this);
 			}	    	
 	    }
 	    
 	    private void cancelDownload () {
-	    	Log.d(ApplifierImpactConstants.LOG_NAME, "Download cancelled for: " + _downloadUrl.toString());
+	    	ApplifierImpactUtils.Log("Download cancelled for: " + _downloadUrl.toString(), this);
 			closeAndFlushConnection();
 			ApplifierImpactUtils.removeFile(_targetFile.toString());
         	removeDownload(_campaign);

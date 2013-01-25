@@ -55,9 +55,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private IApplifierImpactCampaignListener _campaignListener = null;
 	private IApplifierImpactVideoListener _videoListener = null;
 	
-	// Currently Selected Campaign (for viewing)
-	//private ApplifierImpactCampaign _selectedCampaign = null;	
-	
 	
 	public ApplifierImpact (Activity activity, String gameId) {
 		instance = this;
@@ -134,7 +131,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	public void stopAll () {
-		Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpact->stopAll()");
+		ApplifierImpactUtils.Log("stopAll()", this);
 		ApplifierImpactDownloader.stopAllDownloads();
 		webdata.stopAllRequests();
 	}
@@ -202,7 +199,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				campaignId = data.getString(ApplifierImpactConstants.IMPACT_WEBVIEW_EVENTDATA_CAMPAIGNID_KEY);
 			}
 			catch (Exception e) {
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Could not get campaignId");
+				ApplifierImpactUtils.Log("Could not get campaignId", this);
 			}
 			
 			if (campaignId != null) {
@@ -217,7 +214,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				
 				if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null && (rewatch || !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed())) {
 					ApplifierImpactPlayVideoRunner playVideoRunner = new ApplifierImpactPlayVideoRunner();
-					Log.d(ApplifierImpactConstants.LOG_NAME, "Running threaded");
+					ApplifierImpactUtils.Log("Running threaded", this);
 					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
 				}
 			}
@@ -269,7 +266,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		Boolean dataOk = true;			
 		JSONObject data = new JSONObject();
 		
-		Log.d(ApplifierImpactConstants.LOG_NAME, "dataOk: " + dataOk);
+		ApplifierImpactUtils.Log("dataOk: " + dataOk, this);
 		
 		try  {
 			data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN);
@@ -306,7 +303,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
 				@Override
 				public void run() {
-					Log.d(ApplifierImpactConstants.LOG_NAME, "Impact ready!");
+					ApplifierImpactUtils.Log("Impact ready!", this);
 					_impactReadySent = true;
 					_campaignListener.onCampaignsAvailable();
 				}
@@ -360,7 +357,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				_mainView.videoplayerview.playVideo(playUrl);
 			}			
 			else
-				Log.d(ApplifierImpactConstants.LOG_NAME, "Campaign is null");
+				ApplifierImpactUtils.Log("Campaign is null", this);
 		}		
 	}
 }
