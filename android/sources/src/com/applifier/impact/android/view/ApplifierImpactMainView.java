@@ -108,6 +108,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 				
 				if (videoplayerview.getParent() == null) {
 					videoplayerview.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+					// Could this sometimes come on top of webview
 					addView(videoplayerview, ((ViewGroup)this).getChildCount());
 				}
 				
@@ -176,9 +177,12 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		ApplifierImpactUtils.Log("onVideoPlaybackStarted", this);
 		
 		JSONObject params = null;
+		JSONObject spinnerParams = null;
 		
 		try {
 			params = new JSONObject("{\"campaignId\":\"" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId() + "\"}");
+			spinnerParams = new JSONObject();
+			spinnerParams.put(ApplifierImpactConstants.IMPACT_TEXTKEY_KEY, ApplifierImpactConstants.IMPACT_TEXTKEY_BUFFERING);
 		}
 		catch (Exception e) {
 			ApplifierImpactUtils.Log("Could not create JSON", this);
@@ -186,8 +190,10 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		
 		sendActionToListener(ApplifierImpactMainViewAction.VideoStart);
 		bringChildToFront(videoplayerview);
+		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		removeFromMainView(webview);
 		focusToView(videoplayerview);
+		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, spinnerParams);
 		webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_COMPLETED, params);
 	}
 	

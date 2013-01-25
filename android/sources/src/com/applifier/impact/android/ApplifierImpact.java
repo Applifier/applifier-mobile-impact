@@ -349,6 +349,24 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		@Override
 		public void run() {			
 			if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null) {
+				
+				/*
+				[[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner 
+				data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
+				*/
+				
+				JSONObject data = new JSONObject();
+				
+				try {
+					data.put(ApplifierImpactConstants.IMPACT_TEXTKEY_KEY, ApplifierImpactConstants.IMPACT_TEXTKEY_BUFFERING);
+				}
+				catch (Exception e) {
+					ApplifierImpactUtils.Log("Couldn't create data JSON", this);
+					return;
+				}
+				
+				_mainView.webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_SHOWSPINNER, data);
+				
 				String playUrl = ApplifierImpactUtils.getCacheDirectory() + "/" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getVideoFilename();
 				if (!ApplifierImpactUtils.isFileInCache(ApplifierImpactProperties.SELECTED_CAMPAIGN.getVideoFilename()))
 					playUrl = ApplifierImpactProperties.SELECTED_CAMPAIGN.getVideoStreamUrl(); 

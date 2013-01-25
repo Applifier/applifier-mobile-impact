@@ -66,7 +66,6 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		startVideo();
 		
 		// Force landscape orientation when video starts
-		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 	}
 
 	public void pauseVideo () {
@@ -100,7 +99,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		
 		if (_videoPausedTimer == null) {
 			_videoPausedTimer = new Timer();
-			_videoPausedTimer.scheduleAtFixedRate(new VideoStateChecker(), 300, 300);
+			_videoPausedTimer.scheduleAtFixedRate(new VideoStateChecker(), 0, 50);
 		}
 	}
 	
@@ -132,8 +131,6 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 					_listener.onEventPositionReached(ApplifierVideoPosition.Start);
 					_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
 				}
-				
-				hideBufferingView();
 			}
 		});
 		
@@ -255,6 +252,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
     
 	private class VideoStateChecker extends TimerTask {
 		private Float _curPos = 0f;
+		private Float _oldPos = 0f;
+		private boolean _playHeadHasMoved = false;
 		
 		@Override
 		public void run () {
@@ -263,8 +262,12 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				pauseVideo();
 			}
 			
+			_oldPos = _curPos;
 			_curPos = new Float(_videoView.getCurrentPosition());
 			Float position = _curPos / _videoView.getDuration();
+			
+			if (_curPos > _oldPos) 
+				_playHeadHasMoved = true;
 			
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
 				@Override
@@ -294,11 +297,11 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 					}
 				});				
 			}
-			else if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && _videoPlayheadPrepared && _bufferingView != null && _bufferingView.getParent() != null) {
+			
+			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && _videoPlayheadPrepared && _playHeadHasMoved) {
 				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						ApplifierImpactUtils.Log("run", this);
 						hideBufferingView();
 						
 						if (!_videoPlaybackStartedSent) {
