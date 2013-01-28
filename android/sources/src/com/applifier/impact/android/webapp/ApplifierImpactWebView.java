@@ -12,8 +12,8 @@ import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -111,6 +111,27 @@ public class ApplifierImpactWebView extends WebView {
 		_webBridge = webBridge;
 		setupApplifierView();
 		loadUrl(_url);
+		
+		setOnLongClickListener(new OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+			    return true;
+			}
+		});
+		
+		/*
+		setOnTouchListener(new OnTouchListener() {
+			
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_MOVE)
+					return true;
+				else
+					return false;
+			}
+		});
+		*/
+		
+		setLongClickable(false);
 	}
 	
 	private void setupApplifierView ()  {
@@ -141,7 +162,8 @@ public class ApplifierImpactWebView extends WebView {
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 		setInitialScale(0);
-		setLongClickable(false);
+		
+
 		
 		setBackgroundColor(Color.BLACK);
 		setBackgroundDrawable(null);
@@ -149,7 +171,7 @@ public class ApplifierImpactWebView extends WebView {
 		
 		setWebViewClient(new ApplifierViewClient());
 		setWebChromeClient(new ApplifierViewChromeClient());
-			
+
 		if (appCachePath != null) {
 			boolean appCache = true;
   

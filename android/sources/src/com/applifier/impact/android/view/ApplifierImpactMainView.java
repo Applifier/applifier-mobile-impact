@@ -18,7 +18,6 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -36,7 +35,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 
 	// Listener
 	private IApplifierImpactMainViewListener _listener = null;
-	
 
 	public ApplifierImpactMainView(Context context, IApplifierImpactMainViewListener listener) {
 		super(context);
@@ -92,29 +90,16 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	public void setViewState (ApplifierImpactMainViewState state) {
 		switch (state) {
 			case WebView:
-				if (webview == null)
-					createWebView();
-				
-				if (webview.getParent() == null)
-					addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-				else
-					bringChildToFront(webview);
-				
+				removeFromMainView(webview);
+				addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 				focusToView(webview);
 				break;
 			case VideoPlayer:
-				if (videoplayerview == null)
+				if (videoplayerview == null) {
 					createVideoPlayerView();
-				
-				if (videoplayerview.getParent() == null) {
-					videoplayerview.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-					// Could this sometimes come on top of webview
-					addView(videoplayerview, ((ViewGroup)this).getChildCount());
+					removeFromMainView(webview);
+					addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 				}
-				
-				if (webview != null)
-					bringChildToFront(webview);
-				
 				break;
 		}
 	}
@@ -123,20 +108,26 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	/* PRIVATE METHODS */
 	
 	private void init () {
+		ApplifierImpactUtils.Log("Init", this);
+		createVideoPlayerView();
 		createWebView();
 	}
 	
 	private void destroyVideoPlayerView () {
+		ApplifierImpactUtils.Log("Destroying player", this);
 		removeFromMainView(videoplayerview);
 		videoplayerview = null;
 	}
 	
 	private void createVideoPlayerView () {
 		videoplayerview = new ApplifierImpactVideoPlayView(ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext(), this);
+		videoplayerview.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+		addView(videoplayerview);
 	}
 	
 	private void createWebView () {
 		webview = new ApplifierImpactWebView(ApplifierImpactProperties.CURRENT_ACTIVITY, this, new ApplifierImpactWebBridge(ApplifierImpact.instance));
+		addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 	}
 	
 	private void removeFromMainView (View view) {
@@ -191,7 +182,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		sendActionToListener(ApplifierImpactMainViewAction.VideoStart);
 		bringChildToFront(videoplayerview);
 		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		removeFromMainView(webview);
+		//removeFromMainView(webview);
 		focusToView(videoplayerview);
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, spinnerParams);
 		webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_COMPLETED, params);
@@ -204,14 +195,15 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	}
 	
 	@Override
-	public void onCompletion(MediaPlayer mp) {				
+	public void onCompletion(MediaPlayer mp) {
+		ApplifierImpactUtils.Log("onCompletion", this);
 		videoplayerview.setKeepScreenOn(false);
+		destroyVideoPlayerView();
 		setViewState(ApplifierImpactMainViewState.WebView);
 		onEventPositionReached(ApplifierVideoPosition.End);
 		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 		ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
-		destroyVideoPlayerView();
 		sendActionToListener(ApplifierImpactMainViewAction.VideoEnd);
 	}
 	

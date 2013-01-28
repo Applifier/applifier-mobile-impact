@@ -11,10 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.applifier.impact.android.ApplifierImpactUtils;
-import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 import com.applifier.impact.android.campaign.ApplifierImpactRewardItem;

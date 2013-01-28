@@ -5,31 +5,20 @@ import org.json.JSONObject;
 import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.cache.ApplifierImpactDownloader;
 import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
-import com.applifier.impact.android.video.ApplifierImpactVideoPlayView;
 import com.applifier.impact.android.video.IApplifierImpactVideoListener;
-import com.applifier.impact.android.video.IApplifierImpactVideoPlayerListener;
 import com.applifier.impact.android.view.ApplifierImpactMainView;
 import com.applifier.impact.android.view.IApplifierImpactMainViewListener;
-import com.applifier.impact.android.view.IApplifierImpactViewListener;
 import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewAction;
 import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewState;
 import com.applifier.impact.android.webapp.*;
-import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.media.MediaPlayer;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
+
 
 public class ApplifierImpact implements IApplifierImpactCacheListener, 
 										IApplifierImpactWebDataListener, 
@@ -278,6 +267,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 
 		if (dataOk) {
 			_mainView.openImpact(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, data);
+			if (_impactListener != null)
+				_impactListener.onImpactOpen();
 		}
 	}
 
@@ -340,6 +331,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				if (dataOk) {
 					_mainView.closeImpact(data);
 					ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
+					if (_impactListener != null)
+						_impactListener.onImpactClose();
 				}
 			}
 		}
@@ -349,12 +342,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		@Override
 		public void run() {			
 			if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null) {
-				
-				/*
-				[[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner 
-				data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
-				*/
-				
 				JSONObject data = new JSONObject();
 				
 				try {
