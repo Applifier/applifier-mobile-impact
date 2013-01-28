@@ -167,12 +167,11 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	public void onVideoPlaybackStarted () {
 		ApplifierImpactUtils.Log("onVideoPlaybackStarted", this);
 		
-		JSONObject params = null;
-		JSONObject spinnerParams = null;
+		JSONObject params = new JSONObject();
+		JSONObject spinnerParams = new JSONObject();
 		
 		try {
-			params = new JSONObject("{\"campaignId\":\"" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId() + "\"}");
-			spinnerParams = new JSONObject();
+			params.put(ApplifierImpactConstants.IMPACT_NATIVEEVENT_CAMPAIGNID_KEY, ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId());
 			spinnerParams.put(ApplifierImpactConstants.IMPACT_TEXTKEY_KEY, ApplifierImpactConstants.IMPACT_TEXTKEY_BUFFERING);
 		}
 		catch (Exception e) {
@@ -182,7 +181,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		sendActionToListener(ApplifierImpactMainViewAction.VideoStart);
 		bringChildToFront(videoplayerview);
 		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		//removeFromMainView(webview);
 		focusToView(videoplayerview);
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, spinnerParams);
 		webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_COMPLETED, params);
@@ -201,9 +199,23 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		destroyVideoPlayerView();
 		setViewState(ApplifierImpactMainViewState.WebView);
 		onEventPositionReached(ApplifierVideoPosition.End);
+		
+		JSONObject params = new JSONObject();
+		
+		try {
+			params.put(ApplifierImpactConstants.IMPACT_NATIVEEVENT_CAMPAIGNID_KEY, ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId());
+		}
+		catch (Exception e) {
+			ApplifierImpactUtils.Log("Could not create JSON", this);
+		}
+		
+		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
+
+		
 		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 		ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
+		
 		sendActionToListener(ApplifierImpactMainViewAction.VideoEnd);
 	}
 	

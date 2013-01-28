@@ -87,6 +87,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			if (activity.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
 				open();
 			}
+			else {
+				ApplifierImpactProperties.BASE_ACTIVITY = activity;
+			}
 		}
 	}
 	
@@ -103,7 +106,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		if (!_showingImpact && canShowCampaigns()) {
 			Intent newIntent = new Intent(ApplifierImpactProperties.CURRENT_ACTIVITY, com.applifier.impact.android.view.ApplifierImpactFullscreenActivity.class);
 			newIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK);
-			ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(newIntent);
+			ApplifierImpactProperties.BASE_ACTIVITY.startActivity(newIntent);
 			_showingImpact = true;	
 			return _showingImpact;
 		}
@@ -331,6 +334,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				if (dataOk) {
 					_mainView.closeImpact(data);
 					ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
+					ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
 					if (_impactListener != null)
 						_impactListener.onImpactClose();
 				}
