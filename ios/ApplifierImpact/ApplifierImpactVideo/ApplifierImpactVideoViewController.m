@@ -61,7 +61,6 @@
 }
 
 - (void)_makeOrientation {
-
   if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
     double maxValue = fmax(self.view.superview.bounds.size.width, self.view.superview.bounds.size.height);
     double minValue = fmin(self.view.superview.bounds.size.width, self.view.superview.bounds.size.height);
