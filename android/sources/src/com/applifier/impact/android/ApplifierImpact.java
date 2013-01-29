@@ -16,6 +16,7 @@ import com.applifier.impact.android.webapp.*;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 
 
 public class ApplifierImpact implements IApplifierImpactCacheListener, 
@@ -53,6 +54,18 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		_impactListener = listener;
 	}
 
+	public static boolean isSupported () {
+		if (Build.VERSION.SDK_INT < 7) {
+			return false;
+		}
+		
+		return false;
+	}
+	
+	public void setTestMode (boolean testModeEnabled) {
+		ApplifierImpactProperties.TESTMODE_ENABLED = testModeEnabled;
+	}
+	
 	public void changeActivity (Activity activity) {
 		if (activity == null) return;
 		
@@ -69,7 +82,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		}
 	}
 	
-	public boolean closeImpact () {
+	public boolean hideImpact () {
 		if (_showingImpact) {
 			close();
 			return true;
@@ -79,7 +92,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	public boolean showImpact () {
-		if (!_showingImpact && canShowCampaigns()) {
+		if (canShowImpact()) {
 			Intent newIntent = new Intent(ApplifierImpactProperties.CURRENT_ACTIVITY, com.applifier.impact.android.view.ApplifierImpactFullscreenActivity.class);
 			newIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK);
 			ApplifierImpactProperties.BASE_ACTIVITY.startActivity(newIntent);
@@ -89,15 +102,15 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 
 		return false;
 	}
-		
-	public boolean hasCampaigns () {
-		if (webdata != null && canShowCampaigns()) {
-			return webdata.getViewableVideoPlanCampaigns().size() > 0;
-		}
-		
-		return false;
+	
+	public boolean canShowCampaigns () {
+		return _mainView != null && _mainView.webview != null && _mainView.webview.isWebAppLoaded() && _webAppLoaded && webdata != null && webdata.getViewableVideoPlanCampaigns().size() > 0;
 	}
 	
+	public boolean canShowImpact () {
+		return !_showingImpact && _mainView != null && _mainView.webview != null && _mainView.webview.isWebAppLoaded() && _webAppLoaded && webdata != null && webdata.getVideoPlanCampaigns().size() > 0;
+	}
+
 	public void stopAll () {
 		ApplifierImpactUtils.Log("stopAll()", this);
 		ApplifierImpactDownloader.stopAllDownloads();
@@ -195,7 +208,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 
 	@Override
 	public void onCloseImpactView(JSONObject data) {
-		closeImpact();
+		hideImpact();
 	}
 	
 	@Override
@@ -280,10 +293,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			// Update cache WILL START DOWNLOADS if needed, after this method you can check getDownloadingCampaigns which ones started downloading.
 			cachemanager.updateCache(webdata.getVideoPlanCampaigns());				
 		}
-	}
-	
-	private boolean canShowCampaigns () {
-		return _mainView != null && _mainView.webview != null && _mainView.webview.isWebAppLoaded() && _webAppLoaded && webdata.getViewableVideoPlanCampaigns().size() > 0;
 	}
 	
 	private void sendImpactReadyEvent () {

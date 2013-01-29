@@ -37,7 +37,7 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
     	ApplifierImpact.instance.changeActivity(this);
 		ApplifierImpact.instance.setImpactListener(this);
 		
-		if (!ApplifierImpact.instance.hasCampaigns()) {
+		if (!ApplifierImpact.instance.canShowCampaigns()) {
 			((ImageView)findViewById(R.id.unlock)).setVisibility(View.INVISIBLE);
 		}
     }

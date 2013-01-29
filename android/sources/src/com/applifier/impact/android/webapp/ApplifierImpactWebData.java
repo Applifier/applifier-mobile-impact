@@ -126,7 +126,8 @@ public class ApplifierImpactWebData {
 	}
 	
 	public boolean sendCampaignViewProgress (ApplifierImpactCampaign campaign, ApplifierVideoPosition position) {
-		if (campaign == null) return false;
+		boolean progressSent = false;
+		if (campaign == null) return progressSent;
 
 		ApplifierImpactUtils.Log("VP: " + position.toString() + ", " + getGamerId(), this);
 		
@@ -138,9 +139,10 @@ public class ApplifierImpactWebData {
 			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(viewUrl, ApplifierImpactRequestType.VideoViewed, 0);
 			addLoader(loader);
 			startNextLoader();
-			return true;
+			progressSent = true;
 		}
-		else if (position != null && getGamerId() != null) {
+		
+		if (position != null && getGamerId() != null) {
 			String analyticsUrl = String.format("%s", ApplifierImpactProperties.ANALYTICS_BASE_URL);
 			analyticsUrl = String.format("%s?%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
 			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_EVENTTYPE_KEY, position.toString());
@@ -150,10 +152,10 @@ public class ApplifierImpactWebData {
 			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(analyticsUrl, ApplifierImpactRequestType.VideoViewed, 0);
 			addLoader(loader);
 			startNextLoader();
-			return true;
+			progressSent = true;
 		}
 		
-		return false;
+		return progressSent;
 	}
 	
 	public void stopAllRequests () {
