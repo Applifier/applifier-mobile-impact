@@ -1,7 +1,7 @@
 package com.mycompany.test;
 
 import com.applifier.impact.android.ApplifierImpact;
-import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
+import com.applifier.impact.android.IApplifierImpactListener;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 import com.mycompany.test.R;
@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-public class ApplifierImpactTestStartActivity extends Activity implements IApplifierImpactCampaignListener {
+public class ApplifierImpactTestStartActivity extends Activity implements IApplifierImpactListener {
 	private ApplifierImpact ai = null;
 	
     @Override
@@ -26,9 +26,7 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
         setContentView(R.layout.main);
         ((ImageView)findViewById(R.id.playbtn)).setAlpha(80);
 		Log.d(ApplifierImpactConstants.LOG_NAME, "Init impact");
-		ai = new ApplifierImpact(this, "16");
-		ai.setCampaignListener(this);
-		ai.init();
+		ai = new ApplifierImpact(this, "16", this);
     }
     
     @Override
@@ -36,6 +34,7 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
     	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactTestStartActivity->onResume()");
     	super.onResume();
 		ApplifierImpact.instance.changeActivity(this);
+		ApplifierImpact.instance.setImpactListener(this);
     }
     
 	@Override
@@ -59,12 +58,33 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
     @Override
 	protected void onDestroy() {
     	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactTestStartActivity->onDestroy()");
-    	//ai.stopAll();
-    	//System.runFinalizersOnExit(true);		
+    	ai.stopAll();
+    	System.runFinalizersOnExit(true);		
 		//android.os.Process.killProcess(android.os.Process.myPid());
     	super.onDestroy();		
 	}
 	
+    @Override
+	public void onImpactClose () {
+    	
+    }
+    
+    @Override
+	public void onImpactOpen () {
+    	
+    }
+	
+	// Impact video events
+    @Override
+	public void onVideoStarted () {
+    	
+    }
+    
+    @Override
+	public void onVideoCompleted () {    	
+    }
+	
+	// Impact campaign events
     @Override
 	public void onCampaignsAvailable () {
     	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactTestStartActivity->onCampaignsAvailable()");

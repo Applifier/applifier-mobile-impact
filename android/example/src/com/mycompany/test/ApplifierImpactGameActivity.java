@@ -10,9 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
-import com.applifier.impact.android.video.IApplifierImpactVideoListener;
 
-public class ApplifierImpactGameActivity extends Activity implements IApplifierImpactListener, IApplifierImpactVideoListener {
+public class ApplifierImpactGameActivity extends Activity implements IApplifierImpactListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactGameActivity->onCreate()");
@@ -37,7 +36,6 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
     	
     	ApplifierImpact.instance.changeActivity(this);
 		ApplifierImpact.instance.setImpactListener(this);
-		ApplifierImpact.instance.setVideoListener(this);
 		
 		if (!ApplifierImpact.instance.hasCampaigns()) {
 			((ImageView)findViewById(R.id.unlock)).setVisibility(View.INVISIBLE);
@@ -61,5 +59,9 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
     	((ImageView)findViewById(R.id.plissken)).setAlpha(255);
     	((ImageView)findViewById(R.id.unlock)).setVisibility(View.INVISIBLE);
     	Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Video completed!");
+	}
+	
+    @Override
+	public void onCampaignsAvailable () {
 	}
 }

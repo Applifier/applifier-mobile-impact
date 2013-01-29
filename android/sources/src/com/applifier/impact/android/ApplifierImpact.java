@@ -6,10 +6,8 @@ import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.cache.ApplifierImpactDownloader;
 import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
-import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
-import com.applifier.impact.android.video.IApplifierImpactVideoListener;
 import com.applifier.impact.android.view.ApplifierImpactMainView;
 import com.applifier.impact.android.view.IApplifierImpactMainViewListener;
 import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewAction;
@@ -41,42 +39,20 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	// Listeners
 	private IApplifierImpactListener _impactListener = null;
-	private IApplifierImpactCampaignListener _campaignListener = null;
-	private IApplifierImpactVideoListener _videoListener = null;
 	
 	
 	public ApplifierImpact (Activity activity, String gameId) {
-		instance = this;
-		ApplifierImpactProperties.IMPACT_GAME_ID = gameId;
-		ApplifierImpactProperties.BASE_ACTIVITY = activity;
-		ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
+		init(activity, gameId, null);
+	}
+	
+	public ApplifierImpact (Activity activity, String gameId, IApplifierImpactListener listener) {
+		init(activity, gameId, listener);
 	}
 		
 	public void setImpactListener (IApplifierImpactListener listener) {
 		_impactListener = listener;
 	}
-	
-	public void setCampaignListener (IApplifierImpactCampaignListener listener) {
-		_campaignListener = listener;
-	}
-	
-	public void setVideoListener (IApplifierImpactVideoListener listener) {
-		_videoListener = listener;
-	}
-	
-	public void init () {
-		if (_initialized) return; 
-		
-		cachemanager = new ApplifierImpactCacheManager();
-		cachemanager.setDownloadListener(this);
-		webdata = new ApplifierImpactWebData();
-		webdata.setWebDataListener(this);
 
-		if (webdata.initCampaigns()) {
-			_initialized = true;
-		}
-	}
-		
 	public void changeActivity (Activity activity) {
 		if (activity == null) return;
 		
@@ -138,12 +114,12 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				close();
 				break;
 			case VideoStart:
-				if (_videoListener != null)
-					_videoListener.onVideoStarted();
+				if (_impactListener != null)
+					_impactListener.onVideoStarted();
 				break;
 			case VideoEnd:
-				if (_videoListener != null)
-					_videoListener.onVideoCompleted();
+				if (_impactListener != null)
+					_impactListener.onVideoCompleted();
 				break;
 		}
 	}
@@ -249,6 +225,24 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 
 	/* PRIVATE METHODS */
 	
+	private void init (Activity activity, String gameId, IApplifierImpactListener listener) {
+		instance = this;
+		ApplifierImpactProperties.IMPACT_GAME_ID = gameId;
+		ApplifierImpactProperties.BASE_ACTIVITY = activity;
+		ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
+		
+		if (_initialized) return; 
+		
+		cachemanager = new ApplifierImpactCacheManager();
+		cachemanager.setDownloadListener(this);
+		webdata = new ApplifierImpactWebData();
+		webdata.setWebDataListener(this);
+
+		if (webdata.initCampaigns()) {
+			_initialized = true;
+		}
+	}
+	
 	private void close () {
 		ApplifierImpactCloseRunner closeRunner = new ApplifierImpactCloseRunner();
 		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(closeRunner);
@@ -293,13 +287,13 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	private void sendImpactReadyEvent () {
-		if (!_impactReadySent && _campaignListener != null) {
+		if (!_impactReadySent && _impactListener != null) {
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
 				@Override
 				public void run() {
 					ApplifierImpactUtils.Log("Impact ready!", this);
 					_impactReadySent = true;
-					_campaignListener.onCampaignsAvailable();
+					_impactListener.onCampaignsAvailable();
 				}
 			});
 		}
