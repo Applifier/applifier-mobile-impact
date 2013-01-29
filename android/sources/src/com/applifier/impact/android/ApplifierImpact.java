@@ -16,6 +16,7 @@ import com.applifier.impact.android.webapp.*;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 
 
@@ -34,6 +35,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private boolean _showingImpact = false;
 	private boolean _impactReadySent = false;
 	private boolean _webAppLoaded = false;
+	private boolean _openRequestFromDeveloper = false;
 		
 	// Main View
 	private ApplifierImpactMainView _mainView = null;
@@ -74,7 +76,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			
 			// Not the most pretty way to detect when the fullscreen activity is ready
 			if (activity.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
-				open();
+				String view = _mainView.webview.getWebViewCurrentView();
+				if (_openRequestFromDeveloper) {
+					view = ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START;
+					ApplifierImpactUtils.Log("changeActivity: This open request is from the developer, setting start view", this);
+				}
+				
+				open(view);
+				_openRequestFromDeveloper = false;
 			}
 			else {
 				ApplifierImpactProperties.BASE_ACTIVITY = activity;
@@ -96,7 +105,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			Intent newIntent = new Intent(ApplifierImpactProperties.CURRENT_ACTIVITY, com.applifier.impact.android.view.ApplifierImpactFullscreenActivity.class);
 			newIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK);
 			ApplifierImpactProperties.BASE_ACTIVITY.startActivity(newIntent);
-			_showingImpact = true;	
+			_showingImpact = true;
+			_openRequestFromDeveloper = true;
 			return _showingImpact;
 		}
 
@@ -235,6 +245,15 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		}
 	}
 	
+	public void onOpenPlayStore (JSONObject data) {
+		try {
+		    ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.PandoraTV")));
+		} 
+		catch (android.content.ActivityNotFoundException anfe) {
+			ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.PandoraTV")));
+		}
+	}
+	
 
 	/* PRIVATE METHODS */
 	
@@ -261,11 +280,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(closeRunner);
 	}
 	
-	private void open () {
+	private void open (String view) {
 		Boolean dataOk = true;			
 		JSONObject data = new JSONObject();
-		
-		ApplifierImpactUtils.Log("dataOk: " + dataOk, this);
 		
 		try  {
 			data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN);
@@ -275,8 +292,11 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			dataOk = false;
 		}
 
-		if (dataOk) {
-			_mainView.openImpact(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, data);
+		ApplifierImpactUtils.Log("open() dataOk: " + dataOk, this);
+		
+		if (dataOk && view != null) {
+			ApplifierImpactUtils.Log("open() opening with view:" + view + " and data:" + data.toString(), this);
+			_mainView.openImpact(view, data);
 			if (_impactListener != null)
 				_impactListener.onImpactOpen();
 		}
@@ -325,8 +345,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				Boolean dataOk = true;			
 				JSONObject data = new JSONObject();
 				
-				ApplifierImpactUtils.Log("dataOk: " + dataOk, this);
-				
 				try  {
 					data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_CLOSE);
 				}
@@ -334,6 +352,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 					dataOk = false;
 				}
 
+				ApplifierImpactUtils.Log("dataOk: " + dataOk, this);
+				
 				if (dataOk) {
 					_mainView.closeImpact(data);
 					ApplifierImpactProperties.CURRENT_ACTIVITY.finish();

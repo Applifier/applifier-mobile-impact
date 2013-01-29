@@ -65,7 +65,10 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	public void openImpact (String view, JSONObject data) {
 		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && ApplifierImpactProperties.CURRENT_ACTIVITY.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
 			webview.setWebViewCurrentView(view, data);
-						
+			
+			if (this.getParent() != null && (ViewGroup)this.getParent() != null)
+				((ViewGroup)this.getParent()).removeView(this);
+			
 			if (this.getParent() == null)
 				ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(this, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 			

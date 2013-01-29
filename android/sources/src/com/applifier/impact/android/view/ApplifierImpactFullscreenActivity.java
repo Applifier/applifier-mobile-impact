@@ -9,20 +9,21 @@ import android.os.Bundle;
 public class ApplifierImpactFullscreenActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	ApplifierImpactUtils.Log("ApplifierImpactFullscreenActivity->onCreate()", this);
         super.onCreate(savedInstanceState);
+    	ApplifierImpactUtils.Log("ApplifierImpactFullscreenActivity->onCreate()", this);
 		ApplifierImpact.instance.changeActivity(this);
     }
     
     @Override
     public void onResume () {
-    	ApplifierImpactUtils.Log("ApplifierImpactFullscreenActivity->onResume()", this);
     	super.onResume();
+    	ApplifierImpactUtils.Log("ApplifierImpactFullscreenActivity->onResume()", this);
+		ApplifierImpact.instance.changeActivity(this);
     }
     
     @Override
 	protected void onDestroy() {
-    	ApplifierImpactUtils.Log("ApplifierImpactFullscreenActivity->onDestroy()", this);
     	super.onDestroy();		
+    	ApplifierImpactUtils.Log("ApplifierImpactFullscreenActivity->onDestroy()", this);
 	}
 }

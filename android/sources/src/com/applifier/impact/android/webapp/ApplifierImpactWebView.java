@@ -26,6 +26,7 @@ public class ApplifierImpactWebView extends WebView {
 	private IApplifierImpactWebViewListener _listener = null;
 	private boolean _webAppLoaded = false;
 	private ApplifierImpactWebBridge _webBridge = null;
+	private String _currentWebView = ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START;
 	
 	public ApplifierImpactWebView(Activity activity, IApplifierImpactWebViewListener listener, ApplifierImpactWebBridge webBridge) {
 		super(activity);
@@ -42,6 +43,10 @@ public class ApplifierImpactWebView extends WebView {
 		return _webAppLoaded;
 	}
 	
+	public String getWebViewCurrentView () {
+		return _currentWebView;
+	}
+	
 	public void setWebViewCurrentView (String view) {
 		setWebViewCurrentView(view, null);
 	}
@@ -54,6 +59,7 @@ public class ApplifierImpactWebView extends WebView {
 				dataString = data.toString();
 			
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_CHANGE_VIEW, view, dataString);
+			_currentWebView = view;
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
 			ApplifierImpactUtils.Log("Send change view to WebApp: " + javascriptString, this);
 		}

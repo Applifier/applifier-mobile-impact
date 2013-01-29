@@ -1,25 +1,30 @@
 package com.applifier.impact.android.webapp;
 
 import org.json.JSONObject;
+
 import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 public class ApplifierImpactWebBridge {
-	private enum ApplifierImpactWebEvent { PlayVideo, PauseVideo, CloseView, InitComplete;
+	private enum ApplifierImpactWebEvent { PlayVideo, PauseVideo, CloseView, InitComplete, PlayStore;
 		@Override
 		public String toString () {
 			String retVal = null;
 			switch (this) {
 				case PlayVideo:
-					retVal = "playVideo";
+					retVal = ApplifierImpactConstants.IMPACT_WEBVIEW_API_PLAYVIDEO;
 					break;
 				case PauseVideo:
 					retVal = "pauseVideo";
 					break;
 				case CloseView:
-					retVal = "close";
+					retVal = ApplifierImpactConstants.IMPACT_WEBVIEW_API_CLOSE;
 					break;
 				case InitComplete:
-					retVal = "initComplete";
+					retVal = ApplifierImpactConstants.IMPACT_WEBVIEW_API_INITCOMPLETE;
+					break;
+				case PlayStore:
+					retVal = ApplifierImpactConstants.IMPACT_WEBVIEW_API_PLAYSTORE;
 					break;
 			}
 			return retVal;
@@ -76,6 +81,9 @@ public class ApplifierImpactWebBridge {
 				break;
 			case InitComplete:
 				_listener.onWebAppInitComplete(parameters);
+				break;
+			case PlayStore:
+				_listener.onOpenPlayStore(parameters);
 				break;
 		}
 	}

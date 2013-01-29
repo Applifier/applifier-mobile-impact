@@ -39,7 +39,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_API_INITCOMPLETE = "initComplete";
 	public static final String IMPACT_WEBVIEW_API_CLOSE = "close";
 	public static final String IMPACT_WEBVIEW_API_OPEN = "open";
-	public static final String IMPACT_WEBVIEW_API_PLAYSTORE = "playStore";
+	public static final String IMPACT_WEBVIEW_API_PLAYSTORE = "appStore";
 	public static final String IMPACT_WEBVIEW_API_ACTION_VIDEOSTARTEDPLAYING = "video_started_playing";	
 		
 	public static final String IMPACT_WEBVIEW_EVENTDATA_CAMPAIGNID_KEY = "campaignId";	
