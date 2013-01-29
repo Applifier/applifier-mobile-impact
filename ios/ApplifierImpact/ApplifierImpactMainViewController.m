@@ -141,6 +141,10 @@
         self.openHandler = ^(void) {
           AILOG_DEBUG(@"Running openhandler after opening view");
           [self.delegate mainControllerDidOpen];
+          
+          if (state == kApplifierImpactViewStateVideoPlayer) {
+            [[ApplifierImpactMainViewController sharedInstance] showPlayerAndPlaySelectedVideo:YES];
+          }
         };
       }
     }
@@ -155,7 +159,7 @@
       [[[ApplifierImpactWebAppController sharedInstance] webView] setFrame:self.view.bounds];
     }
     
-    if (state == kApplifierImpactViewStateVideoPlayer) {
+    if (state == kApplifierImpactViewStateVideoPlayer && [ApplifierImpactDevice isSimulator]) {
       [self showPlayerAndPlaySelectedVideo:YES];
     }
   });

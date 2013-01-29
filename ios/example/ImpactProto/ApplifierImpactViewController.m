@@ -43,7 +43,8 @@
 }
 
 - (void)openImpact {
-	if ([[ApplifierImpact sharedInstance] canShowImpact]) {
+	NSLog(@"canShowImpact: %i",[[ApplifierImpact sharedInstance] canShowImpact]);
+    if ([[ApplifierImpact sharedInstance] canShowImpact]) {
         /*
         NSLog(@"REWARD_ITEM_KEYS: %@", [[ApplifierImpact sharedInstance] getRewardItemKeys]);
         NSLog(@"CURRENT_REWARD_ITEM: %@", [[ApplifierImpact sharedInstance] getCurrentRewardItemKey]);
@@ -54,7 +55,7 @@
         NSLog(@"DEFAULT_REWARD_ITEM: %@", [[ApplifierImpact sharedInstance] getDefaultRewardItemKey]); */
 
         //[[ApplifierImpact sharedInstance] setViewController:self showImmediatelyInNewController:YES];
-        [[ApplifierImpact sharedInstance] showImpact:@{kApplifierImpactOptionNoOfferscreenKey:@true, kApplifierImpactOptionOpenAnimatedKey:@false}];
+        NSLog(@"showImpact: %i", [[ApplifierImpact sharedInstance] showImpact:@{kApplifierImpactOptionNoOfferscreenKey:@true, kApplifierImpactOptionOpenAnimatedKey:@true}]);
         //[[ApplifierImpact sharedInstance] showImpact];
         
         /*

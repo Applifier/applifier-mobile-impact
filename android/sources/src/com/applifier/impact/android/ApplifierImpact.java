@@ -5,31 +5,20 @@ import org.json.JSONObject;
 import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.cache.ApplifierImpactDownloader;
 import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.IApplifierImpactCampaignListener;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
-import com.applifier.impact.android.video.ApplifierImpactVideoPlayView;
 import com.applifier.impact.android.video.IApplifierImpactVideoListener;
-import com.applifier.impact.android.video.IApplifierImpactVideoPlayerListener;
 import com.applifier.impact.android.view.ApplifierImpactMainView;
 import com.applifier.impact.android.view.IApplifierImpactMainViewListener;
-import com.applifier.impact.android.view.IApplifierImpactViewListener;
 import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewAction;
 import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewState;
 import com.applifier.impact.android.webapp.*;
-import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.media.MediaPlayer;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
+
 
 public class ApplifierImpact implements IApplifierImpactCacheListener, 
 										IApplifierImpactWebDataListener, 
@@ -98,6 +87,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			if (activity.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
 				open();
 			}
+			else {
+				ApplifierImpactProperties.BASE_ACTIVITY = activity;
+			}
 		}
 	}
 	
@@ -114,7 +106,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		if (!_showingImpact && canShowCampaigns()) {
 			Intent newIntent = new Intent(ApplifierImpactProperties.CURRENT_ACTIVITY, com.applifier.impact.android.view.ApplifierImpactFullscreenActivity.class);
 			newIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK);
-			ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(newIntent);
+			ApplifierImpactProperties.BASE_ACTIVITY.startActivity(newIntent);
 			_showingImpact = true;	
 			return _showingImpact;
 		}
@@ -278,6 +270,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 
 		if (dataOk) {
 			_mainView.openImpact(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, data);
+			if (_impactListener != null)
+				_impactListener.onImpactOpen();
 		}
 	}
 
@@ -340,6 +334,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				if (dataOk) {
 					_mainView.closeImpact(data);
 					ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
+					ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
+					if (_impactListener != null)
+						_impactListener.onImpactClose();
 				}
 			}
 		}
@@ -349,6 +346,18 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		@Override
 		public void run() {			
 			if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null) {
+				JSONObject data = new JSONObject();
+				
+				try {
+					data.put(ApplifierImpactConstants.IMPACT_TEXTKEY_KEY, ApplifierImpactConstants.IMPACT_TEXTKEY_BUFFERING);
+				}
+				catch (Exception e) {
+					ApplifierImpactUtils.Log("Couldn't create data JSON", this);
+					return;
+				}
+				
+				_mainView.webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_SHOWSPINNER, data);
+				
 				String playUrl = ApplifierImpactUtils.getCacheDirectory() + "/" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getVideoFilename();
 				if (!ApplifierImpactUtils.isFileInCache(ApplifierImpactProperties.SELECTED_CAMPAIGN.getVideoFilename()))
 					playUrl = ApplifierImpactProperties.SELECTED_CAMPAIGN.getVideoStreamUrl(); 

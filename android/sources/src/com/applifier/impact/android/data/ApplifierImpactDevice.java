@@ -24,9 +24,8 @@ public class ApplifierImpactDevice {
 		return Build.MANUFACTURER + " " + Build.MODEL;
 	}
 	
-	public static String getDeviceType () {
-		String deviceType = "" + ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getConfiguration().screenLayout;
-		return deviceType;
+	public static int getDeviceType () {
+		return ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getConfiguration().screenLayout;
 	}
 
 	public static String getDeviceId () {
@@ -150,5 +149,13 @@ public class ApplifierImpactDevice {
 		else {
 			return false;
 		}
+	}
+	
+	public static int getScreenDensity () {
+		return ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getDisplayMetrics().densityDpi;
+	}
+	
+	public static int getScreenSize () {
+		return getDeviceType();
 	}
 }

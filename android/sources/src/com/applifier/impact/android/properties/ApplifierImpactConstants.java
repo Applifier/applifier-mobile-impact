@@ -33,7 +33,6 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_COMPLETED = "completed";
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_START = "start";
 	
-	
 	public static final String IMPACT_WEBVIEW_API_ACTION_KEY = "action";
 	public static final String IMPACT_WEBVIEW_API_PLAYVIDEO = "playVideo";
 	public static final String IMPACT_WEBVIEW_API_NAVIGATETO = "navigateTo";
@@ -46,6 +45,11 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_EVENTDATA_CAMPAIGNID_KEY = "campaignId";	
 	public static final String IMPACT_WEBVIEW_EVENTDATA_REWATCH_KEY = "rewatch";	
 	public static final String IMPACT_WEBVIEW_EVENTDATA_CLICKURL_KEY = "clickUrl";	
+
+	public static final String IMPACT_NATIVEEVENT_HIDESPINNER = "hideSpinner";	
+	public static final String IMPACT_NATIVEEVENT_SHOWSPINNER = "showSpinner";	
+	public static final String IMPACT_NATIVEEVENT_VIDEOCOMPLETED = "videoCompleted";
+	public static final String IMPACT_NATIVEEVENT_CAMPAIGNID_KEY = "campaignId";
 
 	/* Campaign JSON Properties */
 	public static final String IMPACT_CAMPAIGNS_KEY = "campaigns";
@@ -90,6 +94,8 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_INIT_QUERYPARAM_SDKVERSION_KEY = "sdkVersion";
 	public static final String IMPACT_INIT_QUERYPARAM_CONNECTIONTYPE_KEY = "connectionType";
 	public static final String IMPACT_INIT_QUERYPARAM_TEST_KEY = "test";
+	public static final String IMPACT_INIT_QUERYPARAM_SCREENDENSITY_KEY = "screenDensity";
+	public static final String IMPACT_INIT_QUERYPARAM_SCREENSIZE_KEY = "screenSize";
 	
 	/* Device types */
 	public static final String IMPACT_DEVICEID_UNKNOWN = "unknown";
@@ -113,4 +119,9 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_FAILED_URL_RETRIES_KEY = "retries";
 	
 	public static final String IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME = "com.applifier.impact.android.view.ApplifierImpactFullscreenActivity";
+	
+	public static final String IMPACT_TEXTKEY_KEY = "textKey";
+	public static final String IMPACT_TEXTKEY_BUFFERING = "buffering";
+	public static final String IMPACT_TEXTKEY_LOADING = "loading";
+	public static final String IMPACT_ITEMKEY_KEY = "itemKey";
 }

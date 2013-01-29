@@ -6,18 +6,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.applifier.impact.android.ApplifierImpactUtils;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.view.ApplifierImpactBufferingView;
 import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.PowerManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -64,9 +61,6 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_videoView.setVideoPath(_videoFileName);
 		_timeLeftInSecondsText.setText("" + Math.round(Math.ceil(_videoView.getDuration() / 1000)));
 		startVideo();
-		
-		// Force landscape orientation when video starts
-		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 	}
 
 	public void pauseVideo () {
@@ -100,7 +94,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		
 		if (_videoPausedTimer == null) {
 			_videoPausedTimer = new Timer();
-			_videoPausedTimer.scheduleAtFixedRate(new VideoStateChecker(), 300, 300);
+			_videoPausedTimer.scheduleAtFixedRate(new VideoStateChecker(), 0, 50);
 		}
 	}
 	
@@ -132,8 +126,6 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 					_listener.onEventPositionReached(ApplifierVideoPosition.Start);
 					_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
 				}
-				
-				hideBufferingView();
 			}
 		});
 		
@@ -247,7 +239,6 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
     @Override
     protected void onAttachedToWindow() {
     	super.onAttachedToWindow();    	
-  		createAndAddBufferingView();
   		hideVideoPausedView();
     }
     
@@ -255,6 +246,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
     
 	private class VideoStateChecker extends TimerTask {
 		private Float _curPos = 0f;
+		private Float _oldPos = 0f;
+		private boolean _playHeadHasMoved = false;
 		
 		@Override
 		public void run () {
@@ -263,8 +256,12 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				pauseVideo();
 			}
 			
+			_oldPos = _curPos;
 			_curPos = new Float(_videoView.getCurrentPosition());
 			Float position = _curPos / _videoView.getDuration();
+			
+			if ( _oldPos > 0 && _curPos > _oldPos) 
+				_playHeadHasMoved = true;
 			
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
 				@Override
@@ -294,15 +291,13 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 					}
 				});				
 			}
-			else if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && _videoPlayheadPrepared && _bufferingView != null && _bufferingView.getParent() != null) {
+			
+			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && _videoPlayheadPrepared && _playHeadHasMoved) {
 				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						ApplifierImpactUtils.Log("run", this);
 						hideBufferingView();
-						
 						if (!_videoPlaybackStartedSent) {
-							// FIX: Move this to actually check buffer status before sending playback started, with streams, screen can go black
 							if (_listener != null) {
 								ApplifierImpactUtils.Log("onVideoPlaybackStarted to listener", this);
 								_listener.onVideoPlaybackStarted();

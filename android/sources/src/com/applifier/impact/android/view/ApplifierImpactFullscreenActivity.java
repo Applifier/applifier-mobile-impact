@@ -2,11 +2,9 @@ package com.applifier.impact.android.view;
 
 import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactUtils;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 
 public class ApplifierImpactFullscreenActivity extends Activity {
     @Override
