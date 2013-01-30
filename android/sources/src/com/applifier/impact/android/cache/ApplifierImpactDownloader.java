@@ -147,6 +147,7 @@ public class ApplifierImpactDownloader {
 		}
 		catch (Exception e) {
 			ApplifierImpactUtils.Log("Problems creating FOS: " + fileName, ApplifierImpactDownloader.class);
+			return null;
 		}
 		
 		return fos;
@@ -212,6 +213,9 @@ public class ApplifierImpactDownloader {
 				
 				_targetFile = new File(sUrl[0]);
 				_output = getOutputStreamFor(_campaign.getVideoFilename());
+				
+				if (_output == null)
+					onCancelled(this);
 				
 				byte data[] = new byte[1024];
 				long total = 0;
@@ -285,7 +289,7 @@ public class ApplifierImpactDownloader {
 	    private void cancelDownload () {
 	    	ApplifierImpactUtils.Log("Download cancelled for: " + _downloadUrl.toString(), this);
 			closeAndFlushConnection();
-			ApplifierImpactUtils.removeFile(_targetFile.toString());
+			ApplifierImpactUtils.removeFile(_campaign.getVideoFilename());
         	removeDownload(_campaign);
         	removeFromCacheDownloads(this);
         	sendToListeners(ApplifierDownloadEventType.DownloadCancelled, _downloadUrl.toString());

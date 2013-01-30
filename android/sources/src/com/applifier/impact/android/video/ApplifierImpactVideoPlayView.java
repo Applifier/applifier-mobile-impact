@@ -58,7 +58,27 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_videoPlayheadPrepared = false;
 		_videoFileName = fileName;
 		ApplifierImpactUtils.Log("Playing video from: " + _videoFileName, this);
-		_videoView.setVideoPath(_videoFileName);
+		
+		_videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+			@Override
+			public boolean onError(MediaPlayer mp, int what, int extra) {
+				ApplifierImpactUtils.Log("For some reason the device failed to play the video, a crash was prevented", this);
+				if (_listener != null)
+					_listener.onVideoPlaybackError();
+				return true;
+			}
+		});
+		
+		try {
+			_videoView.setVideoPath(_videoFileName);
+		}
+		catch (Exception e) {
+			ApplifierImpactUtils.Log("For some reason the device failed to play the video, a crash was prevented", this);
+			if (_listener != null)
+				_listener.onVideoPlaybackError();
+			return;
+		}
+		
 		_timeLeftInSecondsText.setText("" + Math.round(Math.ceil(_videoView.getDuration() / 1000)));
 		startVideo();
 	}
@@ -260,7 +280,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			_curPos = new Float(_videoView.getCurrentPosition());
 			Float position = _curPos / _videoView.getDuration();
 			
-			if ( _oldPos > 0 && _curPos > _oldPos) 
+			if (_curPos > _oldPos) 
 				_playHeadHasMoved = true;
 			
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
