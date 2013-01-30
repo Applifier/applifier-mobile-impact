@@ -1,6 +1,7 @@
 package com.mycompany.test;
 
 import com.applifier.impact.android.ApplifierImpact;
+import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.IApplifierImpactListener;
 
 import android.app.Activity;
@@ -22,6 +23,7 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
         ((ImageView)findViewById(R.id.unlock)).setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
+				ApplifierImpactUtils.Log("Opened with key: " + ApplifierImpact.instance.getCurrentRewardItemKey(), this);
 				ApplifierImpact.instance.showImpact();
 			}
 		});

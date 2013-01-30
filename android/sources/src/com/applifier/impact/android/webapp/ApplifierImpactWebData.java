@@ -29,6 +29,8 @@ public class ApplifierImpactWebData {
 	private ApplifierImpactUrlLoader _currentLoader = null;
 	private ApplifierImpactRewardItem _defaultRewardItem = null;
 	private ArrayList<ApplifierImpactRewardItem> _rewardItems = null;
+	private ApplifierImpactRewardItem _currentRewardItem = null;
+	
 	private boolean _isLoading = false;
 	
 	public static enum ApplifierVideoPosition { Start, FirstQuartile, MidPoint, ThirdQuartile, End;
@@ -202,8 +204,41 @@ public class ApplifierImpactWebData {
 		return null;
 	}
 	
+	
+	// Multiple reward items
+	
+	public ArrayList<ApplifierImpactRewardItem> getRewardItems () {
+		return _rewardItems;
+	}
+	
+	public ApplifierImpactRewardItem getDefaultRewardItem () {
+		return _defaultRewardItem;
+	}
+	
 	public String getCurrentRewardItemKey () {
-		return _defaultRewardItem.getKey();
+		if (_currentRewardItem != null)
+			return _currentRewardItem.getKey();
+		
+		return null;
+	}
+	
+	public ApplifierImpactRewardItem getRewardItemByKey (String rewardItemKey) {
+		if (_rewardItems != null) {
+			for (ApplifierImpactRewardItem rewardItem : _rewardItems) {
+				if (rewardItem.getKey().equals(rewardItemKey))
+					return rewardItem;
+			}
+		}
+		
+		if (_defaultRewardItem != null && _defaultRewardItem.getKey().equals(rewardItemKey))
+			return _defaultRewardItem;
+		
+		return null;
+	}
+	
+	public void setCurrentRewardItem (ApplifierImpactRewardItem rewardItem) {
+		if (_currentRewardItem != null && !_currentRewardItem.equals(_currentRewardItem))
+			_currentRewardItem = rewardItem;
 	}
 	
 	
@@ -372,6 +407,8 @@ public class ApplifierImpactWebData {
 						campaignDataFailed();
 						return;
 					}
+					
+					_currentRewardItem = _defaultRewardItem;
 				}
 				
 				// Parse possible multiple reward items

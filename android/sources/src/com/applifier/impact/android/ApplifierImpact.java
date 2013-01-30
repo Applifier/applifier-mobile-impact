@@ -1,11 +1,15 @@
 package com.applifier.impact.android;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import org.json.JSONObject;
 
 import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.cache.ApplifierImpactDownloader;
 import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
+import com.applifier.impact.android.campaign.ApplifierImpactRewardItem;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.view.ApplifierImpactMainView;
@@ -24,6 +28,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 										IApplifierImpactWebDataListener, 
 										IApplifierImpactWebBrigeListener,
 										IApplifierImpactMainViewListener {
+	
+	// Reward item HashMap keys
+	public static final String APPLIFIER_IMPACT_REWARDITEM_PICTURE_KEY = "picture";
+	public static final String APPLIFIER_IMPACT_REWARDITEM_NAME_KEY = "name";	
 	
 	// Impact components
 	public static ApplifierImpact instance = null;
@@ -57,14 +65,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 
 	public static boolean isSupported () {
-		if (Build.VERSION.SDK_INT < 7) {
+		if (Build.VERSION.SDK_INT < 9) {
 			return false;
 		}
 		
 		return false;
 	}
 	
-	public void setTestMode (boolean testModeEnabled) {
+	public static void setTestMode (boolean testModeEnabled) {
 		ApplifierImpactProperties.TESTMODE_ENABLED = testModeEnabled;
 	}
 	
@@ -125,6 +133,70 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		ApplifierImpactUtils.Log("stopAll()", this);
 		ApplifierImpactDownloader.stopAllDownloads();
 		webdata.stopAllRequests();
+	}
+	
+	
+	// Public multiple reward item support
+	
+	public boolean hasMultipleRewardItems () {
+		if (webdata.getRewardItems() != null && webdata.getRewardItems().size() > 0)
+			return true;
+		
+		return false;
+	}
+	
+	public ArrayList<String> getRewardItemKeys () {
+		if (webdata.getRewardItems() != null && webdata.getRewardItems().size() > 0) {
+			ArrayList<ApplifierImpactRewardItem> rewardItems = webdata.getRewardItems();
+			ArrayList<String> rewardItemKeys = new ArrayList<String>();
+			for (ApplifierImpactRewardItem rewardItem : rewardItems) {
+				rewardItemKeys.add(rewardItem.getKey());
+			}
+			
+			return rewardItemKeys;
+		}
+		
+		return null;
+	}
+	
+	public String getDefaultRewardItemKey () {
+		if (webdata != null && webdata.getDefaultRewardItem() != null)
+			return webdata.getDefaultRewardItem().getKey();
+		
+		return null;
+	}
+	
+	public String getCurrentRewardItemKey () {
+		if (webdata != null && webdata.getCurrentRewardItemKey() != null)
+			return webdata.getCurrentRewardItemKey();
+			
+		return null;
+	}
+	
+	public boolean setRewardItemKey (String rewardItemKey) {
+		ApplifierImpactRewardItem rewardItem = webdata.getRewardItemByKey(rewardItemKey);
+		
+		if (rewardItem != null) {
+			webdata.setCurrentRewardItem(rewardItem);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public void setDefaultRewardItemAsRewardItem () {
+		if (webdata != null && webdata.getDefaultRewardItem() != null) {
+			webdata.setCurrentRewardItem(webdata.getDefaultRewardItem());
+		}
+	}
+	
+	public Map<String, String> getRewardItemDetailsWithKey (String rewardItemKey) {
+		ApplifierImpactRewardItem rewardItem = webdata.getRewardItemByKey(rewardItemKey);
+		if (rewardItem != null) {
+			return rewardItem.getDetails();
+		}
+		
+		return null;
 	}
 	
 	
