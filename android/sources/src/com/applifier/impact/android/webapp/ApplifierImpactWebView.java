@@ -12,6 +12,7 @@ import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -117,13 +118,15 @@ public class ApplifierImpactWebView extends WebView {
 		setupApplifierView();
 		loadUrl(_url);
 		
-		setOnLongClickListener(new OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-			    return true;
-			}
-		});
-		setLongClickable(false);
+		if (Build.VERSION.SDK_INT > 8) {
+			setOnLongClickListener(new OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+				    return true;
+				}
+			});
+			setLongClickable(false);
+		}
 	}
 	
 	private void setupApplifierView ()  {
@@ -141,7 +144,7 @@ public class ApplifierImpactWebView extends WebView {
 		
 		getSettings().setSupportZoom(false);
 		getSettings().setBuiltInZoomControls(false);
-		getSettings().setLightTouchEnabled(false);
+		//getSettings().setLightTouchEnabled(false);
 		getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 		getSettings().setSupportMultipleWindows(false);
 		getSettings().setPluginsEnabled(false);
@@ -154,9 +157,7 @@ public class ApplifierImpactWebView extends WebView {
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 		setInitialScale(0);
-		
 
-		
 		setBackgroundColor(Color.BLACK);
 		setBackgroundDrawable(null);
 		setBackgroundResource(0);
