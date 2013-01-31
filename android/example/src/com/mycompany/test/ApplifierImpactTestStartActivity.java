@@ -99,4 +99,8 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
 			}
 		});  
 	}
+    
+    @Override
+    public void onCampaignsFetchFailed () {
+    }
 }

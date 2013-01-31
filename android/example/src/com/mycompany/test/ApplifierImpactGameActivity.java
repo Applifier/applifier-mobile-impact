@@ -66,4 +66,8 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
     @Override
 	public void onCampaignsAvailable () {
 	}
+    
+    @Override
+    public void onCampaignsFetchFailed () {
+    }
 }

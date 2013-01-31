@@ -249,6 +249,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	@Override
 	public void onWebDataFailed () {
+		if (_impactListener != null)
+			_impactListener.onCampaignsFetchFailed();
 	}
 	
 	

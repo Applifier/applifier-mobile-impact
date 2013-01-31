@@ -10,6 +10,8 @@ public class ApplifierImpactConstants {
 	/* Impact */
 	public static final Boolean IMPACT_DEBUG_MODE = true; 
 	public static final String IMPACT_VERSION = "1.0.3";
+	public static final String IMPACT_REQUEST_METHOD_POST = "POST";
+	public static final String IMPACT_REQUEST_METHOD_GET = "GET";
 	
 	/* JSON Data Root */	
 	public static final String IMPACT_JSON_DATA_ROOTKEY = "data";

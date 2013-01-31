@@ -1,11 +1,14 @@
 package com.applifier.impact.android.webapp;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,6 +33,9 @@ public class ApplifierImpactWebData {
 	private ApplifierImpactRewardItem _defaultRewardItem = null;
 	private ArrayList<ApplifierImpactRewardItem> _rewardItems = null;
 	private ApplifierImpactRewardItem _currentRewardItem = null;
+	private int _totalUrlsSent = 0;
+	private int _totalLoadersCreated = 0;
+	private int _totalLoadersHaveRun = 0;
 	
 	private boolean _isLoading = false;
 	
@@ -48,7 +54,10 @@ public class ApplifierImpactWebData {
 					output = "third_quartile";
 					break;
 				case End:
-					output = "view";
+					output = "video_end";
+					break;
+				case Start:
+					output = "video_start";
 					break;
 				default:
 					output = name().toString().toLowerCase();
@@ -118,7 +127,12 @@ public class ApplifierImpactWebData {
 
 	public boolean initCampaigns () {
 		String url = ApplifierImpactProperties.getCampaignQueryUrl();
-		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(url, ApplifierImpactRequestType.VideoPlan, 0);
+		
+		String[] parts = url.split("\\?");
+		
+		ApplifierImpactUtils.Log(parts.toString(), this);
+		
+		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(parts[0], parts[1], ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET, ApplifierImpactRequestType.VideoPlan, 0);
 		ApplifierImpactUtils.Log("VIDEOPLAN_URL: " + loader.getUrl(), this);
 		addLoader(loader);
 		startNextLoader();
@@ -131,27 +145,16 @@ public class ApplifierImpactWebData {
 		boolean progressSent = false;
 		if (campaign == null) return progressSent;
 
-		ApplifierImpactUtils.Log("VP: " + position.toString() + ", " + getGamerId(), this);
+		ApplifierImpactUtils.Log("VP: " + position.toString() + ", " + ApplifierImpactProperties.IMPACT_GAMER_ID, this);
 		
-		if (position != null && getGamerId() != null && (position.equals(ApplifierVideoPosition.Start)  || position.equals(ApplifierVideoPosition.End))) {			
+		if (position != null && ApplifierImpactProperties.IMPACT_GAMER_ID != null) {			
 			String viewUrl = String.format("%s%s", ApplifierImpactProperties.IMPACT_BASE_URL, ApplifierImpactConstants.IMPACT_ANALYTICS_TRACKING_PATH);
-			viewUrl = String.format("%s%s/%s/%s", viewUrl, ApplifierImpactProperties.IMPACT_GAMER_ID, position.toString(), campaign.getCampaignId());
-			viewUrl = String.format("%s?%s=%s", viewUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
-			viewUrl = String.format("%s&%s=%s", viewUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, getCurrentRewardItemKey());
-			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(viewUrl, ApplifierImpactRequestType.VideoViewed, 0);
-			addLoader(loader);
-			startNextLoader();
-			progressSent = true;
-		}
-		
-		if (position != null && getGamerId() != null) {
-			String analyticsUrl = String.format("%s", ApplifierImpactProperties.ANALYTICS_BASE_URL);
-			analyticsUrl = String.format("%s?%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
-			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_EVENTTYPE_KEY, position.toString());
-			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_TRACKINGID_KEY, ApplifierImpactProperties.IMPACT_GAMER_ID);
-			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_PROVIDERID_KEY, campaign.getCampaignId());
-			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, getCurrentRewardItemKey());
-			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(analyticsUrl, ApplifierImpactRequestType.VideoViewed, 0);
+			viewUrl = String.format("%s%s/video/%s/%s", viewUrl, ApplifierImpactProperties.IMPACT_GAMER_ID, position.toString(), campaign.getCampaignId());
+			viewUrl = String.format("%s/%s", viewUrl, ApplifierImpactProperties.IMPACT_GAME_ID);
+			
+			String queryParams = String.format("%s=%s", ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, getCurrentRewardItemKey());
+			
+			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(viewUrl, queryParams, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_POST, ApplifierImpactRequestType.VideoViewed, 0);
 			addLoader(loader);
 			startNextLoader();
 			progressSent = true;
@@ -175,32 +178,6 @@ public class ApplifierImpactWebData {
 		if (_campaignJson != null)
 			return _campaignJson.toString();
 		
-		return null;
-	}
-	
-	public String getGamerId () {
-		if (_campaignJson != null) {
-			if (_campaignJson.has("data")) {				
-				JSONObject dataObj = null;
-				try {
-					dataObj = _campaignJson.getJSONObject("data");
-				}
-				catch (Exception e) {
-					ApplifierImpactUtils.Log("Malformed JSON", this);
-					return null;
-				}
-				
-				if (dataObj != null) {
-					try {						
-						return dataObj.getString("gamerId");
-					}
-					catch (Exception e) {
-						ApplifierImpactUtils.Log("Malformed JSON", this);
-					}
-				}
-			}
-		}
-			
 		return null;
 	}
 	
@@ -252,7 +229,9 @@ public class ApplifierImpactWebData {
 	}
 	
 	private void startNextLoader () {
+		
 		if (_urlLoaders.size() > 0 && !_isLoading) {
+			ApplifierImpactUtils.Log("Starting next URL loader", this);
 			_isLoading = true;
 			_currentLoader = (ApplifierImpactUrlLoader)_urlLoaders.remove(0).execute();
 		}			
@@ -268,6 +247,10 @@ public class ApplifierImpactWebData {
 			case Unsent:
 				break;
 		}
+		
+		_totalUrlsSent++;
+		
+		ApplifierImpactUtils.Log("Total urls sent: " + _totalUrlsSent, this);
 		
 		_isLoading = false;
 		startNextLoader();
@@ -306,6 +289,8 @@ public class ApplifierImpactWebData {
 						JSONObject failedUrl = pendingRequestsArray.getJSONObject(i);
 						loader = new ApplifierImpactUrlLoader(
 								failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_URL_KEY), 
+								failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_BODY_KEY),
+								failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_METHODTYPE_KEY),
 								ApplifierImpactRequestType.getValueOf(failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_REQUESTTYPE_KEY)), 
 								failedUrl.getInt(ApplifierImpactConstants.IMPACT_FAILED_URL_RETRIES_KEY) + 1
 								);
@@ -341,10 +326,10 @@ public class ApplifierImpactWebData {
 			JSONObject failedUrl = null;
 			for (ApplifierImpactUrlLoader failedLoader : _failedUrlLoaders) {
 				failedUrl = new JSONObject();
-				failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_URL_KEY, failedLoader.getUrl());
+				failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_URL_KEY, failedLoader.getBaseUrl());
 				failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_REQUESTTYPE_KEY, failedLoader.getRequestType());
-				failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_METHODTYPE_KEY, "GET");
-				failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_BODY_KEY, "");
+				failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_METHODTYPE_KEY, failedLoader.getHTTPMethod());
+				failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_BODY_KEY, failedLoader.getQueryParams());				
 				failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_RETRIES_KEY, failedLoader.getRetries());
 				
 				failedUrlsArray.put(failedUrl);
@@ -490,21 +475,37 @@ public class ApplifierImpactWebData {
 	
 	private class ApplifierImpactUrlLoader extends AsyncTask<String, Integer, String> {
 		private URL _url = null;
-		private URLConnection _urlConnection = null;
+		private HttpURLConnection _connection = null;
 		private int _downloadLength = 0;
 		private InputStream _input = null;
 		private String _urlData = "";
 		private ApplifierImpactRequestType _requestType = null;
+		private String _finalUrl = null;
 		private int _retries = 0;
+		private String _httpMethod = ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET;
+		private String _queryParams = null;
+		private String _baseUrl = null;
 		
-		public ApplifierImpactUrlLoader (String url, ApplifierImpactRequestType requestType, int existingRetries) {
+		public ApplifierImpactUrlLoader (String url, String queryParams, String httpMethod, ApplifierImpactRequestType requestType, int existingRetries) {
 			super();
 			try {
-				_url = new URL(url);
+				_finalUrl = url;
+				_baseUrl = url;
+				
+				if (httpMethod.equals(ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET) && queryParams != null && queryParams.length() > 2) {
+					_finalUrl += "?" + queryParams;
+				}
+				
+				_url = new URL(_finalUrl);
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Problems with url: " + e.getMessage(), this);
 			}
+			
+			_queryParams = queryParams;
+			_httpMethod = httpMethod;
+			_totalLoadersCreated++;
+			ApplifierImpactUtils.Log("Total urlLoaders created: " + _totalLoadersCreated, this);
 			_requestType = requestType;
 			_retries = existingRetries;
 		}
@@ -517,8 +518,20 @@ public class ApplifierImpactWebData {
 			return _url.toString();
 		}
 		
+		public String getBaseUrl () {
+			return _baseUrl;
+		}
+		
 		public String getData () {
 			return _urlData;
+		}
+		
+		public String getQueryParams () {
+			return _queryParams;
+		}
+		
+		public String getHTTPMethod () {
+			return _httpMethod;
 		}
 		
 		public ApplifierImpactRequestType getRequestType () {
@@ -528,20 +541,41 @@ public class ApplifierImpactWebData {
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				_urlConnection = _url.openConnection();
-				_urlConnection.setConnectTimeout(10000);
-				_urlConnection.setReadTimeout(10000);
-				_urlConnection.connect();
+				if (_url.toString().startsWith("https://")) {
+					_connection = (HttpsURLConnection)_url.openConnection();
+				}
+				else {
+					_connection = (HttpURLConnection)_url.openConnection();
+				}
+				
+				_connection.setConnectTimeout(10000);
+				_connection.setReadTimeout(10000);
+				_connection.setRequestMethod(_httpMethod);
+				_connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+				_connection.setDoInput(true);
+				
+				if (_httpMethod.equals(ApplifierImpactConstants.IMPACT_REQUEST_METHOD_POST))
+					_connection.setDoOutput(true);
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Problems opening connection: " + e.getMessage(), this);
 			}
 			
-			if (_urlConnection != null) {
-				_downloadLength = _urlConnection.getContentLength();
+			if (_connection != null) {				
+				if (_httpMethod.equals(ApplifierImpactConstants.IMPACT_REQUEST_METHOD_POST)) {
+					try {
+						PrintWriter pout = new PrintWriter(new OutputStreamWriter(_connection.getOutputStream(), "UTF-8"), true);
+						pout.print(_queryParams);
+						pout.flush();
+					}
+					catch (Exception e) {
+						ApplifierImpactUtils.Log("Problems writing post-data: " + e.getMessage() + ", " + e.getStackTrace(), this);
+					}
+				}
 				
 				try {
-					_input = new BufferedInputStream(_url.openStream());
+					ApplifierImpactUtils.Log("Connection response: " + _connection.getResponseCode() + ", " + _connection.getResponseMessage() + ", " + _connection.getURL().toString(), this);
+					_input = _connection.getInputStream();
 				}
 				catch (Exception e) {
 					ApplifierImpactUtils.Log("Problems opening stream: " + e.getMessage(), this);
@@ -552,6 +586,9 @@ public class ApplifierImpactWebData {
 				int count = 0;
 				
 				try {
+					_totalLoadersHaveRun++;
+					_downloadLength = _connection.getContentLength();
+					ApplifierImpactUtils.Log("Total urlLoaders that have started running: " + _totalLoadersHaveRun, this);
 					ApplifierImpactUtils.Log("Reading data from: " + _url.toString(), this);
 					while ((count = _input.read(data)) != -1) {
 						total += count;
