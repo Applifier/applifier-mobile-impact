@@ -1,5 +1,8 @@
 package com.mycompany.test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.IApplifierImpactListener;
@@ -24,7 +27,15 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
 			@Override
 			public void onClick(View v) {
 				ApplifierImpactUtils.Log("Opened with key: " + ApplifierImpact.instance.getCurrentRewardItemKey(), this);
-				ApplifierImpact.instance.showImpact();
+				
+				// Open with options test
+				Map<String, Boolean> optionsMap = new HashMap<String, Boolean>();
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, false);
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, false);
+				ApplifierImpact.instance.showImpact(optionsMap);
+				
+				// Open without options (defaults)
+				//ApplifierImpact.instance.showImpact();
 			}
 		});
         

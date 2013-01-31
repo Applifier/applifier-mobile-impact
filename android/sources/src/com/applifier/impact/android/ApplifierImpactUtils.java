@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
 import android.os.Environment;
 import android.util.Log;
@@ -17,11 +18,15 @@ import android.util.Log;
 public class ApplifierImpactUtils {
 
 	public static void Log (String message, Class cls) {
-		Log.d(ApplifierImpactConstants.LOG_NAME, cls.getName() + " :: " +  message);
+		if (ApplifierImpactProperties.IMPACT_DEBUG_MODE) {
+			Log.d(ApplifierImpactConstants.LOG_NAME, cls.getName() + " :: " +  message);
+		}
 	}
 	
 	public static void Log (String message, Object obj) {
-		Log.d(ApplifierImpactConstants.LOG_NAME, obj.getClass().getName() + " :: " +  message);
+		if (ApplifierImpactProperties.IMPACT_DEBUG_MODE) {
+			Log.d(ApplifierImpactConstants.LOG_NAME, obj.getClass().getName() + " :: " +  message);
+		}
 	}
 	
 	public static String Md5 (String input) {

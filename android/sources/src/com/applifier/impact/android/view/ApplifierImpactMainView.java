@@ -15,6 +15,7 @@ import com.applifier.impact.android.webapp.IApplifierImpactWebViewListener;
 import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;

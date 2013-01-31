@@ -24,6 +24,8 @@ public class ApplifierImpactProperties {
 	public static Activity BASE_ACTIVITY = null;
 	public static Activity CURRENT_ACTIVITY = null;
 	public static ApplifierImpactCampaign SELECTED_CAMPAIGN = null;
+	public static Boolean IMPACT_DEBUG_MODE = false; 
+
 	public static final int MAX_NUMBER_OF_ANALYTICS_RETRIES = 5;
 	
 	private static String _campaignQueryString = null; 
@@ -63,7 +65,7 @@ public class ApplifierImpactProperties {
 			if (feature.name != null)
 				ApplifierImpactUtils.Log("Feature:" + feature.name, ApplifierImpactProperties.class);
 			else
-				ApplifierImpactUtils.Log("Feature:" + feature.getGlEsVersion(), ApplifierImpactProperties.class);
+				ApplifierImpactUtils.Log("Feature: OpenGLES " + feature.getGlEsVersion(), ApplifierImpactProperties.class);
 		}
 		*/
 	}

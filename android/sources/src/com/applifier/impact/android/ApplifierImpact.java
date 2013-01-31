@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.cache.ApplifierImpactDownloader;
 import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.ApplifierImpactRewardItem;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
@@ -22,6 +23,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.sax.StartElementListener;
 
 
 public class ApplifierImpact implements IApplifierImpactCacheListener, 
@@ -31,7 +33,12 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	// Reward item HashMap keys
 	public static final String APPLIFIER_IMPACT_REWARDITEM_PICTURE_KEY = "picture";
-	public static final String APPLIFIER_IMPACT_REWARDITEM_NAME_KEY = "name";	
+	public static final String APPLIFIER_IMPACT_REWARDITEM_NAME_KEY = "name";
+	
+	// Impact developer options keys
+	public static final String APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY = "noOfferScreen";
+	public static final String APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY = "openAnimated";
+	
 	
 	// Impact components
 	public static ApplifierImpact instance = null;
@@ -44,6 +51,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private boolean _impactReadySent = false;
 	private boolean _webAppLoaded = false;
 	private boolean _openRequestFromDeveloper = false;
+	private Map<String, Boolean> _developerOptions = null;
 		
 	// Main View
 	private ApplifierImpactMainView _mainView = null;
@@ -59,11 +67,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public ApplifierImpact (Activity activity, String gameId, IApplifierImpactListener listener) {
 		init(activity, gameId, listener);
 	}
-		
-	public void setImpactListener (IApplifierImpactListener listener) {
-		_impactListener = listener;
-	}
-
+	
+	
+	/* PUBLIC STATIC METHODS */
+	
 	public static boolean isSupported () {
 		if (Build.VERSION.SDK_INT < 9) {
 			return false;
@@ -72,8 +79,23 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		return false;
 	}
 	
+	public static void setDebugMode (boolean debugModeEnabled) {
+		ApplifierImpactProperties.IMPACT_DEBUG_MODE = debugModeEnabled;
+	}
+	
 	public static void setTestMode (boolean testModeEnabled) {
 		ApplifierImpactProperties.TESTMODE_ENABLED = testModeEnabled;
+	}
+	
+	public static String getSDKVersion () {
+		return ApplifierImpactConstants.IMPACT_VERSION;
+	}
+	
+	
+	/* PUBLIC METHODS */
+	
+	public void setImpactListener (IApplifierImpactListener listener) {
+		_impactListener = listener;
 	}
 	
 	public void changeActivity (Activity activity) {
@@ -108,11 +130,26 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		return false;
 	}
 	
+	public boolean showImpact (Map<String, Boolean> options) {
+		if (canShowImpact()) {
+			_developerOptions = options;
+			
+			if (_developerOptions != null && _developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY) && _developerOptions.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true)) {
+				if (webdata.getViewableVideoPlanCampaigns().size() > 0) {
+					ApplifierImpactCampaign selectedCampaign = webdata.getViewableVideoPlanCampaigns().get(0);
+					ApplifierImpactProperties.SELECTED_CAMPAIGN = selectedCampaign;
+				}
+			}
+			
+			return showImpact();
+		}
+		
+		return false;
+	}
+	
 	public boolean showImpact () {
 		if (canShowImpact()) {
-			Intent newIntent = new Intent(ApplifierImpactProperties.CURRENT_ACTIVITY, com.applifier.impact.android.view.ApplifierImpactFullscreenActivity.class);
-			newIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK);
-			ApplifierImpactProperties.BASE_ACTIVITY.startActivity(newIntent);
+			startImpactFullscreenActivity();
 			_showingImpact = true;
 			_openRequestFromDeveloper = true;
 			return _showingImpact;
@@ -136,7 +173,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	
-	// Public multiple reward item support
+	/* PUBLIC MULTIPLE REWARD ITEM SUPPORT */
 	
 	public boolean hasMultipleRewardItems () {
 		if (webdata.getRewardItems() != null && webdata.getRewardItems().size() > 0)
@@ -278,9 +315,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				}
 				
 				if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null && (rewatch || !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed())) {
-					ApplifierImpactPlayVideoRunner playVideoRunner = new ApplifierImpactPlayVideoRunner();
-					ApplifierImpactUtils.Log("Running threaded", this);
-					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
+					playVideo();
 				}
 			}
 		}
@@ -371,6 +406,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		if (dataOk && view != null) {
 			ApplifierImpactUtils.Log("open() opening with view:" + view + " and data:" + data.toString(), this);
 			_mainView.openImpact(view, data);
+			
+			if (_developerOptions != null && _developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY)  && _developerOptions.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true))
+				playVideo();
+			
 			if (_impactListener != null)
 				_impactListener.onImpactOpen();
 		}
@@ -406,6 +445,23 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		_mainView = new ApplifierImpactMainView(ApplifierImpactProperties.CURRENT_ACTIVITY, this);
 	}
 
+	private void playVideo () {
+		ApplifierImpactPlayVideoRunner playVideoRunner = new ApplifierImpactPlayVideoRunner();
+		ApplifierImpactUtils.Log("Running threaded", this);
+		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
+	}
+	
+	private void startImpactFullscreenActivity () {
+		Intent newIntent = new Intent(ApplifierImpactProperties.CURRENT_ACTIVITY, com.applifier.impact.android.view.ApplifierImpactFullscreenActivity.class);
+		int flags = Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK;
+		
+		if (_developerOptions != null && _developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) && _developerOptions.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(true))
+			flags = Intent.FLAG_ACTIVITY_NEW_TASK;
+		
+		newIntent.addFlags(flags);
+		ApplifierImpactProperties.BASE_ACTIVITY.startActivity(newIntent);
+	}
+	
 	
 	/* INTERNAL CLASSES */
 
@@ -431,11 +487,17 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				if (dataOk) {
 					_mainView.closeImpact(data);
 					ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
-					ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
+					
+					if (_developerOptions == null || !_developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) || _developerOptions.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(false))
+						ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
+					
 					if (_impactListener != null)
 						_impactListener.onImpactClose();
 				}
 			}
+			
+			// Reset developer options when impact closes
+			_developerOptions = null;
 		}
 	}
 	
