@@ -26,7 +26,7 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
         ((ImageView)findViewById(R.id.unlock)).setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				ApplifierImpactUtils.Log("Opened with key: " + ApplifierImpact.instance.getCurrentRewardItemKey(), this);
+				ApplifierImpactUtils.Log("Opening with key: " + ApplifierImpact.instance.getCurrentRewardItemKey(), this);
 				
 				// Open with options test
 				Map<String, Boolean> optionsMap = new HashMap<String, Boolean>();
