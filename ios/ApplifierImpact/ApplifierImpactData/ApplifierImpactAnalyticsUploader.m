@@ -138,57 +138,45 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 	
 	dispatch_async(self.analyticsQueue, ^{
 		NSString *positionString = nil;
-		NSString *trackingString = nil;
     
-		if (videoPosition == kVideoAnalyticsPositionStart) {
+		if (videoPosition == kVideoAnalyticsPositionStart)
 			positionString = kApplifierImpactAnalyticsEventTypeVideoStart;
-			trackingString = kApplifierImpactTrackingEventTypeVideoStart;
-		}
 		else if (videoPosition == kVideoAnalyticsPositionFirstQuartile)
 			positionString = kApplifierImpactAnalyticsEventTypeVideoFirstQuartile;
 		else if (videoPosition == kVideoAnalyticsPositionMidPoint)
 			positionString = kApplifierImpactAnalyticsEventTypeVideoMidPoint;
 		else if (videoPosition == kVideoAnalyticsPositionThirdQuartile)
 			positionString = kApplifierImpactAnalyticsEventTypeVideoThirdQuartile;
-		else if (videoPosition == kVideoAnalyticsPositionEnd) {
+		else if (videoPosition == kVideoAnalyticsPositionEnd)
 			positionString = kApplifierImpactAnalyticsEventTypeVideoEnd;
-			trackingString = kApplifierImpactTrackingEventTypeVideoEnd;
-		}
 		
-    NSString *query = [NSString stringWithFormat:@"%@=%@&%@=%@&%@=%@&%@=%@&%@=%@", kApplifierImpactAnalyticsQueryParamGameIdKey, [[ApplifierImpactProperties sharedInstance] impactGameId], kApplifierImpactAnalyticsQueryParamEventTypeKey, positionString, kApplifierImpactAnalyticsQueryParamTrackingIdKey, [[ApplifierImpactProperties sharedInstance] gamerId], kApplifierImpactAnalyticsQueryParamProviderIdKey, campaign.id, kApplifierImpactAnalyticsQueryParamRewardItemKey, [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey]];
-    
-    [self performSelector:@selector(sendAnalyticsRequestWithQueryString:) onThread:self.backgroundThread withObject:query waitUntilDone:NO];
-     
-     if (trackingString != nil) {
-       NSString *trackingQuery = [NSString stringWithFormat:@"%@/%@/%@?%@=%@&%@=%@", [[ApplifierImpactProperties sharedInstance] gamerId], trackingString, campaign.id, kApplifierImpactAnalyticsQueryParamGameIdKey, [[ApplifierImpactProperties sharedInstance] impactGameId],kApplifierImpactAnalyticsQueryParamRewardItemKey, [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey]];
-       [self performSelector:@selector(sendTrackingCallWithQueryString:) onThread:self.backgroundThread withObject:trackingQuery waitUntilDone:NO];
+    if (positionString != nil) {
+      NSString *trackingQuery = [NSString stringWithFormat:@"%@/video/%@/%@/%@?%@=%@", [[ApplifierImpactProperties sharedInstance] gamerId], positionString, campaign.id, [[ApplifierImpactProperties sharedInstance] impactGameId], kApplifierImpactAnalyticsQueryParamRewardItemKey, [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey]];
+      
+      if ([[ApplifierImpactProperties sharedInstance] gamerSID] != nil) {
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [[ApplifierImpactProperties sharedInstance] gamerSID]];
+      }
+      
+      [self performSelector:@selector(sendTrackingCallWithQueryString:) onThread:self.backgroundThread withObject:trackingQuery waitUntilDone:NO];
      }
 	});
-}
-
-- (void)sendAnalyticsRequestWithQueryString:(NSString *)queryString {
-	AIAssert(![NSThread isMainThread]);
-	
-	if (queryString == nil || [queryString length] == 0) {
-		AILOG_DEBUG(@"Invalid input.");
-		return;
-	}
-
-  AILOG_DEBUG(@"View report: %@?%@", [[ApplifierImpactProperties sharedInstance] analyticsBaseUrl], queryString);
-	[self _queueWithURLString:[[ApplifierImpactProperties sharedInstance] analyticsBaseUrl] queryString:queryString httpMethod:@"POST" retries:[NSNumber numberWithInt:0]];
 }
 
 - (void)sendTrackingCallWithQueryString:(NSString *)queryString {
 	AIAssert(![NSThread isMainThread]);
 	
+  NSArray *queryStringComponents = [queryString componentsSeparatedByString:@"?"];
+  NSString *trackingPath = [queryStringComponents objectAtIndex:0];
+  queryString = [queryStringComponents objectAtIndex:1];
+  
 	if (queryString == nil || [queryString length] == 0) {
 		AILOG_DEBUG(@"Invalid input.");
 		return;
 	}
   
-  AILOG_DEBUG(@"Tracking report: %@%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactAnalyticsTrackingPath, queryString);
+  AILOG_DEBUG(@"Tracking report: %@%@%@ : %@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactAnalyticsTrackingPath, trackingPath, queryString);
   
-  [self _queueWithURLString:[NSString stringWithFormat:@"%@%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactAnalyticsTrackingPath,queryString] queryString:nil httpMethod:@"GET" retries:[NSNumber numberWithInt:0]];
+  [self _queueWithURLString:[NSString stringWithFormat:@"%@%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactAnalyticsTrackingPath,trackingPath] queryString:queryString httpMethod:@"POST" retries:[NSNumber numberWithInt:0]];
 }
 
 

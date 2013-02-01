@@ -27,6 +27,7 @@ extern NSString * const kApplifierImpactRewardItemNameKey;
 
 extern NSString * const kApplifierImpactOptionNoOfferscreenKey;
 extern NSString * const kApplifierImpactOptionOpenAnimatedKey;
+extern NSString * const kApplifierImpactOptionGamerSIDKey;
 
 @class ApplifierImpact;
 @class SKStoreProductViewController;
@@ -54,6 +55,7 @@ extern NSString * const kApplifierImpactOptionOpenAnimatedKey;
 
 + (ApplifierImpact *)sharedInstance;
 + (BOOL)isSupported;
++ (NSString *)getSDKVersion;
 - (void)setTestMode:(BOOL)testModeEnabled;
 - (BOOL)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController;
 - (BOOL)startWithGameId:(NSString *)gameId;

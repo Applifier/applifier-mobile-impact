@@ -238,7 +238,9 @@
   if ([name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
     [[ApplifierImpactWebAppController sharedInstance] setWebViewInitialized:NO];
     [self.videoController forceStopVideoPlayer];
-    [self closeImpact:NO withAnimations:NO];
+    
+    if (self.isOpen)
+      [self closeImpact:NO withAnimations:NO];
   }
 }
 

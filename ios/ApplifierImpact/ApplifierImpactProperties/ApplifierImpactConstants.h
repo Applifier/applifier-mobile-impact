@@ -124,6 +124,7 @@ extern NSString * const kApplifierImpactAnalyticsQueryParamEventTypeKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamTrackingIdKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamProviderIdKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamRewardItemKey;
+extern NSString * const kApplifierImpactAnalyticsQueryParamGamerSIDKey;
 
 extern NSString * const kApplifierImpactAnalyticsEventTypeVideoStart;
 extern NSString * const kApplifierImpactAnalyticsEventTypeVideoFirstQuartile;

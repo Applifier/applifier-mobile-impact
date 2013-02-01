@@ -16,6 +16,7 @@ NSString * const kApplifierImpactRewardItemPictureKey = @"picture";
 NSString * const kApplifierImpactRewardItemNameKey = @"name";
 NSString * const kApplifierImpactOptionNoOfferscreenKey = @"noOfferScreen";
 NSString * const kApplifierImpactOptionOpenAnimatedKey = @"openAnimated";
+NSString * const kApplifierImpactOptionGamerSIDKey = @"sid";
 
 @interface ApplifierImpact () <ApplifierImpactCampaignManagerDelegate, UIWebViewDelegate, UIScrollViewDelegate, ApplifierImpactMainViewControllerDelegate>
 @property (nonatomic, strong) NSThread *backgroundThread;
@@ -33,6 +34,10 @@ NSString * const kApplifierImpactOptionOpenAnimatedKey = @"openAnimated";
   }
   
   return YES;
+}
+
++ (NSString *)getSDKVersion {
+  return [[ApplifierImpactProperties sharedInstance] impactVersion];
 }
 
 static ApplifierImpact *sharedImpact = nil;
@@ -111,22 +116,28 @@ static ApplifierImpact *sharedImpact = nil;
   BOOL animated = YES;
   ApplifierImpactViewState state = kApplifierImpactViewStateWebView;
   
-  if ([options objectForKey:kApplifierImpactOptionNoOfferscreenKey] != nil && [[options objectForKey:kApplifierImpactOptionNoOfferscreenKey] boolValue] == YES) {
-    if (![self canShowAds]) return NO;
-    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
-    
-    state = kApplifierImpactViewStateVideoPlayer;
-    [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:nil];
-    
-    ApplifierImpactCampaign *campaign = [[[ApplifierImpactCampaignManager sharedInstance] getViewableCampaigns] objectAtIndex:0];
-    
-    if (campaign != nil) {
-      [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:campaign];
+  if (options != nil) {
+    if ([options objectForKey:kApplifierImpactOptionNoOfferscreenKey] != nil && [[options objectForKey:kApplifierImpactOptionNoOfferscreenKey] boolValue] == YES) {
+      if (![self canShowAds]) return NO;
+      [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
+      
+      state = kApplifierImpactViewStateVideoPlayer;
+      [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:nil];
+      
+      ApplifierImpactCampaign *campaign = [[[ApplifierImpactCampaignManager sharedInstance] getViewableCampaigns] objectAtIndex:0];
+      
+      if (campaign != nil) {
+        [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:campaign];
+      }
     }
-  }
-  
-  if ([options objectForKey:kApplifierImpactOptionOpenAnimatedKey] != nil && [[options objectForKey:kApplifierImpactOptionOpenAnimatedKey] boolValue] == NO) {
-    animated = NO;
+    
+    if ([options objectForKey:kApplifierImpactOptionOpenAnimatedKey] != nil && [[options objectForKey:kApplifierImpactOptionOpenAnimatedKey] boolValue] == NO) {
+      animated = NO;
+    }
+    
+    if ([options objectForKey:kApplifierImpactOptionGamerSIDKey] != nil) {
+      [[ApplifierImpactProperties sharedInstance] setGamerSID:[options objectForKey:kApplifierImpactOptionGamerSIDKey]];
+    }
   }
   
   [[ApplifierImpactMainViewController sharedInstance] openImpact:animated inState:state];

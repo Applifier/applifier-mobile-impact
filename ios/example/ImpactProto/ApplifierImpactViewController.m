@@ -55,7 +55,9 @@
         NSLog(@"DEFAULT_REWARD_ITEM: %@", [[ApplifierImpact sharedInstance] getDefaultRewardItemKey]); */
 
         //[[ApplifierImpact sharedInstance] setViewController:self showImmediatelyInNewController:YES];
-        NSLog(@"showImpact: %i", [[ApplifierImpact sharedInstance] showImpact:@{kApplifierImpactOptionNoOfferscreenKey:@true, kApplifierImpactOptionOpenAnimatedKey:@true}]);
+        
+        NSLog(@"showImpact: %i", [[ApplifierImpact sharedInstance] showImpact:@{kApplifierImpactOptionNoOfferscreenKey:@false, kApplifierImpactOptionOpenAnimatedKey:@true, kApplifierImpactOptionGamerSIDKey:@"gom"}]);
+        
         //[[ApplifierImpact sharedInstance] showImpact];
         
         /*
