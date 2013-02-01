@@ -119,6 +119,7 @@ NSString * const kApplifierImpactAnalyticsQueryParamEventTypeKey = @"type";
 NSString * const kApplifierImpactAnalyticsQueryParamTrackingIdKey = @"trackingId";
 NSString * const kApplifierImpactAnalyticsQueryParamProviderIdKey = @"providerId";
 NSString * const kApplifierImpactAnalyticsQueryParamRewardItemKey = @"rewardItem";
+NSString * const kApplifierImpactAnalyticsQueryParamGamerSIDKey = @"sid";
 
 NSString * const kApplifierImpactAnalyticsEventTypeVideoStart = @"video_start";
 NSString * const kApplifierImpactAnalyticsEventTypeVideoFirstQuartile = @"first_quartile";

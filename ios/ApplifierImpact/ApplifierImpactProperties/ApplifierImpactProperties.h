@@ -18,6 +18,7 @@
   @property (nonatomic, strong) NSString *campaignQueryString;
   @property (nonatomic, strong) NSString *impactGameId;
   @property (nonatomic, strong) NSString *gamerId;
+  @property (nonatomic, strong) NSString *gamerSID;
   @property (nonatomic) BOOL testModeEnabled;
   @property (nonatomic, assign) UIViewController *currentViewController;
   @property (nonatomic, assign) int maxNumberOfAnalyticsRetries;
