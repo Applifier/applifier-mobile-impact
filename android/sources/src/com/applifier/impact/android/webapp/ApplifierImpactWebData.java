@@ -154,6 +154,9 @@ public class ApplifierImpactWebData {
 			
 			String queryParams = String.format("%s=%s", ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, getCurrentRewardItemKey());
 			
+			if (ApplifierImpactProperties.GAMER_SID != null)
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY, ApplifierImpactProperties.GAMER_SID);
+			
 			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(viewUrl, queryParams, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_POST, ApplifierImpactRequestType.VideoViewed, 0);
 			addLoader(loader);
 			startNextLoader();
@@ -574,7 +577,7 @@ public class ApplifierImpactWebData {
 				}
 				
 				try {
-					ApplifierImpactUtils.Log("Connection response: " + _connection.getResponseCode() + ", " + _connection.getResponseMessage() + ", " + _connection.getURL().toString(), this);
+					ApplifierImpactUtils.Log("Connection response: " + _connection.getResponseCode() + ", " + _connection.getResponseMessage() + ", " + _connection.getURL().toString() + " : " + _queryParams, this);
 					_input = _connection.getInputStream();
 				}
 				catch (Exception e) {

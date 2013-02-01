@@ -7,19 +7,18 @@ import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
 
 import android.app.Activity;
-import android.content.pm.FeatureInfo;
-import android.content.pm.PackageManager;
 
 public class ApplifierImpactProperties {
-	//public static String CAMPAIGN_DATA_URL = "http://192.168.1.152:3500/mobile/campaigns";
+	public static String CAMPAIGN_DATA_URL = "http://192.168.1.152:3500/mobile/campaigns";
 	//public static String CAMPAIGN_DATA_URL = "https://impact.applifier.com/mobile/campaigns";
-	public static String CAMPAIGN_DATA_URL = "https://staging-impact.applifier.com/mobile/campaigns";
+	//public static String CAMPAIGN_DATA_URL = "https://staging-impact.applifier.com/mobile/campaigns";
 	public static String WEBVIEW_BASE_URL = null;
 	public static String ANALYTICS_BASE_URL = null;
 	public static String IMPACT_BASE_URL = null;
 	public static String CAMPAIGN_QUERY_STRING = null;
 	public static String IMPACT_GAME_ID = null;
 	public static String IMPACT_GAMER_ID = null;
+	public static String GAMER_SID = null;
 	public static Boolean TESTMODE_ENABLED = false;
 	public static Activity BASE_ACTIVITY = null;
 	public static Activity CURRENT_ACTIVITY = null;

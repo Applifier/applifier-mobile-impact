@@ -89,6 +89,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		
 		destroyVideoPlayerView();
 		webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, data);
+		ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
 	}
 	
 	public void setViewState (ApplifierImpactMainViewState state) {
@@ -217,7 +218,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		
 		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
-		ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
 		
 		sendActionToListener(ApplifierImpactMainViewAction.VideoEnd);
 	}

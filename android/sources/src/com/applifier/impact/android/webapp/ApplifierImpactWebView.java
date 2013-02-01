@@ -92,6 +92,8 @@ public class ApplifierImpactWebView extends WebView {
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_MACADDRESS_KEY, ApplifierImpactDevice.getMacAddress());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDKVERSION_KEY, ApplifierImpactConstants.IMPACT_VERSION);
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SCREENDENSITY_KEY, ApplifierImpactDevice.getScreenDensity());
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SCREENSIZE_KEY, ApplifierImpactDevice.getScreenSize());
 				
 				// Tracking data
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SOFTWAREVERSION_KEY, ApplifierImpactDevice.getSoftwareVersion());
@@ -144,7 +146,7 @@ public class ApplifierImpactWebView extends WebView {
 		
 		getSettings().setSupportZoom(false);
 		getSettings().setBuiltInZoomControls(false);
-		//getSettings().setLightTouchEnabled(false);
+		getSettings().setLightTouchEnabled(false);
 		getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 		getSettings().setSupportMultipleWindows(false);
 		getSettings().setPluginsEnabled(false);

@@ -30,6 +30,8 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_DATAPARAM_MACADDRESS_KEY = "macAddress";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SDKVERSION_KEY = "sdkVersion";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SOFTWAREVERSION_KEY = "softwareVersion";
+	public static final String IMPACT_WEBVIEW_DATAPARAM_SCREENDENSITY_KEY = "screenDensity";
+	public static final String IMPACT_WEBVIEW_DATAPARAM_SCREENSIZE_KEY = "screenSize";
 
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_COMPLETED = "completed";
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_START = "start";
@@ -64,7 +66,8 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_CAMPAIGN_GAME_NAME_KEY = "gameName";
 	public static final String IMPACT_CAMPAIGN_ID_KEY = "id";
 	public static final String IMPACT_CAMPAIGN_TAGLINE_KEY = "tagLine";
-	public static final String IMPACT_CAMPAIGN_STOREID_KEY = "iTunesId";
+	public static final String IMPACT_CAMPAIGN_ITUNESID_KEY = "iTunesId";
+	public static final String IMPACT_CAMPAIGN_STOREID_KEY = "storeId";
 	public static final String IMPACT_CAMPAIGN_CACHE_VIDEO_KEY = "cacheVideo";
 
 	/* Reward Item JSON Properties */
@@ -112,6 +115,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_TRACKINGID_KEY = "trackingId";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_PROVIDERID_KEY = "providerId";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY = "rewardItem";
+	public static final String IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY = "sid";
 	
 	/* Failed URL keys */
 	public static final String IMPACT_FAILED_URL_URL_KEY = "url";

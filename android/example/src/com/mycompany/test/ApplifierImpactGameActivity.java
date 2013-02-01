@@ -29,9 +29,10 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
 				ApplifierImpactUtils.Log("Opening with key: " + ApplifierImpact.instance.getCurrentRewardItemKey(), this);
 				
 				// Open with options test
-				Map<String, Boolean> optionsMap = new HashMap<String, Boolean>();
+				Map<String, Object> optionsMap = new HashMap<String, Object>();
 				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, false);
 				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, false);
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, "gom");
 				ApplifierImpact.instance.showImpact(optionsMap);
 				
 				// Open without options (defaults)

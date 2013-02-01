@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.sax.StartElementListener;
 
 
 public class ApplifierImpact implements IApplifierImpactCacheListener, 
@@ -38,6 +37,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	// Impact developer options keys
 	public static final String APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY = "noOfferScreen";
 	public static final String APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY = "openAnimated";
+	public static final String APPLIFIER_IMPACT_OPTION_GAMERSID_KEY = "sid";
+	
 	
 	
 	// Impact components
@@ -51,7 +52,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private boolean _impactReadySent = false;
 	private boolean _webAppLoaded = false;
 	private boolean _openRequestFromDeveloper = false;
-	private Map<String, Boolean> _developerOptions = null;
+	private Map<String, Object> _developerOptions = null;
 		
 	// Main View
 	private ApplifierImpactMainView _mainView = null;
@@ -130,14 +131,19 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		return false;
 	}
 	
-	public boolean showImpact (Map<String, Boolean> options) {
+	public boolean showImpact (Map<String, Object> options) {
 		if (canShowImpact()) {
 			_developerOptions = options;
 			
-			if (_developerOptions != null && _developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY) && _developerOptions.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true)) {
-				if (webdata.getViewableVideoPlanCampaigns().size() > 0) {
-					ApplifierImpactCampaign selectedCampaign = webdata.getViewableVideoPlanCampaigns().get(0);
-					ApplifierImpactProperties.SELECTED_CAMPAIGN = selectedCampaign;
+			if (_developerOptions != null) {
+				if (_developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY) && _developerOptions.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true)) {
+					if (webdata.getViewableVideoPlanCampaigns().size() > 0) {
+						ApplifierImpactCampaign selectedCampaign = webdata.getViewableVideoPlanCampaigns().get(0);
+						ApplifierImpactProperties.SELECTED_CAMPAIGN = selectedCampaign;
+					}
+				}
+				if (_developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY) && _developerOptions.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY) != null) {
+					ApplifierImpactProperties.GAMER_SID = "" + _developerOptions.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY);
 				}
 			}
 			
@@ -355,11 +361,19 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	public void onOpenPlayStore (JSONObject data) {
-		try {
-		    ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.PandoraTV")));
-		} 
-		catch (android.content.ActivityNotFoundException anfe) {
-			ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.PandoraTV")));
+	    ApplifierImpactUtils.Log("onOpenPlayStore", this);
+		if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null && ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId() != null) {
+			try {
+			    ApplifierImpactUtils.Log("Opening playstore activity with storeId: " + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId(), this);
+				ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId())));
+			} 
+			catch (android.content.ActivityNotFoundException anfe) {
+			    ApplifierImpactUtils.Log("Could not open PlayStore activity, opening in browser with storeId: " + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId(), this);
+				ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId())));
+			}
+		}
+		else {
+		    ApplifierImpactUtils.Log("Selected campaign (" + ApplifierImpactProperties.SELECTED_CAMPAIGN + ") or couldn't get storeId", this);
 		}
 	}
 	

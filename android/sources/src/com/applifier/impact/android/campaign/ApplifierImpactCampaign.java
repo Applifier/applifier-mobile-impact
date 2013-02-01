@@ -37,6 +37,7 @@ public class ApplifierImpactCampaign {
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_GAME_NAME_KEY,
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_ID_KEY,
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_TAGLINE_KEY};
+	
 	private ApplifierImpactCampaignStatus _campaignStatus = ApplifierImpactCampaignStatus.READY;
 	
 	public ApplifierImpactCampaign () {		
@@ -202,6 +203,27 @@ public class ApplifierImpactCampaign {
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("getTagLine: This should not happen!", this);
+			}
+		}
+		
+		return null;
+	}
+	
+	public String getStoreId () {
+		if (_campaignJson.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_STOREID_KEY)) {
+			try {
+				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_STOREID_KEY);
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("getStoreId: Was supposed to use ApplifierImpactConstants.IMPACT_CAMPAIGN_STOREID_KEY but " + e.getMessage() + " occured", this);
+			}
+		}
+		if (_campaignJson.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_ITUNESID_KEY)) {
+			try {
+				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_ITUNESID_KEY);
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("getStoreId: Was supposed to use ApplifierImpactConstants.IMPACT_CAMPAIGN_ITUNESID_KEY but " + e.getMessage() + " occured", this);
 			}
 		}
 		
