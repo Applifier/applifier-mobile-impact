@@ -15,7 +15,6 @@ import com.applifier.impact.android.webapp.IApplifierImpactWebViewListener;
 import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
@@ -80,15 +79,15 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		}
 	}
 	
-	public void closeImpact (JSONObject data) {
+	public void closeImpact (JSONObject data) {		
 		if (this.getParent() != null) {
 			ViewGroup vg = (ViewGroup)this.getParent();
 			if (vg != null)
 				vg.removeView(this);
 		}
 		
-		destroyVideoPlayerView();
 		webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, data);
+		destroyVideoPlayerView();
 		ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
 	}
 	
@@ -187,6 +186,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		bringChildToFront(videoplayerview);
 		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		focusToView(videoplayerview);
+
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, spinnerParams);
 		webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_COMPLETED, params);
 	}

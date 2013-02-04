@@ -35,6 +35,7 @@ public class ApplifierImpactConstants {
 
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_COMPLETED = "completed";
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_START = "start";
+	public static final String IMPACT_WEBVIEW_VIEWTYPE_NONE = "none";
 	
 	public static final String IMPACT_WEBVIEW_API_ACTION_KEY = "action";
 	public static final String IMPACT_WEBVIEW_API_PLAYVIDEO = "playVideo";

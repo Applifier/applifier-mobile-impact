@@ -2,6 +2,8 @@ package com.applifier.impact.android;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONObject;
 
@@ -177,6 +179,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		ApplifierImpactUtils.Log("stopAll()", this);
 		ApplifierImpactDownloader.stopAllDownloads();
 		webdata.stopAllRequests();
+		ApplifierImpactProperties.BASE_ACTIVITY = null;
+		ApplifierImpactProperties.CURRENT_ACTIVITY = null;
+		ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
 	}
 	
 	
@@ -341,6 +346,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	// IApplifierImpactWebBrigeListener
 	@Override
 	public void onPlayVideo(JSONObject data) {
+		ApplifierImpactUtils.Log("onPlayVideo", this);
 		if (data.has(ApplifierImpactConstants.IMPACT_WEBVIEW_EVENTDATA_CAMPAIGNID_KEY)) {
 			String campaignId = null;
 			
@@ -361,6 +367,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				catch (Exception e) {
 				}
 				
+				ApplifierImpactUtils.Log("onPlayVideo: Selected campaign=" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId() + " isViewed: " + ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed(), this);
 				if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null && (rewatch || !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed())) {
 					playVideo();
 				}
@@ -525,9 +532,11 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	// FIX: Could these 2 classes be moved to MainView
 	
 	private class ApplifierImpactCloseRunner implements Runnable {
+		JSONObject _data = null;
 		@Override
 		public void run() {
 			_showingImpact = false;
+			
 			if (ApplifierImpactProperties.CURRENT_ACTIVITY.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
 				Boolean dataOk = true;			
 				JSONObject data = new JSONObject();
@@ -542,14 +551,27 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				ApplifierImpactUtils.Log("dataOk: " + dataOk, this);
 				
 				if (dataOk) {
-					_mainView.closeImpact(data);
-					ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
-					
-					if (_developerOptions == null || !_developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) || _developerOptions.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(false))
-						ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
-					
-					if (_impactListener != null)
-						_impactListener.onImpactClose();
+					_data = data;
+					_mainView.webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_NONE, data);
+					Timer testTimer = new Timer();
+					testTimer.schedule(new TimerTask() {
+						@Override
+						public void run() {
+							ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									_mainView.closeImpact(_data);
+									ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
+									
+									if (_developerOptions == null || !_developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) || _developerOptions.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(false))
+										ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
+									
+									if (_impactListener != null)
+										_impactListener.onImpactClose();
+								}
+							});
+						}
+					}, 100);
 				}
 			}
 			
@@ -561,7 +583,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private class ApplifierImpactPlayVideoRunner implements Runnable {
 		@Override
 		public void run() {			
+			ApplifierImpactUtils.Log("Running videoplayrunner", this);
 			if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null) {
+				ApplifierImpactUtils.Log("Selected campaign found", this);
 				JSONObject data = new JSONObject();
 				
 				try {
@@ -579,6 +603,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 					playUrl = ApplifierImpactProperties.SELECTED_CAMPAIGN.getVideoStreamUrl(); 
 
 				_mainView.setViewState(ApplifierImpactMainViewState.VideoPlayer);
+				ApplifierImpactUtils.Log("Start videoplayback with: " + playUrl, this);
 				_mainView.videoplayerview.playVideo(playUrl);
 			}			
 			else
