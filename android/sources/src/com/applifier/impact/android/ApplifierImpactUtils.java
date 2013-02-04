@@ -1,11 +1,15 @@
 package com.applifier.impact.android;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
 import javax.security.auth.x500.X500Principal;
@@ -16,8 +20,10 @@ import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.os.Environment;
 import android.util.Log;
 
@@ -37,18 +43,42 @@ public class ApplifierImpactUtils {
 		}
 	}
 	
-	public boolean isDebuggable(Context ctx) {
+	public static boolean isDebuggable(Context ctx) {
 	    boolean debuggable = false;
-	 
+	    boolean problemsWithData = false;
+	    
 	    PackageManager pm = ctx.getPackageManager();
 	    try {
 	        ApplicationInfo appinfo = pm.getApplicationInfo(ctx.getPackageName(), 0);
 	        debuggable = (0 != (appinfo.flags &= ApplicationInfo.FLAG_DEBUGGABLE));
 	    }
 	    catch (NameNotFoundException e) {
-	        /*debuggable variable will remain false*/
+	        problemsWithData = true;
 	    }
-	     
+	    
+	    if (problemsWithData) {
+	    	problemsWithData = false;
+		    try {
+		        PackageInfo pinfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(),PackageManager.GET_SIGNATURES);
+		        Signature signatures[] = pinfo.signatures;
+		         
+		        for ( int i = 0; i < signatures.length;i++) {
+		            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+		            ByteArrayInputStream stream = new ByteArrayInputStream(signatures[i].toByteArray());
+		            X509Certificate cert = (X509Certificate) cf.generateCertificate(stream);       
+		            debuggable = cert.getSubjectX500Principal().equals(DEBUG_DN);
+		            if (debuggable)
+		                break;
+		        }
+		    }
+		    catch (NameNotFoundException e) {
+		    	problemsWithData = true;
+		    }
+		    catch (CertificateException e) {
+		    	problemsWithData = true;
+		    }
+	    }
+	    
 	    return debuggable;
 	}
 	

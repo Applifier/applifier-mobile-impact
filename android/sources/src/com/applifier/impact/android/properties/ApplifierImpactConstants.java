@@ -80,6 +80,9 @@ public class ApplifierImpactConstants {
 	/* Gamer JSON Properties */
 	public static final String IMPACT_GAMER_ID_KEY = "gamerId";
 
+	/* SDK Sanity check properties */	
+	public static final String IMPACT_NATIVESDKVERSION_KEY = "nativeSdkVersion";
+	
 	/* Impact Base JSON Properties */
 	public static final String IMPACT_URL_KEY = "impactUrl";
 	public static final String IMPACT_WEBVIEW_URL_KEY = "webViewUrl";	

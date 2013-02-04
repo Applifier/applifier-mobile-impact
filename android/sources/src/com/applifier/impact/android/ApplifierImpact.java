@@ -20,6 +20,8 @@ import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpact
 import com.applifier.impact.android.webapp.*;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -51,6 +53,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private boolean _webAppLoaded = false;
 	private boolean _openRequestFromDeveloper = false;
 	private Map<String, Object> _developerOptions = null;
+	private AlertDialog _alertDialog = null;
 		
 	// Main View
 	private ApplifierImpactMainView _mainView = null;
@@ -285,6 +288,46 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	// IApplifierImpactWebDataListener
 	@Override
 	public void onWebDataCompleted () {
+		JSONObject jsonData = null;
+		boolean dataFetchFailed = false;
+		String nativeSdkVersion = null;
+		
+		if (webdata.getData() != null && webdata.getData().has(ApplifierImpactConstants.IMPACT_JSON_DATA_ROOTKEY)) {
+			try {
+				jsonData = webdata.getData().getJSONObject(ApplifierImpactConstants.IMPACT_JSON_DATA_ROOTKEY);
+			}
+			catch (Exception e) {
+				dataFetchFailed = true;
+			}
+			
+			if (!dataFetchFailed) {
+				if (jsonData.has(ApplifierImpactConstants.IMPACT_NATIVESDKVERSION_KEY)) {
+					try {
+						nativeSdkVersion = jsonData.getString(ApplifierImpactConstants.IMPACT_NATIVESDKVERSION_KEY);
+					}
+					catch (Exception e) {
+						dataFetchFailed = true;
+					}
+				}
+			}
+		}
+		
+		if (nativeSdkVersion != null && !dataFetchFailed && ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.CURRENT_ACTIVITY)) {
+			if (!nativeSdkVersion.equals(ApplifierImpactConstants.IMPACT_VERSION)) {
+				_alertDialog = new AlertDialog.Builder(ApplifierImpactProperties.CURRENT_ACTIVITY).create();
+				_alertDialog.setTitle("Applifier Impact");
+				_alertDialog.setMessage("You are not running the latest version of Applifier Impact android. Please update your version (this dialog won't appear in release builds).");
+				_alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						_alertDialog.dismiss();
+					}
+				});
+				
+				_alertDialog.show();
+			}
+		}
+		
 		setup();
 	}
 	
@@ -384,7 +427,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		ApplifierImpactProperties.BASE_ACTIVITY = activity;
 		ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
 		
-		ApplifierImpactUtils.Log(Build.FINGERPRINT, this);
+		//ApplifierImpactUtils.Log("Is debuggable=" + ApplifierImpactUtils.isDebuggable(activity), this);
 		
 		if (_initialized) return; 
 		
