@@ -201,9 +201,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
   NSDictionary *trackingData = @{kApplifierImpactWebViewDataParamIosVersionKey:[ApplifierImpactDevice softwareVersion], kApplifierImpactWebViewDataParamDeviceTypeKey:[ApplifierImpactDevice analyticsMachineName]};
   NSMutableDictionary *webAppValues = [NSMutableDictionary dictionaryWithDictionary:persistingData];
   
-  if ([ApplifierImpactDevice canUseTracking]) {
-    [webAppValues addEntriesFromDictionary:trackingData];
-  }
+  [webAppValues addEntriesFromDictionary:trackingData];
   
   [self setupWebApp:[[UIScreen mainScreen] bounds]];
   [self loadWebApp:webAppValues];
