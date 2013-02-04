@@ -35,7 +35,7 @@
   		    android:name="com.applifier.impact.android.view.ApplifierImpactFullscreenActivity" 
           	android:configChanges="keyboardHidden|orientation"
           	android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-          	android:hardwareAccelerated="true" />	
+          	android:hardwareAccelerated="true" />
     </application>
 
 </manifest>
