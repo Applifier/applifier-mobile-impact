@@ -568,6 +568,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 									
 									if (_impactListener != null)
 										_impactListener.onImpactClose();
+									
+									_developerOptions = null;
 								}
 							});
 						}
@@ -576,7 +578,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			}
 			
 			// Reset developer options when impact closes
-			_developerOptions = null;
 		}
 	}
 	

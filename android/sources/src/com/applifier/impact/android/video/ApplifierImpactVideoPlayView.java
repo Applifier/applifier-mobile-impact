@@ -34,6 +34,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	private RelativeLayout _countDownText = null;
 	private TextView _timeLeftInSecondsText = null;
 	private boolean _videoPlaybackStartedSent = false;
+	private boolean _videoPlaybackErrors = false;
 	
 	public ApplifierImpactVideoPlayView(Context context, IApplifierImpactVideoPlayerListener listener) {
 		super(context);
@@ -63,6 +64,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			@Override
 			public boolean onError(MediaPlayer mp, int what, int extra) {
 				ApplifierImpactUtils.Log("For some reason the device failed to play the video, a crash was prevented", this);
+				_videoPlaybackErrors = true;
+				purgeVideoPausedTimer();
 				if (_listener != null)
 					_listener.onVideoPlaybackError();
 				return true;
@@ -74,13 +77,17 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		}
 		catch (Exception e) {
 			ApplifierImpactUtils.Log("For some reason the device failed to play the video, a crash was prevented", this);
+			_videoPlaybackErrors = true;
+			purgeVideoPausedTimer();
 			if (_listener != null)
 				_listener.onVideoPlaybackError();
 			return;
 		}
 		
-		_timeLeftInSecondsText.setText("" + Math.round(Math.ceil(_videoView.getDuration() / 1000)));
-		startVideo();
+		if (!_videoPlaybackErrors) {
+			_timeLeftInSecondsText.setText("" + Math.round(Math.ceil(_videoView.getDuration() / 1000)));
+			startVideo();
+		}
 	}
 
 	public void pauseVideo () {
