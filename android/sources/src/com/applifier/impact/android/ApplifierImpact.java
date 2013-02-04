@@ -38,9 +38,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public static final String APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY = "noOfferScreen";
 	public static final String APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY = "openAnimated";
 	public static final String APPLIFIER_IMPACT_OPTION_GAMERSID_KEY = "sid";
-	
-	
-	
+
 	// Impact components
 	public static ApplifierImpact instance = null;
 	public static ApplifierImpactCacheManager cachemanager = null;
@@ -385,6 +383,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		ApplifierImpactProperties.IMPACT_GAME_ID = gameId;
 		ApplifierImpactProperties.BASE_ACTIVITY = activity;
 		ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
+		
+		ApplifierImpactUtils.Log(Build.FINGERPRINT, this);
 		
 		if (_initialized) return; 
 		

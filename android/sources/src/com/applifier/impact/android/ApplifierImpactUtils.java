@@ -8,15 +8,23 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import javax.security.auth.x500.X500Principal;
+
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 import android.util.Log;
 
 public class ApplifierImpactUtils {
 
+	private static final X500Principal DEBUG_DN = new X500Principal("CN=Android Debug,O=Android,C=US");
+	
 	public static void Log (String message, Class cls) {
 		if (ApplifierImpactProperties.IMPACT_DEBUG_MODE) {
 			Log.d(ApplifierImpactConstants.LOG_NAME, cls.getName() + " :: " +  message);
@@ -27,6 +35,21 @@ public class ApplifierImpactUtils {
 		if (ApplifierImpactProperties.IMPACT_DEBUG_MODE) {
 			Log.d(ApplifierImpactConstants.LOG_NAME, obj.getClass().getName() + " :: " +  message);
 		}
+	}
+	
+	public boolean isDebuggable(Context ctx) {
+	    boolean debuggable = false;
+	 
+	    PackageManager pm = ctx.getPackageManager();
+	    try {
+	        ApplicationInfo appinfo = pm.getApplicationInfo(ctx.getPackageName(), 0);
+	        debuggable = (0 != (appinfo.flags &= ApplicationInfo.FLAG_DEBUGGABLE));
+	    }
+	    catch (NameNotFoundException e) {
+	        /*debuggable variable will remain false*/
+	    }
+	     
+	    return debuggable;
 	}
 	
 	public static String Md5 (String input) {
