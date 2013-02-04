@@ -179,6 +179,17 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
   [self _queueWithURLString:[NSString stringWithFormat:@"%@%@%@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactAnalyticsTrackingPath,trackingPath] queryString:queryString httpMethod:@"POST" retries:[NSNumber numberWithInt:0]];
 }
 
+- (void)sendAnalyticsRequestWithQueryString:(NSString *)queryString {
+	AIAssert(![NSThread isMainThread]);
+	
+	if (queryString == nil || [queryString length] == 0) {
+		AILOG_DEBUG(@"Invalid input.");
+		return;
+	}
+  
+  AILOG_DEBUG(@"View report: %@?%@", [[ApplifierImpactProperties sharedInstance] analyticsBaseUrl], queryString);
+	[self _queueWithURLString:[[ApplifierImpactProperties sharedInstance] analyticsBaseUrl] queryString:queryString httpMethod:@"POST" retries:[NSNumber numberWithInt:0]];
+}
 
 #pragma mark - Install tracking
 
