@@ -178,6 +178,14 @@ public class ApplifierImpactUtils {
 		return Environment.getExternalStorageDirectory().toString() + "/" + ApplifierImpactConstants.CACHE_DIR_NAME;
 	}
 	
+	public static boolean canUseExternalStorage () {
+		String state = Environment.getExternalStorageState();
+		if (state.equals(Environment.MEDIA_MOUNTED))
+			return true;
+		
+		return false;
+	}
+	
 	public static File createCacheDir () {
 		File tdir = new File (getCacheDirectory());
 		tdir.mkdirs();

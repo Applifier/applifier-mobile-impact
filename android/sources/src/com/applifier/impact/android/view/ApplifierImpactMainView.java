@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -35,6 +36,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 
 	// Listener
 	private IApplifierImpactMainViewListener _listener = null;
+	private ApplifierImpactMainViewState _currentState = ApplifierImpactMainViewState.WebView;
 
 	public ApplifierImpactMainView(Context context, IApplifierImpactMainViewListener listener) {
 		super(context);
@@ -92,27 +94,59 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	}
 	
 	public void setViewState (ApplifierImpactMainViewState state) {
-		switch (state) {
-			case WebView:
-				removeFromMainView(webview);
-				addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-				focusToView(webview);
-				break;
-			case VideoPlayer:
-				if (videoplayerview == null) {
-					createVideoPlayerView();
+		if (!_currentState.equals(state)) {
+			_currentState = state;
+			
+			switch (state) {
+				case WebView:
 					removeFromMainView(webview);
 					addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
-				}
-				break;
+					focusToView(webview);
+					break;
+				case VideoPlayer:
+					if (videoplayerview == null) {
+						createVideoPlayerView();
+						removeFromMainView(webview);
+						addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+					}
+					break;
+			}
 		}
 	}
 	
+	public ApplifierImpactMainViewState getViewState () {
+		return _currentState;
+	}
+	
+	public void afterVideoPlaybackOperations () {
+		videoplayerview.setKeepScreenOn(false);
+		destroyVideoPlayerView();
+		setViewState(ApplifierImpactMainViewState.WebView);		
+		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+	}
+	
+	@Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+		switch (keyCode) {
+			case KeyEvent.KEYCODE_BACK:
+				ApplifierImpactUtils.Log("onKeyDown", this);
+				sendActionToListener(ApplifierImpactMainViewAction.BackButtonPressed);
+		    	return true;
+		}
+    	
+    	return false;
+    }
+	
+    protected void onAttachedToWindow() {
+    	super.onAttachedToWindow();
+    	focusToView(this);
+    }
 	
 	/* PRIVATE METHODS */
 	
 	private void init () {
 		ApplifierImpactUtils.Log("Init", this);
+		this.setId(1001);
 		createVideoPlayerView();
 		createWebView();
 	}
@@ -126,11 +160,13 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	private void createVideoPlayerView () {
 		videoplayerview = new ApplifierImpactVideoPlayView(ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext(), this);
 		videoplayerview.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+		videoplayerview.setId(1002);
 		addView(videoplayerview);
 	}
 	
 	private void createWebView () {
 		webview = new ApplifierImpactWebView(ApplifierImpactProperties.CURRENT_ACTIVITY, this, new ApplifierImpactWebBridge(ApplifierImpact.instance));
+		webview.setId(1003);
 		addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 	}
 	
@@ -200,9 +236,10 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	@Override
 	public void onCompletion(MediaPlayer mp) {
 		ApplifierImpactUtils.Log("onCompletion", this);
-		videoplayerview.setKeepScreenOn(false);
-		destroyVideoPlayerView();
-		setViewState(ApplifierImpactMainViewState.WebView);
+		afterVideoPlaybackOperations();
+		//videoplayerview.setKeepScreenOn(false);
+		//destroyVideoPlayerView();
+		//setViewState(ApplifierImpactMainViewState.WebView);
 		onEventPositionReached(ApplifierVideoPosition.End);
 		
 		JSONObject params = new JSONObject();
@@ -216,14 +253,16 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
 		
-		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		//ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 		
 		sendActionToListener(ApplifierImpactMainViewAction.VideoEnd);
 	}
 	
 	public void onVideoPlaybackError () {
-		ApplifierImpactUtils.Log("onVideoPlaybackError", this);
+		ApplifierImpactUtils.Log("onVideoPlaybackError", this);		
+		ApplifierImpact.webdata.sendAnalyticsRequest(ApplifierImpactConstants.IMPACT_ANALYTICS_EVENTTYPE_VIDEOERROR, ApplifierImpactProperties.SELECTED_CAMPAIGN);
+		
 		videoplayerview.setKeepScreenOn(false);
 		destroyVideoPlayerView();
 		setViewState(ApplifierImpactMainViewState.WebView);

@@ -255,7 +255,32 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public void onMainViewAction (ApplifierImpactMainViewAction action) {
 		switch (action) {
 			case BackButtonPressed:
-				close();
+				ApplifierImpactUtils.Log("onMainViewAction: BackButtonPressed: " + _mainView.getViewState().toString() + ", " + _mainView.webview.getWebViewCurrentView(), this);
+				if (_mainView.getViewState().equals(ApplifierImpactMainViewState.WebView)) {
+					if (_mainView.webview.getWebViewCurrentView().equals(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_COMPLETED)) {
+						JSONObject spinnerParams = new JSONObject();
+						
+						try {
+							spinnerParams.put(ApplifierImpactConstants.IMPACT_TEXTKEY_KEY, ApplifierImpactConstants.IMPACT_TEXTKEY_BUFFERING);
+						}
+						catch (Exception e) {
+							ApplifierImpactUtils.Log("Could not create JSON", this);
+						}
+						
+						_mainView.webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, spinnerParams);
+						_mainView.webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START);
+						ApplifierImpactUtils.Log("onMainViewAction: Setting startscreen", this);
+					}
+					else {
+						ApplifierImpactUtils.Log("onMainViewAction: Closing impact", this);
+						close();
+					}
+				}
+				else if (_mainView.getViewState().equals(ApplifierImpactMainViewState.VideoPlayer)) {
+					ApplifierImpactUtils.Log("onMainViewAction: Removing player and setting WebView state", this);
+					_mainView.webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START);
+					_mainView.afterVideoPlaybackOperations();
+				}
 				break;
 			case VideoStart:
 				if (_impactListener != null)
@@ -419,6 +444,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			    ApplifierImpactUtils.Log("Could not open PlayStore activity, opening in browser with storeId: " + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId(), this);
 				ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId())));
 			}
+			
+			webdata.sendAnalyticsRequest(ApplifierImpactConstants.IMPACT_ANALYTICS_EVENTTYPE_OPENAPPSTORE, ApplifierImpactProperties.SELECTED_CAMPAIGN);
 		}
 		else {
 		    ApplifierImpactUtils.Log("Selected campaign (" + ApplifierImpactProperties.SELECTED_CAMPAIGN + ") or couldn't get storeId", this);

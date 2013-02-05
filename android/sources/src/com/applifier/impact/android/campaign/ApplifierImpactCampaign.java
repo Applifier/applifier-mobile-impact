@@ -72,7 +72,7 @@ public class ApplifierImpactCampaign {
 				return _campaignJson.getBoolean(ApplifierImpactConstants.IMPACT_CAMPAIGN_CACHE_VIDEO_KEY);
 			}
 			catch (Exception e) {
-				ApplifierImpactUtils.Log("shouldCacheVideo: This should not happen!", this);
+				ApplifierImpactUtils.Log("shouldCacheVideo: key not found, returning false", this);
 			}			
 		}
 		return false;

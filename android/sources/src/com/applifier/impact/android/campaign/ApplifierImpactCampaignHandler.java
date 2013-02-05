@@ -76,13 +76,13 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	}
 	
 	private void checkFileAndDownloadIfNeeded (String fileUrl) {
-		if (_campaign.shouldCacheVideo() && !ApplifierImpactUtils.isFileInCache(_campaign.getVideoFilename())) {
+		if (_campaign.shouldCacheVideo() && !ApplifierImpactUtils.isFileInCache(_campaign.getVideoFilename()) && ApplifierImpactUtils.canUseExternalStorage()) {
 			if (!hasDownloads())
 				ApplifierImpactDownloader.addListener(this);
 			
 			addCampaignToDownloads();
 		}
-		else if (!isFileOk(fileUrl) && _campaign.shouldCacheVideo()) {
+		else if (!isFileOk(fileUrl) && _campaign.shouldCacheVideo() && ApplifierImpactUtils.canUseExternalStorage()) {
 			ApplifierImpactUtils.removeFile(fileUrl);
 			ApplifierImpactDownloader.addListener(this);
 			addCampaignToDownloads();

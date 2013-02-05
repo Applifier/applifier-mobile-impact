@@ -135,4 +135,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_TEXTKEY_LOADING = "loading";
 	public static final String IMPACT_TEXTKEY_VIDEOPLAYBACKERROR = "videoPlaybackError";
 	public static final String IMPACT_ITEMKEY_KEY = "itemKey";
+	
+	public static final String IMPACT_ANALYTICS_EVENTTYPE_OPENAPPSTORE = "openAppStore";
+	public static final String IMPACT_ANALYTICS_EVENTTYPE_VIDEOERROR = "videoError";
 }

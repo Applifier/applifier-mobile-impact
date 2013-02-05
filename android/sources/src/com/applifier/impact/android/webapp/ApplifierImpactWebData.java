@@ -18,8 +18,10 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 
 import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.ApplifierImpactRewardItem;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
@@ -70,7 +72,7 @@ public class ApplifierImpactWebData {
 		}
 	};
 	
-	private static enum ApplifierImpactRequestType { VideoPlan, VideoViewed, Unsent;
+	private static enum ApplifierImpactRequestType { Analytics, VideoPlan, VideoViewed, Unsent;
 		@Override
 		public String toString () {
 			String output = name().toString().toLowerCase();
@@ -168,6 +170,24 @@ public class ApplifierImpactWebData {
 		return progressSent;
 	}
 	
+	public void sendAnalyticsRequest (String eventType, ApplifierImpactCampaign campaign) {
+		if (campaign != null) {
+			String viewUrl = String.format("%s",  ApplifierImpactProperties.ANALYTICS_BASE_URL);
+			String analyticsUrl = String.format("%s=%s", ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
+			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_EVENTTYPE_KEY, eventType);
+			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_TRACKINGID_KEY, ApplifierImpactProperties.IMPACT_GAMER_ID);
+			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_PROVIDERID_KEY, campaign.getCampaignId());
+			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, getCurrentRewardItemKey());
+			
+			if (ApplifierImpactProperties.GAMER_SID != null)
+				analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY, ApplifierImpactProperties.GAMER_SID);
+			
+			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(viewUrl, analyticsUrl, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET, ApplifierImpactRequestType.Analytics, 0);
+			addLoader(loader);
+			startNextLoader();
+		}
+	}
+	
 	public void stopAllRequests () {
 		if (_urlLoaders != null)
 			_urlLoaders.clear();
@@ -254,6 +274,8 @@ public class ApplifierImpactWebData {
 				break;
 			case Unsent:
 				break;
+			case Analytics:
+				break;
 		}
 		
 		_totalUrlsSent++;
@@ -266,6 +288,7 @@ public class ApplifierImpactWebData {
 	
 	private void urlLoadFailed (ApplifierImpactUrlLoader loader) {
 		switch (loader.getRequestType()) {
+			case Analytics:
 			case VideoViewed:
 			case Unsent:
 				writeFailedUrl(loader);

@@ -204,6 +204,7 @@ public class ApplifierImpactWebView extends WebView {
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BACK:
+				ApplifierImpactUtils.Log("onKeyDown", this);
 		    	if (_listener != null)
 		    		_listener.onBackButtonClicked(this);
 		    	return true;

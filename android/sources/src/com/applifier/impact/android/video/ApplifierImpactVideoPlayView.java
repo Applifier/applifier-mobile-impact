@@ -63,7 +63,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
 			@Override
 			public boolean onError(MediaPlayer mp, int what, int extra) {
-				ApplifierImpactUtils.Log("For some reason the device failed to play the video, a crash was prevented", this);
+				ApplifierImpactUtils.Log("For some reason the device failed to play the video (error: " + what + ", " + extra + "), a crash was prevented.", this);
 				_videoPlaybackErrors = true;
 				purgeVideoPausedTimer();
 				if (_listener != null)
@@ -76,7 +76,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			_videoView.setVideoPath(_videoFileName);
 		}
 		catch (Exception e) {
-			ApplifierImpactUtils.Log("For some reason the device failed to play the video, a crash was prevented", this);
+			ApplifierImpactUtils.Log("For some reason the device failed to play the video, a crash was prevented.", this);
 			_videoPlaybackErrors = true;
 			purgeVideoPausedTimer();
 			if (_listener != null)
@@ -121,7 +121,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		
 		if (_videoPausedTimer == null) {
 			_videoPausedTimer = new Timer();
-			_videoPausedTimer.scheduleAtFixedRate(new VideoStateChecker(), 0, 50);
+			_videoPausedTimer.scheduleAtFixedRate(new VideoStateChecker(), 0, 80);
 		}
 	}
 	
@@ -148,11 +148,6 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			public void onPrepared(MediaPlayer mp) {
 				ApplifierImpactUtils.Log("onPrepared", this);
 				_videoPlayheadPrepared = true;
-				
-				if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {
-					_listener.onEventPositionReached(ApplifierVideoPosition.Start);
-					_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
-				}
 			}
 		});
 		
@@ -248,6 +243,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BACK:
+				ApplifierImpactUtils.Log("onKeyDown", this);
 				purgeVideoPausedTimer();
 				_videoView.stopPlayback();
 				setKeepScreenOn(false);
@@ -326,9 +322,14 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 						hideBufferingView();
 						if (!_videoPlaybackStartedSent) {
 							if (_listener != null) {
-								ApplifierImpactUtils.Log("onVideoPlaybackStarted to listener", this);
+								ApplifierImpactUtils.Log("onVideoPlaybackStarted sent to listener", this);
 								_listener.onVideoPlaybackStarted();
 								_videoPlaybackStartedSent = true;
+							}
+							
+							if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {
+								_listener.onEventPositionReached(ApplifierVideoPosition.Start);
+								_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
 							}
 						}
 					}
