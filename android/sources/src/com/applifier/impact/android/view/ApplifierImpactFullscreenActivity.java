@@ -5,6 +5,7 @@ import com.applifier.impact.android.ApplifierImpactUtils;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 public class ApplifierImpactFullscreenActivity extends Activity {
     @Override
@@ -26,4 +27,9 @@ public class ApplifierImpactFullscreenActivity extends Activity {
     	super.onDestroy();		
     	ApplifierImpactUtils.Log("ApplifierImpactFullscreenActivity->onDestroy()", this);
 	}
+    
+	@Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+    	return false;
+    }
 }

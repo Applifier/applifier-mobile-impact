@@ -105,6 +105,25 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		}		
 	}
 	
+	public void clearVideoPlayer  () {
+		ApplifierImpactUtils.Log("clearVideoPlayer", this);
+		setKeepScreenOn(false);
+		setOnClickListener(null);
+		setOnFocusChangeListener(null);
+		
+		hideTimeRemainingLabel();
+		hideBufferingView();
+		hideVideoPausedView();
+		purgeVideoPausedTimer();
+		
+		_videoView.stopPlayback();
+		_videoView.setOnCompletionListener(null);
+		_videoView.setOnPreparedListener(null);
+		_videoView.setOnErrorListener(null);
+		//_timeLeftInSecondsText = null;		
+		//_countDownText = null;
+	}
+	
 	
 	/* INTERNAL METHODS */
 	
@@ -121,7 +140,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		
 		if (_videoPausedTimer == null) {
 			_videoPausedTimer = new Timer();
-			_videoPausedTimer.scheduleAtFixedRate(new VideoStateChecker(), 0, 80);
+			_videoPausedTimer.scheduleAtFixedRate(new VideoStateChecker(), 10, 60);
 		}
 	}
 	
@@ -137,6 +156,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		ApplifierImpactUtils.Log("Creating custom view", this);
 		setBackgroundColor(0xFF000000);
 		_videoView = new VideoView(getContext());
+		_videoView.setId(3001);
 		RelativeLayout.LayoutParams videoLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
 		videoLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 		_videoView.setLayoutParams(videoLayoutParams);		
@@ -152,6 +172,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		});
 		
 		_countDownText = new RelativeLayout(getContext());
+		_countDownText.setId(3002);
 		RelativeLayout.LayoutParams countDownParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		countDownParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		countDownParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -229,6 +250,13 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
     	}  		
 	}
 	
+	private void hideTimeRemainingLabel () {
+		if (_countDownText != null && _countDownText.getParent() != null) {
+			_countDownText.removeAllViews();
+			removeView(_countDownText);			
+		}
+	}
+	
 	private void hideBufferingView () {
 		if (_bufferingView != null && _bufferingView.getParent() != null)
 			removeView(_bufferingView);
@@ -244,11 +272,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BACK:
 				ApplifierImpactUtils.Log("onKeyDown", this);
-				purgeVideoPausedTimer();
-				_videoView.stopPlayback();
-				setKeepScreenOn(false);
-				hideBufferingView();
-				hideVideoPausedView();
+				clearVideoPlayer();
 				
 				if (_listener != null)
 					_listener.onBackButtonClicked(this);

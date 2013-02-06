@@ -11,7 +11,7 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	private ArrayList<String> _downloadList = null;
 	private ApplifierImpactCampaign _campaign = null;
 	private IApplifierImpactCampaignHandlerListener _handlerListener = null;
-	private boolean _cancelledDownloads = false;
+	//private boolean _cancelledDownloads = false;
 	
 	
 	public ApplifierImpactCampaignHandler (ApplifierImpactCampaign campaign) {
@@ -41,7 +41,7 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	public void onFileDownloadCancelled (String downloadUrl) {	
 		if (finishDownload(downloadUrl)) {
 			ApplifierImpactUtils.Log("Download cancelled: " + _campaign.getCampaignId(), this);
-			_cancelledDownloads = true;
+			//_cancelledDownloads = true;
 		}
 	}
 	

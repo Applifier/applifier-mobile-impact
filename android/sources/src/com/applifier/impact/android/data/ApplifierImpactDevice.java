@@ -32,13 +32,13 @@ public class ApplifierImpactDevice {
 		if (ApplifierImpactProperties.CURRENT_ACTIVITY == null) return ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		
 		Context context = ApplifierImpactProperties.CURRENT_ACTIVITY;
-		String prefix = "";
+		//String prefix = "";
 		String deviceId = null;
 		//get android id
 		
 		if  (deviceId == null || deviceId.length() < 3) {
 			//get telephony id
-			prefix = "aTUDID";
+//			prefix = "aTUDID";
 			try {
 				TelephonyManager tmanager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 				deviceId = tmanager.getDeviceId();
@@ -50,7 +50,7 @@ public class ApplifierImpactDevice {
 		
 		if  (deviceId == null || deviceId.length() < 3) {
 			//get device serial no using private api
-			prefix = "aSNO";
+//			prefix = "aSNO";
 			try {
 		        Class<?> c = Class.forName("android.os.SystemProperties");
 		        Method get = c.getMethod("get", String.class);
@@ -62,12 +62,12 @@ public class ApplifierImpactDevice {
 
 		if  (deviceId == null || deviceId.length() < 3) {
 			deviceId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
-			prefix = "aID";
+//			prefix = "aID";
 		}
 		
 		if  (deviceId == null || deviceId.length() < 3) {
 			//get mac address
-			prefix = "aWMAC";
+//			prefix = "aWMAC";
 			try {
 				WifiManager wm = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 				deviceId = wm.getConnectionInfo().getMacAddress();
@@ -77,7 +77,7 @@ public class ApplifierImpactDevice {
 		}
 		
 		if  (deviceId == null || deviceId.length() < 3) {
-			prefix = "aUnknown";
+//			prefix = "aUnknown";
 			deviceId = Build.MANUFACTURER + "-" + Build.MODEL + "-"+Build.FINGERPRINT; 
 		}
 

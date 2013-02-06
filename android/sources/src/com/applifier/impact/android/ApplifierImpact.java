@@ -177,6 +177,11 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 
 	public void stopAll () {
 		ApplifierImpactUtils.Log("stopAll()", this);
+		if (_mainView != null && _mainView.videoplayerview != null)
+			_mainView.videoplayerview.clearVideoPlayer();
+		if (_mainView != null && _mainView.webview != null)
+			_mainView.webview.clearWebView();
+		
 		ApplifierImpactDownloader.stopAllDownloads();
 		webdata.stopAllRequests();
 		ApplifierImpactProperties.BASE_ACTIVITY = null;
@@ -255,32 +260,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public void onMainViewAction (ApplifierImpactMainViewAction action) {
 		switch (action) {
 			case BackButtonPressed:
-				ApplifierImpactUtils.Log("onMainViewAction: BackButtonPressed: " + _mainView.getViewState().toString() + ", " + _mainView.webview.getWebViewCurrentView(), this);
-				if (_mainView.getViewState().equals(ApplifierImpactMainViewState.WebView)) {
-					if (_mainView.webview.getWebViewCurrentView().equals(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_COMPLETED)) {
-						JSONObject spinnerParams = new JSONObject();
-						
-						try {
-							spinnerParams.put(ApplifierImpactConstants.IMPACT_TEXTKEY_KEY, ApplifierImpactConstants.IMPACT_TEXTKEY_BUFFERING);
-						}
-						catch (Exception e) {
-							ApplifierImpactUtils.Log("Could not create JSON", this);
-						}
-						
-						_mainView.webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, spinnerParams);
-						_mainView.webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START);
-						ApplifierImpactUtils.Log("onMainViewAction: Setting startscreen", this);
-					}
-					else {
-						ApplifierImpactUtils.Log("onMainViewAction: Closing impact", this);
-						close();
-					}
-				}
-				else if (_mainView.getViewState().equals(ApplifierImpactMainViewState.VideoPlayer)) {
-					ApplifierImpactUtils.Log("onMainViewAction: Removing player and setting WebView state", this);
-					_mainView.webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START);
-					_mainView.afterVideoPlaybackOperations();
-				}
+				if (_showingImpact)
+					close();
 				break;
 			case VideoStart:
 				if (_impactListener != null)
@@ -562,7 +543,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		JSONObject _data = null;
 		@Override
 		public void run() {
-			_showingImpact = false;
 			
 			if (ApplifierImpactProperties.CURRENT_ACTIVITY.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
 				Boolean dataOk = true;			
@@ -597,6 +577,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 										_impactListener.onImpactClose();
 									
 									_developerOptions = null;
+									_showingImpact = false;
 								}
 							});
 						}

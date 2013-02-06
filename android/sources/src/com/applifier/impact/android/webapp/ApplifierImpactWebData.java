@@ -18,10 +18,8 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 
 import com.applifier.impact.android.ApplifierImpactUtils;
-import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.ApplifierImpactRewardItem;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;

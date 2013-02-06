@@ -108,6 +108,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 						createVideoPlayerView();
 						removeFromMainView(webview);
 						addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+						focusToView(webview);
 					}
 					break;
 			}
@@ -153,6 +154,10 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	
 	private void destroyVideoPlayerView () {
 		ApplifierImpactUtils.Log("Destroying player", this);
+		
+		if (videoplayerview != null)
+			videoplayerview.clearVideoPlayer();
+		
 		removeFromMainView(videoplayerview);
 		videoplayerview = null;
 	}
@@ -237,9 +242,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	public void onCompletion(MediaPlayer mp) {
 		ApplifierImpactUtils.Log("onCompletion", this);
 		afterVideoPlaybackOperations();
-		//videoplayerview.setKeepScreenOn(false);
-		//destroyVideoPlayerView();
-		//setViewState(ApplifierImpactMainViewState.WebView);
 		onEventPositionReached(ApplifierVideoPosition.End);
 		
 		JSONObject params = new JSONObject();
@@ -252,10 +254,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		}
 		
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
-		
-		//ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
-		
 		sendActionToListener(ApplifierImpactMainViewAction.VideoEnd);
 	}
 	

@@ -40,6 +40,13 @@ public class ApplifierImpactWebView extends WebView {
 		init(activity, url, listener, webBridge);
 	}
 	
+	public void clearWebView () {
+		_webAppLoaded = false;
+		_listener = null;
+		setWebViewClient(null);
+		setWebChromeClient(null);
+	}
+	
 	public boolean isWebAppLoaded () {
 		return _webAppLoaded;
 	}

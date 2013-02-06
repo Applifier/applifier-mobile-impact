@@ -172,7 +172,6 @@ public class ApplifierImpactDownloader {
 		private URL _downloadUrl = null;
 		private InputStream _input = null;
 		private OutputStream _output = null;
-		private File _targetFile = null;
 		private int _downloadLength = 0;
 		private URLConnection _urlConnection = null;
 		private boolean _cancelled = false;
@@ -211,9 +210,7 @@ public class ApplifierImpactDownloader {
 					ApplifierImpactUtils.Log("Problems opening stream: " + e.getMessage(), this);
 				}
 				
-				_targetFile = new File(sUrl[0]);
 				_output = getOutputStreamFor(_campaign.getVideoFilename());
-				
 				if (_output == null)
 					onCancelled(this);
 				
