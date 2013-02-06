@@ -41,6 +41,14 @@ public class ApplifierImpactRewardItem {
 		return checkDataIntegrity();
 	}
 	
+	public void clearData () {
+		_key = null;
+		_name = null;
+		_pictureURL = null;
+		_rewardItemJSON = null;
+		_requiredKeys = null;
+	}
+	
 	public Map<String, String> getDetails () {
 		Map<String, String> returnMap = new HashMap<String, String>();
 		returnMap.put(ApplifierImpact.APPLIFIER_IMPACT_REWARDITEM_NAME_KEY, getName());

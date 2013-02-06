@@ -120,8 +120,6 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_videoView.setOnCompletionListener(null);
 		_videoView.setOnPreparedListener(null);
 		_videoView.setOnErrorListener(null);
-		//_timeLeftInSecondsText = null;		
-		//_countDownText = null;
 	}
 	
 	

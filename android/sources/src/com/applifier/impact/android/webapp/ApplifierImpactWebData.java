@@ -186,14 +186,48 @@ public class ApplifierImpactWebData {
 		}
 	}
 	
-	public void stopAllRequests () {
-		if (_urlLoaders != null)
-			_urlLoaders.clear();
-		if (_failedUrlLoaders != null)
-			_failedUrlLoaders.clear();
+	public void clearData () {
+		if (_campaigns != null) {
+			_campaigns.clear();
+			_campaigns = null;
+		}
 		
-		if (_currentLoader != null)
+		if (_defaultRewardItem != null) {
+			_defaultRewardItem.clearData();
+			_defaultRewardItem = null;
+		}
+		
+		if (_rewardItems != null) {
+			for (ApplifierImpactRewardItem rewardItem : _rewardItems)
+				rewardItem.clearData();
+			
+			_rewardItems.clear();
+			_rewardItems = null;
+		}
+		
+		if (_currentRewardItem != null) {
+			_currentRewardItem.clearData();
+			_currentRewardItem = null;
+		}
+		
+		_campaignJson = null;
+	}
+	
+	public void stopAllRequests () {
+		if (_urlLoaders != null) {
+			_urlLoaders.clear();
+			_urlLoaders = null;
+		}
+		
+		if (_failedUrlLoaders != null) {
+			_failedUrlLoaders.clear();
+			_failedUrlLoaders = null;
+		}
+		
+		if (_currentLoader != null) {
 			_currentLoader.cancel(true);
+			_currentLoader = null;
+		}
 	}
 	
 	public JSONObject getData () {

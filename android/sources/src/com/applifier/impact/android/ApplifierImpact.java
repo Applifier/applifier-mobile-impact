@@ -183,7 +183,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			_mainView.webview.clearWebView();
 		
 		ApplifierImpactDownloader.stopAllDownloads();
+		ApplifierImpactDownloader.clearData();
 		webdata.stopAllRequests();
+		webdata.setWebDataListener(null);
+		webdata.clearData();
 		ApplifierImpactProperties.BASE_ACTIVITY = null;
 		ApplifierImpactProperties.CURRENT_ACTIVITY = null;
 		ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
@@ -438,6 +441,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	private void init (Activity activity, String gameId, IApplifierImpactListener listener) {
 		instance = this;
+		setImpactListener(listener);
+		
 		ApplifierImpactProperties.IMPACT_GAME_ID = gameId;
 		ApplifierImpactProperties.BASE_ACTIVITY = activity;
 		ApplifierImpactProperties.CURRENT_ACTIVITY = activity;

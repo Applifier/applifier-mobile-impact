@@ -61,6 +61,20 @@ public class ApplifierImpactDownloader {
 		}
 	}
 	
+	public static void clearData () {
+		if (_cacheDownloads != null) {
+			_cacheDownloads.clear();
+			_cacheDownloads = null;
+		}
+		
+		_isDownloading = false;
+		
+		if (_downloadListeners != null) {
+			_downloadListeners.clear();
+			_downloadListeners = null;
+		}
+	}
+	
 	
 	/* INTERNAL METHODS */
 	
