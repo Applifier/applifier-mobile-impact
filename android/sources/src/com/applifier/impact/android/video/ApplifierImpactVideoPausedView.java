@@ -1,5 +1,7 @@
 package com.applifier.impact.android.video;
 
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -39,7 +42,8 @@ public class ApplifierImpactVideoPausedView extends RelativeLayout {
 	}
 	
 	private void createView () {
-		setBackgroundColor(0x90000000);
+		DisplayMetrics metrics = ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getDisplayMetrics();
+		setBackgroundColor(0xC0000000);
 		
 		RelativeLayout.LayoutParams strokeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		strokeParams.addRule(RelativeLayout.CENTER_IN_PARENT);
@@ -55,7 +59,7 @@ public class ApplifierImpactVideoPausedView extends RelativeLayout {
 		RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
 		arrowParams.addRule(RelativeLayout.ALIGN_LEFT, 60001);
-		arrowParams.leftMargin = 31;
+		arrowParams.leftMargin = Math.round(31 * metrics.density);
 		_triangle = createTriangle(60002);
 		addView(_triangle, arrowParams);
 		
@@ -66,30 +70,32 @@ public class ApplifierImpactVideoPausedView extends RelativeLayout {
 		RelativeLayout.LayoutParams textViewParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		textViewParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		textViewParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		textViewParams.bottomMargin = 100;
+		textViewParams.bottomMargin = Math.round(20 * metrics.density);
 		addView(_textView, textViewParams);
 	}
 	
 	private ImageView createOuterStroke (int id) {
-		Bitmap bmp = Bitmap.createBitmap(113, 113, Bitmap.Config.ARGB_4444);
+		DisplayMetrics metrics = ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getDisplayMetrics();
+		Bitmap bmp = Bitmap.createBitmap(Math.round(113 * metrics.density), Math.round(113 * metrics.density), Bitmap.Config.ARGB_4444);
 		Canvas cnv = new Canvas(bmp);
 		Paint pnt = new Paint(Paint.ANTI_ALIAS_FLAG);
 		pnt.setColor(0xFFFFFFFF);
 		pnt.setStyle(Style.STROKE);
 		pnt.setStrokeWidth(5);
-		cnv.drawCircle(56, 56, 53, pnt);
+		cnv.drawCircle(Math.round(56 * metrics.density), Math.round(56 * metrics.density), Math.round(53 * metrics.density), pnt);
 		ImageView img = new ImageView(getContext());
 		img.setImageBitmap(bmp);
 		img.setId(id);
 		return img;
 	}
 	
-	private ImageView createBall (int id) {		
-		Bitmap bmp = Bitmap.createBitmap(101, 101, Bitmap.Config.ARGB_4444);
+	private ImageView createBall (int id) {
+		DisplayMetrics metrics = ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getDisplayMetrics();
+		Bitmap bmp = Bitmap.createBitmap(Math.round(101 * metrics.density), Math.round(101 * metrics.density), Bitmap.Config.ARGB_4444);
 		Canvas cnv = new Canvas(bmp);
 		Paint pnt = new Paint(Paint.ANTI_ALIAS_FLAG);
 		pnt.setColor(0x90000000);
-		cnv.drawCircle(50, 50, 50, pnt);
+		cnv.drawCircle(Math.round(50 * metrics.density), Math.round(50 * metrics.density), Math.round(50 * metrics.density), pnt);
 		ImageView img = new ImageView(getContext());
 		img.setImageBitmap(bmp);
 		img.setId(id);
@@ -97,7 +103,8 @@ public class ApplifierImpactVideoPausedView extends RelativeLayout {
 	}
 	
 	private ImageView createTriangle (int id) {
-		Bitmap bmp = Bitmap.createBitmap(47, 51, Bitmap.Config.ARGB_4444);
+		DisplayMetrics metrics = ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getDisplayMetrics();
+		Bitmap bmp = Bitmap.createBitmap(Math.round(47 * metrics.density), Math.round(51 * metrics.density), Bitmap.Config.ARGB_4444);
 		Canvas cnv = new Canvas(bmp);
 		Paint pnt = new Paint(Paint.ANTI_ALIAS_FLAG);
 		pnt.setColor(Color.WHITE);
@@ -107,11 +114,11 @@ public class ApplifierImpactVideoPausedView extends RelativeLayout {
 		points[0] = 0f;
 		points[1] = 0f;
 		
-		points[2] = 47f;
-		points[3] = 25f;
+		points[2] = 47f * metrics.density;
+		points[3] = 25f * metrics.density;
 
 		points[4] = 0f;
-		points[5] = 51f;
+		points[5] = 51f * metrics.density;
 
 		points[6] = 0f;
 		points[7] = 0f;

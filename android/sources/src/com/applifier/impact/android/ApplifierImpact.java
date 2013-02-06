@@ -184,6 +184,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		
 		ApplifierImpactDownloader.stopAllDownloads();
 		ApplifierImpactDownloader.clearData();
+		cachemanager.setDownloadListener(null);
+		cachemanager.clearData();
 		webdata.stopAllRequests();
 		webdata.setWebDataListener(null);
 		webdata.clearData();

@@ -60,6 +60,20 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 		*/
 	}
 	
+	public void clearData () {
+		if (_handlerListener != null)
+			_handlerListener = null;
+		
+		if (_downloadList != null) {
+			_downloadList.clear();
+		}
+		
+		if (_campaign != null) {
+			_campaign.clearData();
+			_campaign = null;
+		}
+	}
+	
 	
 	/* INTERNAL METHODS */
 	
