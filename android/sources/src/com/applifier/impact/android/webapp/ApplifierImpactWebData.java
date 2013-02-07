@@ -132,8 +132,6 @@ public class ApplifierImpactWebData {
 		
 		String[] parts = url.split("\\?");
 		
-		ApplifierImpactUtils.Log(parts.toString(), this);
-		
 		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(parts[0], parts[1], ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET, ApplifierImpactRequestType.VideoPlan, 0);
 		ApplifierImpactUtils.Log("VIDEOPLAN_URL: " + loader.getUrl(), this);
 		addLoader(loader);
@@ -445,8 +443,11 @@ public class ApplifierImpactWebData {
 						_campaigns = deserializeCampaigns(campaigns);
 				}
 				
+				// Fall back, if campaigns were not found just set it to size 0
+				if (_campaigns == null)
+					_campaigns = new ArrayList<ApplifierImpactCampaign>();
+				
 				ApplifierImpactUtils.Log("Parsed total of " + _campaigns.size() + " campaigns", this);
-
 				
 				// Parse default reward item
 				if (validData) {
@@ -485,6 +486,13 @@ public class ApplifierImpactWebData {
 		}
 		catch (Exception e) {
 			ApplifierImpactUtils.Log("Malformed JSON: " + e.getMessage(), this);
+			
+			if (e.getStackTrace() != null) {
+				for (StackTraceElement element : e.getStackTrace()) {
+					ApplifierImpactUtils.Log("Malformed JSON: " + element.toString(), this);
+				}
+			}
+			
 			campaignDataFailed();
 			return;
 		}

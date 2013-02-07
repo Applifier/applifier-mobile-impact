@@ -106,7 +106,7 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	
 	private boolean isFileOk (String fileUrl) {
 		long localSize = ApplifierImpactUtils.getSizeForLocalFile(_campaign.getVideoFilename());
-		long expectedSize = _campaign.getVidoFileExpectedSize();
+		long expectedSize = _campaign.getVideoFileExpectedSize();
 		
 		ApplifierImpactUtils.Log("isFileOk: localSize=" + localSize + ", expectedSize=" + expectedSize, this);
 				

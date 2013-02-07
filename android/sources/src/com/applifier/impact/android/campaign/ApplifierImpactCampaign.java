@@ -33,7 +33,6 @@ public class ApplifierImpactCampaign {
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_PICTURE_KEY, 
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_DOWNLOADABLE_KEY, 
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_STREAMING_KEY,
-			ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_SIZE_KEY,
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_GAME_ID_KEY,
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_GAME_NAME_KEY,
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_ID_KEY,
@@ -214,7 +213,7 @@ public class ApplifierImpactCampaign {
 		return null;
 	}
 	
-	public long getVidoFileExpectedSize () {
+	public long getVideoFileExpectedSize () {
 		long size = -1;
 		if (checkDataIntegrity()) {
 			try {
@@ -224,14 +223,14 @@ public class ApplifierImpactCampaign {
 					size = Long.parseLong(fileSize);
 				}
 				catch (Exception e) {
-					ApplifierImpactUtils.Log("getVidoFileExpectedSize: Error parsing expected filesize: " + e.getMessage(), this);
+					ApplifierImpactUtils.Log("getVideoFileExpectedSize: could not parse size: " + e.getMessage(), this);
 					return size;
 				}
 				
 				return size;
 			}
 			catch (Exception e) {
-				ApplifierImpactUtils.Log("getVidoFileExpectedSize: This should not happen!", this);
+				ApplifierImpactUtils.Log("getVideoFileExpectedSize: not found, returning -1", this);
 				return size;
 			}
 		}
