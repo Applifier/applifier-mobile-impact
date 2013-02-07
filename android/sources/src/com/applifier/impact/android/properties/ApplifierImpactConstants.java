@@ -71,6 +71,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_CAMPAIGN_ITUNESID_KEY = "iTunesId";
 	public static final String IMPACT_CAMPAIGN_STOREID_KEY = "storeId";
 	public static final String IMPACT_CAMPAIGN_CACHE_VIDEO_KEY = "cacheVideo";
+	public static final String IMPACT_CAMPAIGN_BYPASSAPPSHEET_KEY = "bypassAppSheet";
 	
 	/* Reward Item JSON Properties */
 	public static final String IMPACT_REWARD_ITEMKEY_KEY = "itemKey";

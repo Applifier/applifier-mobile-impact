@@ -423,12 +423,16 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	    ApplifierImpactUtils.Log("onOpenPlayStore", this);
 		if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null && ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId() != null) {
 			try {
-			    ApplifierImpactUtils.Log("Opening playstore activity with storeId: " + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId(), this);
-				ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId())));
+				if (!ApplifierImpactProperties.SELECTED_CAMPAIGN.shouldBypassAppSheet()) {
+					ApplifierImpactUtils.Log("Opening playstore activity with storeId: " + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId(), this);
+					ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId())));
+				}
+				else {
+					openPlayStoreInBrowser();
+				}
 			} 
 			catch (android.content.ActivityNotFoundException anfe) {
-			    ApplifierImpactUtils.Log("Could not open PlayStore activity, opening in browser with storeId: " + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId(), this);
-				ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId())));
+				openPlayStoreInBrowser();
 			}
 			
 			webdata.sendAnalyticsRequest(ApplifierImpactConstants.IMPACT_ANALYTICS_EVENTTYPE_OPENAPPSTORE, ApplifierImpactProperties.SELECTED_CAMPAIGN);
@@ -440,6 +444,11 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 
 	/* PRIVATE METHODS */
+	
+	private void openPlayStoreInBrowser () {
+	    ApplifierImpactUtils.Log("Could not open PlayStore activity, opening in browser with storeId: " + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId(), this);
+		ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId())));
+	}
 	
 	private void init (Activity activity, String gameId, IApplifierImpactListener listener) {
 		instance = this;

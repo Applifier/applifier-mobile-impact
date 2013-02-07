@@ -39,6 +39,8 @@ public class ApplifierImpactCampaign {
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_ID_KEY,
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_TAGLINE_KEY};
 	
+	//bypassAppSheet
+	
 	private ApplifierImpactCampaignStatus _campaignStatus = ApplifierImpactCampaignStatus.READY;
 	
 	public ApplifierImpactCampaign () {		
@@ -78,6 +80,21 @@ public class ApplifierImpactCampaign {
 		}
 		return false;
 	}
+	
+	public Boolean shouldBypassAppSheet () {
+		if (checkDataIntegrity()) {
+			try {
+				return _campaignJson.getBoolean(ApplifierImpactConstants.IMPACT_CAMPAIGN_BYPASSAPPSHEET_KEY);
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("shouldBypassAppSheet: key not found for campaign: " + getCampaignId() + ", returning false", this);
+			}			
+		}
+		
+		return false;
+	}
+	
+	//IMPACT_CAMPAIGN_BYPASSAPPSHEET_KEY
 
 	public String getEndScreenUrl () {
 		if (checkDataIntegrity()) {

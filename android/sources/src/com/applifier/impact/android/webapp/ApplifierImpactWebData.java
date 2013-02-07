@@ -488,9 +488,6 @@ public class ApplifierImpactWebData {
 			campaignDataFailed();
 			return;
 		}
-			
-		if (_campaigns != null)
-			ApplifierImpactUtils.Log(_campaigns.toString(), this);
 		
 		if (_listener != null && validData && _campaigns != null && _campaigns.size() > 0) {
 			ApplifierImpactUtils.Log("WebDataCompleted: " + json, this);
