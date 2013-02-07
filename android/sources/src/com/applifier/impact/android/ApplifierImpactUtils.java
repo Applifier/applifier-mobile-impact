@@ -174,6 +174,18 @@ public class ApplifierImpactUtils {
 		}
 	}
 	
+	public static long getSizeForLocalFile (String fileName) {
+		File removeFile = new File (fileName);
+		File cachedVideoFile = new File (ApplifierImpactUtils.getCacheDirectory() + "/" + removeFile.getName());
+		long size = -1;
+		
+		if (cachedVideoFile.exists()) {
+			size = cachedVideoFile.length();
+		}
+		
+		return size;
+	}
+	
 	public static String getCacheDirectory () {
 		return Environment.getExternalStorageDirectory().toString() + "/" + ApplifierImpactConstants.CACHE_DIR_NAME;
 	}

@@ -456,6 +456,7 @@ public class ApplifierImpactWebData {
 						return;
 					}
 					
+					ApplifierImpactUtils.Log("Parsed default rewardItem: " + _defaultRewardItem.getName() + ", " + _defaultRewardItem.getKey(), this);
 					_currentRewardItem = _defaultRewardItem;
 				}
 				
@@ -611,7 +612,7 @@ public class ApplifierImpactWebData {
 				else {
 					_connection = (HttpURLConnection)_url.openConnection();
 				}
-				
+
 				_connection.setConnectTimeout(10000);
 				_connection.setReadTimeout(10000);
 				_connection.setRequestMethod(_httpMethod);
@@ -655,10 +656,11 @@ public class ApplifierImpactWebData {
 					ApplifierImpactUtils.Log("Total urlLoaders that have started running: " + _totalLoadersHaveRun, this);
 					ApplifierImpactUtils.Log("Reading data from: " + _url.toString() + " Content-length: " + _downloadLength, this);
 					
-					ByteArrayBuffer baf = new ByteArrayBuffer(1024);
+					ByteArrayBuffer baf = new ByteArrayBuffer(1024 * 20);
 					int current = 0;
 					
 					while ((current = _binput.read()) != -1) {
+						total++;
 						baf.append((byte)current);
 						
 						if (isCancelled())

@@ -33,6 +33,7 @@ public class ApplifierImpactCampaign {
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_PICTURE_KEY, 
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_DOWNLOADABLE_KEY, 
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_STREAMING_KEY,
+			ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_SIZE_KEY,
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_GAME_ID_KEY,
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_GAME_NAME_KEY,
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_ID_KEY,
@@ -72,7 +73,7 @@ public class ApplifierImpactCampaign {
 				return _campaignJson.getBoolean(ApplifierImpactConstants.IMPACT_CAMPAIGN_CACHE_VIDEO_KEY);
 			}
 			catch (Exception e) {
-				ApplifierImpactUtils.Log("shouldCacheVideo: key not found, returning false", this);
+				ApplifierImpactUtils.Log("shouldCacheVideo: key not found for campaign: " + getCampaignId() + ", returning false", this);
 			}			
 		}
 		return false;
@@ -194,6 +195,31 @@ public class ApplifierImpactCampaign {
 		}
 		
 		return null;
+	}
+	
+	public long getVidoFileExpectedSize () {
+		long size = -1;
+		if (checkDataIntegrity()) {
+			try {
+				String fileSize = _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_SIZE_KEY);
+				
+				try {
+					size = Long.parseLong(fileSize);
+				}
+				catch (Exception e) {
+					ApplifierImpactUtils.Log("getVidoFileExpectedSize: Error parsing expected filesize: " + e.getMessage(), this);
+					return size;
+				}
+				
+				return size;
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("getVidoFileExpectedSize: This should not happen!", this);
+				return size;
+			}
+		}
+		
+		return size;
 	}
 	
 	public String getTagLine () {

@@ -50,8 +50,12 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
 	public boolean onOptionsItemSelected (MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.kill:
+		    	ai.stopAll();
+		    	System.runFinalizersOnExit(true);		
 				finish();
-				break;
+		    	Log.d(ApplifierImpactConstants.LOG_NAME, "Quitting");
+
+		    	break;
 		}
 		
 		return true;
@@ -60,9 +64,6 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
     @Override
 	protected void onDestroy() {
     	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactTestStartActivity->onDestroy()");
-    	ai.stopAll();
-    	System.runFinalizersOnExit(true);		
-		//android.os.Process.killProcess(android.os.Process.myPid());
     	super.onDestroy();		
 	}
 	

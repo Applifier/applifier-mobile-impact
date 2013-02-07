@@ -63,6 +63,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_CAMPAIGN_PICTURE_KEY = "picture";
 	public static final String IMPACT_CAMPAIGN_TRAILER_DOWNLOADABLE_KEY = "trailerDownloadable";
 	public static final String IMPACT_CAMPAIGN_TRAILER_STREAMING_KEY = "trailerStreaming";
+	public static final String IMPACT_CAMPAIGN_TRAILER_SIZE_KEY = "trailerSize";
 	public static final String IMPACT_CAMPAIGN_GAME_ID_KEY = "gameId";
 	public static final String IMPACT_CAMPAIGN_GAME_NAME_KEY = "gameName";
 	public static final String IMPACT_CAMPAIGN_ID_KEY = "id";
@@ -70,7 +71,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_CAMPAIGN_ITUNESID_KEY = "iTunesId";
 	public static final String IMPACT_CAMPAIGN_STOREID_KEY = "storeId";
 	public static final String IMPACT_CAMPAIGN_CACHE_VIDEO_KEY = "cacheVideo";
-
+	
 	/* Reward Item JSON Properties */
 	public static final String IMPACT_REWARD_ITEMKEY_KEY = "itemKey";
 	public static final String IMPACT_REWARD_NAME_KEY = "name";

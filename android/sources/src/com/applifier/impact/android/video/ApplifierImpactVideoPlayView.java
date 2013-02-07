@@ -296,6 +296,9 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		
 		@Override
 		public void run () {
+			if (_videoView == null || _timeLeftInSecondsText == null)
+				this.cancel();
+			
 			PowerManager pm = (PowerManager)getContext().getSystemService(Context.POWER_SERVICE);			
 			if (!pm.isScreenOn()) {
 				pauseVideo();
