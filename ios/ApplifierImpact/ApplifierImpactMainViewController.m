@@ -255,7 +255,7 @@
 - (void)openAppStoreWithData:(NSDictionary *)data {
 	AILOG_DEBUG(@"");
 	
-  if (![self _canOpenStoreProductViewController]) {
+  if (![self _canOpenStoreProductViewController] || [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].bypassAppSheet == YES) {
 		NSString *clickUrl = [data objectForKey:@"clickUrl"];
     if (clickUrl == nil) return;
     AILOG_DEBUG(@"Cannot open store product view controller, falling back to click URL.");
