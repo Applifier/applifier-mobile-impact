@@ -77,6 +77,7 @@ NSString * const kApplifierImpactCampaignIDKey = @"id";
 NSString * const kApplifierImpactCampaignTaglineKey = @"tagLine";
 NSString * const kApplifierImpactCampaignStoreIDKey = @"iTunesId";
 NSString * const kApplifierImpactCampaignCacheVideoKey = @"cacheVideo";
+NSString * const kApplifierImpactCampaignBypassAppSheet = @"bypassAppSheet";
 
 
 /* Reward Item JSON Properties */

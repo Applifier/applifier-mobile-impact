@@ -130,6 +130,13 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
         }
       }
       
+      campaign.bypassAppSheet = NO;
+      if ([campaignDictionary objectForKey:kApplifierImpactCampaignBypassAppSheet] != nil) {
+        if ([[campaignDictionary valueForKey:kApplifierImpactCampaignBypassAppSheet] boolValue] != 0) {
+          campaign.bypassAppSheet = YES;
+        }
+      }
+      
 			[campaigns addObject:campaign];
 		}
 		else {

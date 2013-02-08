@@ -19,5 +19,6 @@
 @property (nonatomic, strong) NSString *itunesID;
 @property (nonatomic, assign) BOOL shouldCacheVideo;
 @property (nonatomic, assign) BOOL viewed;
+@property (nonatomic, assign) BOOL bypassAppSheet;
 
 @end

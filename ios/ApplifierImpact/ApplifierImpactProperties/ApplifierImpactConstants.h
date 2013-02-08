@@ -83,6 +83,7 @@ extern NSString * const kApplifierImpactCampaignIDKey;
 extern NSString * const kApplifierImpactCampaignTaglineKey;
 extern NSString * const kApplifierImpactCampaignStoreIDKey;
 extern NSString * const kApplifierImpactCampaignCacheVideoKey;
+extern NSString * const kApplifierImpactCampaignBypassAppSheet;
 
 
 /* Reward Item JSON Properties */
