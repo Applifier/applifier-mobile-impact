@@ -54,6 +54,9 @@ extern NSString * const kApplifierImpactWebViewEventDataClickUrlKey;
 
 extern NSString * const kApplifierImpactNativeEventHideSpinner;
 extern NSString * const kApplifierImpactNativeEventShowSpinner;
+extern NSString * const kApplifierImpactNativeEventShowError;
+extern NSString * const kApplifierImpactNativeEventVideoCompleted;
+extern NSString * const kApplifierImpactNativeEventCampaignIdKey;
 
 
 /* Native Event Params */
@@ -62,6 +65,7 @@ extern NSString * const kApplifierImpactTextKeyKey;
 extern NSString * const kApplifierImpactTextKeyBuffering;
 extern NSString * const kApplifierImpactTextKeyLoading;
 extern NSString * const kApplifierImpactItemKeyKey;
+extern NSString * const kApplifierImpactTextKeyVideoPlaybackError;
 
 
 /* JSON Data Root */
@@ -84,7 +88,7 @@ extern NSString * const kApplifierImpactCampaignTaglineKey;
 extern NSString * const kApplifierImpactCampaignStoreIDKey;
 extern NSString * const kApplifierImpactCampaignCacheVideoKey;
 extern NSString * const kApplifierImpactCampaignBypassAppSheet;
-
+extern NSString * const kApplifierImpactCampaignExpectedFileSize;
 
 /* Reward Item JSON Properties */
 

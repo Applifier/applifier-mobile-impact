@@ -155,9 +155,32 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	
 	[self.fileHandle closeFile];
 	self.fileHandle = nil;
-	
-	if (failure) {
-		ApplifierImpactCampaign *campaign = [self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey];
+	ApplifierImpactCampaign *campaign = [self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey];
+
+  // Check that file came through OK
+  if (!failure) {
+    NSError *err;
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
+    
+    if (err == nil) {
+      NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
+      long long fileSize = [fileSizeNumber longLongValue];
+      AILOG_DEBUG(@"File size values are: expectedSize=%lld, actualSize=%lld", campaign.expectedTrailerSize, fileSize);
+      if (campaign.expectedTrailerSize > 0 && fileSize != campaign.expectedTrailerSize) {
+        AILOG_DEBUG(@"Problems with file size, expected: %lld, got: %lld", campaign.expectedTrailerSize, fileSize);
+        [[NSFileManager defaultManager] removeItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
+      }
+    }
+    else {
+      AILOG_DEBUG(@"Could not get file stats, something could be wrong with the file!");
+    }
+  }
+  
+  // FIX: _queueCampaignDownload cannot ever start download again because self.currentDownload has a reference
+  // to the failed campaign and existinqueue will say YES. Currently okay since downloads do not support retries
+  // and therefore any of the files could remain in forever download loop. Fix downloads to have retries.
+  
+	if (failure) {		
 		[self _queueCampaignDownload:campaign];
 	}
 	else
