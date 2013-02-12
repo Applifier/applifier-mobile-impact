@@ -17,6 +17,7 @@ import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideo
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
@@ -225,9 +226,13 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		
 		sendActionToListener(ApplifierImpactMainViewAction.VideoStart);
 		bringChildToFront(videoplayerview);
-		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		
+		if (Build.VERSION.SDK_INT < 9) 
+			ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		else
+			ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(6);
+		
 		focusToView(videoplayerview);
-
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, spinnerParams);
 		webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_COMPLETED, params);
 	}
