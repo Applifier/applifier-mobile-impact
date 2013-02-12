@@ -309,7 +309,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 		}
 		
 		NSURL *videoURL = [self.cache localVideoURLForCampaign:campaign];
-		if (videoURL == nil || [self.cache campaignExistsInQueue:campaign] || ![campaign shouldCacheVideo]) {
+		if (videoURL == nil || [self.cache campaignExistsInQueue:campaign] || ![campaign shouldCacheVideo] || ![self.cache isCampaignVideoCached:campaign]) {
       AILOG_DEBUG(@"Campaign is not cached!");
       videoURL = campaign.trailerStreamingURL;
     }
