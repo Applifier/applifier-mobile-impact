@@ -38,7 +38,6 @@
   dispatch_async(dispatch_get_main_queue(), ^{
     [self.delegate videoPlaybackStarted];
   });
-	[self _logVideoAnalytics];
 }
 
 - (void)_videoPlaybackEnded:(NSNotification *)notification {
@@ -107,11 +106,14 @@
     
     AVPlayerStatus playerStatus = self.currentItem.status;
     if (playerStatus == AVPlayerStatusReadyToPlay) {
+      AILOG_DEBUG(@"videostartedplaying");
+      __block ApplifierImpactVideoPlayer *blockSelf = self;
+      
       dispatch_async(dispatch_get_main_queue(), ^{
         [self.delegate videoStartedPlaying];
+        [self _logVideoAnalytics];
       });
       
-       __block ApplifierImpactVideoPlayer *blockSelf = self;
       Float64 duration = [self _currentVideoDuration];
       NSMutableArray *analyticsTimeValues = [NSMutableArray array];
       [analyticsTimeValues addObject:[self _valueWithDuration:duration * .25]];
@@ -120,6 +122,7 @@
       
       if (![ApplifierImpactDevice isSimulator]) {
         self.analyticsTimeObserver = [self addBoundaryTimeObserverForTimes:analyticsTimeValues queue:nil usingBlock:^{
+          AILOG_DEBUG(@"Log position");
           [blockSelf _logVideoAnalytics];
         }];
       }
@@ -163,6 +166,7 @@
 #pragma mark Analytics
 
 - (void)_logVideoAnalytics {
+  AILOG_DEBUG(@"_logVideoAnalytics");
 	self.videoPosition++;
   [[ApplifierImpactAnalyticsUploader sharedInstance] logVideoAnalyticsWithPosition:self.videoPosition campaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
 }

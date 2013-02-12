@@ -190,6 +190,8 @@
 - (void)videoPlayerEncounteredError {
   AILOG_DEBUG(@"");
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
+  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventVideoCompleted data:@{kApplifierImpactNativeEventCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowError data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyVideoPlaybackError}];
   [self _dismissVideoController];
 }
 
@@ -218,12 +220,18 @@
 }
 
 - (void)_destroyVideoController {
-  self.videoController.delegate = nil;
+  if (self.videoController != nil) {
+    [self.videoController forceStopVideoPlayer];
+    self.videoController.delegate = nil;
+  }
+  
   self.videoController = nil;
 }
 
 - (void)_dismissVideoController {
-  [self dismissViewControllerAnimated:NO completion:nil];
+  if ([self.presentedViewController isEqual:self.videoController])
+    [self dismissViewControllerAnimated:NO completion:nil];
+  
   [self _destroyVideoController];
 }
 
@@ -255,7 +263,7 @@
 - (void)openAppStoreWithData:(NSDictionary *)data {
 	AILOG_DEBUG(@"");
 	
-  if (![self _canOpenStoreProductViewController]) {
+  if (![self _canOpenStoreProductViewController] || [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].bypassAppSheet == YES) {
 		NSString *clickUrl = [data objectForKey:@"clickUrl"];
     if (clickUrl == nil) return;
     AILOG_DEBUG(@"Cannot open store product view controller, falling back to click URL.");

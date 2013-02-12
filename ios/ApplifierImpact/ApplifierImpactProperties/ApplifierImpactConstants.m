@@ -48,6 +48,9 @@ NSString * const kApplifierImpactWebViewEventDataClickUrlKey = @"clickUrl";
 
 NSString * const kApplifierImpactNativeEventHideSpinner = @"hideSpinner";
 NSString * const kApplifierImpactNativeEventShowSpinner = @"showSpinner";
+NSString * const kApplifierImpactNativeEventShowError = @"showError";
+NSString * const kApplifierImpactNativeEventVideoCompleted = @"videoCompleted";
+NSString * const kApplifierImpactNativeEventCampaignIdKey = @"campaignId";
 
 
 /* Native Event Params */
@@ -55,6 +58,7 @@ NSString * const kApplifierImpactNativeEventShowSpinner = @"showSpinner";
 NSString * const kApplifierImpactTextKeyKey = @"textKey";
 NSString * const kApplifierImpactTextKeyBuffering = @"buffering";
 NSString * const kApplifierImpactTextKeyLoading = @"loading";
+NSString * const kApplifierImpactTextKeyVideoPlaybackError = @"videoPlaybackError";
 NSString * const kApplifierImpactItemKeyKey = @"itemKey";
 
 
@@ -77,7 +81,8 @@ NSString * const kApplifierImpactCampaignIDKey = @"id";
 NSString * const kApplifierImpactCampaignTaglineKey = @"tagLine";
 NSString * const kApplifierImpactCampaignStoreIDKey = @"iTunesId";
 NSString * const kApplifierImpactCampaignCacheVideoKey = @"cacheVideo";
-
+NSString * const kApplifierImpactCampaignBypassAppSheet = @"bypassAppSheet";
+NSString * const kApplifierImpactCampaignExpectedFileSize = @"trailerSize";
 
 /* Reward Item JSON Properties */
 

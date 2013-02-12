@@ -87,7 +87,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 			NSURL *trailerStreamingURL = [NSURL URLWithString:trailerStreamingURLString];
 			AIAssertV(trailerStreamingURL != nil, nil);
 			campaign.trailerStreamingURL = trailerStreamingURL;
-			
+      
 			id gameIDValue = [campaignDictionary objectForKey:kApplifierImpactCampaignGameIDKey];
       if (gameIDValue == nil) continue;
 			AIAssertV(gameIDValue != nil && ([gameIDValue isKindOfClass:[NSString class]] || [gameIDValue isKindOfClass:[NSNumber class]]), nil);
@@ -127,6 +127,20 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
       if ([campaignDictionary objectForKey:kApplifierImpactCampaignCacheVideoKey] != nil) {
         if ([[campaignDictionary valueForKey:kApplifierImpactCampaignCacheVideoKey] boolValue] != 0) {
           campaign.shouldCacheVideo = YES;
+        }
+      }
+      
+      campaign.bypassAppSheet = NO;
+      if ([campaignDictionary objectForKey:kApplifierImpactCampaignBypassAppSheet] != nil) {
+        if ([[campaignDictionary valueForKey:kApplifierImpactCampaignBypassAppSheet] boolValue] != 0) {
+          campaign.bypassAppSheet = YES;
+        }
+      }
+      
+      campaign.expectedTrailerSize = -1;
+      if ([campaignDictionary objectForKey:kApplifierImpactCampaignExpectedFileSize] != nil) {
+        if ([[campaignDictionary valueForKey:kApplifierImpactCampaignExpectedFileSize] longLongValue] != 0) {
+          campaign.expectedTrailerSize = [[campaignDictionary valueForKey:kApplifierImpactCampaignExpectedFileSize] longLongValue];
         }
       }
       

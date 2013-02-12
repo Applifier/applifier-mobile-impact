@@ -150,6 +150,7 @@
 
 - (void)forceStopVideoPlayer {
   AILOG_DEBUG(@"");
+  // FIX: Wrong order?
   [self _detachVideoPlayer];
   [self _destroyVideoPlayer];
 }
