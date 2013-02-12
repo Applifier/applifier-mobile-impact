@@ -80,7 +80,6 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 			NSURL *trailerDownloadableURL = [NSURL URLWithString:trailerDownloadableURLString];
 			AIAssertV(trailerDownloadableURL != nil, nil);
 			campaign.trailerDownloadableURL = trailerDownloadableURL;
-      //campaign.trailerDownloadableURL = [NSURL URLWithString:@"http://nanananna.lol"];
 			
 			NSString *trailerStreamingURLString = [campaignDictionary objectForKey:kApplifierImpactCampaignTrailerStreamingKey];
       if (trailerStreamingURLString == nil) continue;
@@ -88,7 +87,6 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 			NSURL *trailerStreamingURL = [NSURL URLWithString:trailerStreamingURLString];
 			AIAssertV(trailerStreamingURL != nil, nil);
 			campaign.trailerStreamingURL = trailerStreamingURL;
-			campaign.trailerStreamingURL = [NSURL URLWithString:@"http://lolololo.nanana.hihi"];
       
 			id gameIDValue = [campaignDictionary objectForKey:kApplifierImpactCampaignGameIDKey];
       if (gameIDValue == nil) continue;
