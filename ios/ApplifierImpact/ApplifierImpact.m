@@ -21,6 +21,7 @@ NSString * const kApplifierImpactOptionGamerSIDKey = @"sid";
 @interface ApplifierImpact () <ApplifierImpactCampaignManagerDelegate, UIWebViewDelegate, UIScrollViewDelegate, ApplifierImpactMainViewControllerDelegate>
 @property (nonatomic, strong) NSThread *backgroundThread;
 @property (nonatomic, assign) dispatch_queue_t queue;
+@property (nonatomic, assign) Boolean debug;
 @end
 
 @implementation ApplifierImpact
@@ -40,12 +41,21 @@ NSString * const kApplifierImpactOptionGamerSIDKey = @"sid";
   return [[ApplifierImpactProperties sharedInstance] impactVersion];
 }
 
+- (void)setDebugMode:(BOOL)debugMode {
+  self.debug = debugMode;
+}
+
+- (BOOL)isDebugMode {
+  return self.debug;
+}
+
 static ApplifierImpact *sharedImpact = nil;
 
 + (ApplifierImpact *)sharedInstance {
 	@synchronized(self) {
 		if (sharedImpact == nil) {
       sharedImpact = [[ApplifierImpact alloc] init];
+      sharedImpact.debug = NO;
 		}
 	}
 	

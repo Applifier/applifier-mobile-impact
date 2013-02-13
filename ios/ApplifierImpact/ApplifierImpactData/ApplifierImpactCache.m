@@ -39,7 +39,6 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 }
 
 - (NSString *)_videoFilenameForCampaign:(ApplifierImpactCampaign *)campaign {
-  AILOG_DEBUG(@"PAAAATH: %@", [campaign.trailerDownloadableURL lastPathComponent]);
   if ([campaign.trailerDownloadableURL lastPathComponent] == nil || [campaign.trailerDownloadableURL lastPathComponent].length < 3) {
     return [NSString stringWithFormat:@"%@-%@", campaign.id, @"failed.mp4"];
   }

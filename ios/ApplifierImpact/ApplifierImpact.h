@@ -6,21 +6,13 @@
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
 
-#define IMPACT_DEBUG_MODE_ENABLED 1
-
-#define AILOG_LOG(levelName, fmt, ...) NSLog((@"%@ [T:0x%x %@] %s:%d " fmt), levelName, (unsigned int)[NSThread currentThread], ([[NSThread currentThread] isMainThread] ? @"M" : @"S"), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define AILOG_LOG(levelName, fmt, ...) if ([[ApplifierImpact sharedInstance] isDebugMode]) NSLog((@"%@ [T:0x%x %@] %s:%d " fmt), levelName, (unsigned int)[NSThread currentThread], ([[NSThread currentThread] isMainThread] ? @"M" : @"S"), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 #define AILOG_ERROR(fmt, ...) AILOG_LOG(@"ERROR", fmt, ##__VA_ARGS__)
 
-#if IMPACT_DEBUG_MODE_ENABLED
 #define AILOG_DEBUG(fmt, ...) AILOG_LOG(@"DEBUG", fmt, ##__VA_ARGS__)
 #define AIAssert(condition) do { if ( ! (condition)) { AILOG_ERROR(@"Expected condition '%s' to be true.", #condition); abort(); } } while(0)
 #define AIAssertV(condition, value) do { if ( ! (condition)) { AILOG_ERROR(@"Expected condition '%s' to be true.", #condition); abort(); } } while(0)
-#else
-#define AILOG_DEBUG(...)
-#define AIAssert(condition) do { if ( ! (condition)) { AILOG_ERROR(@"Expected condition '%s' to be true.", #condition); return; } } while(0)
-#define AIAssertV(condition, value) do { if ( ! (condition)) { AILOG_ERROR(@"Expected condition '%s' to be true.", #condition); return value; } } while(0)
-#endif
 
 extern NSString * const kApplifierImpactRewardItemPictureKey;
 extern NSString * const kApplifierImpactRewardItemNameKey;
@@ -56,6 +48,8 @@ extern NSString * const kApplifierImpactOptionGamerSIDKey;
 + (ApplifierImpact *)sharedInstance;
 + (BOOL)isSupported;
 + (NSString *)getSDKVersion;
+- (void)setDebugMode:(BOOL)debugMode;
+- (BOOL)isDebugMode;
 - (void)setTestMode:(BOOL)testModeEnabled;
 - (BOOL)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController;
 - (BOOL)startWithGameId:(NSString *)gameId;
