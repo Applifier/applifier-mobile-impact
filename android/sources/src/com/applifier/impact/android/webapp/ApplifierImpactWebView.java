@@ -1,5 +1,6 @@
 package com.applifier.impact.android.webapp;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 import org.json.JSONObject;
@@ -225,7 +226,12 @@ public class ApplifierImpactWebView extends WebView {
 	
 	private class ApplifierViewChromeClient extends WebChromeClient {
 		public void onConsoleMessage(String message, int lineNumber, String sourceID) {
-			ApplifierImpactUtils.Log("JavaScript (line: " + lineNumber + "): " + message, this);
+			String sourceFile = sourceID;
+			File tmp = new File(sourceID);
+			if (tmp != null && tmp.getName() != null)
+				sourceFile = tmp.getName();
+			
+			ApplifierImpactUtils.Log("JavaScript (sourceId=" + sourceFile + ", line=" + lineNumber + "): " + message, this);
 		}
 		
 		public void onReachedMaxAppCacheSize(long spaceNeeded, long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) {
