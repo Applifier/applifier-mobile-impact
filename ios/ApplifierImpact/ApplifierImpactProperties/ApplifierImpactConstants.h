@@ -108,7 +108,7 @@ extern NSString * const kApplifierImpactGamerIDKey;
 extern NSString * const kApplifierImpactUrlKey;
 extern NSString * const kApplifierImpactWebViewUrlKey;
 extern NSString * const kApplifierImpactAnalyticsUrlKey;
-
+extern NSString * const kApplifierImpactSdkVersionKey;
 
 /* Analytics Uploader */
 

@@ -103,6 +103,7 @@ NSString * const kApplifierImpactGamerIDKey = @"gamerId";
 NSString * const kApplifierImpactUrlKey = @"impactUrl";
 NSString * const kApplifierImpactWebViewUrlKey = @"webViewUrl";
 NSString * const kApplifierImpactAnalyticsUrlKey = @"analyticsUrl";
+NSString * const kApplifierImpactSdkVersionKey = @"nativeSdkVersion";
 
 
 /* Analytics Uploader */

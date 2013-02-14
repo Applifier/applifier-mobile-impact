@@ -22,6 +22,7 @@
   @property (nonatomic) BOOL testModeEnabled;
   @property (nonatomic, assign) UIViewController *currentViewController;
   @property (nonatomic, assign) int maxNumberOfAnalyticsRetries;
+  @property (nonatomic, strong) NSString *expectedSdkVersion;
 
 + (ApplifierImpactProperties *)sharedInstance;
 - (void)refreshCampaignQueryString;
