@@ -342,10 +342,33 @@
 - (void)webAppReady {
   [self.delegate mainControllerWebViewInitialized];
   dispatch_async(dispatch_get_main_queue(), ^{
+    [self checkForVersionAndShowAlertDialog];
+    
     [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIInitComplete, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
   });
 }
 
+- (void)checkForVersionAndShowAlertDialog {
+  if ([[ApplifierImpactProperties sharedInstance] expectedSdkVersion] != nil && ![[[ApplifierImpactProperties sharedInstance] expectedSdkVersion] isEqualToString:[[ApplifierImpactProperties sharedInstance] impactVersion]]) {
+    AILOG_DEBUG(@"Got different sdkVersions, checking further.");
+    
+    if (![ApplifierImpactDevice isEncrypted]) {
+      if ([ApplifierImpactDevice isJailbroken]) {
+        AILOG_DEBUG(@"Build is not encrypted, but device seems to be jailbroken. Not showing version alert");
+        return;
+      }
+      else {
+        // Build is not encrypted and device is not jailbroken, alert dialog is shown that SDK is not the latest version.
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Applifier Impact SDK"
+                                                        message:@"The Applifier Impact SDK you are running is not the current version, please update your SDK"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+      }
+    }
+  }
+}
 
 #pragma mark - Shared Instance
 

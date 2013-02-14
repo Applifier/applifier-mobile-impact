@@ -26,5 +26,7 @@
 + (NSNumber *)getIOSExactVersion;
 
 + (BOOL)isSimulator;
++ (BOOL)isEncrypted;
++ (BOOL)isJailbroken;
 
 @end

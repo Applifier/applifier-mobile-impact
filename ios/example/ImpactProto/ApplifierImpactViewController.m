@@ -36,6 +36,7 @@
     [super viewDidAppear:animated];
     
     // TEST MODE: Do not use in production apps
+    [[ApplifierImpact sharedInstance] setDebugMode:YES];
     [[ApplifierImpact sharedInstance] setTestMode:YES];
     
     // Initialize Applifier Impact

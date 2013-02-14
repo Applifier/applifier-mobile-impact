@@ -39,6 +39,10 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 }
 
 - (NSString *)_videoFilenameForCampaign:(ApplifierImpactCampaign *)campaign {
+  if ([campaign.trailerDownloadableURL lastPathComponent] == nil || [campaign.trailerDownloadableURL lastPathComponent].length < 3) {
+    return [NSString stringWithFormat:@"%@-%@", campaign.id, @"failed.mp4"];
+  }
+  
 	return [NSString stringWithFormat:@"%@-%@", campaign.id, [campaign.trailerDownloadableURL lastPathComponent]];
 }
 
@@ -153,13 +157,13 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 - (void)_downloadFinishedWithFailure:(BOOL)failure {
 	AILOG_DEBUG(@"download finished with failure: %@", failure ? @"yes" : @"no");
 	
+  NSError *err;
 	[self.fileHandle closeFile];
 	self.fileHandle = nil;
 	ApplifierImpactCampaign *campaign = [self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey];
 
   // Check that file came through OK
   if (!failure) {
-    NSError *err;
     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
     
     if (err == nil) {
@@ -182,6 +186,8 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
   
 	if (failure) {		
 		[self _queueCampaignDownload:campaign];
+    if ([self isCampaignVideoCached:campaign])
+      [[NSFileManager defaultManager] removeItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
 	}
 	else
 		[self.delegate cache:self finishedCachingCampaign:[self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey]];
