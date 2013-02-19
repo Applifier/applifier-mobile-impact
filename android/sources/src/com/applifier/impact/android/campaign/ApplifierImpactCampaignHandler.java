@@ -11,7 +11,7 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	private ArrayList<String> _downloadList = null;
 	private ApplifierImpactCampaign _campaign = null;
 	private IApplifierImpactCampaignHandlerListener _handlerListener = null;
-	private boolean _cancelledDownloads = false;
+	//private boolean _cancelledDownloads = false;
 	
 	
 	public ApplifierImpactCampaignHandler (ApplifierImpactCampaign campaign) {
@@ -41,7 +41,7 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	public void onFileDownloadCancelled (String downloadUrl) {	
 		if (finishDownload(downloadUrl)) {
 			ApplifierImpactUtils.Log("Download cancelled: " + _campaign.getCampaignId(), this);
-			_cancelledDownloads = true;
+			//_cancelledDownloads = true;
 		}
 	}
 	
@@ -60,6 +60,20 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 		*/
 	}
 	
+	public void clearData () {
+		if (_handlerListener != null)
+			_handlerListener = null;
+		
+		if (_downloadList != null) {
+			_downloadList.clear();
+		}
+		
+		if (_campaign != null) {
+			_campaign.clearData();
+			_campaign = null;
+		}
+	}
+	
 	
 	/* INTERNAL METHODS */
 	
@@ -76,22 +90,36 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	}
 	
 	private void checkFileAndDownloadIfNeeded (String fileUrl) {
-		if (_campaign.shouldCacheVideo() && !ApplifierImpactUtils.isFileInCache(_campaign.getVideoFilename())) {
+		if (_campaign.shouldCacheVideo() && !ApplifierImpactUtils.isFileInCache(_campaign.getVideoFilename()) && ApplifierImpactUtils.canUseExternalStorage()) {
 			if (!hasDownloads())
 				ApplifierImpactDownloader.addListener(this);
 			
 			addCampaignToDownloads();
 		}
-		else if (!isFileOk(fileUrl) && _campaign.shouldCacheVideo()) {
-			ApplifierImpactUtils.removeFile(fileUrl);
+		else if (_campaign.shouldCacheVideo() && !isFileOk(fileUrl) && ApplifierImpactUtils.canUseExternalStorage()) {
+			ApplifierImpactUtils.Log("The file was not okay, redownloading", this);
+			ApplifierImpactUtils.removeFile(_campaign.getVideoFilename());
 			ApplifierImpactDownloader.addListener(this);
 			addCampaignToDownloads();
 		}		
 	}
 	
 	private boolean isFileOk (String fileUrl) {
-		// TODO: Implement isFileOk
-		return true;
+		long localSize = ApplifierImpactUtils.getSizeForLocalFile(_campaign.getVideoFilename());
+		long expectedSize = _campaign.getVideoFileExpectedSize();
+		
+		ApplifierImpactUtils.Log("isFileOk: localSize=" + localSize + ", expectedSize=" + expectedSize, this);
+				
+		if (localSize == -1)
+			return false;
+		
+		if (expectedSize == -1)
+			return true;
+		
+		if (localSize > 0 && expectedSize > 0 && localSize == expectedSize)
+			return true;
+			
+		return false;
 	}
 	
 	private void addCampaignToDownloads () {

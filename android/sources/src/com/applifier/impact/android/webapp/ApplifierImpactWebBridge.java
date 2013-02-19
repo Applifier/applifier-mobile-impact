@@ -1,25 +1,30 @@
 package com.applifier.impact.android.webapp;
 
 import org.json.JSONObject;
+
 import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 public class ApplifierImpactWebBridge {
-	private enum ApplifierImpactWebEvent { PlayVideo, PauseVideo, CloseView, InitComplete;
+	private enum ApplifierImpactWebEvent { PlayVideo, PauseVideo, CloseView, InitComplete, PlayStore;
 		@Override
 		public String toString () {
 			String retVal = null;
 			switch (this) {
 				case PlayVideo:
-					retVal = "playVideo";
+					retVal = ApplifierImpactConstants.IMPACT_WEBVIEW_API_PLAYVIDEO;
 					break;
 				case PauseVideo:
 					retVal = "pauseVideo";
 					break;
 				case CloseView:
-					retVal = "close";
+					retVal = ApplifierImpactConstants.IMPACT_WEBVIEW_API_CLOSE;
 					break;
 				case InitComplete:
-					retVal = "initComplete";
+					retVal = ApplifierImpactConstants.IMPACT_WEBVIEW_API_INITCOMPLETE;
+					break;
+				case PlayStore:
+					retVal = ApplifierImpactConstants.IMPACT_WEBVIEW_API_PLAYSTORE;
 					break;
 			}
 			return retVal;
@@ -41,10 +46,10 @@ public class ApplifierImpactWebBridge {
 		_listener = listener;
 	}
 	
-	public void handleWebEvent (String type, String data) {
+	public boolean handleWebEvent (String type, String data) {
 		ApplifierImpactUtils.Log("handleWebEvent: "+ type + ", " + data, this);
 
-		if (_listener == null || data == null) return;
+		if (_listener == null || data == null) return false;
 		
 		JSONObject jsonData = null;
 		JSONObject parameters = null;
@@ -58,11 +63,11 @@ public class ApplifierImpactWebBridge {
 			ApplifierImpactUtils.Log("Error while parsing parameters: " + e.getMessage(), this);
 		}
 		
-		if (jsonData == null || event == null) return;
+		if (jsonData == null || event == null) return false;
 		
 		ApplifierImpactWebEvent eventType = getEventType(event);
 		
-		if (eventType == null) return;
+		if (eventType == null) return false;
 		
 		switch (eventType) {
 			case PlayVideo:
@@ -77,6 +82,11 @@ public class ApplifierImpactWebBridge {
 			case InitComplete:
 				_listener.onWebAppInitComplete(parameters);
 				break;
+			case PlayStore:
+				_listener.onOpenPlayStore(parameters);
+				break;
 		}
+		
+		return true;
 	}
 }

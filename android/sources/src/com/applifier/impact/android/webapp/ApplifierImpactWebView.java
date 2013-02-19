@@ -1,5 +1,6 @@
 package com.applifier.impact.android.webapp;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 import org.json.JSONObject;
@@ -12,6 +13,7 @@ import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -26,6 +28,7 @@ public class ApplifierImpactWebView extends WebView {
 	private IApplifierImpactWebViewListener _listener = null;
 	private boolean _webAppLoaded = false;
 	private ApplifierImpactWebBridge _webBridge = null;
+	private String _currentWebView = ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START;
 	
 	public ApplifierImpactWebView(Activity activity, IApplifierImpactWebViewListener listener, ApplifierImpactWebBridge webBridge) {
 		super(activity);
@@ -38,8 +41,19 @@ public class ApplifierImpactWebView extends WebView {
 		init(activity, url, listener, webBridge);
 	}
 	
+	public void clearWebView () {
+		_webAppLoaded = false;
+		_listener = null;
+		setWebViewClient(null);
+		setWebChromeClient(null);
+	}
+	
 	public boolean isWebAppLoaded () {
 		return _webAppLoaded;
+	}
+	
+	public String getWebViewCurrentView () {
+		return _currentWebView;
 	}
 	
 	public void setWebViewCurrentView (String view) {
@@ -54,8 +68,26 @@ public class ApplifierImpactWebView extends WebView {
 				dataString = data.toString();
 			
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_CHANGE_VIEW, view, dataString);
+			_currentWebView = view;
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
 			ApplifierImpactUtils.Log("Send change view to WebApp: " + javascriptString, this);
+			
+			if (data != null) {
+				String action = "test";
+				try {
+					action = data.getString(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY);
+				}
+				catch (Exception e) {
+				}
+				
+				if (data.has(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY) &&
+					action.equals(ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN) &&
+					ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.BASE_ACTIVITY) &&
+					!ApplifierImpactProperties.TEST_JAVASCRIPT_RAN &&
+					ApplifierImpactProperties.TEST_JAVASCRIPT != null) {
+					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(ApplifierImpactProperties.TEST_JAVASCRIPT));
+				}
+			}
 		}
 	}
 	
@@ -85,6 +117,8 @@ public class ApplifierImpactWebView extends WebView {
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_MACADDRESS_KEY, ApplifierImpactDevice.getMacAddress());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDKVERSION_KEY, ApplifierImpactConstants.IMPACT_VERSION);
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SCREENDENSITY_KEY, ApplifierImpactDevice.getScreenDensity());
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SCREENSIZE_KEY, ApplifierImpactDevice.getScreenSize());
 				
 				// Tracking data
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SOFTWAREVERSION_KEY, ApplifierImpactDevice.getSoftwareVersion());
@@ -111,13 +145,15 @@ public class ApplifierImpactWebView extends WebView {
 		setupApplifierView();
 		loadUrl(_url);
 		
-		setOnLongClickListener(new OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-			    return true;
-			}
-		});
-		setLongClickable(false);
+		if (Build.VERSION.SDK_INT > 8) {
+			setOnLongClickListener(new OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+				    return true;
+				}
+			});
+			setLongClickable(false);
+		}
 	}
 	
 	private void setupApplifierView ()  {
@@ -148,9 +184,7 @@ public class ApplifierImpactWebView extends WebView {
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 		setInitialScale(0);
-		
 
-		
 		setBackgroundColor(Color.BLACK);
 		setBackgroundDrawable(null);
 		setBackgroundResource(0);
@@ -172,21 +206,22 @@ public class ApplifierImpactWebView extends WebView {
 			getSettings().setAllowFileAccess(true);
 		}
 		
+		ApplifierImpactUtils.Log("Adding javascript interface", this);
+		addJavascriptInterface(_webBridge, "applifierimpactnative");
+	}
+	
+	public void setRenderMode (int mode) {
 		// WebView background will go white in SDK >= 11 if you don't set webview's
 		// layer-type to software.
 		try
 		{
 			Method layertype = View.class.getMethod("setLayerType", Integer.TYPE, Paint.class);
-			layertype.invoke(this, 1, null);
+			layertype.invoke(this, mode, null);
 		}
 		catch (Exception e) {
 			ApplifierImpactUtils.Log("Could not invoke setLayerType", this);
-		}
-		
-		ApplifierImpactUtils.Log("Adding javascript interface", this);
-		addJavascriptInterface(_webBridge, "applifierimpactnative");
+		}		
 	}
-	
 	
 	/* OVERRIDE METHODS */
 	
@@ -194,6 +229,7 @@ public class ApplifierImpactWebView extends WebView {
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BACK:
+				ApplifierImpactUtils.Log("onKeyDown", this);
 		    	if (_listener != null)
 		    		_listener.onBackButtonClicked(this);
 		    	return true;
@@ -207,7 +243,12 @@ public class ApplifierImpactWebView extends WebView {
 	
 	private class ApplifierViewChromeClient extends WebChromeClient {
 		public void onConsoleMessage(String message, int lineNumber, String sourceID) {
-			ApplifierImpactUtils.Log("JavaScript (line: " + lineNumber + "): " + message, this);
+			String sourceFile = sourceID;
+			File tmp = new File(sourceID);
+			if (tmp != null && tmp.getName() != null)
+				sourceFile = tmp.getName();
+			
+			ApplifierImpactUtils.Log("JavaScript (sourceId=" + sourceFile + ", line=" + lineNumber + "): " + message, this);
 		}
 		
 		public void onReachedMaxAppCacheSize(long spaceNeeded, long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) {

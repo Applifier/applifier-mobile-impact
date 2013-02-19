@@ -1,6 +1,10 @@
 package com.mycompany.test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.applifier.impact.android.ApplifierImpact;
+import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.IApplifierImpactListener;
 
 import android.app.Activity;
@@ -10,9 +14,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
-import com.applifier.impact.android.video.IApplifierImpactVideoListener;
 
-public class ApplifierImpactGameActivity extends Activity implements IApplifierImpactListener, IApplifierImpactVideoListener {
+public class ApplifierImpactGameActivity extends Activity implements IApplifierImpactListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactGameActivity->onCreate()");
@@ -23,7 +26,17 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
         ((ImageView)findViewById(R.id.unlock)).setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				ApplifierImpact.instance.showImpact();
+				ApplifierImpactUtils.Log("Opening with key: " + ApplifierImpact.instance.getCurrentRewardItemKey(), this);
+				
+				// Open with options test
+				Map<String, Object> optionsMap = new HashMap<String, Object>();
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, false);
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, false);
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, "gom");
+				ApplifierImpact.instance.showImpact(optionsMap);
+				
+				// Open without options (defaults)
+				//ApplifierImpact.instance.showImpact();
 			}
 		});
         
@@ -37,9 +50,8 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
     	
     	ApplifierImpact.instance.changeActivity(this);
 		ApplifierImpact.instance.setImpactListener(this);
-		ApplifierImpact.instance.setVideoListener(this);
 		
-		if (!ApplifierImpact.instance.hasCampaigns()) {
+		if (!ApplifierImpact.instance.canShowCampaigns()) {
 			((ImageView)findViewById(R.id.unlock)).setVisibility(View.INVISIBLE);
 		}
     }
@@ -62,4 +74,12 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
     	((ImageView)findViewById(R.id.unlock)).setVisibility(View.INVISIBLE);
     	Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Video completed!");
 	}
+	
+    @Override
+	public void onCampaignsAvailable () {
+	}
+    
+    @Override
+    public void onCampaignsFetchFailed () {
+    }
 }

@@ -8,8 +8,9 @@ public class ApplifierImpactConstants {
 	public static final String PENDING_REQUESTS_FILENAME = "pendingrequests.dat";
 
 	/* Impact */
-	public static final Boolean IMPACT_DEBUG_MODE = true; 
 	public static final String IMPACT_VERSION = "1.0.3";
+	public static final String IMPACT_REQUEST_METHOD_POST = "POST";
+	public static final String IMPACT_REQUEST_METHOD_GET = "GET";
 	
 	/* JSON Data Root */	
 	public static final String IMPACT_JSON_DATA_ROOTKEY = "data";
@@ -29,9 +30,12 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_DATAPARAM_MACADDRESS_KEY = "macAddress";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SDKVERSION_KEY = "sdkVersion";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SOFTWAREVERSION_KEY = "softwareVersion";
+	public static final String IMPACT_WEBVIEW_DATAPARAM_SCREENDENSITY_KEY = "screenDensity";
+	public static final String IMPACT_WEBVIEW_DATAPARAM_SCREENSIZE_KEY = "screenSize";
 
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_COMPLETED = "completed";
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_START = "start";
+	public static final String IMPACT_WEBVIEW_VIEWTYPE_NONE = "none";
 	
 	public static final String IMPACT_WEBVIEW_API_ACTION_KEY = "action";
 	public static final String IMPACT_WEBVIEW_API_PLAYVIDEO = "playVideo";
@@ -39,14 +43,15 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_API_INITCOMPLETE = "initComplete";
 	public static final String IMPACT_WEBVIEW_API_CLOSE = "close";
 	public static final String IMPACT_WEBVIEW_API_OPEN = "open";
-	public static final String IMPACT_WEBVIEW_API_APPSTORE = "appStore";
+	public static final String IMPACT_WEBVIEW_API_PLAYSTORE = "appStore";
 	public static final String IMPACT_WEBVIEW_API_ACTION_VIDEOSTARTEDPLAYING = "video_started_playing";	
 		
 	public static final String IMPACT_WEBVIEW_EVENTDATA_CAMPAIGNID_KEY = "campaignId";	
 	public static final String IMPACT_WEBVIEW_EVENTDATA_REWATCH_KEY = "rewatch";	
 	public static final String IMPACT_WEBVIEW_EVENTDATA_CLICKURL_KEY = "clickUrl";	
 
-	public static final String IMPACT_NATIVEEVENT_HIDESPINNER = "hideSpinner";	
+	public static final String IMPACT_NATIVEEVENT_SHOWERROR = "showError";
+	public static final String IMPACT_NATIVEEVENT_HIDESPINNER = "hideSpinner";
 	public static final String IMPACT_NATIVEEVENT_SHOWSPINNER = "showSpinner";	
 	public static final String IMPACT_NATIVEEVENT_VIDEOCOMPLETED = "videoCompleted";
 	public static final String IMPACT_NATIVEEVENT_CAMPAIGNID_KEY = "campaignId";
@@ -58,13 +63,16 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_CAMPAIGN_PICTURE_KEY = "picture";
 	public static final String IMPACT_CAMPAIGN_TRAILER_DOWNLOADABLE_KEY = "trailerDownloadable";
 	public static final String IMPACT_CAMPAIGN_TRAILER_STREAMING_KEY = "trailerStreaming";
+	public static final String IMPACT_CAMPAIGN_TRAILER_SIZE_KEY = "trailerSize";
 	public static final String IMPACT_CAMPAIGN_GAME_ID_KEY = "gameId";
 	public static final String IMPACT_CAMPAIGN_GAME_NAME_KEY = "gameName";
 	public static final String IMPACT_CAMPAIGN_ID_KEY = "id";
 	public static final String IMPACT_CAMPAIGN_TAGLINE_KEY = "tagLine";
-	public static final String IMPACT_CAMPAIGN_STOREID_KEY = "iTunesId";
+	public static final String IMPACT_CAMPAIGN_ITUNESID_KEY = "iTunesId";
+	public static final String IMPACT_CAMPAIGN_STOREID_KEY = "storeId";
 	public static final String IMPACT_CAMPAIGN_CACHE_VIDEO_KEY = "cacheVideo";
-
+	public static final String IMPACT_CAMPAIGN_BYPASSAPPSHEET_KEY = "bypassAppSheet";
+	
 	/* Reward Item JSON Properties */
 	public static final String IMPACT_REWARD_ITEMKEY_KEY = "itemKey";
 	public static final String IMPACT_REWARD_NAME_KEY = "name";
@@ -75,6 +83,9 @@ public class ApplifierImpactConstants {
 	/* Gamer JSON Properties */
 	public static final String IMPACT_GAMER_ID_KEY = "gamerId";
 
+	/* SDK Sanity check properties */	
+	public static final String IMPACT_NATIVESDKVERSION_KEY = "nativeSdkVersion";
+	
 	/* Impact Base JSON Properties */
 	public static final String IMPACT_URL_KEY = "impactUrl";
 	public static final String IMPACT_WEBVIEW_URL_KEY = "webViewUrl";	
@@ -110,6 +121,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_TRACKINGID_KEY = "trackingId";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_PROVIDERID_KEY = "providerId";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY = "rewardItem";
+	public static final String IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY = "sid";
 	
 	/* Failed URL keys */
 	public static final String IMPACT_FAILED_URL_URL_KEY = "url";
@@ -123,5 +135,9 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_TEXTKEY_KEY = "textKey";
 	public static final String IMPACT_TEXTKEY_BUFFERING = "buffering";
 	public static final String IMPACT_TEXTKEY_LOADING = "loading";
+	public static final String IMPACT_TEXTKEY_VIDEOPLAYBACKERROR = "videoPlaybackError";
 	public static final String IMPACT_ITEMKEY_KEY = "itemKey";
+	
+	public static final String IMPACT_ANALYTICS_EVENTTYPE_OPENAPPSTORE = "openAppStore";
+	public static final String IMPACT_ANALYTICS_EVENTTYPE_VIDEOERROR = "videoError";
 }

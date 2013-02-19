@@ -9,8 +9,6 @@ import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.IApplifierImpactCampaignHandlerListener;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
-import android.util.Log;
-
 public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHandlerListener {
 	
 	private IApplifierImpactCacheListener _downloadListener = null;	
@@ -21,8 +19,12 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 	
 	
 	public ApplifierImpactCacheManager () {
-		ApplifierImpactUtils.createCacheDir();
-		ApplifierImpactUtils.Log("External storagedir: " + ApplifierImpactUtils.getCacheDirectory(), this);
+		if (ApplifierImpactUtils.canUseExternalStorage()) {
+			ApplifierImpactUtils.Log("External storagedir: " + ApplifierImpactUtils.getCacheDirectory() + " created with result: " + ApplifierImpactUtils.createCacheDir(), this);
+		}
+		else {
+			ApplifierImpactUtils.Log("Could not create cache, no external memory present", this);
+		}
 	}
 	
 	public void setDownloadListener (IApplifierImpactCacheListener listener) {
@@ -76,6 +78,33 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 					addToDownloadingHandlers(campaignHandler);
 				}					
 			}
+		}
+	}
+	
+	public void clearData () {
+		if (_downloadListener != null)
+			_downloadListener = null;
+		
+		if (_downloadingHandlers != null) {
+			for (ApplifierImpactCampaignHandler ch : _downloadingHandlers) {
+				ch.setListener(null);
+				ch.clearData();
+				ch = null;	
+			}
+			
+			_downloadingHandlers.clear();
+			_downloadingHandlers = null;
+		}
+		
+		if (_handlers != null) {
+			for (ApplifierImpactCampaignHandler ch : _handlers) {
+				ch.setListener(null);
+				ch.clearData();
+				ch = null;
+			}
+			
+			_handlers.clear();
+			_handlers = null;
 		}
 	}
 

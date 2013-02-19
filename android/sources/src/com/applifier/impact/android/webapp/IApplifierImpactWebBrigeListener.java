@@ -7,4 +7,5 @@ public interface IApplifierImpactWebBrigeListener {
 	public void onPauseVideo (JSONObject data);
 	public void onCloseImpactView (JSONObject data);
 	public void onWebAppInitComplete (JSONObject data);
+	public void onOpenPlayStore (JSONObject data);
 }

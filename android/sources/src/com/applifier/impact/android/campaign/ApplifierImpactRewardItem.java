@@ -1,7 +1,11 @@
 package com.applifier.impact.android.campaign;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONObject;
 
+import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
@@ -35,6 +39,21 @@ public class ApplifierImpactRewardItem {
 	
 	public boolean hasValidData () {
 		return checkDataIntegrity();
+	}
+	
+	public void clearData () {
+		_key = null;
+		_name = null;
+		_pictureURL = null;
+		_rewardItemJSON = null;
+		_requiredKeys = null;
+	}
+	
+	public Map<String, String> getDetails () {
+		Map<String, String> returnMap = new HashMap<String, String>();
+		returnMap.put(ApplifierImpact.APPLIFIER_IMPACT_REWARDITEM_NAME_KEY, getName());
+		returnMap.put(ApplifierImpact.APPLIFIER_IMPACT_REWARDITEM_PICTURE_KEY, getPictureUrl());
+		return null;
 	}
 	
 	/* INTERNAL METHODS */

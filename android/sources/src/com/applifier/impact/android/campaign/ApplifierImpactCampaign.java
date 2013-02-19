@@ -37,6 +37,9 @@ public class ApplifierImpactCampaign {
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_GAME_NAME_KEY,
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_ID_KEY,
 			ApplifierImpactConstants.IMPACT_CAMPAIGN_TAGLINE_KEY};
+	
+	//bypassAppSheet
+	
 	private ApplifierImpactCampaignStatus _campaignStatus = ApplifierImpactCampaignStatus.READY;
 	
 	public ApplifierImpactCampaign () {		
@@ -71,11 +74,26 @@ public class ApplifierImpactCampaign {
 				return _campaignJson.getBoolean(ApplifierImpactConstants.IMPACT_CAMPAIGN_CACHE_VIDEO_KEY);
 			}
 			catch (Exception e) {
-				ApplifierImpactUtils.Log("shouldCacheVideo: This should not happen!", this);
+				ApplifierImpactUtils.Log("shouldCacheVideo: key not found for campaign: " + getCampaignId() + ", returning false", this);
 			}			
 		}
 		return false;
 	}
+	
+	public Boolean shouldBypassAppSheet () {
+		if (checkDataIntegrity()) {
+			try {
+				return _campaignJson.getBoolean(ApplifierImpactConstants.IMPACT_CAMPAIGN_BYPASSAPPSHEET_KEY);
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("shouldBypassAppSheet: key not found for campaign: " + getCampaignId() + ", returning false", this);
+			}			
+		}
+		
+		return false;
+	}
+	
+	//IMPACT_CAMPAIGN_BYPASSAPPSHEET_KEY
 
 	public String getEndScreenUrl () {
 		if (checkDataIntegrity()) {
@@ -195,6 +213,31 @@ public class ApplifierImpactCampaign {
 		return null;
 	}
 	
+	public long getVideoFileExpectedSize () {
+		long size = -1;
+		if (checkDataIntegrity()) {
+			try {
+				String fileSize = _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_TRAILER_SIZE_KEY);
+				
+				try {
+					size = Long.parseLong(fileSize);
+				}
+				catch (Exception e) {
+					ApplifierImpactUtils.Log("getVideoFileExpectedSize: could not parse size: " + e.getMessage(), this);
+					return size;
+				}
+				
+				return size;
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("getVideoFileExpectedSize: not found, returning -1", this);
+				return size;
+			}
+		}
+		
+		return size;
+	}
+	
 	public String getTagLine () {
 		if (checkDataIntegrity()) {
 			try {
@@ -202,6 +245,27 @@ public class ApplifierImpactCampaign {
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("getTagLine: This should not happen!", this);
+			}
+		}
+		
+		return null;
+	}
+	
+	public String getStoreId () {
+		if (_campaignJson.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_STOREID_KEY)) {
+			try {
+				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_STOREID_KEY);
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("getStoreId: Was supposed to use ApplifierImpactConstants.IMPACT_CAMPAIGN_STOREID_KEY but " + e.getMessage() + " occured", this);
+			}
+		}
+		if (_campaignJson.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_ITUNESID_KEY)) {
+			try {
+				return _campaignJson.getString(ApplifierImpactConstants.IMPACT_CAMPAIGN_ITUNESID_KEY);
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("getStoreId: Was supposed to use ApplifierImpactConstants.IMPACT_CAMPAIGN_ITUNESID_KEY but " + e.getMessage() + " occured", this);
 			}
 		}
 		
@@ -225,6 +289,10 @@ public class ApplifierImpactCampaign {
 	
 	public boolean hasValidData () {
 		return checkDataIntegrity();
+	}
+	
+	public void clearData () {
+		_campaignJson = null;
 	}
 	
 	/* INTERNAL METHODS */

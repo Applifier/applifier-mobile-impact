@@ -34,6 +34,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	private RelativeLayout _countDownText = null;
 	private TextView _timeLeftInSecondsText = null;
 	private boolean _videoPlaybackStartedSent = false;
+	private boolean _videoPlaybackErrors = false;
 	
 	public ApplifierImpactVideoPlayView(Context context, IApplifierImpactVideoPlayerListener listener) {
 		super(context);
@@ -58,9 +59,35 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_videoPlayheadPrepared = false;
 		_videoFileName = fileName;
 		ApplifierImpactUtils.Log("Playing video from: " + _videoFileName, this);
-		_videoView.setVideoPath(_videoFileName);
-		_timeLeftInSecondsText.setText("" + Math.round(Math.ceil(_videoView.getDuration() / 1000)));
-		startVideo();
+		
+		_videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+			@Override
+			public boolean onError(MediaPlayer mp, int what, int extra) {
+				ApplifierImpactUtils.Log("For some reason the device failed to play the video (error: " + what + ", " + extra + "), a crash was prevented.", this);
+				_videoPlaybackErrors = true;
+				purgeVideoPausedTimer();
+				if (_listener != null)
+					_listener.onVideoPlaybackError();
+				return true;
+			}
+		});
+		
+		try {
+			_videoView.setVideoPath(_videoFileName);
+		}
+		catch (Exception e) {
+			ApplifierImpactUtils.Log("For some reason the device failed to play the video, a crash was prevented.", this);
+			_videoPlaybackErrors = true;
+			purgeVideoPausedTimer();
+			if (_listener != null)
+				_listener.onVideoPlaybackError();
+			return;
+		}
+		
+		if (!_videoPlaybackErrors) {
+			_timeLeftInSecondsText.setText("" + Math.round(Math.ceil(_videoView.getDuration() / 1000)));
+			startVideo();
+		}
 	}
 
 	public void pauseVideo () {
@@ -76,6 +103,23 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				}
 			});
 		}		
+	}
+	
+	public void clearVideoPlayer  () {
+		ApplifierImpactUtils.Log("clearVideoPlayer", this);
+		setKeepScreenOn(false);
+		setOnClickListener(null);
+		setOnFocusChangeListener(null);
+		
+		hideTimeRemainingLabel();
+		hideBufferingView();
+		hideVideoPausedView();
+		purgeVideoPausedTimer();
+		
+		_videoView.stopPlayback();
+		_videoView.setOnCompletionListener(null);
+		_videoView.setOnPreparedListener(null);
+		_videoView.setOnErrorListener(null);
 	}
 	
 	
@@ -94,7 +138,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		
 		if (_videoPausedTimer == null) {
 			_videoPausedTimer = new Timer();
-			_videoPausedTimer.scheduleAtFixedRate(new VideoStateChecker(), 0, 50);
+			_videoPausedTimer.scheduleAtFixedRate(new VideoStateChecker(), 10, 60);
 		}
 	}
 	
@@ -110,6 +154,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		ApplifierImpactUtils.Log("Creating custom view", this);
 		setBackgroundColor(0xFF000000);
 		_videoView = new VideoView(getContext());
+		_videoView.setId(3001);
 		RelativeLayout.LayoutParams videoLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
 		videoLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 		_videoView.setLayoutParams(videoLayoutParams);		
@@ -121,15 +166,11 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			public void onPrepared(MediaPlayer mp) {
 				ApplifierImpactUtils.Log("onPrepared", this);
 				_videoPlayheadPrepared = true;
-				
-				if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {
-					_listener.onEventPositionReached(ApplifierVideoPosition.Start);
-					_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
-				}
 			}
 		});
 		
 		_countDownText = new RelativeLayout(getContext());
+		_countDownText.setId(3002);
 		RelativeLayout.LayoutParams countDownParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		countDownParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		countDownParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -207,6 +248,13 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
     	}  		
 	}
 	
+	private void hideTimeRemainingLabel () {
+		if (_countDownText != null && _countDownText.getParent() != null) {
+			_countDownText.removeAllViews();
+			removeView(_countDownText);			
+		}
+	}
+	
 	private void hideBufferingView () {
 		if (_bufferingView != null && _bufferingView.getParent() != null)
 			removeView(_bufferingView);
@@ -221,11 +269,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BACK:
-				purgeVideoPausedTimer();
-				_videoView.stopPlayback();
-				setKeepScreenOn(false);
-				hideBufferingView();
-				hideVideoPausedView();
+				ApplifierImpactUtils.Log("onKeyDown", this);
+				clearVideoPlayer();
 				
 				if (_listener != null)
 					_listener.onBackButtonClicked(this);
@@ -251,6 +296,9 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		
 		@Override
 		public void run () {
+			if (_videoView == null || _timeLeftInSecondsText == null)
+				this.cancel();
+			
 			PowerManager pm = (PowerManager)getContext().getSystemService(Context.POWER_SERVICE);			
 			if (!pm.isScreenOn()) {
 				pauseVideo();
@@ -260,7 +308,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			_curPos = new Float(_videoView.getCurrentPosition());
 			Float position = _curPos / _videoView.getDuration();
 			
-			if ( _oldPos > 0 && _curPos > _oldPos) 
+			if (_curPos > _oldPos) 
 				_playHeadHasMoved = true;
 			
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
@@ -299,9 +347,14 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 						hideBufferingView();
 						if (!_videoPlaybackStartedSent) {
 							if (_listener != null) {
-								ApplifierImpactUtils.Log("onVideoPlaybackStarted to listener", this);
+								ApplifierImpactUtils.Log("onVideoPlaybackStarted sent to listener", this);
 								_listener.onVideoPlaybackStarted();
 								_videoPlaybackStartedSent = true;
+							}
+							
+							if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {
+								_listener.onEventPositionReached(ApplifierVideoPosition.Start);
+								_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
 							}
 						}
 					}

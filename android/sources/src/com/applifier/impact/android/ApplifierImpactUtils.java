@@ -1,27 +1,85 @@
 package com.applifier.impact.android;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+
+import javax.security.auth.x500.X500Principal;
 
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.os.Environment;
 import android.util.Log;
 
 public class ApplifierImpactUtils {
 
+	private static final X500Principal DEBUG_DN = new X500Principal("CN=Android Debug,O=Android,C=US");
+	
 	public static void Log (String message, Class cls) {
-		Log.d(ApplifierImpactConstants.LOG_NAME, cls.getName() + " :: " +  message);
+		if (ApplifierImpactProperties.IMPACT_DEBUG_MODE) {
+			Log.d(ApplifierImpactConstants.LOG_NAME, cls.getName() + " :: " +  message);
+		}
 	}
 	
 	public static void Log (String message, Object obj) {
-		Log.d(ApplifierImpactConstants.LOG_NAME, obj.getClass().getName() + " :: " +  message);
+		if (ApplifierImpactProperties.IMPACT_DEBUG_MODE) {
+			Log.d(ApplifierImpactConstants.LOG_NAME, obj.getClass().getName() + " :: " +  message);
+		}
+	}
+	
+	public static boolean isDebuggable(Context ctx) {
+	    boolean debuggable = false;
+	    boolean problemsWithData = false;
+	    
+	    PackageManager pm = ctx.getPackageManager();
+	    try {
+	        ApplicationInfo appinfo = pm.getApplicationInfo(ctx.getPackageName(), 0);
+	        debuggable = (0 != (appinfo.flags &= ApplicationInfo.FLAG_DEBUGGABLE));
+	    }
+	    catch (NameNotFoundException e) {
+	        problemsWithData = true;
+	    }
+	    
+	    if (problemsWithData) {
+	    	problemsWithData = false;
+		    try {
+		        PackageInfo pinfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(),PackageManager.GET_SIGNATURES);
+		        Signature signatures[] = pinfo.signatures;
+		         
+		        for ( int i = 0; i < signatures.length;i++) {
+		            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+		            ByteArrayInputStream stream = new ByteArrayInputStream(signatures[i].toByteArray());
+		            X509Certificate cert = (X509Certificate) cf.generateCertificate(stream);       
+		            debuggable = cert.getSubjectX500Principal().equals(DEBUG_DN);
+		            if (debuggable)
+		                break;
+		        }
+		    }
+		    catch (NameNotFoundException e) {
+		    	problemsWithData = true;
+		    }
+		    catch (CertificateException e) {
+		    	problemsWithData = true;
+		    }
+	    }
+	    
+	    return debuggable;
 	}
 	
 	public static String Md5 (String input) {
@@ -116,8 +174,28 @@ public class ApplifierImpactUtils {
 		}
 	}
 	
+	public static long getSizeForLocalFile (String fileName) {
+		File removeFile = new File (fileName);
+		File cachedVideoFile = new File (ApplifierImpactUtils.getCacheDirectory() + "/" + removeFile.getName());
+		long size = -1;
+		
+		if (cachedVideoFile.exists()) {
+			size = cachedVideoFile.length();
+		}
+		
+		return size;
+	}
+	
 	public static String getCacheDirectory () {
 		return Environment.getExternalStorageDirectory().toString() + "/" + ApplifierImpactConstants.CACHE_DIR_NAME;
+	}
+	
+	public static boolean canUseExternalStorage () {
+		String state = Environment.getExternalStorageState();
+		if (state.equals(Environment.MEDIA_MOUNTED))
+			return true;
+		
+		return false;
 	}
 	
 	public static File createCacheDir () {
