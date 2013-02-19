@@ -72,6 +72,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		init(activity, gameId, listener);
 	}
 	
+	public ApplifierImpact (Activity activity, String gameId, IApplifierImpactListener listener, Map<String, String> extraParameters) {
+		init(activity, gameId, listener);
+	}
+	
 	
 	/* PUBLIC STATIC METHODS */
 	
@@ -233,19 +237,23 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	public boolean setRewardItemKey (String rewardItemKey) {
-		ApplifierImpactRewardItem rewardItem = webdata.getRewardItemByKey(rewardItemKey);
-		
-		if (rewardItem != null) {
-			webdata.setCurrentRewardItem(rewardItem);
-			return true;
+		if (canShowImpact()) {
+			ApplifierImpactRewardItem rewardItem = webdata.getRewardItemByKey(rewardItemKey);
+			
+			if (rewardItem != null) {
+				webdata.setCurrentRewardItem(rewardItem);
+				return true;
+			}
 		}
 		
 		return false;
 	}
 	
 	public void setDefaultRewardItemAsRewardItem () {
-		if (webdata != null && webdata.getDefaultRewardItem() != null) {
-			webdata.setCurrentRewardItem(webdata.getDefaultRewardItem());
+		if (canShowImpact()) {
+			if (webdata != null && webdata.getDefaultRewardItem() != null) {
+				webdata.setCurrentRewardItem(webdata.getDefaultRewardItem());
+			}
 		}
 	}
 	
@@ -458,7 +466,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		ApplifierImpactProperties.BASE_ACTIVITY = activity;
 		ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
 		
-		//ApplifierImpactUtils.Log("Is debuggable=" + ApplifierImpactUtils.isDebuggable(activity), this);
+		ApplifierImpactUtils.Log("Is debuggable=" + ApplifierImpactUtils.isDebuggable(activity), this);
 		
 		if (_initialized) return; 
 		

@@ -128,6 +128,11 @@ public class ApplifierImpactWebData {
 	}
 
 	public boolean initCampaigns () {
+		if (ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.BASE_ACTIVITY) && ApplifierImpactProperties.TEST_DATA != null) {
+			campaignDataReceived(ApplifierImpactProperties.TEST_DATA);
+			return true;
+		}
+		
 		String url = ApplifierImpactProperties.getCampaignQueryUrl();
 		
 		String[] parts = url.split("\\?");

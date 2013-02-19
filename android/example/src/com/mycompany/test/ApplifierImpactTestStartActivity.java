@@ -28,6 +28,7 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
 		Log.d(ApplifierImpactConstants.LOG_NAME, "Init impact");
 		ApplifierImpact.setDebugMode(true);
 		ApplifierImpact.setTestMode(true);
+		
 		ai = new ApplifierImpact(this, "16", this);
     }
     

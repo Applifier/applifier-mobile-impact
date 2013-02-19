@@ -71,6 +71,23 @@ public class ApplifierImpactWebView extends WebView {
 			_currentWebView = view;
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
 			ApplifierImpactUtils.Log("Send change view to WebApp: " + javascriptString, this);
+			
+			if (data != null) {
+				String action = "test";
+				try {
+					action = data.getString(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY);
+				}
+				catch (Exception e) {
+				}
+				
+				if (data.has(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY) &&
+					action.equals(ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN) &&
+					ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.BASE_ACTIVITY) &&
+					!ApplifierImpactProperties.TEST_JAVASCRIPT_RAN &&
+					ApplifierImpactProperties.TEST_JAVASCRIPT != null) {
+					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(ApplifierImpactProperties.TEST_JAVASCRIPT));
+				}
+			}
 		}
 	}
 	
