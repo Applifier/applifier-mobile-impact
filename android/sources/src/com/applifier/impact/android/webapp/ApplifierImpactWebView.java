@@ -80,11 +80,18 @@ public class ApplifierImpactWebView extends WebView {
 				catch (Exception e) {
 				}
 				
+				ApplifierImpactUtils.Log("dataHasApiActionKey=" + data.has(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY) , this);
+				ApplifierImpactUtils.Log("actionEqualsWebViewApiOpen=" + action.equals(ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN) , this);
+				ApplifierImpactUtils.Log("isDebuggable=" + ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.BASE_ACTIVITY) , this);
+				ApplifierImpactUtils.Log("testJavaScriptHasRunned=" + ApplifierImpactProperties.TEST_JAVASCRIPT_RAN , this);
+				ApplifierImpactUtils.Log("testJavaScriptContents=" + ApplifierImpactProperties.TEST_JAVASCRIPT , this);
+				
 				if (data.has(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY) &&
 					action.equals(ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN) &&
 					ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.BASE_ACTIVITY) &&
 					!ApplifierImpactProperties.TEST_JAVASCRIPT_RAN &&
 					ApplifierImpactProperties.TEST_JAVASCRIPT != null) {
+					ApplifierImpactUtils.Log("Running test-javascript: " + ApplifierImpactProperties.TEST_JAVASCRIPT , this);
 					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(ApplifierImpactProperties.TEST_JAVASCRIPT));
 				}
 			}
