@@ -73,6 +73,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	public ApplifierImpact (Activity activity, String gameId, IApplifierImpactListener listener, Map<String, String> extraParameters) {
+		ApplifierImpactProperties.setExtraParams(extraParameters);
 		init(activity, gameId, listener);
 	}
 	
