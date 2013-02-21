@@ -83,16 +83,18 @@ public class ApplifierImpactWebView extends WebView {
 				ApplifierImpactUtils.Log("dataHasApiActionKey=" + data.has(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY) , this);
 				ApplifierImpactUtils.Log("actionEqualsWebViewApiOpen=" + action.equals(ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN) , this);
 				ApplifierImpactUtils.Log("isDebuggable=" + ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.BASE_ACTIVITY) , this);
-				ApplifierImpactUtils.Log("testJavaScriptHasRunned=" + ApplifierImpactProperties.TEST_JAVASCRIPT_RAN , this);
+				ApplifierImpactUtils.Log("runWebViewTests=" + ApplifierImpactProperties.RUN_WEBVIEW_TESTS , this);
 				ApplifierImpactUtils.Log("testJavaScriptContents=" + ApplifierImpactProperties.TEST_JAVASCRIPT , this);
 				
 				if (data.has(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY) &&
+					action != null &&
 					action.equals(ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN) &&
 					ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.BASE_ACTIVITY) &&
-					!ApplifierImpactProperties.TEST_JAVASCRIPT_RAN &&
+					ApplifierImpactProperties.RUN_WEBVIEW_TESTS &&
 					ApplifierImpactProperties.TEST_JAVASCRIPT != null) {
 					ApplifierImpactUtils.Log("Running test-javascript: " + ApplifierImpactProperties.TEST_JAVASCRIPT , this);
 					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(ApplifierImpactProperties.TEST_JAVASCRIPT));
+					ApplifierImpactProperties.RUN_WEBVIEW_TESTS = false;
 				}
 			}
 		}

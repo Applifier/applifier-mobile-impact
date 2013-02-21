@@ -71,12 +71,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public ApplifierImpact (Activity activity, String gameId, IApplifierImpactListener listener) {
 		init(activity, gameId, listener);
 	}
-	
-	public ApplifierImpact (Activity activity, String gameId, IApplifierImpactListener listener, Map<String, String> extraParameters) {
-		ApplifierImpactProperties.setExtraParams(extraParameters);
-		init(activity, gameId, listener);
-	}
-	
+
 	
 	/* PUBLIC STATIC METHODS */
 	
@@ -598,11 +593,11 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 									if (_developerOptions == null || !_developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) || _developerOptions.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(false))
 										ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
 									
-									if (_impactListener != null)
-										_impactListener.onImpactClose();
-									
 									_developerOptions = null;
 									_showingImpact = false;
+									
+									if (_impactListener != null)
+										_impactListener.onImpactClose();
 								}
 							});
 						}
