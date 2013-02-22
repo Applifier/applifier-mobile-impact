@@ -640,6 +640,8 @@ public class ApplifierImpactWebData {
 		
 		@Override
 		protected String doInBackground(String... params) {
+			Boolean panicCancel = false;
+
 			try {
 				if (_url.toString().startsWith("https://")) {
 					_connection = (HttpsURLConnection)_url.openConnection();
@@ -659,6 +661,17 @@ public class ApplifierImpactWebData {
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Problems opening connection: " + e.getMessage(), this);
+				panicCancel = true;
+			}
+			
+			if (panicCancel) {
+				try {
+					cancel(true);
+				}
+				catch (Exception e) {
+					ApplifierImpactUtils.Log("Cancelling urlLoader got exception: " + e.getMessage(), this);
+					panicCancel = false;
+				}
 			}
 			
 			if (_connection != null) {				
@@ -670,6 +683,17 @@ public class ApplifierImpactWebData {
 					}
 					catch (Exception e) {
 						ApplifierImpactUtils.Log("Problems writing post-data: " + e.getMessage() + ", " + e.getStackTrace(), this);
+						panicCancel = true;
+					}
+					
+					if (panicCancel) {
+						try {
+							cancel(true);
+						}
+						catch (Exception e) {
+							ApplifierImpactUtils.Log("Cancelling urlLoader got exception: " + e.getMessage(), this);
+							panicCancel = false;
+						}
 					}
 				}
 				
@@ -680,13 +704,21 @@ public class ApplifierImpactWebData {
 				}
 				catch (Exception e) {
 					ApplifierImpactUtils.Log("Problems opening stream: " + e.getMessage(), this);
+					panicCancel = true;
+				}
+				
+				if (panicCancel) {
+					try {
+						cancel(true);
+					}
+					catch (Exception e) {
+						ApplifierImpactUtils.Log("Cancelling urlLoader got exception: " + e.getMessage(), this);
+						panicCancel = false;
+					}
 				}
 				
 				long total = 0;
-				
 				_downloadLength = _connection.getContentLength();
-				
-				Boolean panicCancel = false;
 				
 				try {
 					_totalLoadersHaveRun++;
@@ -708,7 +740,7 @@ public class ApplifierImpactWebData {
 					ApplifierImpactUtils.Log("Read total of: " + total, this);
 				}
 				catch (Exception e) {
-					ApplifierImpactUtils.Log("Problems loading url: " + e.getMessage(), this);
+					ApplifierImpactUtils.Log("Problems loading url! Error-message: " + e.getMessage(), this);
 					panicCancel = true;
 					return null;
 				}
