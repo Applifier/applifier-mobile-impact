@@ -556,13 +556,15 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				public void run() {
 					ApplifierImpactUtils.Log("Delayed video start", this);
 					ApplifierImpactPlayVideoRunner playVideoRunner = new ApplifierImpactPlayVideoRunner();
-					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
+					if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
+						ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
 				}
 			}, delay);
 		}
 		else {
 			ApplifierImpactPlayVideoRunner playVideoRunner = new ApplifierImpactPlayVideoRunner();
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
+			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
+				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
 		}
 	}
 	

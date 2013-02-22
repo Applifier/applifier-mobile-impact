@@ -12,14 +12,22 @@ public class ApplifierImpactFullscreenActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     	ApplifierImpactUtils.Log("ApplifierImpactFullscreenActivity->onCreate()", this);
-		ApplifierImpact.instance.changeActivity(this);
+    	
+    	if (ApplifierImpact.instance != null)
+    		ApplifierImpact.instance.changeActivity(this);
+    	else
+        	ApplifierImpactUtils.Log("onCreate() Impact instance is NULL!", this);
     }
     
     @Override
     public void onResume () {
     	super.onResume();
     	ApplifierImpactUtils.Log("ApplifierImpactFullscreenActivity->onResume()", this);
-		ApplifierImpact.instance.changeActivity(this);
+    	
+    	if (ApplifierImpact.instance != null)
+    		ApplifierImpact.instance.changeActivity(this);
+    	else
+        	ApplifierImpactUtils.Log("onResume() Impact instance is NULL!", this);
     }
     
     @Override
