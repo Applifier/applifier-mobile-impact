@@ -282,7 +282,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				break;
 			case RequestRetryVideoPlay:
 				ApplifierImpactUtils.Log("Retrying video play, because something went wrong.", this);
-				playVideo(100);
+				playVideo(250);
 				break;
 		}
 	}
