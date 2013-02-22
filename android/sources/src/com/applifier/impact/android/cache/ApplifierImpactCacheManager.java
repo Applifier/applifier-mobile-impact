@@ -45,7 +45,8 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 		
 		_amountPrepared = 0;
 		
-		ApplifierImpactUtils.Log(activeList.toString(), this);
+		if (activeList != null)
+			ApplifierImpactUtils.Log(activeList.toString(), this);
 		
 		// Check cache directory and delete all files that don't match the current files in campaigns
 		if (ApplifierImpactUtils.getCacheDirectory() != null) {

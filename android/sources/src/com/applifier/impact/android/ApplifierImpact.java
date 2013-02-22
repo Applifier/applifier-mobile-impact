@@ -455,6 +455,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	private void init (Activity activity, String gameId, IApplifierImpactListener listener) {
+		if (_initialized) return; 
+		
 		instance = this;
 		setImpactListener(listener);
 		
@@ -464,7 +466,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		
 		ApplifierImpactUtils.Log("Is debuggable=" + ApplifierImpactUtils.isDebuggable(activity), this);
 		
-		if (_initialized) return; 
 		
 		cachemanager = new ApplifierImpactCacheManager();
 		cachemanager.setDownloadListener(this);

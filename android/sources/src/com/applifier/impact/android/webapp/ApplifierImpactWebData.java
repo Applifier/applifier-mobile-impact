@@ -344,7 +344,7 @@ public class ApplifierImpactWebData {
 			String contents = ApplifierImpactUtils.readFile(pendingRequestFile, true);
 			JSONObject pendingRequestsJson = null;
 			JSONArray pendingRequestsArray = null;
-			ApplifierImpactUrlLoader loader = null;
+			//ApplifierImpactUrlLoader loader = null;
 			
 			try {
 				pendingRequestsJson = new JSONObject(contents);
