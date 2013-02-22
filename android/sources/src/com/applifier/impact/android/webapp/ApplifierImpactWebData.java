@@ -304,6 +304,7 @@ public class ApplifierImpactWebData {
 		switch (loader.getRequestType()) {
 			case VideoPlan:
 				campaignDataReceived(loader.getData());
+				loader.clear();
 				break;
 			case VideoViewed:
 				break;
@@ -653,6 +654,17 @@ public class ApplifierImpactWebData {
 			return _requestType;
 		}
 		
+		public void clear () {
+			_downloadLength = 0;
+			_urlData = "";
+			_requestType = null;
+			_finalUrl = null;
+			_retries = 0;
+			_httpMethod = null;
+			_queryParams = null;
+			_baseUrl = null;
+		}
+		
 		private void cancelInMainThread () {
 			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
 				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactCancelUrlLoaderRunner(this));
@@ -789,16 +801,7 @@ public class ApplifierImpactWebData {
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Problems closing connection: " + e.getMessage(), this);
 			}
-			
-			_downloadLength = 0;
-			_urlData = "";
-			_requestType = null;
-			_finalUrl = null;
-			_retries = 0;
-			_httpMethod = null;
-			_queryParams = null;
-			_baseUrl = null;
-			
+				
 			try {
 				_input.close();
 				_input = null;
