@@ -650,8 +650,8 @@ public class ApplifierImpactWebData {
 					_connection = (HttpURLConnection)_url.openConnection();
 				}
 
-				_connection.setConnectTimeout(10000);
-				_connection.setReadTimeout(10000);
+				_connection.setConnectTimeout(20000);
+				_connection.setReadTimeout(30000);
 				_connection.setRequestMethod(_httpMethod);
 				_connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 				_connection.setDoInput(true);
