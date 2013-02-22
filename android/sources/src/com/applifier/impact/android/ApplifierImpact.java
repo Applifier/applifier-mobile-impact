@@ -280,6 +280,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				if (_impactListener != null)
 					_impactListener.onVideoCompleted();
 				break;
+			case RequestRetryVideoPlay:
+				playVideo();
+				break;
 		}
 	}
 	

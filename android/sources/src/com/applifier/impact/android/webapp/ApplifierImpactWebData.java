@@ -581,6 +581,7 @@ public class ApplifierImpactWebData {
 		public void run () {
 			try {
 				_loader.cancel(true);
+				_loader.clear();
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Cancelling urlLoader got exception: " + e.getMessage(), this);
