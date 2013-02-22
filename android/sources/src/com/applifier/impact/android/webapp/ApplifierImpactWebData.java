@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
+import android.os.Looper;
 
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
@@ -134,15 +135,23 @@ public class ApplifierImpactWebData {
 		}
 		
 		String url = ApplifierImpactProperties.getCampaignQueryUrl();
-		
 		String[] parts = url.split("\\?");
 		
+		ApplifierImpactUrlLoaderCreator ulc = new ApplifierImpactUrlLoaderCreator(parts[0], parts[1], ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET, ApplifierImpactRequestType.VideoPlan, 0);
+		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(ulc);
+		
+
+		/*
 		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(parts[0], parts[1], ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET, ApplifierImpactRequestType.VideoPlan, 0);
 		ApplifierImpactUtils.Log("VIDEOPLAN_URL: " + loader.getUrl(), this);
 		addLoader(loader);
 		startNextLoader();
 		checkFailedUrls();
+		*/
 		
+		checkFailedUrls();			
+
 		return true;
 	}
 	
@@ -162,9 +171,16 @@ public class ApplifierImpactWebData {
 			if (ApplifierImpactProperties.GAMER_SID != null)
 				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY, ApplifierImpactProperties.GAMER_SID);
 			
+			ApplifierImpactUrlLoaderCreator ulc = new ApplifierImpactUrlLoaderCreator(viewUrl, queryParams, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_POST, ApplifierImpactRequestType.VideoViewed, 0);
+			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
+				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(ulc);
+			
+			/*
 			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(viewUrl, queryParams, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_POST, ApplifierImpactRequestType.VideoViewed, 0);
 			addLoader(loader);
 			startNextLoader();
+			*/
+			
 			progressSent = true;
 		}
 		
@@ -183,9 +199,15 @@ public class ApplifierImpactWebData {
 			if (ApplifierImpactProperties.GAMER_SID != null)
 				analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY, ApplifierImpactProperties.GAMER_SID);
 			
+			ApplifierImpactUrlLoaderCreator ulc = new ApplifierImpactUrlLoaderCreator(viewUrl, analyticsUrl, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET, ApplifierImpactRequestType.Analytics, 0);
+			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
+				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(ulc);
+			
+			/*
 			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(viewUrl, analyticsUrl, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET, ApplifierImpactRequestType.Analytics, 0);
 			addLoader(loader);
-			startNextLoader();
+			startNextLoader();*/
+			
 		}
 	}
 	
@@ -353,6 +375,18 @@ public class ApplifierImpactWebData {
 				if (pendingRequestsArray != null && pendingRequestsArray.length() > 0) {
 					for (int i = 0; i < pendingRequestsArray.length(); i++) {
 						JSONObject failedUrl = pendingRequestsArray.getJSONObject(i);
+						
+						ApplifierImpactUrlLoaderCreator ulc = new ApplifierImpactUrlLoaderCreator(
+								failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_URL_KEY), 
+								failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_BODY_KEY), 
+								failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_METHODTYPE_KEY), 
+								ApplifierImpactRequestType.getValueOf(failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_REQUESTTYPE_KEY)), 
+								failedUrl.getInt(ApplifierImpactConstants.IMPACT_FAILED_URL_RETRIES_KEY) + 1);
+						
+						if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
+							ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(ulc);
+						
+						/*
 						loader = new ApplifierImpactUrlLoader(
 								failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_URL_KEY), 
 								failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_BODY_KEY),
@@ -362,7 +396,7 @@ public class ApplifierImpactWebData {
 								);
 						
 						if (loader.getRetries() <= ApplifierImpactProperties.MAX_NUMBER_OF_ANALYTICS_RETRIES)
-							addLoader(loader);
+							addLoader(loader);*/
 					}
 				}
 			}
@@ -547,6 +581,31 @@ public class ApplifierImpactWebData {
 	
 	/* INTERNAL CLASSES */
 	
+	private class ApplifierImpactUrlLoaderCreator implements Runnable {
+		private String _url = null;
+		private String _queryParams = null;
+		private String _requestMethod = null;
+		private ApplifierImpactRequestType _requestType = null;
+		private int _retries = 0;
+		
+		public ApplifierImpactUrlLoaderCreator (String urlPart1, String urlPart2, String requestMethod, ApplifierImpactRequestType requestType, int retries) {
+			_url = urlPart1;
+			_queryParams = urlPart2;
+			_requestMethod = requestMethod;
+			_requestType = requestType;
+			_retries = retries;
+		}
+		public void run () {
+			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(_url, _queryParams, _requestMethod, _requestType, _retries);
+			ApplifierImpactUtils.Log("URL: " + loader.getUrl(), this);
+			
+			if (_retries <= ApplifierImpactProperties.MAX_NUMBER_OF_ANALYTICS_RETRIES)
+				addLoader(loader);
+			
+			startNextLoader();
+		}
+	}
+	
 	private class ApplifierImpactUrlLoader extends AsyncTask<String, Integer, String> {
 		private URL _url = null;
 		private HttpURLConnection _connection = null;
@@ -574,7 +633,7 @@ public class ApplifierImpactWebData {
 				_url = new URL(_finalUrl);
 			}
 			catch (Exception e) {
-				ApplifierImpactUtils.Log("Problems with url: " + e.getMessage(), this);
+				ApplifierImpactUtils.Log("Problems with url! Error-message: " + e.getMessage(), this);
 			}
 			
 			_queryParams = queryParams;
@@ -661,6 +720,8 @@ public class ApplifierImpactWebData {
 				
 				_downloadLength = _connection.getContentLength();
 				
+				Boolean panicCancel = false;
+				
 				try {
 					_totalLoadersHaveRun++;
 					ApplifierImpactUtils.Log("Total urlLoaders that have started running: " + _totalLoadersHaveRun, this);
@@ -682,9 +743,20 @@ public class ApplifierImpactWebData {
 				}
 				catch (Exception e) {
 					ApplifierImpactUtils.Log("Problems loading url: " + e.getMessage(), this);
-					cancel(true);
+					panicCancel = true;
 					return null;
 				}
+				
+				if (panicCancel) {
+					try {
+						cancel(true);
+					}
+					catch (Exception e) {
+						ApplifierImpactUtils.Log("Cancelling urlLoader got exception: " + e.getMessage(), this);
+						panicCancel = false;
+					}
+				}
+
 			}
 			
 			return null;

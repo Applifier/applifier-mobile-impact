@@ -176,7 +176,9 @@ public class ApplifierImpactWebView extends WebView {
 			getSettings().setCacheMode(WebSettings.LOAD_NORMAL);
 		}
 		
-		String appCachePath = getContext().getCacheDir().toString();
+		String appCachePath = null;
+		if (getContext() != null && getContext().getCacheDir() != null) 
+			appCachePath = getContext().getCacheDir().toString();
 		
 		getSettings().setSupportZoom(false);
 		getSettings().setBuiltInZoomControls(false);
@@ -212,7 +214,6 @@ public class ApplifierImpactWebView extends WebView {
 			getSettings().setDomStorageEnabled(true);
 			getSettings().setAppCacheMaxSize(1024*1024*10);
 			getSettings().setAppCachePath(appCachePath);
-			getSettings().setAllowFileAccess(true);
 		}
 		
 		ApplifierImpactUtils.Log("Adding javascript interface", this);
