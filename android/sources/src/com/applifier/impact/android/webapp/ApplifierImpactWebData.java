@@ -794,16 +794,6 @@ public class ApplifierImpactWebData {
 		}
 		
 		private void closeAndFlushConnection () {
-			
-			/*
-			try {
-				_connection.disconnect();
-				_connection = null;
-			}
-			catch (Exception e) {
-				ApplifierImpactUtils.Log("Problems closing connection: " + e.getMessage(), this);
-			}*/
-				
 			try {
 				_input.close();
 				_input = null;

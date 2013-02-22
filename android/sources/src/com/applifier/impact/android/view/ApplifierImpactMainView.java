@@ -300,6 +300,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 			_retriedVideoPlaybackOnce = false;
 		}
 		else {
+			ApplifierImpactUtils.Log("Sending RequestRetryVideoPlay Something went wrong", this);
 			_retriedVideoPlaybackOnce = true;
 			sendActionToListener(ApplifierImpactMainViewAction.RequestRetryVideoPlay);
 		}
