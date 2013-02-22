@@ -656,6 +656,7 @@ public class ApplifierImpactWebData {
 		}
 		
 		public void clear () {
+			_url = null;
 			_downloadLength = 0;
 			_urlData = "";
 			_requestType = null;
@@ -793,15 +794,15 @@ public class ApplifierImpactWebData {
 		}
 		
 		private void closeAndFlushConnection () {
-			_url = null;
 			
+			/*
 			try {
 				_connection.disconnect();
 				_connection = null;
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Problems closing connection: " + e.getMessage(), this);
-			}
+			}*/
 				
 			try {
 				_input.close();
