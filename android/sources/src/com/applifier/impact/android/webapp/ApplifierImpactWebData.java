@@ -572,6 +572,21 @@ public class ApplifierImpactWebData {
 		}
 	}
 	
+	private class ApplifierImpactCancelUrlLoaderRunner implements Runnable {
+		private ApplifierImpactUrlLoader _loader = null;
+		public ApplifierImpactCancelUrlLoaderRunner (ApplifierImpactUrlLoader loader) {
+			_loader = loader;
+		}
+		public void run () {
+			try {
+				_loader.cancel(true);
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("Cancelling urlLoader got exception: " + e.getMessage(), this);
+			}
+		}
+	}
+	
 	private class ApplifierImpactUrlLoader extends AsyncTask<String, Integer, String> {
 		private URL _url = null;
 		private HttpURLConnection _connection = null;
@@ -638,6 +653,11 @@ public class ApplifierImpactWebData {
 			return _requestType;
 		}
 		
+		private void cancelInMainThread () {
+			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
+				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactCancelUrlLoaderRunner(this));
+		}
+		
 		@Override
 		protected String doInBackground(String... params) {
 			Boolean panicCancel = false;
@@ -665,13 +685,8 @@ public class ApplifierImpactWebData {
 			}
 			
 			if (panicCancel) {
-				try {
-					cancel(true);
-				}
-				catch (Exception e) {
-					ApplifierImpactUtils.Log("Cancelling urlLoader got exception: " + e.getMessage(), this);
-					panicCancel = false;
-				}
+				cancelInMainThread();
+				panicCancel = false;
 			}
 			
 			if (_connection != null) {				
@@ -687,13 +702,8 @@ public class ApplifierImpactWebData {
 					}
 					
 					if (panicCancel) {
-						try {
-							cancel(true);
-						}
-						catch (Exception e) {
-							ApplifierImpactUtils.Log("Cancelling urlLoader got exception: " + e.getMessage(), this);
-							panicCancel = false;
-						}
+						cancelInMainThread();
+						panicCancel = false;
 					}
 				}
 				
@@ -708,13 +718,8 @@ public class ApplifierImpactWebData {
 				}
 				
 				if (panicCancel) {
-					try {
-						cancel(true);
-					}
-					catch (Exception e) {
-						ApplifierImpactUtils.Log("Cancelling urlLoader got exception: " + e.getMessage(), this);
-						panicCancel = false;
-					}
+					cancelInMainThread();
+					panicCancel = false;
 				}
 				
 				long total = 0;
@@ -746,15 +751,9 @@ public class ApplifierImpactWebData {
 				}
 				
 				if (panicCancel) {
-					try {
-						cancel(true);
-					}
-					catch (Exception e) {
-						ApplifierImpactUtils.Log("Cancelling urlLoader got exception: " + e.getMessage(), this);
-						panicCancel = false;
-					}
+					cancelInMainThread();
+					panicCancel = false;
 				}
-
 			}
 			
 			return null;
@@ -781,11 +780,33 @@ public class ApplifierImpactWebData {
 		}
 		
 		private void closeAndFlushConnection () {
+			_url = null;
+			
 			try {
-				_input.close();
+				_connection.disconnect();
+				_connection = null;
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Problems closing connection: " + e.getMessage(), this);
+			}
+			
+			_downloadLength = 0;
+			_urlData = "";
+			_requestType = null;
+			_finalUrl = null;
+			_retries = 0;
+			_httpMethod = null;
+			_queryParams = null;
+			_baseUrl = null;
+			
+			try {
+				_input.close();
+				_input = null;
+				_binput.close();
+				_binput = null;
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("Problems closing streams: " + e.getMessage(), this);
 			}	
 		}
 	}

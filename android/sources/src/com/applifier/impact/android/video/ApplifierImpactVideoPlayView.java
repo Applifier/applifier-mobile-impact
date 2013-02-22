@@ -292,7 +292,9 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	private class VideoStateChecker extends TimerTask {
 		private Float _curPos = 0f;
 		private Float _oldPos = 0f;
+		private int _duration = 1;
 		private boolean _playHeadHasMoved = false;
+		
 		
 		@Override
 		public void run () {
@@ -305,8 +307,34 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			}
 			
 			_oldPos = _curPos;
-			_curPos = new Float(_videoView.getCurrentPosition());
-			Float position = _curPos / _videoView.getDuration();
+			
+			try {
+				_curPos = new Float(_videoView.getCurrentPosition());
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("Could not get videoView currentPosition", this);
+				if (_oldPos > 0)
+					_curPos = _oldPos;
+				else
+					_curPos = 0.01f;
+			}
+			
+			Float position = 0f;
+			int duration = 1;
+			Boolean durationSuccess = true;
+			
+			try {
+				duration = _videoView.getDuration();
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("Could not get videoView duration", this);
+				durationSuccess = false;
+			}
+			
+			if (durationSuccess)
+				_duration = duration;
+			
+			position = _curPos / _duration;
 			
 			if (_curPos > _oldPos) 
 				_playHeadHasMoved = true;
@@ -314,7 +342,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
 				@Override
 				public void run() {
-					_timeLeftInSecondsText.setText("" + Math.round(Math.ceil((_videoView.getDuration() - _curPos) / 1000)));
+					_timeLeftInSecondsText.setText("" + Math.round(Math.ceil((_duration - _curPos) / 1000)));
 				}
 			});
 			
@@ -331,7 +359,15 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				_sentPositionEvents.put(ApplifierVideoPosition.ThirdQuartile, true);
 			}
 			
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && _videoView != null && _videoView.getBufferPercentage() < 15 && _videoView.getParent() == null) {				
+			int bufferPercentage = 0;
+			try {
+				bufferPercentage = _videoView.getBufferPercentage();
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("Could not get videoView buffering percentage", this);
+			}
+			
+			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && _videoView != null && bufferPercentage < 15 && _videoView.getParent() == null) {				
 				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {					
 					@Override
 					public void run() {
