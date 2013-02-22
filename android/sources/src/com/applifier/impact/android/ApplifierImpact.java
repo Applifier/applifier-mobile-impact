@@ -282,7 +282,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				break;
 			case RequestRetryVideoPlay:
 				ApplifierImpactUtils.Log("Retrying video play, because something went wrong.", this);
-				playVideo();
+				playVideo(100);
 				break;
 		}
 	}
@@ -543,9 +543,27 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 
 	private void playVideo () {
-		ApplifierImpactPlayVideoRunner playVideoRunner = new ApplifierImpactPlayVideoRunner();
+		playVideo(0);
+	}
+	
+	private void playVideo (long delay) {
 		ApplifierImpactUtils.Log("Running threaded", this);
-		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
+		
+		if (delay > 0) {
+			Timer delayTimer = new Timer();
+			delayTimer.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					ApplifierImpactUtils.Log("Delayed video start", this);
+					ApplifierImpactPlayVideoRunner playVideoRunner = new ApplifierImpactPlayVideoRunner();
+					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
+				}
+			}, delay);
+		}
+		else {
+			ApplifierImpactPlayVideoRunner playVideoRunner = new ApplifierImpactPlayVideoRunner();
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
+		}
 	}
 	
 	private void startImpactFullscreenActivity () {
