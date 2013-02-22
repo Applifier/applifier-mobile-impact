@@ -16,7 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
-import android.os.Looper;
 
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
@@ -141,15 +140,6 @@ public class ApplifierImpactWebData {
 		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(ulc);
 		
-
-		/*
-		ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(parts[0], parts[1], ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET, ApplifierImpactRequestType.VideoPlan, 0);
-		ApplifierImpactUtils.Log("VIDEOPLAN_URL: " + loader.getUrl(), this);
-		addLoader(loader);
-		startNextLoader();
-		checkFailedUrls();
-		*/
-		
 		checkFailedUrls();			
 
 		return true;
@@ -175,12 +165,6 @@ public class ApplifierImpactWebData {
 			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
 				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(ulc);
 			
-			/*
-			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(viewUrl, queryParams, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_POST, ApplifierImpactRequestType.VideoViewed, 0);
-			addLoader(loader);
-			startNextLoader();
-			*/
-			
 			progressSent = true;
 		}
 		
@@ -202,12 +186,6 @@ public class ApplifierImpactWebData {
 			ApplifierImpactUrlLoaderCreator ulc = new ApplifierImpactUrlLoaderCreator(viewUrl, analyticsUrl, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET, ApplifierImpactRequestType.Analytics, 0);
 			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
 				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(ulc);
-			
-			/*
-			ApplifierImpactUrlLoader loader = new ApplifierImpactUrlLoader(viewUrl, analyticsUrl, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET, ApplifierImpactRequestType.Analytics, 0);
-			addLoader(loader);
-			startNextLoader();*/
-			
 		}
 	}
 	
@@ -385,18 +363,6 @@ public class ApplifierImpactWebData {
 						
 						if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
 							ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(ulc);
-						
-						/*
-						loader = new ApplifierImpactUrlLoader(
-								failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_URL_KEY), 
-								failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_BODY_KEY),
-								failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_METHODTYPE_KEY),
-								ApplifierImpactRequestType.getValueOf(failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_REQUESTTYPE_KEY)), 
-								failedUrl.getInt(ApplifierImpactConstants.IMPACT_FAILED_URL_RETRIES_KEY) + 1
-								);
-						
-						if (loader.getRetries() <= ApplifierImpactProperties.MAX_NUMBER_OF_ANALYTICS_RETRIES)
-							addLoader(loader);*/
 					}
 				}
 			}
