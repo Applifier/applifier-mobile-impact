@@ -105,18 +105,29 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public void changeActivity (Activity activity) {
 		if (activity == null) return;
 		
-		if (!activity.equals(ApplifierImpactProperties.CURRENT_ACTIVITY)) {
+		if (activity != null && !activity.equals(ApplifierImpactProperties.CURRENT_ACTIVITY)) {
 			ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
 			
 			// Not the most pretty way to detect when the fullscreen activity is ready
-			if (activity.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
-				String view = _mainView.webview.getWebViewCurrentView();
-				if (_openRequestFromDeveloper) {
-					view = ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START;
-					ApplifierImpactUtils.Log("changeActivity: This open request is from the developer, setting start view", this);
+			if (activity != null &&
+				activity.getClass() != null &&
+				activity.getClass().getName() != null &&
+				activity.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
+				
+				String view = null;
+				
+				if (_mainView != null && _mainView.webview != null) {
+					view = _mainView.webview.getWebViewCurrentView();
+					
+					if (_openRequestFromDeveloper) {
+						view = ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START;
+						ApplifierImpactUtils.Log("changeActivity: This open request is from the developer, setting start view", this);
+					}
+					
+					if (view != null)
+						open(view);
 				}
 				
-				open(view);
 				_openRequestFromDeveloper = false;
 			}
 			else {
@@ -523,13 +534,16 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		
 		if (dataOk && view != null) {
 			ApplifierImpactUtils.Log("open() opening with view:" + view + " and data:" + data.toString(), this);
-			_mainView.openImpact(view, data);
 			
-			if (_developerOptions != null && _developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY)  && _developerOptions.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true))
-				playVideo();
-			
-			if (_impactListener != null)
-				_impactListener.onImpactOpen();
+			if (_mainView != null) {
+				_mainView.openImpact(view, data);
+				
+				if (_developerOptions != null && _developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY)  && _developerOptions.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true))
+					playVideo();
+				
+				if (_impactListener != null)
+					_impactListener.onImpactOpen();
+			}
 		}
 	}
 
