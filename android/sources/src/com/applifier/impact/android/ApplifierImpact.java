@@ -168,11 +168,24 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	public boolean canShowCampaigns () {
-		return _mainView != null && _mainView.webview != null && _mainView.webview.isWebAppLoaded() && _webAppLoaded && webdata != null && webdata.getViewableVideoPlanCampaigns().size() > 0;
+		return _mainView != null && 
+			_mainView.webview != null && 
+			_mainView.webview.isWebAppLoaded() && 
+			_webAppLoaded && 
+			webdata != null && 
+			webdata.getViewableVideoPlanCampaigns() != null && 
+			webdata.getViewableVideoPlanCampaigns().size() > 0;
 	}
 	
 	public boolean canShowImpact () {
-		return !_showingImpact && _mainView != null && _mainView.webview != null && _mainView.webview.isWebAppLoaded() && _webAppLoaded && webdata != null && webdata.getVideoPlanCampaigns().size() > 0;
+		return !_showingImpact && 
+			_mainView != null && 
+			_mainView.webview != null && 
+			_mainView.webview.isWebAppLoaded() && 
+			_webAppLoaded && 
+			webdata != null && 
+			webdata.getVideoPlanCampaigns() != null && 
+			webdata.getVideoPlanCampaigns().size() > 0;
 	}
 
 	public void stopAll () {
@@ -282,7 +295,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				break;
 			case RequestRetryVideoPlay:
 				ApplifierImpactUtils.Log("Retrying video play, because something went wrong.", this);
-				playVideo(250);
+				playVideo(300);
 				break;
 		}
 	}

@@ -254,7 +254,15 @@ public class ApplifierImpactWebView extends WebView {
 	private class ApplifierViewChromeClient extends WebChromeClient {
 		public void onConsoleMessage(String message, int lineNumber, String sourceID) {
 			String sourceFile = sourceID;
-			File tmp = new File(sourceID);
+			File tmp = null;
+			
+			try {
+				tmp = new File(sourceID);
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("Could not handle sourceId: " + e.getMessage(), this);
+			}
+			
 			if (tmp != null && tmp.getName() != null)
 				sourceFile = tmp.getName();
 			
