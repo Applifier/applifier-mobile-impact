@@ -101,9 +101,9 @@ public class ApplifierImpactWebData {
 	}
 	
 	public ApplifierImpactCampaign getCampaignById (String campaignId) {
-		if (campaignId != null) {
+		if (campaignId != null && _campaigns != null) {
 			for (int i = 0; i < _campaigns.size(); i++) {
-				if (_campaigns.get(i).getCampaignId().equals(campaignId))
+				if (_campaigns.get(i) != null && _campaigns.get(i).getCampaignId() != null && _campaigns.get(i).getCampaignId().equals(campaignId))
 					return _campaigns.get(i);
 			}
 		}

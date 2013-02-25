@@ -390,18 +390,26 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			}
 			
 			if (campaignId != null) {
-				ApplifierImpactProperties.SELECTED_CAMPAIGN = webdata.getCampaignById(campaignId);
-				Boolean rewatch = false;
-				
-				try {
-					rewatch = data.getBoolean(ApplifierImpactConstants.IMPACT_WEBVIEW_EVENTDATA_REWATCH_KEY);
-				}
-				catch (Exception e) {
+				if (webdata != null && webdata.getCampaignById(campaignId) != null) {
+					ApplifierImpactProperties.SELECTED_CAMPAIGN = webdata.getCampaignById(campaignId);
 				}
 				
-				ApplifierImpactUtils.Log("onPlayVideo: Selected campaign=" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId() + " isViewed: " + ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed(), this);
-				if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null && (rewatch || !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed())) {
-					playVideo();
+				if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null && 
+					ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId() != null && 
+					ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId().equals(campaignId)) {
+					
+					Boolean rewatch = false;
+					
+					try {
+						rewatch = data.getBoolean(ApplifierImpactConstants.IMPACT_WEBVIEW_EVENTDATA_REWATCH_KEY);
+					}
+					catch (Exception e) {
+					}
+					
+					ApplifierImpactUtils.Log("onPlayVideo: Selected campaign=" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId() + " isViewed: " + ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed(), this);
+					if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null && (rewatch || !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed())) {
+						playVideo();
+					}
 				}
 			}
 		}
