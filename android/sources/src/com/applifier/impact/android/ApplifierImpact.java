@@ -302,7 +302,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				break;
 			case VideoEnd:
 				if (_impactListener != null)
-					_impactListener.onVideoCompleted();
+					_impactListener.onVideoCompleted(getCurrentRewardItemKey());
 				break;
 			case RequestRetryVideoPlay:
 				ApplifierImpactUtils.Log("Retrying video play, because something went wrong.", this);
