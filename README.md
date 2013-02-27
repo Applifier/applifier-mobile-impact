@@ -4,6 +4,7 @@ If you don't have one, you can create an account at https://my.applfier.com/.
 Integration instructions can be found here:
 
 For iOS: http://docs.applifier.com/facebook-and-web/applifier-impact/ios/integrating-applifier-impact-for-ios/
+
 For Android: http://docs.applifier.com/documentation/applifier-impact/impact-for-android/integration-documentation/
 
 Applifier Impact SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
