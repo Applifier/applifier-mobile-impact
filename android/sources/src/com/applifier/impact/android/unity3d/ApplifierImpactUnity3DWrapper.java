@@ -79,7 +79,6 @@ public class ApplifierImpactUnity3DWrapper implements IApplifierImpactListener {
 	}
 	
 	public void showImpact (boolean openAnimated, boolean noOfferscreen, final String gamerSID) {
-		//(boolean openAnimated, boolean noOfferscreen, String gamerSID)
 		if (_applifierImpact != null && _applifierImpact.canShowCampaigns() && _applifierImpact.canShowImpact()) {
 			HashMap<String, Object> params = new HashMap<String, Object>();
 			params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, openAnimated);
