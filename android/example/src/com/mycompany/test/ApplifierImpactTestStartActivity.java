@@ -85,7 +85,7 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
     }
     
     @Override
-	public void onVideoCompleted () {
+	public void onVideoCompleted (String rewardItemKey) {
     }
 	
 	// Impact campaign events

@@ -282,6 +282,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		if (rewardItem != null) {
 			return rewardItem.getDetails();
 		}
+		else {
+			ApplifierImpactUtils.Log("Could not fetch reward item: " + rewardItemKey, this);
+		}
 		
 		return null;
 	}
