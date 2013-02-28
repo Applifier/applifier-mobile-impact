@@ -84,7 +84,7 @@ public class ApplifierImpactUnity3DWrapper implements IApplifierImpactListener {
 			params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, openAnimated);
 			params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, noOfferscreen);
 			
-			if (gamerSID != null)
+			if (gamerSID != null && gamerSID.length() > 0)
 				params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, gamerSID);
 			
 			ApplifierImpactUtils.Log("Opening with: openAnimated=" + openAnimated + ", noOfferscreen=" + noOfferscreen + ", gamerSID=" + gamerSID, this);
