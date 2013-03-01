@@ -5,6 +5,9 @@ using System.Collections.Generic;
 public class ApplifierImpactOpenButton : MonoBehaviour {
 	private bool _canOpenImpact = false;
 	
+	void Awake () {
+	}
+
 	void OnGUI () {
 		if (ApplifierImpactMobile.getTestButtonVisibility()) {
 			string buttonText = "Waiting...";

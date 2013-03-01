@@ -18,8 +18,54 @@ public class ApplifierImpactMobile : MonoBehaviour {
 	private static float _savedTimeScale = 1f;
 	private static string _gamerSID = "";
 	
+	public delegate void ApplifierImpactCampaignsAvailable();
+	private static ApplifierImpactCampaignsAvailable _campaignsAvailableDelegate;
+	public static void setCampaignsAvailableDelegate (ApplifierImpactCampaignsAvailable action) {
+		_campaignsAvailableDelegate = action;
+	}
+
+	public delegate void ApplifierImpactCampaignsFetchFailed();
+	private static ApplifierImpactCampaignsFetchFailed _campaignsFetchFailedDelegate;
+	public static void setCampaignsFetchFailedDelegate (ApplifierImpactCampaignsFetchFailed action) {
+		_campaignsFetchFailedDelegate = action;
+	}
+
+	public delegate void ApplifierImpactOpen();
+	private static ApplifierImpactOpen _impactOpenDelegate;
+	public static void setOpenDelegate (ApplifierImpactOpen action) {
+		_impactOpenDelegate = action;
+	}
+	
+	public delegate void ApplifierImpactClose();
+	private static ApplifierImpactClose _impactCloseDelegate;
+	public static void setCloseDelegate (ApplifierImpactClose action) {
+		_impactCloseDelegate = action;
+	}
+
+	public delegate void ApplifierImpactVideoCompleted();
+	private static ApplifierImpactVideoCompleted _videoCompletedDelegate;
+	public static void setVideoCompletedDelegate (ApplifierImpactVideoCompleted action) {
+		_videoCompletedDelegate = action;
+	}
+	
+	public delegate void ApplifierImpactVideoStarted();
+	private static ApplifierImpactVideoStarted _videoStartedDelegate;
+	public static void setVideoStartedDelegate (ApplifierImpactVideoStarted action) {
+		_videoStartedDelegate = action;
+	}
+	
+	
 	public void Awake () {
 		this.init(this.gameId, this.testModeEnabled, this.debugModeEnabled);
+	}
+	
+	public void OnDestroy () {
+		_campaignsAvailableDelegate = null;
+		_campaignsFetchFailedDelegate = null;
+		_impactOpenDelegate = null;
+		_impactCloseDelegate = null;
+		_videoCompletedDelegate = null;
+		_videoStartedDelegate = null;
 	}
 	
 	public void init (string gameId, bool testModeEnabled, bool debugModeEnabled) {
@@ -38,6 +84,7 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		ApplifierImpactMobile applifierImpactMobile = applifierImpact.GetComponent<ApplifierImpactMobile>();
 		return applifierImpactMobile;
 	}
+	
 	
 	public static bool getTestButtonVisibility () {
 		return getCurrentInstance().showTestButton;
@@ -131,7 +178,7 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		return retDict;
 	}
 	
-	public static void showImpact () {
+	public static bool showImpact () {
 		if (!_impactOpen && _campaignsAvailable) {
 			ApplifierImpactMobile instance = getCurrentInstance();
 			
@@ -144,8 +191,18 @@ public class ApplifierImpactMobile : MonoBehaviour {
 				noOfferscreen = instance.noOfferscreen;
 			}
 			
-			ApplifierImpactMobileExternal.showImpact(animated, noOfferscreen, gamerSID);
+			if (ApplifierImpactMobileExternal.showImpact(animated, noOfferscreen, gamerSID)) {				
+				if (_impactOpenDelegate != null)
+					_impactOpenDelegate();
+				
+				_impactOpen = true;
+				_savedTimeScale = Time.timeScale;
+				AudioListener.pause = true;
+				Time.timeScale = 0;
+			}
 		}
+		
+		return false;
 	}
 	
 	public static void hideImpact () {
@@ -161,32 +218,44 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		_impactOpen = false;
 		AudioListener.pause = false;
 		Time.timeScale = _savedTimeScale;
+		
+		if (_impactCloseDelegate != null)
+			_impactCloseDelegate();
+		
 		ApplifierImpactMobileExternal.Log("onImpactClose");
 	}
 	
 	public void onImpactOpen () {
-		_impactOpen = true;
-		_savedTimeScale = Time.timeScale;
-		AudioListener.pause = true;
-		Time.timeScale = 0;
 		ApplifierImpactMobileExternal.Log("onImpactOpen");
 	}
 	
 	public void onVideoStarted () {
+		if (_videoStartedDelegate != null)
+			_videoStartedDelegate();
+		
 		ApplifierImpactMobileExternal.Log("onVideoStarted");
 	}
 	
 	public void onVideoCompleted (string rewardItemKey) {
+		if (_videoCompletedDelegate != null)
+			_videoCompletedDelegate();
+		
 		ApplifierImpactMobileExternal.Log("onVideoCompleted: " + rewardItemKey);
 	}
 	
 	public void onCampaignsAvailable () {
 		_campaignsAvailable = true;
+		if (_campaignsAvailableDelegate != null)
+			_campaignsAvailableDelegate();
+			
 		ApplifierImpactMobileExternal.Log("onCampaignsAvailable");
 	}
 
 	public void onCampaignsFetchFailed () {
 		_campaignsAvailable = false;
+		if (_campaignsFetchFailedDelegate != null)
+			_campaignsFetchFailedDelegate();
+		
 		ApplifierImpactMobileExternal.Log("onCampaignsFetchFailed");
 	}
 }

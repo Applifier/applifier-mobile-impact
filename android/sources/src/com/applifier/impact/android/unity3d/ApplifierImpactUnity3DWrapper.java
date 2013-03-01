@@ -78,7 +78,7 @@ public class ApplifierImpactUnity3DWrapper implements IApplifierImpactListener {
 		}
 	}
 	
-	public void showImpact (boolean openAnimated, boolean noOfferscreen, final String gamerSID) {
+	public boolean showImpact (boolean openAnimated, boolean noOfferscreen, final String gamerSID) {
 		if (_applifierImpact != null && _applifierImpact.canShowCampaigns() && _applifierImpact.canShowImpact()) {
 			HashMap<String, Object> params = new HashMap<String, Object>();
 			params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, openAnimated);
@@ -88,8 +88,10 @@ public class ApplifierImpactUnity3DWrapper implements IApplifierImpactListener {
 				params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, gamerSID);
 			
 			ApplifierImpactUtils.Log("Opening with: openAnimated=" + openAnimated + ", noOfferscreen=" + noOfferscreen + ", gamerSID=" + gamerSID, this);
-			_applifierImpact.showImpact(params);
+			return _applifierImpact.showImpact(params);
 		}
+		
+		return false;
 	}
 	
 	public void hideImpact () {
@@ -209,7 +211,6 @@ public class ApplifierImpactUnity3DWrapper implements IApplifierImpactListener {
 	public void onCampaignsFetchFailed() {
 		sendMessageToUnity3D("onCampaignsFetchFailed", null);
 	}
-	
 	
     public void sendMessageToUnity3D(String methodName, String parameter) {
         // Unity Development build crashes if parameter is NULL

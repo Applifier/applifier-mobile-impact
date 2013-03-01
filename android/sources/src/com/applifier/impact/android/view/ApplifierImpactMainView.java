@@ -261,7 +261,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		}
 		
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
-		ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 		sendActionToListener(ApplifierImpactMainViewAction.VideoEnd);
 	}
 	

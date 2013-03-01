@@ -16,8 +16,9 @@ public class ApplifierImpactMobileExternal : MonoBehaviour {
 		Log ("UnityEditor: init(), gameId=" + gameId + ", testModeEnabled=" + testModeEnabled + ", gameObjectName=" + gameObjectName + ", debugModeEnabled=" + debugModeEnabled);
 	}
 	
-	public static void showImpact (bool openAnimated, bool noOfferscreen, string gamerSID) {
+	public static bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID) {
 		Log ("UnityEditor: showImpact()");
+		return false;
 	}
 	
 	public static void hideImpact () {
@@ -97,9 +98,9 @@ public class ApplifierImpactMobileExternal : MonoBehaviour {
 		applifierImpactUnity.Call("init", gameId, activity, testModeEnabled, debugModeEnabled, gameObjectName);
 	}
 	
-	public static void showImpact (bool openAnimated, bool noOfferscreen, string gamerSID) {
+	public static bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID) {
 		Log ("UnityAndroid: showImpact()");
-		applifierImpactUnity.Call("showImpact", openAnimated, noOfferscreen, gamerSID);
+		return applifierImpactUnity.Call<bool>("showImpact", openAnimated, noOfferscreen, gamerSID);
 	}
 	
 	public static void hideImpact () {
