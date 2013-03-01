@@ -42,7 +42,7 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		_impactCloseDelegate = action;
 	}
 
-	public delegate void ApplifierImpactVideoCompleted();
+	public delegate void ApplifierImpactVideoCompleted(string rewardItemKey);
 	private static ApplifierImpactVideoCompleted _videoCompletedDelegate;
 	public static void setVideoCompletedDelegate (ApplifierImpactVideoCompleted action) {
 		_videoCompletedDelegate = action;
@@ -238,7 +238,7 @@ public class ApplifierImpactMobile : MonoBehaviour {
 	
 	public void onVideoCompleted (string rewardItemKey) {
 		if (_videoCompletedDelegate != null)
-			_videoCompletedDelegate();
+			_videoCompletedDelegate(rewardItemKey);
 		
 		ApplifierImpactMobileExternal.Log("onVideoCompleted: " + rewardItemKey);
 	}
