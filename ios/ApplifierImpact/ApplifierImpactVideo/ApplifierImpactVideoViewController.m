@@ -199,7 +199,7 @@
 
 - (void)videoPlaybackEnded {
   AILOG_DEBUG(@"");
-  self.campaignToPlay.viewed = YES;
+  //self.campaignToPlay.viewed = YES;
   [self.delegate videoPlayerPlaybackEnded];
   self.isPlaying = NO;
   self.campaignToPlay = nil;

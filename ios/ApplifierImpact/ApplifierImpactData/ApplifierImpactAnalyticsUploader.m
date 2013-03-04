@@ -157,7 +157,9 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
         trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [[ApplifierImpactProperties sharedInstance] gamerSID]];
       }
       
-      [self performSelector:@selector(sendTrackingCallWithQueryString:) onThread:self.backgroundThread withObject:trackingQuery waitUntilDone:NO];
+      if (!campaign.viewed) {
+        [self performSelector:@selector(sendTrackingCallWithQueryString:) onThread:self.backgroundThread withObject:trackingQuery waitUntilDone:NO];
+      }
      }
 	});
 }

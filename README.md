@@ -1,7 +1,11 @@
 Welcome to the repository for Applifier Impact. To get started, make sure you have an account registered with Applifier.
 If you don't have one, you can create an account at https://my.applfier.com/.
 
-Integration instructions can be found at http://docs.applifier.com/facebook-and-web/applifier-impact/ios/integrating-applifier-impact-for-ios/
+Integration instructions can be found here:
+
+For iOS: http://docs.applifier.com/facebook-and-web/applifier-impact/ios/integrating-applifier-impact-for-ios/
+
+For Android: http://docs.applifier.com/documentation/applifier-impact/impact-for-android/integration-documentation/
 
 Applifier Impact SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
 
@@ -9,6 +13,18 @@ In any issues, please file in issue with us in this Github repository, or log a 
 
 Applifier Impact SDK Release Notes
 ==================================
+
+v1.0.3.1 "Robotic Overlords" - February 27, 2013
+--------------------------
+
+*Android:*
+
+- Android support is now officially released, get it while it's hot!
+
+*iOS:*
+
+- Bugfixes
+
 v1.0.3 "Cornucopia" - January 23, 2013
 --------------------------
 
