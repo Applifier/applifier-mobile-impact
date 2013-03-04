@@ -68,7 +68,7 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
 		Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Video started!");
 	}
 	
-	public void onVideoCompleted () {
+	public void onVideoCompleted (String rewardItemKey) {
     	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactGameActivity->onVideoCompleted()");
     	((ImageView)findViewById(R.id.plissken)).setAlpha(255);
     	((ImageView)findViewById(R.id.unlock)).setVisibility(View.INVISIBLE);

@@ -17,3 +17,5 @@ bin-debug/
 xcuserdata/
 Release-iphonesimulator/
 .fake_fw_testing.framework/
+android/example/.settings/
+android/sources/.settings/
