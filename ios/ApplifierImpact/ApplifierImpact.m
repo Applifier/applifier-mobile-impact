@@ -404,8 +404,10 @@ static ApplifierImpact *sharedImpact = nil;
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
-  if (![[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed)
+  if (![[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed) {
+    [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed = YES;
     [self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key];
+  }
 }
 
 - (void)mainControllerWillLeaveApplication {
