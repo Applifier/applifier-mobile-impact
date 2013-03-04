@@ -28,62 +28,49 @@ public class ApplifierImpactDevice {
 		return ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getConfiguration().screenLayout;
 	}
 
-	public static String getDeviceId () {
-		if (ApplifierImpactProperties.CURRENT_ACTIVITY == null) return ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
+	public static String getAndroidId () {
+		String androidID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		
-		Context context = ApplifierImpactProperties.CURRENT_ACTIVITY;
-		//String prefix = "";
-		String deviceId = null;
-		//get android id
-		
-		if  (deviceId == null || deviceId.length() < 3) {
-			//get telephony id
-//			prefix = "aTUDID";
-			try {
-				TelephonyManager tmanager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-				deviceId = tmanager.getDeviceId();
-			}
-			catch (Exception e) {
-				//maybe no permissions
-			}
+		try {
+			androidID = ApplifierImpactUtils.Md5(Secure.getString(ApplifierImpactProperties.CURRENT_ACTIVITY.getContentResolver(), Secure.ANDROID_ID));
+			androidID = androidID.toLowerCase();
+		}
+		catch (Exception e) {
+			ApplifierImpactUtils.Log("Problems fetching androidId: " + e.getMessage(), ApplifierImpactDevice.class);
 		}
 		
-		if  (deviceId == null || deviceId.length() < 3) {
-			//get device serial no using private api
-//			prefix = "aSNO";
-			try {
-		        Class<?> c = Class.forName("android.os.SystemProperties");
-		        Method get = c.getMethod("get", String.class);
-		        deviceId = (String) get.invoke(c, "ro.serialno");
-		    } 
-			catch (Exception e) {
-		    }
+		return androidID;
+	}
+	
+	public static String getTelephonyId () {
+		String telephonyID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
+		
+		try {
+			TelephonyManager tmanager = (TelephonyManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getSystemService(Context.TELEPHONY_SERVICE);
+			telephonyID = ApplifierImpactUtils.Md5(tmanager.getDeviceId());
+			telephonyID = telephonyID.toLowerCase();
 		}
-
-		if  (deviceId == null || deviceId.length() < 3) {
-			deviceId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
-//			prefix = "aID";
+		catch (Exception e) {
+			ApplifierImpactUtils.Log("Problems fetching telephonyId: " + e.getMessage(), ApplifierImpactDevice.class);
 		}
 		
-		if  (deviceId == null || deviceId.length() < 3) {
-			//get mac address
-//			prefix = "aWMAC";
-			try {
-				WifiManager wm = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-				deviceId = wm.getConnectionInfo().getMacAddress();
-			} catch (Exception e) {
-				//maybe no permissons or wifi off
-			}
-		}
+		return telephonyID;
+	}
+	
+	public static String getAndroidSerial () {
+		String androidSerial = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		
-		if  (deviceId == null || deviceId.length() < 3) {
-//			prefix = "aUnknown";
-			deviceId = Build.MANUFACTURER + "-" + Build.MODEL + "-"+Build.FINGERPRINT; 
-		}
-
-		//Log.d(_logName, "DeviceID : " + prefix + "_" + deviceId);
-		//return prefix + "_" + deviceId;
-		return ApplifierImpactUtils.Md5(deviceId).toLowerCase();
+		try {
+	        Class<?> c = Class.forName("android.os.SystemProperties");
+	        Method get = c.getMethod("get", String.class);
+	        androidSerial = (String) get.invoke(c, "ro.serialno");
+	        androidSerial = ApplifierImpactUtils.Md5(androidSerial);
+	        androidSerial = androidSerial.toLowerCase();
+	    } 
+		catch (Exception e) {
+	    }
+		
+		return androidSerial;
 	}
 	
 	public static String getMacAddress () {
