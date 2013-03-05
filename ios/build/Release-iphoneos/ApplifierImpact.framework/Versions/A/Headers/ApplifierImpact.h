@@ -11,8 +11,8 @@
 #define AILOG_ERROR(fmt, ...) AILOG_LOG(@"ERROR", fmt, ##__VA_ARGS__)
 
 #define AILOG_DEBUG(fmt, ...) AILOG_LOG(@"DEBUG", fmt, ##__VA_ARGS__)
-#define AIAssert(condition) do { if ( ! (condition)) { AILOG_ERROR(@"Expected condition '%s' to be true.", #condition); abort(); } } while(0)
-#define AIAssertV(condition, value) do { if ( ! (condition)) { AILOG_ERROR(@"Expected condition '%s' to be true.", #condition); abort(); } } while(0)
+#define AIAssert(condition) do { if ([[ApplifierImpact sharedInstance] isDebugMode] && !(condition)) { AILOG_ERROR(@"Expected condition '%s' to be true.", #condition); abort(); } } while(0)
+#define AIAssertV(condition, value) do { if ([[ApplifierImpact sharedInstance] isDebugMode] && !(condition)) { AILOG_ERROR(@"Expected condition '%s' to be true.", #condition); abort(); } } while(0)
 
 extern NSString * const kApplifierImpactRewardItemPictureKey;
 extern NSString * const kApplifierImpactRewardItemNameKey;
