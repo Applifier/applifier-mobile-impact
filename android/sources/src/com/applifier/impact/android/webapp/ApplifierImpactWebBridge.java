@@ -2,6 +2,8 @@ package com.applifier.impact.android.webapp;
 
 import org.json.JSONObject;
 
+import android.webkit.JavascriptInterface;
+
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
@@ -46,7 +48,7 @@ public class ApplifierImpactWebBridge {
 		_listener = listener;
 	}
 	
-	//@JavascriptInterface
+	@JavascriptInterface
 	public boolean handleWebEvent (String type, String data) {
 		ApplifierImpactUtils.Log("handleWebEvent: "+ type + ", " + data, this);
 
