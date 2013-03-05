@@ -90,7 +90,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 				vg.removeView(this);
 		}
 		
-		webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, data);
+		//webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, data);
 		destroyVideoPlayerView();
 		ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
 	}

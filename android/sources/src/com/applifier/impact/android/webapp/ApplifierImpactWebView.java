@@ -2,6 +2,8 @@ package com.applifier.impact.android.webapp;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONObject;
 
@@ -281,8 +283,6 @@ public class ApplifierImpactWebView extends WebView {
 			ApplifierImpactUtils.Log("Finished url: "  + url, this);
 			if (_listener != null && !_webAppLoaded) {
 				_webAppLoaded = true;
-				ApplifierImpactUtils.Log("Adding javascript interface", this);
-				addJavascriptInterface(_webBridge, "applifierimpactnative");
 				_listener.onWebAppLoaded();
 			}
 		}

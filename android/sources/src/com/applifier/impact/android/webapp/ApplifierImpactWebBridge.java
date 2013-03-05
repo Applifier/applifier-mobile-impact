@@ -46,6 +46,7 @@ public class ApplifierImpactWebBridge {
 		_listener = listener;
 	}
 	
+	//@JavascriptInterface
 	public boolean handleWebEvent (String type, String data) {
 		ApplifierImpactUtils.Log("handleWebEvent: "+ type + ", " + data, this);
 

@@ -786,7 +786,8 @@ public class ApplifierImpactWebData {
 			return null;
 		}
 
-		protected void onCancelled(Object result) {
+		@Override
+		protected void onCancelled() {
 			_done = true;
 			closeAndFlushConnection();
 			urlLoadFailed(this);

@@ -667,7 +667,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 								}
 							});
 						}
-					}, 100);
+					}, 250);
 				}
 			}
 			
