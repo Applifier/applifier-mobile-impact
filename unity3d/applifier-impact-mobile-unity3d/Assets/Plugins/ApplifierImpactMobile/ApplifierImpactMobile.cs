@@ -14,6 +14,7 @@ public class ApplifierImpactMobile : MonoBehaviour {
 	private static bool _campaignsAvailable = false;
 	private static bool _initRun = false;
 	private static bool _impactOpen = false;
+	private static bool _gotAwake = false;
 	private static string _gameObjectName = null;
 	private static float _savedTimeScale = 1f;
 	private static string _gamerSID = "";
@@ -56,7 +57,10 @@ public class ApplifierImpactMobile : MonoBehaviour {
 	
 	
 	public void Awake () {
-		this.init(this.gameId, this.testModeEnabled, this.debugModeEnabled);
+		if (_gotAwake == false) {
+			_gotAwake = true;
+			this.init(this.gameId, this.testModeEnabled, this.debugModeEnabled);
+		}
 	}
 	
 	public void OnDestroy () {
@@ -70,8 +74,8 @@ public class ApplifierImpactMobile : MonoBehaviour {
 	
 	public void init (string gameId, bool testModeEnabled, bool debugModeEnabled) {
 		if (!_initRun) {
-			_gameObjectName = gameObject.name;
 			_initRun = true;
+			_gameObjectName = gameObject.name;
 			ApplifierImpactMobileExternal.init(gameId, testModeEnabled, debugModeEnabled, _gameObjectName);
 		}
 	}

@@ -41,7 +41,7 @@
             <meta-data android:name="unityplayer.ForwardNativeEventsToDalvik" android:value="false" />
         </activity>
         <activity android:name="com.applifier.impact.android.view.ApplifierImpactFullscreenActivity" 
-          	  android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+     	  	  android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|touchscreen"
           	  android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
                   android:hardwareAccelerated="true" />
     </application>
