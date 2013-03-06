@@ -124,6 +124,16 @@ public class ApplifierImpactWebView extends WebView {
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_CAMPAIGNDATA_KEY, data);
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_PLATFORM_KEY, "android");
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_DEVICEID_KEY, ApplifierImpactDevice.getAndroidId());
+				
+				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getAndroidId()))
+					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_ANDROIDID_KEY, ApplifierImpactDevice.getAndroidId());
+
+				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getAndroidSerial()))
+					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SERIALID_KEY, ApplifierImpactDevice.getAndroidSerial());
+
+				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getTelephonyId()))
+					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_TELEPHONYID_KEY, ApplifierImpactDevice.getTelephonyId());
+				
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_OPENUDID_KEY, ApplifierImpactDevice.getOpenUdid());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_MACADDRESS_KEY, ApplifierImpactDevice.getMacAddress());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDKVERSION_KEY, ApplifierImpactConstants.IMPACT_VERSION);
