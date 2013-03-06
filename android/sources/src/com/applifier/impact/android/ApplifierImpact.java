@@ -170,9 +170,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	public boolean showImpact () {
 		if (canShowImpact()) {
-			startImpactFullscreenActivity();
-			_showingImpact = true;
 			_openRequestFromDeveloper = true;
+			_showingImpact = true;
+			startImpactFullscreenActivity();
 			return _showingImpact;
 		}
 
