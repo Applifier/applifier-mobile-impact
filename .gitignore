@@ -13,9 +13,18 @@ ios/ApplifierImpact.xcodeproj/project.xcworkspace/xcuserdata
 ios/ApplifierImpact.xcodeproj/xcuserdata
 ios/ApplifierImpact.xcworkspace/project.xcworkspace/xcuserdata
 ios/ApplifierImpact.xcworkspace/xcuserdata
+ios/build/ApplifierImpact.build/
+ios/build/Release-iphoneos/ApplifierImpact.embeddedframework/
 bin-debug/
 xcuserdata/
 Release-iphonesimulator/
 .fake_fw_testing.framework/
+*.ipa
+
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+=======
 android/example/.settings/
 android/sources/.settings/

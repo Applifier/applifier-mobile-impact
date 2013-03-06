@@ -2,6 +2,8 @@ package com.applifier.impact.android.webapp;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONObject;
 
@@ -122,6 +124,16 @@ public class ApplifierImpactWebView extends WebView {
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_CAMPAIGNDATA_KEY, data);
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_PLATFORM_KEY, "android");
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_DEVICEID_KEY, ApplifierImpactDevice.getAndroidId());
+				
+				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getAndroidId()))
+					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_ANDROIDID_KEY, ApplifierImpactDevice.getAndroidId());
+
+				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getAndroidSerial()))
+					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SERIALID_KEY, ApplifierImpactDevice.getAndroidSerial());
+
+				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getTelephonyId()))
+					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_TELEPHONYID_KEY, ApplifierImpactDevice.getTelephonyId());
+				
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_OPENUDID_KEY, ApplifierImpactDevice.getOpenUdid());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_MACADDRESS_KEY, ApplifierImpactDevice.getMacAddress());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDKVERSION_KEY, ApplifierImpactConstants.IMPACT_VERSION);
@@ -281,8 +293,6 @@ public class ApplifierImpactWebView extends WebView {
 			ApplifierImpactUtils.Log("Finished url: "  + url, this);
 			if (_listener != null && !_webAppLoaded) {
 				_webAppLoaded = true;
-				ApplifierImpactUtils.Log("Adding javascript interface", this);
-				addJavascriptInterface(_webBridge, "applifierimpactnative");
 				_listener.onWebAppLoaded();
 			}
 		}

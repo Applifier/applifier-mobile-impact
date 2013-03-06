@@ -1,0 +1,193 @@
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
+public class ApplifierImpactMobileExternal : MonoBehaviour {
+
+	private static string _logTag = "ApplifierImpactMobile";
+	
+	public static void Log (string message) {
+		Debug.Log(_logTag + "/" + message);
+	}
+	
+#if UNITY_EDITOR
+	public static void init (string gameId, bool testModeEnabled, bool debugModeEnabled, string gameObjectName) {
+		Log ("UnityEditor: init(), gameId=" + gameId + ", testModeEnabled=" + testModeEnabled + ", gameObjectName=" + gameObjectName + ", debugModeEnabled=" + debugModeEnabled);
+	}
+	
+	public static bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID) {
+		Log ("UnityEditor: showImpact()");
+		return false;
+	}
+	
+	public static void hideImpact () {
+		Log ("UnityEditor: hideImpact()");
+	}
+	
+	public static bool isSupported () {
+		Log ("UnityEditor: isSupported()");
+		return false;
+	}
+	
+	public static string getSDKVersion () {
+		Log ("UnityEditor: getSDKVersion()");
+		return "EDITOR";
+	}
+	
+	public static bool canShowCampaigns () {
+		Log ("UnityEditor: canShowCampaigns()");
+		return false;
+	}
+	
+	public static bool canShowImpact () {
+		Log ("UnityEditor: canShowImpact()");
+		return false;
+	}
+	
+	public static void stopAll () {
+		Log ("UnityEditor: stopAll()");
+	}
+	
+	public static bool hasMultipleRewardItems () {
+		Log ("UnityEditor: hasMultipleRewardItems()");
+		return false;
+	}
+	
+	public static string getRewardItemKeys () {
+		Log ("UnityEditor: getRewardItemKeys()");
+		return "";
+	}
+
+	public static string getDefaultRewardItemKey () {
+		Log ("UnityEditor: getDefaultRewardItemKey()");
+		return "";
+	}
+	
+	public static string getCurrentRewardItemKey () {
+		Log ("UnityEditor: getCurrentRewardItemKey()");
+		return "";
+	}
+
+	public static bool setRewardItemKey (string rewardItemKey) {
+		Log ("UnityEditor: setRewardItemKey() rewardItemKey=" + rewardItemKey);
+		return false;
+	}
+	
+	public static void setDefaultRewardItemAsRewardItem () {
+		Log ("UnityEditor: setDefaultRewardItemAsRewardItem()");
+	}
+	
+	public static Dictionary<string, string> getRewardItemDetailsWithKey (string rewardItemKey) {
+		Log ("UnityEditor: getRewardItemDetailsWithKey() rewardItemKey=" + rewardItemKey);
+		return new Dictionary<string, string>();
+	}
+	
+#elif UNITY_IPHONE
+	
+#elif UNITY_ANDROID
+	private static AndroidJavaObject applifierImpact;
+	private static AndroidJavaObject applifierImpactUnity;
+	private static AndroidJavaClass applifierImpactClass;
+	
+	public static void init (string gameId, bool testModeEnabled, bool debugModeEnabled, string gameObjectName) {
+		Log("UnityAndroid: init(), gameId=" + gameId + ", testModeEnabled=" + testModeEnabled + ", gameObjectName=" + gameObjectName + ", debugModeEnabled=" + debugModeEnabled);
+		AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+		AndroidJavaObject activity = jc.GetStatic<AndroidJavaObject>("currentActivity");
+		applifierImpactUnity = new AndroidJavaObject("com.applifier.impact.android.unity3d.ApplifierImpactUnity3DWrapper");
+		applifierImpactUnity.Call("init", gameId, activity, testModeEnabled, debugModeEnabled, gameObjectName);
+	}
+	
+	public static bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID) {
+		Log ("UnityAndroid: showImpact()");
+		return applifierImpactUnity.Call<bool>("showImpact", openAnimated, noOfferscreen, gamerSID);
+	}
+	
+	public static void hideImpact () {
+		Log ("UnityAndroid: hideImpact()");
+		applifierImpactUnity.Call("hideImpact");
+	}
+	
+	public static bool isSupported () {
+		Log ("UnityAndroid: isSupported()");
+		return applifierImpactUnity.Call<bool>("isSupported");
+	}
+	
+	public static string getSDKVersion () {
+		Log ("UnityAndroid: getSDKVersion()");
+		return applifierImpactUnity.Call<string>("getSDKVersion");
+	}
+	
+	public static bool canShowCampaigns () {
+		Log ("UnityAndroid: canShowCampaigns()");
+		return applifierImpactUnity.Call<bool>("canShowCampaigns");
+	}
+	
+	public static bool canShowImpact () {
+		Log ("UnityAndroid: canShowImpact()");
+		return applifierImpactUnity.Call<bool>("canShowImpact");
+	}
+	
+	public static void stopAll () {
+		Log ("UnityAndroid: stopAll()");
+		applifierImpactUnity.Call("stopAll");
+	}
+	
+	public static bool hasMultipleRewardItems () {
+		Log ("UnityAndroid: hasMultipleRewardItems()");
+		return applifierImpactUnity.Call<bool>("hasMultipleRewardItems");
+	}
+	
+	public static string getRewardItemKeys () {
+		Log ("UnityAndroid: getRewardItemKeys()");
+		return applifierImpactUnity.Call<string>("getRewardItemKeys");
+	}
+
+	public static string getDefaultRewardItemKey () {
+		Log ("UnityAndroid: getDefaultRewardItemKey()");
+		return applifierImpactUnity.Call<string>("getDefaultRewardItemKey");
+	}
+	
+	public static string getCurrentRewardItemKey () {
+		Log ("UnityAndroid: getCurrentRewardItemKey()");
+		return applifierImpactUnity.Call<string>("getCurrentRewardItemKey");
+	}
+
+	public static bool setRewardItemKey (string rewardItemKey) {
+		Log ("UnityAndroid: setRewardItemKey() rewardItemKey=" + rewardItemKey);
+		return applifierImpactUnity.Call<bool>("setRewardItemKey", rewardItemKey);
+	}
+	
+	public static void setDefaultRewardItemAsRewardItem () {
+		Log ("UnityAndroid: setDefaultRewardItemAsRewardItem()");
+		applifierImpactUnity.Call("setDefaultRewardItemAsRewardItem");
+	}
+	
+	public static Dictionary<string, string> getRewardItemDetailsWithKey (string rewardItemKey) {
+		Log ("UnityAndroid: getRewardItemDetailsWithKey() rewardItemKey=" + rewardItemKey);
+		
+		Dictionary<string, string> retDict = new Dictionary<string, string>();
+		
+		if (applifierImpactClass == null)
+			applifierImpactClass = new AndroidJavaClass("com.applifier.impact.android.ApplifierImpact");
+		
+		string nameKey = applifierImpactClass.GetStatic<string>("APPLIFIER_IMPACT_REWARDITEM_NAME_KEY");
+		string pictureKey = applifierImpactClass.GetStatic<string>("APPLIFIER_IMPACT_REWARDITEM_PICTURE_KEY");
+		string rewardItemDataString = applifierImpactUnity.Call<string>("getRewardItemDetailsWithKey", rewardItemKey);
+		
+		if (rewardItemDataString != null) {
+			List<string> splittedData = new List<string>(rewardItemDataString.Split(';'));
+			Log ("UnityAndroid: getRewardItemDetailsWithKey() rewardItemDataString=" + rewardItemDataString);
+			
+			if (splittedData.Count == 2) {
+				retDict.Add(nameKey, splittedData.ToArray().GetValue(0).ToString());
+				retDict.Add(pictureKey, splittedData.ToArray().GetValue(1).ToString());
+			}
+		}
+		
+		return retDict;
+	}
+	
+#endif
+
+}

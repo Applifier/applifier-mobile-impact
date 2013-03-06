@@ -24,6 +24,9 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_DATAPARAM_CAMPAIGNDATA_KEY = "campaignData";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_PLATFORM_KEY = "platform";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_DEVICEID_KEY = "deviceId";
+	public static final String IMPACT_WEBVIEW_DATAPARAM_ANDROIDID_KEY = "androidId";
+	public static final String IMPACT_WEBVIEW_DATAPARAM_TELEPHONYID_KEY = "telephonyId";
+	public static final String IMPACT_WEBVIEW_DATAPARAM_SERIALID_KEY = "serialId";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_GAMEID_KEY = "gameId";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_DEVICETYPE_KEY = "deviceType";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_OPENUDID_KEY = "openUdid";

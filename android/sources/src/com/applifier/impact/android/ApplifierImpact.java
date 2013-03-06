@@ -13,6 +13,7 @@ import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.ApplifierImpactRewardItem;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.view.ApplifierImpactMainView;
@@ -282,6 +283,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		if (rewardItem != null) {
 			return rewardItem.getDetails();
 		}
+		else {
+			ApplifierImpactUtils.Log("Could not fetch reward item: " + rewardItemKey, this);
+		}
 		
 		return null;
 	}
@@ -301,8 +305,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 					_impactListener.onVideoStarted();
 				break;
 			case VideoEnd:
-				if (_impactListener != null)
+				if (_impactListener != null && ApplifierImpactProperties.SELECTED_CAMPAIGN != null && !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed()) {
+					ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 					_impactListener.onVideoCompleted(getCurrentRewardItemKey());
+				}
 				break;
 			case RequestRetryVideoPlay:
 				ApplifierImpactUtils.Log("Retrying video play, because something went wrong.", this);
@@ -661,7 +667,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 								}
 							});
 						}
-					}, 100);
+					}, 250);
 				}
 			}
 			

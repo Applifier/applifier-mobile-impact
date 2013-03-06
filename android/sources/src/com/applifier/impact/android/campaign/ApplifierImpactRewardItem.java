@@ -53,7 +53,7 @@ public class ApplifierImpactRewardItem {
 		Map<String, String> returnMap = new HashMap<String, String>();
 		returnMap.put(ApplifierImpact.APPLIFIER_IMPACT_REWARDITEM_NAME_KEY, getName());
 		returnMap.put(ApplifierImpact.APPLIFIER_IMPACT_REWARDITEM_PICTURE_KEY, getPictureUrl());
-		return null;
+		return returnMap;
 	}
 	
 	/* INTERNAL METHODS */

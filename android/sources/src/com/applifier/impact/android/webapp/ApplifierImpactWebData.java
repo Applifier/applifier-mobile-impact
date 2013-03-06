@@ -21,6 +21,7 @@ import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 import com.applifier.impact.android.campaign.ApplifierImpactRewardItem;
+import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
@@ -420,7 +421,7 @@ public class ApplifierImpactWebData {
 			ApplifierImpactUtils.Log("Error collecting failed urls", this);
 		}
 		
-		if (_failedUrlLoaders != null && _failedUrlLoaders.size() > 0) {
+		if (_failedUrlLoaders != null && _failedUrlLoaders.size() > 0 && ApplifierImpactUtils.canUseExternalStorage()) {
 			File pendingRequestFile = new File(ApplifierImpactUtils.getCacheDirectory() + "/" + ApplifierImpactConstants.PENDING_REQUESTS_FILENAME);
 			ApplifierImpactUtils.writeFile(pendingRequestFile, failedUrlsJson.toString());
 		}
@@ -786,7 +787,8 @@ public class ApplifierImpactWebData {
 			return null;
 		}
 
-		protected void onCancelled(Object result) {
+		@Override
+		protected void onCancelled() {
 			_done = true;
 			closeAndFlushConnection();
 			urlLoadFailed(this);
