@@ -7,4 +7,7 @@
    <FileRef
       location = "group:example/ImpactProto.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:ApplifierImpactUnity/ApplifierImpactUnity.xcodeproj">
+   </FileRef>
 </Workspace>
