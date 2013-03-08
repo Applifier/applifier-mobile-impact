@@ -110,6 +110,7 @@ public class ApplifierImpactDownloader {
 	private static void sendToListeners (ApplifierDownloadEventType type, String downloadUrl) {
 		if (_downloadListeners == null) return;
 
+		@SuppressWarnings("unchecked")
 		ArrayList<IApplifierImpactDownloadListener> tmpListeners = (ArrayList<IApplifierImpactDownloadListener>)_downloadListeners.clone();
 		
 		for (IApplifierImpactDownloadListener listener : tmpListeners) {

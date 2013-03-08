@@ -2,8 +2,6 @@ package com.applifier.impact.android.webapp;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.json.JSONObject;
 
@@ -12,6 +10,7 @@ import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -177,6 +176,7 @@ public class ApplifierImpactWebView extends WebView {
 		}
 	}
 	
+	@SuppressLint("SetJavaScriptEnabled")
 	private void setupApplifierView ()  {
 		getSettings().setJavaScriptEnabled(true);
 		

@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.telephony.TelephonyManager;
 import android.content.Context;
@@ -67,6 +68,7 @@ public class ApplifierImpactOpenUDID {
 	/*
 	 * Generate a new OpenUDID
 	 */
+	@SuppressLint("DefaultLocale")
 	private static void generateOpenUDIDInContext(Context mContext) {
 		if (LOG) _debugLog( "Generating openUDID");
 		//Try to get WIFI MAC
@@ -107,7 +109,6 @@ public class ApplifierImpactOpenUDID {
     }
 	
 	private static void generateImeiId(Context mContext) {
-		// TODO Auto-generated method stub
 		try{
 			TelephonyManager TelephonyMgr = (TelephonyManager)mContext.getSystemService(Context.TELEPHONY_SERVICE);
 			String szImei = TelephonyMgr.getDeviceId(); // Requires READ_PHONE_STATE

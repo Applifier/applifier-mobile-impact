@@ -15,13 +15,13 @@ import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 import com.applifier.impact.android.campaign.ApplifierImpactRewardItem;
-import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
@@ -43,6 +43,7 @@ public class ApplifierImpactWebData {
 	private boolean _isLoading = false;
 	
 	public static enum ApplifierVideoPosition { Start, FirstQuartile, MidPoint, ThirdQuartile, End;
+		@SuppressLint("DefaultLocale")
 		@Override
 		public String toString () {
 			String output = null;
@@ -72,6 +73,7 @@ public class ApplifierImpactWebData {
 	};
 	
 	private static enum ApplifierImpactRequestType { Analytics, VideoPlan, VideoViewed, Unsent;
+		@SuppressLint("DefaultLocale")
 		@Override
 		public String toString () {
 			String output = name().toString().toLowerCase();

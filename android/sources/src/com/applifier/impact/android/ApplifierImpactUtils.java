@@ -18,6 +18,7 @@ import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -31,6 +32,7 @@ public class ApplifierImpactUtils {
 
 	private static final X500Principal DEBUG_DN = new X500Principal("CN=Android Debug,O=Android,C=US");
 	
+	@SuppressWarnings("rawtypes")
 	public static void Log (String message, Class cls) {
 		if (ApplifierImpactProperties.IMPACT_DEBUG_MODE) {
 			Log.d(ApplifierImpactConstants.LOG_NAME, cls.getName() + " :: " +  message);
@@ -82,6 +84,7 @@ public class ApplifierImpactUtils {
 	    return debuggable;
 	}
 	
+	@SuppressLint("DefaultLocale")
 	public static String Md5 (String input) {
 		MessageDigest m = null;
 		try {

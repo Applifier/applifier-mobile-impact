@@ -10,8 +10,8 @@ import com.applifier.impact.android.data.ApplifierImpactDevice;
 import android.app.Activity;
 
 public class ApplifierImpactProperties {
-	//public static String CAMPAIGN_DATA_URL = "http://192.168.1.246:3500/mobile/campaigns";
-	public static String CAMPAIGN_DATA_URL = "https://impact.applifier.com/mobile/campaigns";
+	public static String CAMPAIGN_DATA_URL = "http://192.168.1.246:3500/mobile/campaigns";
+	//public static String CAMPAIGN_DATA_URL = "https://impact.applifier.com/mobile/campaigns";
 //	public static String CAMPAIGN_DATA_URL = "https://staging-impact.applifier.com/mobile/campaigns";
 	public static String WEBVIEW_BASE_URL = null;
 	public static String ANALYTICS_BASE_URL = null;
@@ -30,6 +30,8 @@ public class ApplifierImpactProperties {
 	public static String TEST_URL = null;
 	public static String TEST_JAVASCRIPT = null;
 	public static Boolean RUN_WEBVIEW_TESTS = false;
+	
+	@SuppressWarnings("unused")
 	private static Map<String, String> TEST_EXTRA_PARAMS = null; 
 
 	public static final int MAX_NUMBER_OF_ANALYTICS_RETRIES = 5;

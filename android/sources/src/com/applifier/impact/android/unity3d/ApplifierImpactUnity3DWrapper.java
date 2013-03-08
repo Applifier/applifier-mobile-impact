@@ -162,6 +162,8 @@ public class ApplifierImpactUnity3DWrapper implements IApplifierImpactListener {
 		if (_applifierImpact == null) return "";
 		if (_applifierImpact.getRewardItemDetailsWithKey(rewardItemKey) != null) {
 			ApplifierImpactUtils.Log("Fetching reward data", this);
+			
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			HashMap<String, String> rewardMap = (HashMap)_applifierImpact.getRewardItemDetailsWithKey(rewardItemKey);
 			
 			if (rewardMap != null) {
