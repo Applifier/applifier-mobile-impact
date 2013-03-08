@@ -7,7 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <ApplifierImpact/ApplifierImpact.h>
 
-@interface ApplifierImpactUnity3DWrapper : NSObject
+void UnityPause(bool pause);
 
+@interface ApplifierImpactUnity3DWrapper : NSObject <ApplifierImpactDelegate> {
+    NSString *gameObjectName;
+}
+- (BOOL)initWithGameId:(const char *)gameId andWithGameObjectName:(const char *)gameObjectName;
 @end
