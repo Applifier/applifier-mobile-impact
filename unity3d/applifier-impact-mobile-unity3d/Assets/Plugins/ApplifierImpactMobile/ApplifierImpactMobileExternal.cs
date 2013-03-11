@@ -124,10 +124,10 @@ public class ApplifierImpactMobileExternal : MonoBehaviour {
 	public static extern bool setRewardItemKey (string rewardItemKey);
 	
 	[DllImport ("__Internal")]
-	public static void setDefaultRewardItemAsRewardItem ();
+	public static extern void setDefaultRewardItemAsRewardItem ();
 
 	[DllImport ("__Internal")]
-	public static string getRewardItemDetailsWithKey (string rewardItemKey);
+	public static extern Dictionary<string, string> getRewardItemDetailsWithKey (string rewardItemKey);
 
 	
 #elif UNITY_ANDROID

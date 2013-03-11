@@ -10,7 +10,7 @@
 		7887F89716EA04E7005F7586 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7887F89616EA04E7005F7586 /* UIKit.framework */; };
 		7887F89916EA04E7005F7586 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7887F89816EA04E7005F7586 /* Foundation.framework */; };
 		7887F89B16EA04E7005F7586 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7887F89A16EA04E7005F7586 /* CoreGraphics.framework */; };
-		7887F8B516EA073E005F7586 /* ApplifierImpactUnity3DWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7887F8B416EA073E005F7586 /* ApplifierImpactUnity3DWrapper.m */; };
+		7887F8B516EA073E005F7586 /* ApplifierImpactUnity3DWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7887F8B416EA073E005F7586 /* ApplifierImpactUnity3DWrapper.mm */; };
 		7887F8B716EA0777005F7586 /* ApplifierImpact.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7887F8B616EA0777005F7586 /* ApplifierImpact.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
 
@@ -20,7 +20,7 @@
 		7887F89816EA04E7005F7586 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7887F89A16EA04E7005F7586 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		7887F8B316EA073E005F7586 /* ApplifierImpactUnity3DWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactUnity3DWrapper.h; sourceTree = "<group>"; };
-		7887F8B416EA073E005F7586 /* ApplifierImpactUnity3DWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactUnity3DWrapper.m; sourceTree = "<group>"; };
+		7887F8B416EA073E005F7586 /* ApplifierImpactUnity3DWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ApplifierImpactUnity3DWrapper.mm; sourceTree = "<group>"; };
 		7887F8B616EA0777005F7586 /* ApplifierImpact.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplifierImpact.framework; path = "../build/Release-iphoneos/ApplifierImpact.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,7 +71,7 @@
 			isa = PBXGroup;
 			children = (
 				7887F8B316EA073E005F7586 /* ApplifierImpactUnity3DWrapper.h */,
-				7887F8B416EA073E005F7586 /* ApplifierImpactUnity3DWrapper.m */,
+				7887F8B416EA073E005F7586 /* ApplifierImpactUnity3DWrapper.mm */,
 			);
 			path = ApplifierImpactUnity;
 			sourceTree = "<group>";
@@ -137,7 +137,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7887F8B516EA073E005F7586 /* ApplifierImpactUnity3DWrapper.m in Sources */,
+				7887F8B516EA073E005F7586 /* ApplifierImpactUnity3DWrapper.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
