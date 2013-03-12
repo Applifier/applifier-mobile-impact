@@ -181,6 +181,11 @@ public class ApplifierImpactUnity3DWrapper implements IApplifierImpactListener {
 		return "";
 	}
 	
+    public String getRewardItemDetailsKeys () {
+    	return String.format("%s;%s", ApplifierImpact.APPLIFIER_IMPACT_REWARDITEM_NAME_KEY, ApplifierImpact.APPLIFIER_IMPACT_REWARDITEM_PICTURE_KEY);
+    }
+
+	
 	
 	// IApplifierImpactListener
 	
@@ -231,4 +236,5 @@ public class ApplifierImpactUnity3DWrapper implements IApplifierImpactListener {
         	ApplifierImpactUtils.Log("Can't invoke UnitySendMessage method. Error = "  + e.getLocalizedMessage(), this);
         }
     }
+    
 }
