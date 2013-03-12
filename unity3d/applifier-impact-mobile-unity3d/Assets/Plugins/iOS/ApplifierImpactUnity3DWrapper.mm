@@ -18,6 +18,14 @@ extern "C" {
     NSString* ImpactCreateNSString (const char* string) {
         return string ? [NSString stringWithUTF8String: string] : [NSString stringWithUTF8String: ""];
     }
+    
+    char* ImpactMakeStringCopy (const char* string) {
+        if (string == NULL)
+            return NULL;
+        char* res = (char*)malloc(strlen(string) + 1);
+        strcpy(res, string);
+        return res;
+    }
 }
 
 @interface ApplifierImpactUnity3DWrapper () <ApplifierImpactDelegate>
@@ -45,7 +53,7 @@ extern "C" {
 
 - (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey {
     NSLog(@"applifierImpact");
-    UnitySendMessage([self.gameObjectName UTF8String], "onVideoCompleted", [rewardItemKey UTF8String]);
+    UnitySendMessage(ImpactMakeStringCopy([self.gameObjectName UTF8String]), "onVideoCompleted", [rewardItemKey UTF8String]);
 }
 
 - (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact {
@@ -54,7 +62,7 @@ extern "C" {
 
 - (void)applifierImpactDidOpen:(ApplifierImpact *)applifierImpact {
     NSLog(@"applifierImpactDidOpen");
-    UnitySendMessage([self.gameObjectName UTF8String], "onImpactOpen", "");
+    UnitySendMessage(ImpactMakeStringCopy([self.gameObjectName UTF8String]), "onImpactOpen", "");
     UnityPause(true);
 }
 
@@ -65,7 +73,7 @@ extern "C" {
 - (void)applifierImpactDidClose:(ApplifierImpact *)applifierImpact {
     NSLog(@"applifierImpactDidClose");
     UnityPause(false);
-    UnitySendMessage([self.gameObjectName UTF8String], "onImpactClose", "");
+    UnitySendMessage(ImpactMakeStringCopy([self.gameObjectName UTF8String]), "onImpactClose", "");
 }
 
 - (void)applifierImpactWillLeaveApplication:(ApplifierImpact *)applifierImpact {
@@ -74,17 +82,17 @@ extern "C" {
 
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact {
     NSLog(@"applifierImpactVideoStarted");
-    UnitySendMessage([self.gameObjectName UTF8String], "onVideoStarted", "");
+    UnitySendMessage(ImpactMakeStringCopy([self.gameObjectName UTF8String]), "onVideoStarted", "");
 }
 
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact {
     NSLog(@"applifierImpactCampaignsAreAvailable");
-    UnitySendMessage([self.gameObjectName UTF8String], "onCampaignsAvailable", "");
+    UnitySendMessage(ImpactMakeStringCopy([self.gameObjectName UTF8String]), "onCampaignsAvailable", "");
 }
 
 - (void)applifierImpactCampaignsFetchFailed:(ApplifierImpact *)applifierImpact {
     NSLog(@"applifierImpactCampaignsFetchFailed");
-    UnitySendMessage([self.gameObjectName UTF8String], "onCampaignsFetchFailed", "");
+    UnitySendMessage(ImpactMakeStringCopy([self.gameObjectName UTF8String]), "onCampaignsFetchFailed", "");
 }
 
 
@@ -99,21 +107,30 @@ extern "C" {
     
 	bool showImpact (bool openAnimated, bool noOfferscreen, const char *gamerSID) {
         NSLog(@"showImpact");
+        NSNumber *noOfferscreenObjectiveC = [NSNumber numberWithBool:noOfferscreen];
+        NSNumber *openAnimatedObjectiveC = [NSNumber numberWithBool:openAnimated];
+        
+        if ([[ApplifierImpact sharedInstance] canShowAds] && [[ApplifierImpact sharedInstance] canShowImpact]) {
+            NSDictionary *props = @{kApplifierImpactOptionGamerSIDKey: ImpactCreateNSString(gamerSID), kApplifierImpactOptionNoOfferscreenKey: noOfferscreenObjectiveC, kApplifierImpactOptionOpenAnimatedKey: openAnimatedObjectiveC};
+            return [[ApplifierImpact sharedInstance] showImpact:props];
+        }
+        
         return false;
     }
 	
 	void hideImpact () {
         NSLog(@"showImpact");
+        [[ApplifierImpact sharedInstance] hideImpact];
     }
 	
 	bool isSupported () {
-        NSLog(@"hideImpact");
-        return false;
+        NSLog(@"isSupported");
+        return [ApplifierImpact isSupported];
     }
 	
-	char* getSDKVersion () {
+	const char* getSDKVersion () {
         NSLog(@"getSDKVersion");
-        return "moi";
+        return ImpactMakeStringCopy([[ApplifierImpact getSDKVersion] UTF8String]);
     }
     
 	bool canShowCampaigns () {
@@ -128,42 +145,64 @@ extern "C" {
 	
 	void stopAll () {
         NSLog(@"stopAll");
+        [[ApplifierImpact sharedInstance] stopAll];
     }
     
 	bool hasMultipleRewardItems () {
         NSLog(@"hasMultipleRewardItems");
-        return false;
+        return [[ApplifierImpact sharedInstance] hasMultipleRewardItems];
     }
 	
-	char* getRewardItemKeys () {
+	const char* getRewardItemKeys () {
         NSLog(@"getRewardItemKeys");
-        return "moi,moi,moi";
+        NSArray *keys = [[ApplifierImpact sharedInstance] getRewardItemKeys];
+        NSString *keyString = @"";
+        
+        for (NSString *key in keys) {
+            if ([keyString length] <= 0) {
+                keyString = [NSString stringWithFormat:@"%@", key];
+            }
+            else {
+                keyString = [NSString stringWithFormat:@"%@;%@", keyString, key];
+            }
+        }
+        
+        return ImpactMakeStringCopy([keyString UTF8String]);
     }
     
-	char* getDefaultRewardItemKey () {
+	const char* getDefaultRewardItemKey () {
         NSLog(@"getDefaultRewardItemKey");
-        return "ship";
+        return ImpactMakeStringCopy([[[ApplifierImpact sharedInstance] getDefaultRewardItemKey] UTF8String]);
     }
-	
-	char* getCurrentRewardItemKey () {
+	 
+	const char* getCurrentRewardItemKey () {
         NSLog(@"getCurrentRewardItemKey");
-        return "ship";
+        return ImpactMakeStringCopy([[[ApplifierImpact sharedInstance] getCurrentRewardItemKey] UTF8String]);
     }
     
 	bool setRewardItemKey (const char *rewardItemKey) {
         NSLog(@"setRewardItemKey");
-        return false;
+        return [[ApplifierImpact sharedInstance] setRewardItemKey:ImpactCreateNSString(rewardItemKey)];
     }
 	
 	void setDefaultRewardItemAsRewardItem () {
         NSLog(@"setDefaultRewardItemAsRewardItem");
+        [[ApplifierImpact sharedInstance] setDefaultRewardItemAsRewardItem];
     }
     
-	char* getRewardItemDetailsWithKey (const char *rewardItemKey) {
+	const char* getRewardItemDetailsWithKey (const char *rewardItemKey) {
         NSLog(@"getRewardItemDetailsWithKey");
-        return "moi,moi,moi";
+        if (rewardItemKey != NULL) {
+            NSDictionary *details = [[ApplifierImpact sharedInstance] getRewardItemDetailsWithKey:ImpactCreateNSString(rewardItemKey)];
+            return ImpactMakeStringCopy([[NSString stringWithFormat:@"%@;%@", [details objectForKey:kApplifierImpactRewardItemNameKey], [details objectForKey:kApplifierImpactRewardItemPictureKey]] UTF8String]);
+        }
+        
+        return ImpactMakeStringCopy("");
+    }
+    
+    const char *getRewardItemDetailsKeys () {
+        return ImpactMakeStringCopy([[NSString stringWithFormat:@"%@;%@", kApplifierImpactRewardItemNameKey, kApplifierImpactRewardItemPictureKey] UTF8String]);
     }
 }
 
 @end
-

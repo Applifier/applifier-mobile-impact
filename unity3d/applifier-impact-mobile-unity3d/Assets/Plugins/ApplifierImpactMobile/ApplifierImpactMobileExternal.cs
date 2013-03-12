@@ -78,9 +78,13 @@ public class ApplifierImpactMobileExternal : MonoBehaviour {
 		Log ("UnityEditor: setDefaultRewardItemAsRewardItem()");
 	}
 	
-	public static Dictionary<string, string> getRewardItemDetailsWithKey (string rewardItemKey) {
+	public static string getRewardItemDetailsWithKey (string rewardItemKey) {
 		Log ("UnityEditor: getRewardItemDetailsWithKey() rewardItemKey=" + rewardItemKey);
-		return new Dictionary<string, string>();
+		return "";
+	}
+	
+	public static string getRewardItemDetailsKeys () {
+		return "name;picture";
 	}
 	
 #elif UNITY_IPHONE
@@ -127,7 +131,10 @@ public class ApplifierImpactMobileExternal : MonoBehaviour {
 	public static extern void setDefaultRewardItemAsRewardItem ();
 
 	[DllImport ("__Internal")]
-	public static extern Dictionary<string, string> getRewardItemDetailsWithKey (string rewardItemKey);
+	public static extern string getRewardItemDetailsWithKey (string rewardItemKey);
+
+	[DllImport ("__Internal")]
+	public static extern string getRewardItemDetailsKeys ();
 
 	
 #elif UNITY_ANDROID
@@ -208,29 +215,14 @@ public class ApplifierImpactMobileExternal : MonoBehaviour {
 		applifierImpactUnity.Call("setDefaultRewardItemAsRewardItem");
 	}
 	
-	public static Dictionary<string, string> getRewardItemDetailsWithKey (string rewardItemKey) {
+	public static string getRewardItemDetailsWithKey (string rewardItemKey) {
 		Log ("UnityAndroid: getRewardItemDetailsWithKey() rewardItemKey=" + rewardItemKey);
-		
-		Dictionary<string, string> retDict = new Dictionary<string, string>();
-		
-		if (applifierImpactClass == null)
-			applifierImpactClass = new AndroidJavaClass("com.applifier.impact.android.ApplifierImpact");
-		
-		string nameKey = applifierImpactClass.GetStatic<string>("APPLIFIER_IMPACT_REWARDITEM_NAME_KEY");
-		string pictureKey = applifierImpactClass.GetStatic<string>("APPLIFIER_IMPACT_REWARDITEM_PICTURE_KEY");
-		string rewardItemDataString = applifierImpactUnity.Call<string>("getRewardItemDetailsWithKey", rewardItemKey);
-		
-		if (rewardItemDataString != null) {
-			List<string> splittedData = new List<string>(rewardItemDataString.Split(';'));
-			Log ("UnityAndroid: getRewardItemDetailsWithKey() rewardItemDataString=" + rewardItemDataString);
-			
-			if (splittedData.Count == 2) {
-				retDict.Add(nameKey, splittedData.ToArray().GetValue(0).ToString());
-				retDict.Add(pictureKey, splittedData.ToArray().GetValue(1).ToString());
-			}
-		}
-		
-		return retDict;
+		return applifierImpactUnity.Call<string>("getRewardItemDetailsWithKey", rewardItemKey);
+	}
+	
+	public static string getRewardItemDetailsKeys () {
+		Log ("UnityAndroid: getRewardItemDetailsKeys()");
+		return applifierImpactUnity.Call<string>("getRewardItemDetailsKeys");
 	}
 	
 #endif

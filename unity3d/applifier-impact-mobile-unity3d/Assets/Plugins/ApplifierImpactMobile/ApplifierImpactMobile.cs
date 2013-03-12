@@ -17,7 +17,11 @@ public class ApplifierImpactMobile : MonoBehaviour {
 	private static bool _gotAwake = false;
 	private static string _gameObjectName = null;
 	private static float _savedTimeScale = 1f;
+	private static float _savedAudioVolume = 1f;
 	private static string _gamerSID = "";
+	
+	private static string _rewardItemNameKey = "";
+	private static string _rewardItemPictureKey = "";
 	
 	public delegate void ApplifierImpactCampaignsAvailable();
 	private static ApplifierImpactCampaignsAvailable _campaignsAvailableDelegate;
@@ -172,11 +176,38 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		}
 	}
 	
+	public static string getRewardItemNameKey () {
+		if (_rewardItemNameKey == null || _rewardItemNameKey.Length == 0) {
+			fillRewardItemKeyData();
+		}
+		
+		return _rewardItemNameKey;
+	}
+	
+	public static string getRewardItemPictureKey () {
+		if (_rewardItemPictureKey == null || _rewardItemPictureKey.Length == 0) {
+			fillRewardItemKeyData();
+		}
+		
+		return _rewardItemPictureKey;
+	}
+	
 	public static Dictionary<string, string> getRewardItemDetailsWithKey (string rewardItemKey) {
 		Dictionary<string, string> retDict = new Dictionary<string, string>();
+		string rewardItemDataString = "";
+		
 		if (_campaignsAvailable) {
-			retDict = ApplifierImpactMobileExternal.getRewardItemDetailsWithKey(rewardItemKey);
-			return retDict;
+			rewardItemDataString = ApplifierImpactMobileExternal.getRewardItemDetailsWithKey(rewardItemKey);
+			
+			if (rewardItemDataString != null) {
+				List<string> splittedData = new List<string>(rewardItemDataString.Split(';'));
+				ApplifierImpactMobileExternal.Log("UnityAndroid: getRewardItemDetailsWithKey() rewardItemDataString=" + rewardItemDataString);
+				
+				if (splittedData.Count == 2) {
+					retDict.Add(getRewardItemNameKey(), splittedData.ToArray().GetValue(0).ToString());
+					retDict.Add(getRewardItemPictureKey(), splittedData.ToArray().GetValue(1).ToString());
+				}
+			}
 		}
 		
 		return retDict;
@@ -201,8 +232,15 @@ public class ApplifierImpactMobile : MonoBehaviour {
 				
 				_impactOpen = true;
 				_savedTimeScale = Time.timeScale;
+				_savedAudioVolume = AudioListener.volume;
 				AudioListener.pause = true;
+				AudioListener.volume = 0;
 				Time.timeScale = 0;
+				
+				ApplifierImpactMobileExternal.Log("nameKey=" + getRewardItemNameKey() + ", pictureKey=" + getRewardItemPictureKey());
+				ApplifierImpactMobileExternal.Log("currentRewardItem=" + getCurrentRewardItemKey());
+				ApplifierImpactMobileExternal.Log("defaultRewardItem=" + getDefaultRewardItemKey());
+				ApplifierImpactMobileExternal.Log("defaultItemDetails= " + getRewardItemDetailsWithKey(getDefaultRewardItemKey()).ToString());
 			}
 		}
 		
@@ -214,13 +252,24 @@ public class ApplifierImpactMobile : MonoBehaviour {
 			ApplifierImpactMobileExternal.hideImpact();
 		}
 	}
-	
+
+	private static void fillRewardItemKeyData () {
+		string keyData = ApplifierImpactMobileExternal.getRewardItemDetailsKeys();
+		
+		if (keyData != null && keyData.Length > 2) {
+			List<string> splittedKeyData = new List<string>(keyData.Split(';'));
+			_rewardItemNameKey = splittedKeyData.ToArray().GetValue(0).ToString();
+			_rewardItemPictureKey = splittedKeyData.ToArray().GetValue(1).ToString();
+		}
+	}
+
 	
 	/* Events */
 	
 	public void onImpactClose () {
 		_impactOpen = false;
 		AudioListener.pause = false;
+		AudioListener.volume = _savedAudioVolume;
 		Time.timeScale = _savedTimeScale;
 		
 		if (_impactCloseDelegate != null)
@@ -262,4 +311,5 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		
 		ApplifierImpactMobileExternal.Log("onCampaignsFetchFailed");
 	}
+	
 }
