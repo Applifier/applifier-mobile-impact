@@ -383,14 +383,14 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 						hideBufferingView();
 						if (!_videoPlaybackStartedSent) {
 							if (_listener != null) {
+								_videoPlaybackStartedSent = true;
 								ApplifierImpactUtils.Log("onVideoPlaybackStarted sent to listener", this);
 								_listener.onVideoPlaybackStarted();
-								_videoPlaybackStartedSent = true;
 							}
 							
 							if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {
-								_listener.onEventPositionReached(ApplifierVideoPosition.Start);
 								_sentPositionEvents.put(ApplifierVideoPosition.Start, true);
+								_listener.onEventPositionReached(ApplifierVideoPosition.Start);
 							}
 						}
 					}

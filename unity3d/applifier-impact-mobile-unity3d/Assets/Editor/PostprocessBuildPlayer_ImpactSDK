@@ -1,0 +1,8 @@
+#!/usr/bin/python
+from UpdateXcodeImpact import *
+
+def main():
+	UpdateXcodeImpact.unityAddImpact()
+
+if __name__ == "__main__":
+	main()
