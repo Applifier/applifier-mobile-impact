@@ -236,11 +236,6 @@ public class ApplifierImpactMobile : MonoBehaviour {
 				AudioListener.pause = true;
 				AudioListener.volume = 0;
 				Time.timeScale = 0;
-				
-				ApplifierImpactMobileExternal.Log("nameKey=" + getRewardItemNameKey() + ", pictureKey=" + getRewardItemPictureKey());
-				ApplifierImpactMobileExternal.Log("currentRewardItem=" + getCurrentRewardItemKey());
-				ApplifierImpactMobileExternal.Log("defaultRewardItem=" + getDefaultRewardItemKey());
-				ApplifierImpactMobileExternal.Log("defaultItemDetails= " + getRewardItemDetailsWithKey(getDefaultRewardItemKey()).ToString());
 			}
 		}
 		
