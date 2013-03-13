@@ -14,6 +14,17 @@ In any issues, please file in issue with us in this Github repository, or log a 
 Applifier Impact SDK Release Notes
 ==================================
 
+v1.0.3.2 "Red Apple" - March 13, 2013
+--------------------------
+
+*Android:*
+
+- Minor edge-case bugfixes
+
+*iOS:*
+
+- Support for Unity 3D!
+
 v1.0.3.1 "Robotic Overlords" - February 27, 2013
 --------------------------
 
