@@ -19,11 +19,12 @@ v1.0.3.2 "Red Apple" - March 13, 2013
 
 *Android:*
 
+- Support for Unity3D
 - Minor edge-case bugfixes
 
 *iOS:*
 
-- Support for Unity 3D!
+- Support for Unity3D
 
 v1.0.3.1 "Robotic Overlords" - February 27, 2013
 --------------------------
