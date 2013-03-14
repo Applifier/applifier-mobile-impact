@@ -10,8 +10,8 @@ import com.applifier.impact.android.data.ApplifierImpactDevice;
 import android.app.Activity;
 
 public class ApplifierImpactProperties {
-	public static String CAMPAIGN_DATA_URL = "http://192.168.1.246:3500/mobile/campaigns";
-	//public static String CAMPAIGN_DATA_URL = "https://impact.applifier.com/mobile/campaigns";
+	//public static String CAMPAIGN_DATA_URL = "http://192.168.1.246:3500/mobile/campaigns";
+	public static String CAMPAIGN_DATA_URL = "https://impact.applifier.com/mobile/campaigns";
 //	public static String CAMPAIGN_DATA_URL = "https://staging-impact.applifier.com/mobile/campaigns";
 	public static String WEBVIEW_BASE_URL = null;
 	public static String ANALYTICS_BASE_URL = null;
@@ -60,6 +60,8 @@ public class ApplifierImpactProperties {
 			if (!ApplifierImpactDevice.getMacAddress().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
 				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_MACADDRESS_KEY, URLEncoder.encode(ApplifierImpactDevice.getMacAddress(), "UTF-8"));
 
+			if (!ApplifierImpactDevice.getOdin1Id().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
+				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ODIN1ID_KEY, URLEncoder.encode(ApplifierImpactDevice.getOdin1Id(), "UTF-8"));
 			
 			queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_PLATFORM_KEY, "android");
 			queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_GAMEID_KEY, URLEncoder.encode(ApplifierImpactProperties.IMPACT_GAME_ID, "UTF-8"));

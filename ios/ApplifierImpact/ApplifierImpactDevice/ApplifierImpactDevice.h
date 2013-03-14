@@ -24,6 +24,7 @@
 
 + (int)getIOSMajorVersion;
 + (NSNumber *)getIOSExactVersion;
++ (NSString *)ODIN1;
 
 + (BOOL)isSimulator;
 + (BOOL)isEncrypted;

@@ -27,6 +27,19 @@ public class ApplifierImpactDevice {
 	public static int getDeviceType () {
 		return ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getConfiguration().screenLayout;
 	}
+	
+	public static String getOdin1Id () {
+		String odin1ID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
+		
+		try {
+			odin1ID = ApplifierImpactUtils.SHA1(Secure.getString(ApplifierImpactProperties.CURRENT_ACTIVITY.getContentResolver(), Secure.ANDROID_ID));
+		}
+		catch (Exception e) {
+			ApplifierImpactUtils.Log("Could not resolve ODIN1 Id: " + e.getMessage(), ApplifierImpactDevice.class);
+		}
+		
+		return odin1ID;
+	}
 
 	public static String getAndroidId () {
 		String androidID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;

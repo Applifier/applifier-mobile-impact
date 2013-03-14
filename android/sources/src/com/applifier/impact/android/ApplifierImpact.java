@@ -493,7 +493,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	private void openPlayStoreInBrowser () {
 	    ApplifierImpactUtils.Log("Could not open PlayStore activity, opening in browser with storeId: " + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId(), this);
-		ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId())));
+		ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ApplifierImpactProperties.SELECTED_CAMPAIGN.getClickUrl())));
 	}
 	
 	private void init (Activity activity, String gameId, IApplifierImpactListener listener) {

@@ -97,6 +97,7 @@ public class ApplifierImpactConstants {
 	/* Init Query Params */
 	public static final String IMPACT_INIT_QUERYPARAM_DEVICEID_KEY = "deviceId";
 	public static final String IMPACT_INIT_QUERYPARAM_ANDROIDID_KEY = "androidId";
+	public static final String IMPACT_INIT_QUERYPARAM_ODIN1ID_KEY = "odin1Id";
 	public static final String IMPACT_INIT_QUERYPARAM_TELEPHONYID_KEY = "telephonyId";
 	public static final String IMPACT_INIT_QUERYPARAM_SERIALID_KEY = "serialId";
 	public static final String IMPACT_INIT_QUERYPARAM_DEVICETYPE_KEY = "deviceType";

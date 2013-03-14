@@ -53,6 +53,10 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamMacAddressKey, [ApplifierImpactDevice md5MACAddressString]];
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamSdkVersionKey, kApplifierImpactVersion];
   
+  if ([ApplifierImpactDevice ODIN1] != nil) {
+    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamOdin1IdKey, [ApplifierImpactDevice ODIN1]];
+  }
+  
   // Add advertisingTrackingId info if identifier is available
   if ([ApplifierImpactDevice md5AdvertisingIdentifierString] != nil) {
     queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamAdvertisingTrackingIdKey, [ApplifierImpactDevice md5AdvertisingIdentifierString]];

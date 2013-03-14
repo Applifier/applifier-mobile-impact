@@ -166,6 +166,7 @@ NSString * const kApplifierImpactInitQueryParamDeviceTypeKey = @"deviceType";
 NSString * const kApplifierImpactInitQueryParamPlatformKey = @"platform";
 NSString * const kApplifierImpactInitQueryParamGameIdKey = @"gameId";
 NSString * const kApplifierImpactInitQueryParamOpenUdidKey = @"openUdid";
+NSString * const kApplifierImpactInitQueryParamOdin1IdKey = @"odin1Id";
 NSString * const kApplifierImpactInitQueryParamMacAddressKey = @"macAddress";
 NSString * const kApplifierImpactInitQueryParamAdvertisingTrackingIdKey = @"advertisingTrackingId";
 NSString * const kApplifierImpactInitQueryParamTrackingEnabledKey = @"trackingEnabled";

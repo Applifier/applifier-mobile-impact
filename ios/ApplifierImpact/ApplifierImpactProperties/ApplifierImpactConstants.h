@@ -125,6 +125,7 @@ extern NSString * const kApplifierImpactAnalyticsSavedUploadBodyKey;
 extern NSString * const kApplifierImpactAnalyticsSavedUploadHTTPMethodKey;
 
 extern NSString * const kApplifierImpactAnalyticsQueryParamGameIdKey;
+extern NSString * const kApplifierImpactInitQueryParamOdin1IdKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamEventTypeKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamTrackingIdKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamProviderIdKey;
