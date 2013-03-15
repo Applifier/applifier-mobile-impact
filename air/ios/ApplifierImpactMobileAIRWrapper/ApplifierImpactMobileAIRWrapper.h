@@ -12,7 +12,8 @@
 
 @interface ApplifierImpactMobileAIRWrapper : NSObject <ApplifierImpactDelegate>
 + (ApplifierImpactMobileAIRWrapper *)sharedInstance;
-- (BOOL)show;
+- (BOOL)show:(NSDictionary *)options;
 - (BOOL)hide;
-- (void)startWithGameId:(NSString *)gameId;
+
+
 @end

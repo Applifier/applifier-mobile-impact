@@ -32,7 +32,7 @@ ApplifierImpactMobileAIRWrapper *applifierImpactWrapperSharedInstance = nil;
     [[ApplifierImpact sharedInstance] startWithGameId:gameId andViewController:self.currentWindow.rootViewController];
 }
 
-- (BOOL)show {
+- (BOOL)show:(NSDictionary *)options {
 	NSLog(@"show");
     return [[ApplifierImpact sharedInstance] showImpact];
 }
@@ -120,29 +120,60 @@ FREObject init(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) 
     return NULL;
 }
 
-FREObject showImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-	NSLog(@"showImpact");
-    uint32_t value = [[ApplifierImpactMobileAIRWrapper sharedInstance] show];
-    
-    FREObject retBool = nil;
-    FRENewObjectFromBool(value, &retBool);
-    
-    return retBool;
-}
-
-FREObject hideImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-	NSLog(@"hideImpact");
-    uint32_t value = [[ApplifierImpactMobileAIRWrapper sharedInstance] hide];
-    
-    FREObject retBool = nil;
-    FRENewObjectFromBool(value, &retBool);
-    
-    return retBool;
-}
-
 FREObject isSupported(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
 	NSLog(@"isSupported");
     uint32_t value = [ApplifierImpact isSupported];
+    
+    FREObject retBool = nil;
+    FRENewObjectFromBool(value, &retBool);
+    
+    return retBool;
+}
+
+FREObject getSDKVersion(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    NSLog(@"getSDKVersion");
+    const uint8_t* sdkVersion = (const uint8_t*)[[ApplifierImpact getSDKVersion] UTF8String];
+    FREObject retSDKVersion = nil;
+    FRENewObjectFromUTF8(sizeof(sdkVersion), sdkVersion, retSDKVersion);
+    
+    return retSDKVersion;
+}
+
+FREObject setDebugMode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    NSLog(@"setDebugMode");
+    uint32_t value;
+    
+    if (FRE_OK == FREGetObjectAsBool(argv[0], &value)) {
+        [[ApplifierImpact sharedInstance] setDebugMode:value];
+    }
+    
+    return NULL;
+}
+
+FREObject isDebugMode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    NSLog(@"isDebugMode");
+    uint32_t value = [[ApplifierImpact sharedInstance] isDebugMode];
+    
+    FREObject retBool = nil;
+    FRENewObjectFromBool(value, &retBool);
+    
+    return retBool;
+}
+
+FREObject setTestMode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+	NSLog(@"setTestMode");
+    uint32_t value;
+    
+    if (FRE_OK == FREGetObjectAsBool(argv[0], &value)) {
+        [[ApplifierImpact sharedInstance] setTestMode:value];
+    }
+    
+    return NULL;
+}
+
+FREObject canShowCampaigns(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+	NSLog(@"canShowCampaigns");
+    uint32_t value = [[ApplifierImpact sharedInstance] canShowAds];
     
     FREObject retBool = nil;
     FRENewObjectFromBool(value, &retBool);
@@ -160,27 +191,50 @@ FREObject canShowImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject
     return retBool;
 }
 
-FREObject trackInstall(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-	NSLog(@"trackInstall");
-    [[ApplifierImpact sharedInstance] trackInstall];
-    return NULL;
-}
-
 FREObject stopAll(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
 	NSLog(@"stopAll");
     [[ApplifierImpact sharedInstance] stopAll];
     return NULL;
 }
 
-FREObject setTestMode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-	NSLog(@"setTestMode");
-    uint32_t value;
+FREObject hasMultipleRewardItems(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+	NSLog(@"hasMultipleRewardItems");
+    uint32_t value = [[ApplifierImpact sharedInstance] hasMultipleRewardItems];
     
-    if (FRE_OK == FREGetObjectAsBool(argv[0], &value)) {
-        [[ApplifierImpact sharedInstance] setTestMode:value];
-    }
+    FREObject retBool = nil;
+    FRENewObjectFromBool(value, &retBool);
     
-    return NULL;
+    return retBool;
+}
+
+/*
+- (BOOL)hasMultipleRewardItems;
+- (NSArray *)getRewardItemKeys;
+- (NSString *)getDefaultRewardItemKey;
+- (NSString *)getCurrentRewardItemKey;
+- (BOOL)setRewardItemKey:(NSString *)rewardItemKey;
+- (void)setDefaultRewardItemAsRewardItem;
+- (NSDictionary *)getRewardItemDetailsWithKey:(NSString *)rewardItemKey;
+*/
+
+FREObject showImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+	NSLog(@"showImpact");
+    uint32_t value = [[ApplifierImpactMobileAIRWrapper sharedInstance] show:NULL];
+    
+    FREObject retBool = nil;
+    FRENewObjectFromBool(value, &retBool);
+    
+    return retBool;
+}
+
+FREObject hideImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+	NSLog(@"hideImpact");
+    uint32_t value = [[ApplifierImpactMobileAIRWrapper sharedInstance] hide];
+    
+    FREObject retBool = nil;
+    FRENewObjectFromBool(value, &retBool);
+    
+    return retBool;
 }
 
 
@@ -189,40 +243,56 @@ FREObject setTestMode(FREContext ctx, void* funcData, uint32_t argc, FREObject a
 void ApplifierImpactMobileContextInitializer (void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet) {
 	NSLog(@"ApplifierImpactMobileContextInitializer");
     applifierImpactFREContext = ctx;
-    *numFunctionsToTest = 8;
+    *numFunctionsToTest = 12;
     FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * *numFunctionsToTest);
-    
+
     func[0].name = (const uint8_t*) "init";
     func[0].functionData = NULL;
     func[0].function = &init;
     
-    func[1].name = (const uint8_t*) "showImpact";
+    func[1].name = (const uint8_t*) "isSupported";
     func[1].functionData = NULL;
-    func[1].function = &showImpact;
+    func[1].function = &isSupported;
 
-    func[2].name = (const uint8_t*) "hideImpact";
+    func[2].name = (const uint8_t*) "getSDKVersion";
     func[2].functionData = NULL;
-    func[2].function = &hideImpact;
+    func[2].function = &getSDKVersion;
 
-    func[3].name = (const uint8_t*) "isSupported";
+    func[3].name = (const uint8_t*) "setDebugMode";
     func[3].functionData = NULL;
-    func[3].function = &isSupported;
+    func[3].function = &setDebugMode;
 
-    func[4].name = (const uint8_t*) "canShowImpact";
+    func[4].name = (const uint8_t*) "isDebugMode";
     func[4].functionData = NULL;
-    func[4].function = &canShowImpact;
-
-    func[5].name = (const uint8_t*) "trackInstall";
+    func[4].function = &isDebugMode;
+    
+    func[5].name = (const uint8_t*) "setTestMode";
     func[5].functionData = NULL;
-    func[5].function = &trackInstall;
+    func[5].function = &setTestMode;
 
-    func[6].name = (const uint8_t*) "stopAll";
+    func[6].name = (const uint8_t*) "canShowCampaigns";
     func[6].functionData = NULL;
-    func[6].function = &stopAll;
+    func[6].function = &canShowCampaigns;
 
-    func[7].name = (const uint8_t*) "setTestMode";
+    func[7].name = (const uint8_t*) "canShowImpact";
     func[7].functionData = NULL;
-    func[7].function = &setTestMode;
+    func[7].function = &canShowImpact;
+
+    func[8].name = (const uint8_t*) "stopAll";
+    func[8].functionData = NULL;
+    func[8].function = &stopAll;
+    
+    func[9].name = (const uint8_t*) "hasMultipleRewardItems";
+    func[9].functionData = NULL;
+    func[9].function = &hasMultipleRewardItems;
+
+    func[10].name = (const uint8_t*) "showImpact";
+    func[10].functionData = NULL;
+    func[10].function = &showImpact;
+
+    func[11].name = (const uint8_t*) "hideImpact";
+    func[11].functionData = NULL;
+    func[11].function = &hideImpact;
 
     *functionsToSet = func;
     NSLog(@"ApplifierImpactMobileContextInitializer end");

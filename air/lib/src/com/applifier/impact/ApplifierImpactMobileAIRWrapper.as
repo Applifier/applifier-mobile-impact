@@ -21,54 +21,77 @@ package com.applifier.impact
 		
 		
 		/* Interface */
-		public function init (gameId:String) : void 
-		{
+		
+		
+		public function init (gameId:String) : void {
 			if (!canUseExtensionContext()) return;			
 			_extensionContext.call("init", gameId);
 		}
 		
-		public function showImpact () : Boolean 
-		{
-			if (!canUseExtensionContext()) return false;
-			return _extensionContext.call("showImpact") as Boolean;
-		}
-		
-		public function hideImpact () : Boolean
-		{
-			if (!canUseExtensionContext()) return false;
-			return _extensionContext.call("hideImpact") as Boolean;
-		}
-		
-		public function isSupported () : Boolean
-		{
+		public function isSupported () : Boolean {
 			if (!canUseExtensionContext()) return false;
 			return _extensionContext.call("isSupported") as Boolean;
 		}
 		
-		public function canShowImpact () : Boolean
-		{
+		public function getSDKVersion () : String {
+			if (!canUseExtensionContext()) return "0";
+			return _extensionContext.call("getSDKVersion") as String;
+		}
+		
+		public function setDebugMode (debugMode:Boolean) : void {
+			if (!canUseExtensionContext()) return;
+			_extensionContext.call("setDebugMode", debugMode);
+		}
+		
+		public function isDebugMode () : Boolean {
+			if (!canUseExtensionContext()) return true;
+			return _extensionContext.call("isDebugMode") as Boolean;
+		}
+		
+		public function setTestMode (testMode:Boolean) : void {
+			if (!canUseExtensionContext()) return;
+			_extensionContext.call("setTestMode", testMode);
+		}
+		
+		public function canShowCampaigns () : Boolean {
+			if (!canUseExtensionContext()) return false;
+			return _extensionContext.call("canShowCampaigns") as Boolean;
+		}
+		
+		public function canShowImpact () : Boolean {
 			if (!canUseExtensionContext()) return false;
 			return _extensionContext.call("canShowImpact") as Boolean;
 		}
 		
-		public function trackInstall () : void
-		{
-			if (!canUseExtensionContext()) return;
-			_extensionContext.call("trackInstall");
-		}
-		
-		public function stopAll () : void
-		{
+		public function stopAll () : void {
 			if (!canUseExtensionContext()) return;
 			_extensionContext.call("stopAll");
 		}
 		
-		public function setTestMode (mode:Boolean) : void
-		{
-			if (!canUseExtensionContext()) return;
-			_extensionContext.call("setTestMode", mode);
+		public function hasMultipleRewardItems () : Boolean {
+			if (!canUseExtensionContext()) return false;
+			return _extensionContext.call("hasMultipleRewardItems") as Boolean;
 		}
-
+		
+		/*
+		- (BOOL)hasMultipleRewardItems;
+		- (NSArray *)getRewardItemKeys;
+		- (NSString *)getDefaultRewardItemKey;
+		- (NSString *)getCurrentRewardItemKey;
+		- (BOOL)setRewardItemKey:(NSString *)rewardItemKey;
+		- (void)setDefaultRewardItemAsRewardItem;
+		- (NSDictionary *)getRewardItemDetailsWithKey:(NSString *)rewardItemKey;
+		*/
+		
+		public function showImpact () : Boolean {
+			if (!canUseExtensionContext()) return false;
+			return _extensionContext.call("showImpact") as Boolean;
+		}
+		
+		public function hideImpact () : Boolean {
+			if (!canUseExtensionContext()) return false;
+			return _extensionContext.call("hideImpact") as Boolean;
+		}
 		
 		/* Private funtions */
 		private function canUseExtensionContext () : Boolean
