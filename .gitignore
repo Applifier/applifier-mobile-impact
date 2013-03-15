@@ -23,8 +23,8 @@ Release-iphonesimulator/
 
 # AIR
 air/example/bin-release-temp/
-default/bin/
-lib/bin/
+air/default/bin/
+air/lib/bin/
 
 # Unity
 [Ll]ibrary/
