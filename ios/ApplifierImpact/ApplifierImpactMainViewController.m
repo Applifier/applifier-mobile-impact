@@ -107,11 +107,15 @@
   
   if (![ApplifierImpactDevice isSimulator]) {
     if (self.closeHandler == nil) {
+      __unsafe_unretained typeof(self) weakSelf = self;
       self.closeHandler = ^(void) {
         AILOG_DEBUG(@"Setting start view after close");
         [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIClose}];
-        self.isOpen = NO;
-        [self.delegate mainControllerDidClose];
+        
+        if (weakSelf != NULL) {
+          weakSelf.isOpen = NO;
+          [weakSelf.delegate mainControllerDidClose];
+        }
       };
     }
   }
@@ -138,9 +142,11 @@
     
     if (![ApplifierImpactDevice isSimulator]) {
       if (self.openHandler == nil) {
+        __unsafe_unretained typeof(self) weakSelf = self;
         self.openHandler = ^(void) {
           AILOG_DEBUG(@"Running openhandler after opening view");
-          [self.delegate mainControllerDidOpen];
+          if (weakSelf != NULL)
+            [weakSelf.delegate mainControllerDidOpen];
           
           if (state == kApplifierImpactViewStateVideoPlayer) {
             [[ApplifierImpactMainViewController sharedInstance] showPlayerAndPlaySelectedVideo:YES];
