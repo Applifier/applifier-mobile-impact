@@ -25,6 +25,12 @@ Release-iphonesimulator/
 air/example/bin-release-temp/
 air/default/bin/
 air/lib/bin/
+air/android/bin/classes/
+air/android/gen/
+air/android/libs/
+air/android/res/drawable-hdpi/
+air/android/res/drawable-mdpi/
+air/android/res/drawable-xhdpi/
 
 # Unity
 [Ll]ibrary/
