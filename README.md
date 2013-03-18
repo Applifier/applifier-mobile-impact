@@ -1,5 +1,5 @@
 Welcome to the repository for Applifier Impact. To get started, make sure you have an account registered with Applifier.
-If you don't have one, you can create an account at https://my.applfier.com/.
+If you don't have one, you can create an account at https://my.applifier.com/.
 
 Integration instructions can be found here:
 
