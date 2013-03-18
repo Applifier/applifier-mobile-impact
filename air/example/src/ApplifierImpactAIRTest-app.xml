@@ -206,28 +206,15 @@
 	<!-- </iPhone> -->
 
 	<!-- Specify Android specific tags that get passed to AndroidManifest.xml file. -->
-    <!--<android> -->
-    <!--	<manifestAdditions>
+    <!--  <android>  -->
+    	<!--  <manifestAdditions>
 		<![CDATA[
-			<manifest android:installLocation="auto">
-				<uses-permission android:name="android.permission.INTERNET"/>
-				<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-				<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-				<uses-feature android:required="true" android:name="android.hardware.touchscreen.multitouch"/>
-				<application android:enabled="true">
-					<activity android:excludeFromRecents="false">
-						<intent-filter>
-							<action android:name="android.intent.action.MAIN"/>
-							<category android:name="android.intent.category.LAUNCHER"/>
-						</intent-filter>
-					</activity>
-				</application>
-            </manifest>
+
 		]]>
-        </manifestAdditions> -->
+        </manifestAdditions>  --> 
 	    <!-- Color depth for the app (either "32bit" or "16bit"). Optional. Default 16bit before namespace 3.0, 32bit after -->
         <!-- <colorDepth></colorDepth> -->
-    <!-- </android> -->
+    <!--  </android>  -->
 	<!-- End of the schema for adding the android specific tags in AndroidManifest.xml file -->
 
 <android>
@@ -251,7 +238,16 @@
 					together in order to use AIR's NetworkInfo APIs-->
 			    <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>-->
 			    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>-->
+			    
+			    <application>
+			    	<activity 
+		  		    	android:name="com.applifier.impact.android.view.ApplifierImpactFullscreenActivity" 
+		          		android:configChanges="keyboardHidden|orientation"
+		          		android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+		          		android:hardwareAccelerated="true" />
+			    </application>
 			</manifest>
+			
 			
 		]]></manifestAdditions>
     </android>
@@ -265,6 +261,9 @@
 		]]></InfoAdditions>
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
+
+
+
 
 
 

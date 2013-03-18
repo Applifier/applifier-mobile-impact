@@ -19,6 +19,7 @@
 				_impact = new ApplifierImpactMobileAIRWrapper();				
 				
 				// DO NOT USE IN PRODUCTION APPS
+				_impact.setDebugMode(true);
 				_impact.setTestMode(true);
 				
 				// Init Applifier Impact

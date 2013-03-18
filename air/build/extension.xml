@@ -2,17 +2,23 @@
 
 <extension xmlns="http://ns.adobe.com/air/extension/3.1">
     <id>com.applifier.impact</id>
-    <versionNumber>0.0.1</versionNumber>
+    <versionNumber>1.0.3</versionNumber>
     <platforms>
+        <platform name="Android-ARM">
+            	<applicationDeployment>
+                		<nativeLibrary>libApplifierImpactMobileAIRWrapper.jar</nativeLibrary>
+				<initializer>com.applifier.impact.android.air.ApplifierImpactMobileAIRWrapper</initializer>
+            	</applicationDeployment>
+        </platform>
         <platform name="iPhone-ARM">
         	<applicationDeployment>
 				<nativeLibrary>libApplifierImpactMobileAIRWrapper.a</nativeLibrary>
 				<initializer>ApplifierImpactMobileInitializer</initializer>
 				<finalizer>ApplifierImpactMobileFinalizer</finalizer>
-			</applicationDeployment>
-		</platform>
-		<platform name="default">
-			<applicationDeployment/>
-		</platform>
-	</platforms>
+		</applicationDeployment>
+	</platform>
+	<platform name="default">
+		<applicationDeployment/>
+	</platform>
+    </platforms>
 </extension>
