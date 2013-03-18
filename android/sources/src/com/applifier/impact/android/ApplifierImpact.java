@@ -24,6 +24,7 @@ import com.applifier.impact.android.webapp.*;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -81,7 +82,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			return false;
 		}
 		
-		return false;
+		return true;
 	}
 	
 	public static void setDebugMode (boolean debugModeEnabled) {
@@ -617,7 +618,16 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			flags = Intent.FLAG_ACTIVITY_NEW_TASK;
 		
 		newIntent.addFlags(flags);
-		ApplifierImpactProperties.BASE_ACTIVITY.startActivity(newIntent);
+		
+		try {
+			ApplifierImpactProperties.BASE_ACTIVITY.startActivity(newIntent);
+		}
+		catch (ActivityNotFoundException e) {
+			ApplifierImpactUtils.Log("Could not find activity: " + e.getStackTrace(), this);
+		}
+		catch (Exception e) {
+			ApplifierImpactUtils.Log("Weird error: " + e.getStackTrace(), this);
+		}
 	}
 	
 	
