@@ -7,6 +7,12 @@ import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 import com.applifier.impact.android.air.functions.ApplifierImpactCanShowCampaigns;
 import com.applifier.impact.android.air.functions.ApplifierImpactCanShowImpact;
+import com.applifier.impact.android.air.functions.ApplifierImpactGetCurrentRewardItemKey;
+import com.applifier.impact.android.air.functions.ApplifierImpactGetDefaultRewardItemKey;
+import com.applifier.impact.android.air.functions.ApplifierImpactGetRewardItemDetailsWithKey;
+import com.applifier.impact.android.air.functions.ApplifierImpactGetRewardItemKeys;
+import com.applifier.impact.android.air.functions.ApplifierImpactGetRewardItemNameKey;
+import com.applifier.impact.android.air.functions.ApplifierImpactGetRewardItemPictureKey;
 import com.applifier.impact.android.air.functions.ApplifierImpactGetSDKVersion;
 import com.applifier.impact.android.air.functions.ApplifierImpactHasMultipleRewards;
 import com.applifier.impact.android.air.functions.ApplifierImpactHideImpact;
@@ -14,6 +20,8 @@ import com.applifier.impact.android.air.functions.ApplifierImpactInit;
 import com.applifier.impact.android.air.functions.ApplifierImpactIsDebugMode;
 import com.applifier.impact.android.air.functions.ApplifierImpactIsSupported;
 import com.applifier.impact.android.air.functions.ApplifierImpactSetDebugMode;
+import com.applifier.impact.android.air.functions.ApplifierImpactSetDefaultRewardItemAsRewardItem;
+import com.applifier.impact.android.air.functions.ApplifierImpactSetRewardItemKey;
 import com.applifier.impact.android.air.functions.ApplifierImpactSetTestMode;
 import com.applifier.impact.android.air.functions.ApplifierImpactShowImpact;
 import com.applifier.impact.android.air.functions.ApplifierImpactStopAll;
@@ -40,35 +48,19 @@ public class ApplifierImpactMobileExtension extends FREContext {
 			_functions.put("canShowCampaigns", new ApplifierImpactCanShowCampaigns());
 			_functions.put("canShowImpact", new ApplifierImpactCanShowImpact());
 			_functions.put("stopAll", new ApplifierImpactStopAll());
-			_functions.put("hasMultipleRewardItems", new ApplifierImpactHasMultipleRewards());
 			_functions.put("showImpact", new ApplifierImpactShowImpact());
 			_functions.put("hideImpact", new ApplifierImpactHideImpact());
 			
-			/*
-
-			public function init (gameId:String) : void {
-			public function isSupported () : Boolean {
-			public function getSDKVersion () : String {
-			public function setDebugMode (debugMode:Boolean) : void {
-			public function isDebugMode () : Boolean {
-			public function setTestMode (testMode:Boolean) : void {
-			public function canShowCampaigns () : Boolean {
-			public function canShowImpact () : Boolean {
-			public function stopAll () : void {
-			public function hasMultipleRewardItems () : Boolean {
-			public function showImpact () : Boolean {
-			public function hideImpact () : Boolean {
-			
-			- (BOOL)hasMultipleRewardItems;
-			- (NSArray *)getRewardItemKeys;
-			- (NSString *)getDefaultRewardItemKey;
-			- (NSString *)getCurrentRewardItemKey;
-			- (BOOL)setRewardItemKey:(NSString *)rewardItemKey;
-			- (void)setDefaultRewardItemAsRewardItem;
-			- (NSDictionary *)getRewardItemDetailsWithKey:(NSString *)rewardItemKey;
-
-			 */
-			
+			// Multiple rewards
+			_functions.put("hasMultipleRewardItems", new ApplifierImpactHasMultipleRewards());
+			_functions.put("getRewardItemKeys", new ApplifierImpactGetRewardItemKeys());
+			_functions.put("getDefaultRewardItemKey", new ApplifierImpactGetDefaultRewardItemKey());
+			_functions.put("getCurrentRewardItemKey", new ApplifierImpactGetCurrentRewardItemKey());
+			_functions.put("setRewardItemKey", new ApplifierImpactSetRewardItemKey());
+			_functions.put("setDefaultRewardItemAsRewardItem", new ApplifierImpactSetDefaultRewardItemAsRewardItem());
+			_functions.put("getRewardItemDetailsWithKey", new ApplifierImpactGetRewardItemDetailsWithKey());
+			_functions.put("getRewardItemNameKey", new ApplifierImpactGetRewardItemNameKey());
+			_functions.put("getRewardItemPictureKey", new ApplifierImpactGetRewardItemPictureKey());
 		}
 		
 		return _functions;
