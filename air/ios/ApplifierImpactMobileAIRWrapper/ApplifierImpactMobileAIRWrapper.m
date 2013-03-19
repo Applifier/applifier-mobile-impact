@@ -171,6 +171,26 @@ FREObject setTestMode(FREContext ctx, void* funcData, uint32_t argc, FREObject a
     return NULL;
 }
 
+FREObject showImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+	NSLog(@"showImpact");
+    uint32_t value = [[ApplifierImpactMobileAIRWrapper sharedInstance] show:NULL];
+    
+    FREObject retBool = nil;
+    FRENewObjectFromBool(value, &retBool);
+    
+    return retBool;
+}
+
+FREObject hideImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+	NSLog(@"hideImpact");
+    uint32_t value = [[ApplifierImpactMobileAIRWrapper sharedInstance] hide];
+    
+    FREObject retBool = nil;
+    FRENewObjectFromBool(value, &retBool);
+    
+    return retBool;
+}
+
 FREObject canShowCampaigns(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
 	NSLog(@"canShowCampaigns");
     uint32_t value = [[ApplifierImpact sharedInstance] canShowAds];
@@ -207,34 +227,91 @@ FREObject hasMultipleRewardItems(FREContext ctx, void* funcData, uint32_t argc, 
     return retBool;
 }
 
-/*
-- (BOOL)hasMultipleRewardItems;
-- (NSArray *)getRewardItemKeys;
-- (NSString *)getDefaultRewardItemKey;
-- (NSString *)getCurrentRewardItemKey;
-- (BOOL)setRewardItemKey:(NSString *)rewardItemKey;
-- (void)setDefaultRewardItemAsRewardItem;
-- (NSDictionary *)getRewardItemDetailsWithKey:(NSString *)rewardItemKey;
-*/
-
-FREObject showImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-	NSLog(@"showImpact");
-    uint32_t value = [[ApplifierImpactMobileAIRWrapper sharedInstance] show:NULL];
+FREObject getRewardItemKeys(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+	NSLog(@"getRewardItemKeys");
+    NSArray *rewardItemKeys = [[ApplifierImpact sharedInstance] getRewardItemKeys];
+    NSString *rewardItemKeyString = @"";
+    FREObject retRewardKeys = nil;
     
+    for (int i = 0; i < [rewardItemKeys count]; i++) {
+        rewardItemKeyString = [NSString stringWithFormat:@"%@%@", rewardItemKeyString, [rewardItemKeys objectAtIndex:i]];
+        if (i + i < [rewardItemKeys count])
+            rewardItemKeyString = [NSString stringWithFormat:@"%@%@", rewardItemKeyString, @";"];
+    }
+    
+    const uint8_t* c_rewardItemKeyString = (const uint8_t*)[rewardItemKeyString UTF8String];
+    FRENewObjectFromUTF8(sizeof(c_rewardItemKeyString), c_rewardItemKeyString, retRewardKeys);
+    
+    return retRewardKeys;
+}
+
+FREObject getDefaultRewardItemKey(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    NSLog(@"getDefaultRewardItemKey");
+    const uint8_t* defaultRewardItem = (const uint8_t*)[[[ApplifierImpact sharedInstance] getDefaultRewardItemKey] UTF8String];
+    FREObject retDefaultRewardItem = nil;
+    FRENewObjectFromUTF8(sizeof(defaultRewardItem), defaultRewardItem, retDefaultRewardItem);
+    
+    return retDefaultRewardItem;
+}
+
+FREObject getCurrentRewardItemKey(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    NSLog(@"getCurrentRewardItemKey");
+    const uint8_t* currentRewardItem = (const uint8_t*)[[[ApplifierImpact sharedInstance] getCurrentRewardItemKey] UTF8String];
+    FREObject retCurrentRewardItem = nil;
+    FRENewObjectFromUTF8(sizeof(currentRewardItem), currentRewardItem, retCurrentRewardItem);
+    
+    return retCurrentRewardItem;
+}
+
+FREObject setRewardItemKey(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    NSLog(@"setRewardItemKey");
+    
+    uint32_t rewardItemKeyLength;
+    const uint8_t *rewardItemKeyCString;
+    NSString *rewardItemKey = nil;
+    
+    uint32_t success = false;
     FREObject retBool = nil;
-    FRENewObjectFromBool(value, &retBool);
+    
+    if (FRE_OK == FREGetObjectAsUTF8(argv[0], &rewardItemKeyLength, &rewardItemKeyCString)) {
+        rewardItemKey = [NSString stringWithUTF8String:(char*)rewardItemKeyCString];
+        success = [[ApplifierImpact sharedInstance] setRewardItemKey:rewardItemKey];
+        FRENewObjectFromBool(success, &retBool);
+    }
     
     return retBool;
 }
 
-FREObject hideImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-	NSLog(@"hideImpact");
-    uint32_t value = [[ApplifierImpactMobileAIRWrapper sharedInstance] hide];
+FREObject setDefaultRewardItemAsRewardItem(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+	NSLog(@"setDefaultRewardItemAsRewardItem");
+    [[ApplifierImpact sharedInstance] setDefaultRewardItemAsRewardItem];    
+    return NULL;
+}
+
+FREObject getRewardItemDetailsWithKey(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    NSLog(@"getCurrentRewardItemKey");
     
-    FREObject retBool = nil;
-    FRENewObjectFromBool(value, &retBool);
+    uint32_t rewardItemKeyLength;
+    const uint8_t *rewardItemKeyCString;
+    NSString *rewardItemKey = nil;
+    NSDictionary *rewardItemDetails = nil;
+    NSString *rewardItemDetailsString = @"";
+    FREObject retDetails = nil;
     
-    return retBool;
+    if (FRE_OK == FREGetObjectAsUTF8(argv[0], &rewardItemKeyLength, &rewardItemKeyCString)) {
+        rewardItemKey = [NSString stringWithUTF8String:(char*)rewardItemKeyCString];
+        rewardItemDetails = [[ApplifierImpact sharedInstance] getRewardItemDetailsWithKey:rewardItemKey];
+        
+        if (rewardItemDetails != NULL) {
+            rewardItemDetailsString = [NSString stringWithFormat:@"%@;%@", [rewardItemDetails objectForKey:kApplifierImpactRewardItemNameKey], [rewardItemDetails objectForKey:kApplifierImpactRewardItemPictureKey]];
+        }
+        
+    }
+    
+    const uint8_t* rewardItemDetailsCString = (const uint8_t*)[rewardItemDetailsString UTF8String];
+    FRENewObjectFromUTF8(sizeof(rewardItemDetailsCString), rewardItemDetailsCString, retDetails);
+    
+    return retDetails;
 }
 
 
@@ -243,7 +320,7 @@ FREObject hideImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
 void ApplifierImpactMobileContextInitializer (void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet) {
 	NSLog(@"ApplifierImpactMobileContextInitializer");
     applifierImpactFREContext = ctx;
-    *numFunctionsToTest = 12;
+    *numFunctionsToTest = 18;
     FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * *numFunctionsToTest);
 
     func[0].name = (const uint8_t*) "init";
@@ -294,6 +371,30 @@ void ApplifierImpactMobileContextInitializer (void* extData, const uint8_t* ctxT
     func[11].functionData = NULL;
     func[11].function = &hideImpact;
 
+    func[12].name = (const uint8_t*) "getRewardItemKeys";
+    func[12].functionData = NULL;
+    func[12].function = &getRewardItemKeys;
+
+    func[13].name = (const uint8_t*) "getDefaultRewardItemKey";
+    func[13].functionData = NULL;
+    func[13].function = &getDefaultRewardItemKey;
+
+    func[14].name = (const uint8_t*) "getCurrentRewardItemKey";
+    func[14].functionData = NULL;
+    func[14].function = &getCurrentRewardItemKey;
+
+    func[15].name = (const uint8_t*) "setRewardItemKey";
+    func[15].functionData = NULL;
+    func[15].function = &setRewardItemKey;
+
+    func[16].name = (const uint8_t*) "setDefaultRewardItemAsRewardItem";
+    func[16].functionData = NULL;
+    func[16].function = &setDefaultRewardItemAsRewardItem;
+    
+    func[17].name = (const uint8_t*) "getRewardItemDetailsWithKey";
+    func[17].functionData = NULL;
+    func[17].function = &getRewardItemDetailsWithKey;
+    
     *functionsToSet = func;
     NSLog(@"ApplifierImpactMobileContextInitializer end");
 }
