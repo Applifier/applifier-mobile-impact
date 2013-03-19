@@ -1,6 +1,7 @@
 package com.applifier.impact
 {
 	import flash.events.EventDispatcher;
+	import flash.utils.Dictionary;
 	
 	public class ApplifierImpactMobileAIRWrapper extends EventDispatcher
 	{
@@ -31,6 +32,14 @@ package com.applifier.impact
 		public function setTestMode (testMode:Boolean) : void {
 		}
 		
+		public function showImpact () : Boolean {
+			return false;
+		}
+		
+		public function hideImpact () : Boolean {
+			return false;
+		}
+		
 		public function canShowCampaigns () : Boolean {
 			return false;
 		}
@@ -45,23 +54,39 @@ package com.applifier.impact
 		public function hasMultipleRewardItems () : Boolean {
 			return false;
 		}
+
 		
-		/*
-		- (BOOL)hasMultipleRewardItems;
-		- (NSArray *)getRewardItemKeys;
-		- (NSString *)getDefaultRewardItemKey;
-		- (NSString *)getCurrentRewardItemKey;
-		- (BOOL)setRewardItemKey:(NSString *)rewardItemKey;
-		- (void)setDefaultRewardItemAsRewardItem;
-		- (NSDictionary *)getRewardItemDetailsWithKey:(NSString *)rewardItemKey;
-		*/
+		/* MULTIPLE REWARDS */
 		
-		public function showImpact () : Boolean {
+		public function getRewardItemKeys () : Array {
+			return new Array();
+		}
+		
+		public function getDefaultRewardItemKey () : String {
+			return "";	
+		}
+		
+		public function getCurrentRewardItemKey () : String {
+			return "";
+		}
+		
+		public function setRewardItemKey (rewardItemKey:String) : Boolean {
 			return false;
 		}
 		
-		public function hideImpact () : Boolean {
-			return false;
+		public function setDefaultRewardItemAsRewardItem () : void {
+		}
+		
+		public function getRewardItemDetailsWithKey (rewardItemKey:String) : Dictionary {
+			return new Dictionary();
+		}
+		
+		public function getRewardItemNameKey () : String {
+			return "name";
+		}
+		
+		public function getRewardItemPictureKey () : String {
+			return "picture";
 		}
 	}
 }

@@ -3,6 +3,7 @@ package com.applifier.impact
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
 	import flash.external.ExtensionContext;
+	import flash.utils.Dictionary;
 	
 	public class ApplifierImpactMobileAIRWrapper extends EventDispatcher
 	{
@@ -53,6 +54,16 @@ package com.applifier.impact
 			_extensionContext.call("setTestMode", testMode);
 		}
 		
+		public function showImpact () : Boolean {
+			if (!canUseExtensionContext()) return false;
+			return _extensionContext.call("showImpact") as Boolean;
+		}
+		
+		public function hideImpact () : Boolean {
+			if (!canUseExtensionContext()) return false;
+			return _extensionContext.call("hideImpact") as Boolean;
+		}
+		
 		public function canShowCampaigns () : Boolean {
 			if (!canUseExtensionContext()) return false;
 			return _extensionContext.call("canShowCampaigns") as Boolean;
@@ -73,31 +84,73 @@ package com.applifier.impact
 			return _extensionContext.call("hasMultipleRewardItems") as Boolean;
 		}
 		
-		/*
-		- (BOOL)hasMultipleRewardItems;
-		- (NSArray *)getRewardItemKeys;
-		- (NSString *)getDefaultRewardItemKey;
-		- (NSString *)getCurrentRewardItemKey;
-		- (BOOL)setRewardItemKey:(NSString *)rewardItemKey;
-		- (void)setDefaultRewardItemAsRewardItem;
-		- (NSDictionary *)getRewardItemDetailsWithKey:(NSString *)rewardItemKey;
-		*/
-		
-		public function showImpact () : Boolean {
-			if (!canUseExtensionContext()) return false;
-			return _extensionContext.call("showImpact") as Boolean;
+
+		/* MULTIPLE REWARDS */		
+		public function getRewardItemKeys () : Array {
+			if (!canUseExtensionContext()) return new Array();
+			
+			var keys:String = _extensionContext.call("getRewardItemKeys") as String;
+			var keyAr:Array = new Array();
+			
+			if (keys != null) {
+				keyAr = keys.split(";");
+			}
+			
+			return keyAr;
 		}
 		
-		public function hideImpact () : Boolean {
-			if (!canUseExtensionContext()) return false;
-			return _extensionContext.call("hideImpact") as Boolean;
+		public function getDefaultRewardItemKey () : String {
+			if (!canUseExtensionContext()) return "";
+			return _extensionContext.call("getDefaultRewardItemKey") as String;
 		}
+		
+		public function getCurrentRewardItemKey () : String {
+			if (!canUseExtensionContext()) return "";
+			return _extensionContext.call("getCurrentRewardItemKey") as String;
+		}
+		
+		public function setRewardItemKey (rewardItemKey:String) : Boolean {
+			if (!canUseExtensionContext()) return false;			
+			return _extensionContext.call("setRewardItemKey", rewardItemKey) as Boolean;
+		}
+		
+		public function setDefaultRewardItemAsRewardItem () : void {
+			if (!canUseExtensionContext()) return;
+			_extensionContext.call("setDefaultRewardItemAsRewardItem");
+		}
+		
+		public function getRewardItemDetailsWithKey (rewardItemKey:String) : Dictionary {
+			if (!canUseExtensionContext()) return new Dictionary();
+			
+			var details:String = _extensionContext.call("getRewardItemDetailsWithKey", rewardItemKey) as String;
+			var retDict:Dictionary = new Dictionary();
+			
+			if (details != null) {
+				var tmpAr:Array = details.split(";");
+				retDict[getRewardItemNameKey()] = tmpAr[0];
+				retDict[getRewardItemPictureKey()] = tmpAr[1];
+			}
+			
+			return retDict;
+		}
+		
+		public function getRewardItemNameKey () : String {
+			if (!canUseExtensionContext()) return "";
+			return _extensionContext.call("getRewardItemNameKey") as String;
+		}
+		
+		public function getRewardItemPictureKey () : String {
+			if (!canUseExtensionContext()) return "";
+			return _extensionContext.call("getRewardItemPictureKey") as String;
+		}
+		
 		
 		/* Private funtions */
 		private function canUseExtensionContext () : Boolean
 		{
 			return _extensionContext != null;
 		}
+		
 		
 		/* Event listener */
 		private function onStatus (event:StatusEvent) : void
