@@ -314,13 +314,31 @@ FREObject getRewardItemDetailsWithKey(FREContext ctx, void* funcData, uint32_t a
     return retDetails;
 }
 
+FREObject getRewardItemNameKey(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    NSLog(@"getRewardItemNameKey");
+    const uint8_t* nameKey = (const uint8_t*)[kApplifierImpactRewardItemNameKey UTF8String];
+    FREObject retNameKey = nil;
+    FRENewObjectFromUTF8(sizeof(nameKey), nameKey, retNameKey);
+    
+    return retNameKey;
+}
+
+FREObject getRewardItemPictureKey(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    NSLog(@"getRewardItemPictureKey");
+    const uint8_t* pictureKey = (const uint8_t*)[kApplifierImpactRewardItemPictureKey UTF8String];
+    FREObject retPictureKey = nil;
+    FRENewObjectFromUTF8(sizeof(pictureKey), pictureKey, retPictureKey);
+    
+    return retPictureKey;
+}
+
 
 /* Initializers and Finalizers */
 
 void ApplifierImpactMobileContextInitializer (void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet) {
 	NSLog(@"ApplifierImpactMobileContextInitializer");
     applifierImpactFREContext = ctx;
-    *numFunctionsToTest = 18;
+    *numFunctionsToTest = 20;
     FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * *numFunctionsToTest);
 
     func[0].name = (const uint8_t*) "init";
@@ -394,6 +412,14 @@ void ApplifierImpactMobileContextInitializer (void* extData, const uint8_t* ctxT
     func[17].name = (const uint8_t*) "getRewardItemDetailsWithKey";
     func[17].functionData = NULL;
     func[17].function = &getRewardItemDetailsWithKey;
+
+    func[18].name = (const uint8_t*) "getRewardItemNameKey";
+    func[18].functionData = NULL;
+    func[18].function = &getRewardItemNameKey;
+    
+    func[19].name = (const uint8_t*) "getRewardItemPictureKey";
+    func[19].functionData = NULL;
+    func[19].function = &getRewardItemPictureKey;
     
     *functionsToSet = func;
     NSLog(@"ApplifierImpactMobileContextInitializer end");
