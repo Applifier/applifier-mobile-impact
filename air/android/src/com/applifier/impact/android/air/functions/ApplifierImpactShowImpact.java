@@ -1,5 +1,8 @@
 package com.applifier.impact.android.air.functions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
@@ -22,7 +25,27 @@ public class ApplifierImpactShowImpact implements FREFunction {
 		}
 		
 		if (ApplifierImpact.instance != null) {
-			Boolean didShow = ApplifierImpact.instance.showImpact();
+			Boolean noOfferscreen = false;
+			Boolean openAnimated = false;
+			String gamerSID = null;
+			
+			try {
+				noOfferscreen = arg1[0].getAsBool();
+				openAnimated = arg1[1].getAsBool();
+				gamerSID = arg1[2].getAsString();
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("Some option was not available: " + e.getStackTrace(), this);
+			}
+			
+			Map<String, Object> openOptions = new HashMap<String, Object>();
+			openOptions.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, noOfferscreen);
+			openOptions.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, openAnimated);
+			
+			if (gamerSID != null)
+				openOptions.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, gamerSID);
+			
+			Boolean didShow = ApplifierImpact.instance.showImpact(openOptions);
 			
 			try {
 				ret = FREObject.newObject(didShow);

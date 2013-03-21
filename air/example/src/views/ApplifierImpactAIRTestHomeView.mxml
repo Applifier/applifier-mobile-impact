@@ -42,7 +42,7 @@
 			{
 				if (_impact.isSupported() && _impact.canShowImpact()) 
 				{
-					_impact.showImpact();
+					_impact.showImpact(true, false, "Seppo");
 				}
 			}
 			

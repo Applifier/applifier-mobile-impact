@@ -34,7 +34,7 @@ ApplifierImpactMobileAIRWrapper *applifierImpactWrapperSharedInstance = nil;
 
 - (BOOL)show:(NSDictionary *)options {
 	NSLog(@"show");
-    return [[ApplifierImpact sharedInstance] showImpact];
+    return [[ApplifierImpact sharedInstance] showImpact:options];
 }
 
 - (BOOL)hide {
@@ -173,7 +173,35 @@ FREObject setTestMode(FREContext ctx, void* funcData, uint32_t argc, FREObject a
 
 FREObject showImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
 	NSLog(@"showImpact");
-    uint32_t value = [[ApplifierImpactMobileAIRWrapper sharedInstance] show:NULL];
+    
+    uint32_t noOfferscreen = 0;
+    uint32_t openAnimated = 0;
+    
+    uint32_t gamerSIDLength;
+    const uint8_t *gamerSIDCString;
+    NSString *gamerSID = nil;
+    
+    if (FRE_OK == FREGetObjectAsBool(argv[0], &noOfferscreen)) {
+    }
+    
+    if (FRE_OK == FREGetObjectAsBool(argv[1], &openAnimated)) {
+    }
+
+    if (FRE_OK == FREGetObjectAsUTF8(argv[2], &gamerSIDLength, &gamerSIDCString)) {
+        gamerSID = [NSString stringWithUTF8String:(char*)gamerSIDCString];
+    }
+    
+    NSNumber *noOfferscreenObjC = [NSNumber numberWithUnsignedInt:noOfferscreen];
+    NSNumber *openAnimatedObjC = [NSNumber numberWithUnsignedInt:openAnimated];
+    
+    NSMutableDictionary *openOptions = [NSMutableDictionary dictionaryWithDictionary:@{kApplifierImpactOptionNoOfferscreenKey:noOfferscreenObjC, kApplifierImpactOptionOpenAnimatedKey:openAnimatedObjC}];
+    
+    if (gamerSID != nil)
+        [openOptions setValue:gamerSID forKey:kApplifierImpactOptionGamerSIDKey];
+    
+    NSDictionary *finalOptions = [NSDictionary dictionaryWithDictionary:openOptions];
+    
+    uint32_t value = [[ApplifierImpactMobileAIRWrapper sharedInstance] show:finalOptions];
     
     FREObject retBool = nil;
     FRENewObjectFromBool(value, &retBool);
