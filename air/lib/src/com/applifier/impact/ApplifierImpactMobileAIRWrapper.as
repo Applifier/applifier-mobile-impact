@@ -54,9 +54,9 @@ package com.applifier.impact
 			_extensionContext.call("setTestMode", testMode);
 		}
 		
-		public function showImpact () : Boolean {
+		public function showImpact (noOfferscreen:Boolean = false, openAnimated:Boolean = false, gamerSID:String = null) : Boolean {
 			if (!canUseExtensionContext()) return false;
-			return _extensionContext.call("showImpact") as Boolean;
+			return _extensionContext.call("showImpact", noOfferscreen, openAnimated, gamerSID) as Boolean;
 		}
 		
 		public function hideImpact () : Boolean {
@@ -134,6 +134,9 @@ package com.applifier.impact
 			return retDict;
 		}
 		
+		
+		/* REWARD ITEM KEYS */
+		
 		public function getRewardItemNameKey () : String {
 			if (!canUseExtensionContext()) return "";
 			return _extensionContext.call("getRewardItemNameKey") as String;
@@ -146,8 +149,7 @@ package com.applifier.impact
 		
 		
 		/* Private funtions */
-		private function canUseExtensionContext () : Boolean
-		{
+		private function canUseExtensionContext () : Boolean {
 			return _extensionContext != null;
 		}
 		
