@@ -12,4 +12,5 @@ public interface IApplifierImpactVideoPlayerListener extends IApplifierImpactVie
 	public void onEventPositionReached (ApplifierVideoPosition position);
 	public void onVideoPlaybackStarted ();
 	public void onVideoPlaybackError ();
+	public void onVideoSkip ();
 }

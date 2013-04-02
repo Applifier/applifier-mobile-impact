@@ -108,8 +108,9 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 				case VideoPlayer:
 					if (videoplayerview == null) {
 						createVideoPlayerView();
-						removeFromMainView(webview);
-						addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+						bringChildToFront(webview);
+						//removeFromMainView(webview);
+						//addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 						focusToView(webview);
 					}
 					break;
@@ -150,7 +151,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	private void init () {
 		ApplifierImpactUtils.Log("Init", this);
 		this.setId(1001);
-		createVideoPlayerView();
+		//createVideoPlayerView();
 		createWebView();
 	}
 	
@@ -303,6 +304,22 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 			_retriedVideoPlaybackOnce = true;
 			sendActionToListener(ApplifierImpactMainViewAction.RequestRetryVideoPlay);
 		}
+	}
+	
+	public void onVideoSkip () {
+		afterVideoPlaybackOperations();
+		JSONObject params = new JSONObject();
+		
+		try {
+			params.put(ApplifierImpactConstants.IMPACT_NATIVEEVENT_CAMPAIGNID_KEY, ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId());
+		}
+		catch (Exception e) {
+			ApplifierImpactUtils.Log("Could not create JSON", this);
+		}
+		
+		//ApplifierImpact.webdata.sendAnalyticsRequest(ApplifierImpactConstants.IMPACT_ANALYTICS_EVENTTYPE_SKIPVIDEO, ApplifierImpactProperties.SELECTED_CAMPAIGN);
+		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
+		sendActionToListener(ApplifierImpactMainViewAction.VideoEnd);
 	}
 	
 	// IApplifierImpactWebViewListener

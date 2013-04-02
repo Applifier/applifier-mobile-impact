@@ -44,6 +44,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public static final String APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY = "noOfferScreen";
 	public static final String APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY = "openAnimated";
 	public static final String APPLIFIER_IMPACT_OPTION_GAMERSID_KEY = "sid";
+	public static final String APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS = "muteVideoSounds";
 
 	// Impact components
 	public static ApplifierImpact instance = null;
@@ -56,7 +57,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private boolean _impactReadySent = false;
 	private boolean _webAppLoaded = false;
 	private boolean _openRequestFromDeveloper = false;
-	private Map<String, Object> _developerOptions = null;
 	private AlertDialog _alertDialog = null;
 		
 	// Main View
@@ -149,17 +149,17 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	public boolean showImpact (Map<String, Object> options) {
 		if (canShowImpact()) {
-			_developerOptions = options;
+			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS = options;
 			
-			if (_developerOptions != null) {
-				if (_developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY) && _developerOptions.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true)) {
+			if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null) {
+				if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY) && ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true)) {
 					if (webdata.getViewableVideoPlanCampaigns().size() > 0) {
 						ApplifierImpactCampaign selectedCampaign = webdata.getViewableVideoPlanCampaigns().get(0);
 						ApplifierImpactProperties.SELECTED_CAMPAIGN = selectedCampaign;
 					}
 				}
-				if (_developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY) && _developerOptions.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY) != null) {
-					ApplifierImpactProperties.GAMER_SID = "" + _developerOptions.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY);
+				if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY) && ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY) != null) {
+					ApplifierImpactProperties.GAMER_SID = "" + ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY);
 				}
 			}
 			
@@ -545,8 +545,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			if (_mainView != null) {
 				_mainView.openImpact(view, data);
 				
-				if (_developerOptions != null && _developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY)  && _developerOptions.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true))
-					playVideo();
+				if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null && 
+					ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY)  && 
+					ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true))
+						playVideo();
 				
 				if (_impactListener != null)
 					_impactListener.onImpactOpen();
@@ -614,8 +616,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		Intent newIntent = new Intent(ApplifierImpactProperties.CURRENT_ACTIVITY, com.applifier.impact.android.view.ApplifierImpactFullscreenActivity.class);
 		int flags = Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK;
 		
-		if (_developerOptions != null && _developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) && _developerOptions.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(true))
-			flags = Intent.FLAG_ACTIVITY_NEW_TASK;
+		if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null && 
+			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) && 
+			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(true))
+				flags = Intent.FLAG_ACTIVITY_NEW_TASK;
 		
 		newIntent.addFlags(flags);
 		
@@ -666,10 +670,12 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 									_mainView.closeImpact(_data);
 									ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
 									
-									if (_developerOptions == null || !_developerOptions.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) || _developerOptions.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(false))
-										ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
+									if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS == null || 
+										!ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) || 
+										ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(false))
+											ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
 									
-									_developerOptions = null;
+									ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS = null;
 									_showingImpact = false;
 									
 									if (_impactListener != null)

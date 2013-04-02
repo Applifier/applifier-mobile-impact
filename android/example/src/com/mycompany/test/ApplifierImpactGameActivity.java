@@ -33,6 +33,8 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
 				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, false);
 				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, false);
 				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, "gom");
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, false);
+				
 				ApplifierImpact.instance.showImpact(optionsMap);
 				
 				// Open without options (defaults)
