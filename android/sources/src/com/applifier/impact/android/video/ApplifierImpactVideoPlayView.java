@@ -465,7 +465,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				}
 			});
 			
-			if (hasSkipDuration() && _skipTimeInSeconds > 0 && _skipTimeLeft > 0f) {
+			if (hasSkipDuration() && _skipTimeInSeconds > 0 && _skipTimeLeft > 0f && (_duration / 1000) > _skipTimeInSeconds) {
 				_skipTimeLeft = (_skipTimeInSeconds * 1000) - _curPos;
 				
 				if (_skipTimeLeft < 0)
@@ -489,6 +489,14 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 						}
 					});
 				}
+			}
+			else if (_playHeadHasMoved && (_duration / 1000) <= _skipTimeInSeconds) {
+				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
+					@Override
+					public void run() {
+						hideSkipText();
+					}
+				});
 			}
 			
 			if (position > 0.25 && !_sentPositionEvents.containsKey(ApplifierVideoPosition.FirstQuartile)) {
