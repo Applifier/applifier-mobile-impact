@@ -10,6 +10,7 @@
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
+#import "../ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
 
 @interface ApplifierImpactAnalyticsUploader () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSMutableArray *uploadQueue;
@@ -153,8 +154,8 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
     if (positionString != nil) {
       NSString *trackingQuery = [NSString stringWithFormat:@"%@/video/%@/%@/%@?%@=%@", [[ApplifierImpactProperties sharedInstance] gamerId], positionString, campaign.id, [[ApplifierImpactProperties sharedInstance] impactGameId], kApplifierImpactAnalyticsQueryParamRewardItemKey, [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey]];
       
-      if ([[ApplifierImpactProperties sharedInstance] gamerSID] != nil) {
-        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [[ApplifierImpactProperties sharedInstance] gamerSID]];
+      if ([[ApplifierImpactShowOptionsParser sharedInstance] gamerSID] != nil) {
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [[ApplifierImpactShowOptionsParser sharedInstance] gamerSID]];
       }
       
       if (!campaign.viewed) {

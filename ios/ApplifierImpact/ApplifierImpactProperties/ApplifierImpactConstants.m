@@ -51,7 +51,7 @@ NSString * const kApplifierImpactNativeEventShowSpinner = @"showSpinner";
 NSString * const kApplifierImpactNativeEventShowError = @"showError";
 NSString * const kApplifierImpactNativeEventVideoCompleted = @"videoCompleted";
 NSString * const kApplifierImpactNativeEventCampaignIdKey = @"campaignId";
-
+NSString * const kApplifierImpactNativeEventForceStopVideoPlayback = @"forceStopVideoPlayback";
 
 /* Native Event Params */
 

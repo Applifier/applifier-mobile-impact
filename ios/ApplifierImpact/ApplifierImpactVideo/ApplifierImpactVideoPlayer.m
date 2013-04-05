@@ -47,7 +47,9 @@
   }
   
   [self _logVideoAnalytics];
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:@"videoCompleted" data:@{@"campaignId":[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+  
+  /*
+;*/
   
   dispatch_async(dispatch_get_main_queue(), ^{
     [self.delegate videoPlaybackEnded];

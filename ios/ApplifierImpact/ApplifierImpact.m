@@ -10,7 +10,8 @@
 #import "ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
-#import "ApplifierImpactMainViewController.h"
+#import "ApplifierImpactView/ApplifierImpactMainViewController.h"
+#import "ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
 
 NSString * const kApplifierImpactRewardItemPictureKey = @"picture";
 NSString * const kApplifierImpactRewardItemNameKey = @"name";
@@ -123,34 +124,16 @@ static ApplifierImpact *sharedImpact = nil;
   if (![ApplifierImpact isSupported]) return NO;
   if (![self canShowImpact]) return NO;
   
-  BOOL animated = YES;
-  ApplifierImpactViewState state = kApplifierImpactViewStateWebView;
+  ApplifierImpactViewStateType state = kApplifierImpactViewStateTypeOfferScreen;
+  [[ApplifierImpactShowOptionsParser sharedInstance] parseOptions:options];
   
-  if (options != nil) {
-    if ([options objectForKey:kApplifierImpactOptionNoOfferscreenKey] != nil && [[options objectForKey:kApplifierImpactOptionNoOfferscreenKey] boolValue] == YES) {
-      if (![self canShowAds]) return NO;
-      [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
-      
-      state = kApplifierImpactViewStateVideoPlayer;
-      [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:nil];
-      
-      ApplifierImpactCampaign *campaign = [[[ApplifierImpactCampaignManager sharedInstance] getViewableCampaigns] objectAtIndex:0];
-      
-      if (campaign != nil) {
-        [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:campaign];
-      }
-    }
-    
-    if ([options objectForKey:kApplifierImpactOptionOpenAnimatedKey] != nil && [[options objectForKey:kApplifierImpactOptionOpenAnimatedKey] boolValue] == NO) {
-      animated = NO;
-    }
-    
-    if ([options objectForKey:kApplifierImpactOptionGamerSIDKey] != nil) {
-      [[ApplifierImpactProperties sharedInstance] setGamerSID:[options objectForKey:kApplifierImpactOptionGamerSIDKey]];
-    }
+  if ([[ApplifierImpactShowOptionsParser sharedInstance] noOfferScreen]) {
+    if (![self canShowAds]) return NO;
+    state = kApplifierImpactViewStateTypeVideoPlayer;
   }
   
-  [[ApplifierImpactMainViewController sharedInstance] openImpact:animated inState:state];
+  [[ApplifierImpactMainViewController sharedInstance] openImpact:[[ApplifierImpactShowOptionsParser sharedInstance] openAnimated] inState:state withOptions:options];
+  
   return YES;
 }
 
@@ -158,7 +141,7 @@ static ApplifierImpact *sharedImpact = nil;
   AIAssertV([NSThread mainThread], NO);
   if (![ApplifierImpact isSupported]) return NO;
   if (![self canShowImpact]) return NO;
-  [[ApplifierImpactMainViewController sharedInstance] openImpact:YES inState:kApplifierImpactViewStateWebView];
+  [[ApplifierImpactMainViewController sharedInstance] openImpact:YES inState:kApplifierImpactViewStateTypeOfferScreen withOptions:nil];
   return YES;
 }
 
@@ -206,7 +189,7 @@ static ApplifierImpact *sharedImpact = nil;
 - (BOOL)hideImpact {
   AIAssertV([NSThread mainThread], NO);
   if (![ApplifierImpact isSupported]) NO;
-  return [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:YES];
+  return [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:YES withOptions:nil];
 }
 
 - (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact {
@@ -218,11 +201,11 @@ static ApplifierImpact *sharedImpact = nil;
     openAnimated = YES;
   }
   
-  [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:NO];
+  [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:NO withOptions:nil];
   [[ApplifierImpactProperties sharedInstance] setCurrentViewController:viewController];
   
   if (applyImpact && [self canShowImpact]) {
-    [[ApplifierImpactMainViewController sharedInstance] openImpact:openAnimated inState:kApplifierImpactViewStateWebView];
+    [[ApplifierImpactMainViewController sharedInstance] openImpact:openAnimated inState:kApplifierImpactViewStateTypeOfferScreen withOptions:nil];
   }
 }
 
