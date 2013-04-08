@@ -10,6 +10,7 @@
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 #import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
 #import "../ApplifierImpact.h"
+#import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 
 @implementation ApplifierImpactViewStateDefaultSpinner
 
