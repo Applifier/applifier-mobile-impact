@@ -99,5 +99,4 @@
   [[ApplifierImpactMainViewController sharedInstance] dismissViewControllerAnimated:YES completion:nil];
 }
 
-
 @end

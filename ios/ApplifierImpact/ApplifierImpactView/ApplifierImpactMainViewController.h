@@ -8,14 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-#import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 #import "../ApplifierImpactViewState/ApplifierImpactViewState.h"
 
 @protocol ApplifierImpactMainViewControllerDelegate <NSObject>
 
 @required
-- (void)mainControllerWebViewInitialized;
 - (void)mainControllerWillOpen;
 - (void)mainControllerDidOpen;
 - (void)mainControllerWillClose;
@@ -25,7 +23,7 @@
 - (void)mainControllerWillLeaveApplication;
 @end
 
-@interface ApplifierImpactMainViewController : UIViewController <ApplifierImpactWebAppControllerDelegate, ApplifierImpactViewStateDelegate>
+@interface ApplifierImpactMainViewController : UIViewController <ApplifierImpactViewStateDelegate>
 
 @property (nonatomic, assign) id<ApplifierImpactMainViewControllerDelegate> delegate;
 
@@ -37,5 +35,6 @@
 
 - (BOOL)mainControllerVisible;
 - (void)applyOptionsToCurrentState:(NSDictionary *)options;
+- (void)applyViewStateHandler:(ApplifierImpactViewState *)viewState;
 
 @end

@@ -24,9 +24,9 @@
 @interface ApplifierImpactMainViewController ()
   @property (nonatomic, strong) void (^closeHandler)(void);
   @property (nonatomic, strong) void (^openHandler)(void);
-  @property (nonatomic, strong) NSArray *viewStateHandlers;
   @property (nonatomic, strong) ApplifierImpactViewState *currentViewState;
   @property (nonatomic, assign) BOOL isOpen;
+  @property (nonatomic, strong) NSMutableArray *viewStateHandlers;
 @end
 
 @implementation ApplifierImpactMainViewController
@@ -38,10 +38,6 @@
       // Add notification listener
       NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
       [notificationCenter addObserver:self selector:@selector(notificationHandler:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-      
-      // Start WebAppController
-      [ApplifierImpactWebAppController sharedInstance];
-      [[ApplifierImpactWebAppController sharedInstance] setDelegate:self];
     }
   
     return self;
@@ -64,6 +60,16 @@
 
 
 #pragma mark - Public
+
+- (void)applyViewStateHandler:(ApplifierImpactViewState *)viewState {
+  if (viewState != nil) {
+    viewState.delegate = self;
+    if (self.viewStateHandlers == nil) {
+      self.viewStateHandlers = [[NSMutableArray alloc] init];
+    }
+    [self.viewStateHandlers addObject:viewState];
+  }
+}
 
 - (void)applyOptionsToCurrentState:(NSDictionary *)options {
   if (self.currentViewState != nil)
@@ -137,21 +143,7 @@
 
 - (BOOL)openImpact:(BOOL)animated inState:(ApplifierImpactViewStateType)requestedState withOptions:(NSDictionary *)options {
   AILOG_DEBUG(@"");
-  
   if ([[ApplifierImpactProperties sharedInstance] currentViewController] == nil) return NO;
-  
-  // FIX: TEST, DO NOT GENERATE LIST OF MANAGERS HERE
-  if (self.viewStateHandlers == nil) {
-    ApplifierImpactViewStateDefaultOffers *defaultOffers = [[ApplifierImpactViewStateDefaultOffers alloc] init];
-    defaultOffers.delegate = self;
-    ApplifierImpactViewStateDefaultVideoPlayer *defaultVideoPlayer = [[ApplifierImpactViewStateDefaultVideoPlayer alloc] init];
-    defaultVideoPlayer.delegate = self;
-    ApplifierImpactViewStateDefaultEndScreen *defaultEndScreen = [[ApplifierImpactViewStateDefaultEndScreen alloc] init];
-    defaultEndScreen.delegate = self;
-    ApplifierImpactViewStateDefaultSpinner *defaultSpinner = [[ApplifierImpactViewStateDefaultSpinner alloc] init];
-    defaultSpinner.delegate = self;
-    self.viewStateHandlers = [[NSArray alloc] initWithObjects:defaultOffers, defaultVideoPlayer, defaultEndScreen, defaultSpinner, nil];
-  }
   
   dispatch_async(dispatch_get_main_queue(), ^{
     [self selectState:requestedState];
@@ -159,7 +151,6 @@
       [self.delegate mainControllerWillOpen];
       [self.currentViewState willBeShown];
       [self changeState:requestedState withOptions:options];
-      //[viewStateManager enterState];
       
       if (![ApplifierImpactDevice isSimulator]) {
         if (self.openHandler == nil) {
@@ -246,9 +237,6 @@
   AILOG_DEBUG(@"Notification: %@", name);
   
   if ([name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
-    // FIX: Find a better way to re-initialize when needed
-    //[[ApplifierImpactWebAppController sharedInstance] setWebViewInitialized:NO];
-
     [self applyOptionsToCurrentState:@{kApplifierImpactNativeEventForceStopVideoPlayback:@true}];
 
     if (self.isOpen)
@@ -278,40 +266,6 @@
 
 - (void)didReceiveMemoryWarning {
   [super didReceiveMemoryWarning];
-}
-
-
-#pragma mark - WebAppController
-
-- (void)webAppReady {
-  [self.delegate mainControllerWebViewInitialized];
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [self checkForVersionAndShowAlertDialog];
-    
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIInitComplete, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
-  });
-}
-
-- (void)checkForVersionAndShowAlertDialog {
-  if ([[ApplifierImpactProperties sharedInstance] expectedSdkVersion] != nil && ![[[ApplifierImpactProperties sharedInstance] expectedSdkVersion] isEqualToString:[[ApplifierImpactProperties sharedInstance] impactVersion]]) {
-    AILOG_DEBUG(@"Got different sdkVersions, checking further.");
-    
-    if (![ApplifierImpactDevice isEncrypted]) {
-      if ([ApplifierImpactDevice isJailbroken]) {
-        AILOG_DEBUG(@"Build is not encrypted, but device seems to be jailbroken. Not showing version alert");
-        return;
-      }
-      else {
-        // Build is not encrypted and device is not jailbroken, alert dialog is shown that SDK is not the latest version.
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Applifier Impact SDK"
-                                                        message:@"The Applifier Impact SDK you are running is not the current version, please update your SDK"
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
-      }
-    }
-  }
 }
 
 

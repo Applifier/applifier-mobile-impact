@@ -7,7 +7,6 @@
 //
 
 #import "ApplifierImpactInitializer.h"
-#import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 
 @interface ApplifierImpactDefaultInitializer : ApplifierImpactInitializer <ApplifierImpactCampaignManagerDelegate>
 

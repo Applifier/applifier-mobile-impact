@@ -8,7 +8,6 @@
 
 #import "ApplifierImpactViewStateDefaultEndScreen.h"
 
-#import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactRewardItem.h"
 

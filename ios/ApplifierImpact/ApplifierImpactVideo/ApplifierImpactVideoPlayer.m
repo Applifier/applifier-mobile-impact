@@ -12,7 +12,6 @@
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
-#import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 
 @interface ApplifierImpactVideoPlayer ()
   @property (nonatomic, assign) id timeObserver;
@@ -47,10 +46,7 @@
   }
   
   [self _logVideoAnalytics];
-  
-  /*
-;*/
-  
+
   dispatch_async(dispatch_get_main_queue(), ^{
     [self.delegate videoPlaybackEnded];
   });

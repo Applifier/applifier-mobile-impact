@@ -7,6 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
+#import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
+#import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
+#import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
+#import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
 
 @protocol ApplifierImpactInitializerDelegate <NSObject>
 
@@ -20,6 +25,9 @@
   @property (nonatomic, strong) NSThread *backgroundThread;
   @property (nonatomic, assign) dispatch_queue_t queue;
 
-- (void)init:(NSDictionary *)options;
-
+- (void)initImpact:(NSDictionary *)options;
+- (BOOL)initWasSuccessfull;
+- (void)checkForVersionAndShowAlertDialog;
+- (void)reInitialize;
+- (void)deInitialize;
 @end

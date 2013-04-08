@@ -54,7 +54,7 @@ extern NSString * const kApplifierImpactOptionGamerSIDKey;
 - (BOOL)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController;
 - (BOOL)startWithGameId:(NSString *)gameId;
 - (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact;
-- (BOOL)canShowAds;
+- (BOOL)canShowCampaigns;
 - (BOOL)canShowImpact;
 - (BOOL)showImpact:(NSDictionary *)options;
 - (BOOL)showImpact;

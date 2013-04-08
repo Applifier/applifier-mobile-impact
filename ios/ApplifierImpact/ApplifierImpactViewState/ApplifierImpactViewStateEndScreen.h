@@ -11,6 +11,7 @@
 #import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
+#import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 
 #import "../ApplifierImpact.h"
 

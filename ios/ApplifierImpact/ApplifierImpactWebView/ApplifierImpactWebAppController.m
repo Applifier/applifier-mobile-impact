@@ -99,15 +99,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 		if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo]) {
       if ([data objectForKey:kApplifierImpactWebViewEventDataCampaignIdKey] != nil) {
         [self _selectCampaignWithID:[data objectForKey:kApplifierImpactWebViewEventDataCampaignIdKey]];
-        
-        /*
-        BOOL checkIfWatched = YES;
-        if ([data objectForKey:kApplifierImpactWebViewEventDataRewatchKey] != nil && [[data valueForKey:kApplifierImpactWebViewEventDataRewatchKey] boolValue] == true) {
-          checkIfWatched = NO;
-        }*/
-        
         [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeVideoPlayer withOptions:data];
-        //[[ApplifierImpactMainViewController sharedInstance] showPlayerAndPlaySelectedVideo:checkIfWatched];
       }
 		}
 		else if ([type isEqualToString:kApplifierImpactWebViewAPINavigateTo]) {
