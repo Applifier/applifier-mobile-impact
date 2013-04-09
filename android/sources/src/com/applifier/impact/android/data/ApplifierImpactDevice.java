@@ -1,6 +1,9 @@
 package com.applifier.impact.android.data;
 
 import java.lang.reflect.Method;
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.List;
 
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
@@ -86,10 +89,8 @@ public class ApplifierImpactDevice {
 		return androidSerial;
 	}
 	
-	public static String getMacAddress () {
-		String deviceId = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
-		
-		if (ApplifierImpactProperties.CURRENT_ACTIVITY == null) return deviceId;
+	public static String getOldMacAddress () {
+		String deviceId ="unknown";
 		
 		Context context = ApplifierImpactProperties.CURRENT_ACTIVITY;
 
@@ -108,11 +109,76 @@ public class ApplifierImpactDevice {
 		}
 		
 		if (deviceId == null)
-			deviceId = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
+			deviceId ="unknown";
 		
 		return deviceId.toLowerCase();
 	}
 	
+    public static String getMacAddress() {
+		NetworkInterface intf = null;
+		intf = getInterfaceFor("eth0");		
+		if (intf == null) {
+			intf = getInterfaceFor("wlan0");
+		}
+		
+		ApplifierImpactUtils.Log("Old mac: " + getOldMacAddress(), ApplifierImpactDevice.class);
+		return buildMacAddressFromInterface(intf);
+    }
+	
+    public static String buildMacAddressFromInterface (NetworkInterface intf) {
+		byte[] mac = null;
+		
+		if (intf == null) {
+			return ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
+		}
+		
+		try
+		{
+			Method layertype = NetworkInterface.class.getMethod("getHardwareAddress");
+			mac = (byte[])layertype.invoke(intf);
+		}
+		catch (Exception e) {
+			ApplifierImpactUtils.Log("Could not getHardwareAddress", ApplifierImpactDevice.class);
+		}
+		
+		if (mac == null) {
+			return ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
+		}
+		
+		StringBuilder buf = new StringBuilder();
+        for (int idx=0; idx<mac.length; idx++)
+            buf.append(String.format("%02X:", mac[idx]));       
+        if (buf.length()>0) buf.deleteCharAt(buf.length()-1);
+        
+        String retMacAddress = ApplifierImpactUtils.Md5(buf.toString());
+        return retMacAddress.toLowerCase();    	
+    }
+    
+    public static NetworkInterface getInterfaceFor (String interfaceName) {
+    	List<NetworkInterface> interfaces = null;
+    	
+        try {
+        	interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+			ApplifierImpactUtils.Log("Got interface list", ApplifierImpactDevice.class);
+        }
+        catch (Exception e) {
+        	return null;
+        }
+        
+    	for (NetworkInterface intf : interfaces) {
+    		if (interfaceName != null) {
+    			ApplifierImpactUtils.Log("Interface '" + intf.getName() + "' mac=" + buildMacAddressFromInterface(intf), ApplifierImpactDevice.class);
+    			if (intf.getName().equalsIgnoreCase(interfaceName)) {
+    				ApplifierImpactUtils.Log("Returning interface: " + intf.getName(), ApplifierImpactDevice.class);
+    				return intf;
+    			}
+    				
+            }
+    	}
+        
+    	return null;
+    }
+    
 	public static String getOpenUdid () {
 		String deviceId = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		ApplifierImpactOpenUDID.syncContext(ApplifierImpactProperties.CURRENT_ACTIVITY);
