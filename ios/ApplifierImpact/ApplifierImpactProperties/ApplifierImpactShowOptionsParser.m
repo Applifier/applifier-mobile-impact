@@ -26,9 +26,7 @@ static ApplifierImpactShowOptionsParser *sharedOptionsParser = nil;
 
 
 - (void)parseOptions:(NSDictionary *)options {
-  self.noOfferScreen = NO;
-  self.openAnimated = YES;
-  self.gamerSID = NULL;
+  [self resetToDefaults];
   
   if (options != NULL) {
     if ([options objectForKey:kApplifierImpactOptionNoOfferscreenKey] != nil && [[options objectForKey:kApplifierImpactOptionNoOfferscreenKey] boolValue] == YES) {
@@ -43,6 +41,12 @@ static ApplifierImpactShowOptionsParser *sharedOptionsParser = nil;
       self.gamerSID = [options objectForKey:kApplifierImpactOptionGamerSIDKey];
     }
   }
+}
+
+- (void)resetToDefaults {
+  self.noOfferScreen = NO;
+  self.openAnimated = YES;
+  self.gamerSID = NULL;
 }
 
 @end

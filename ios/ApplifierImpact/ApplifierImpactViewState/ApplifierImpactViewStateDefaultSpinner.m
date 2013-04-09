@@ -22,9 +22,7 @@
   AILOG_DEBUG(@"");
   
   [super enterState:options];
-  
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:options];
-
 }
 
 - (void)exitState:(NSDictionary *)options {

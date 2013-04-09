@@ -16,5 +16,5 @@
 
 + (ApplifierImpactShowOptionsParser *)sharedInstance;
 - (void)parseOptions:(NSDictionary *)options;
-
+- (void)resetToDefaults;
 @end

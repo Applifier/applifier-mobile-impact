@@ -21,6 +21,11 @@ extern NSString * const kApplifierImpactOptionNoOfferscreenKey;
 extern NSString * const kApplifierImpactOptionOpenAnimatedKey;
 extern NSString * const kApplifierImpactOptionGamerSIDKey;
 
+typedef enum {
+  kApplifierImpactModeDefault,
+  kApplifierImpactModeNativeNoOfferscreen,
+} ApplifierImpactMode;
+
 @class ApplifierImpact;
 @class SKStoreProductViewController;
 
