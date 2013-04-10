@@ -12,7 +12,6 @@ import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
@@ -89,31 +88,6 @@ public class ApplifierImpactDevice {
 		return androidSerial;
 	}
 	
-	public static String getOldMacAddress () {
-		String deviceId ="unknown";
-		
-		Context context = ApplifierImpactProperties.CURRENT_ACTIVITY;
-
-		try {
-			WifiManager wm = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-			
-			Boolean originalStatus = wm.isWifiEnabled();
-			if (!originalStatus)
-				wm.setWifiEnabled(true);
-			
-			deviceId = ApplifierImpactUtils.Md5(wm.getConnectionInfo().getMacAddress());
-			wm.setWifiEnabled(originalStatus);
-		} 
-		catch (Exception e) {
-			//maybe no permissons or wifi off
-		}
-		
-		if (deviceId == null)
-			deviceId ="unknown";
-		
-		return deviceId.toLowerCase();
-	}
-	
     public static String getMacAddress() {
 		NetworkInterface intf = null;
 		intf = getInterfaceFor("eth0");		
@@ -121,7 +95,6 @@ public class ApplifierImpactDevice {
 			intf = getInterfaceFor("wlan0");
 		}
 		
-		ApplifierImpactUtils.Log("Old mac: " + getOldMacAddress(), ApplifierImpactDevice.class);
 		return buildMacAddressFromInterface(intf);
     }
 	
@@ -159,7 +132,6 @@ public class ApplifierImpactDevice {
     	
         try {
         	interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
-			ApplifierImpactUtils.Log("Got interface list", ApplifierImpactDevice.class);
         }
         catch (Exception e) {
         	return null;
@@ -167,7 +139,6 @@ public class ApplifierImpactDevice {
         
     	for (NetworkInterface intf : interfaces) {
     		if (interfaceName != null) {
-    			ApplifierImpactUtils.Log("Interface '" + intf.getName() + "' mac=" + buildMacAddressFromInterface(intf), ApplifierImpactDevice.class);
     			if (intf.getName().equalsIgnoreCase(interfaceName)) {
     				ApplifierImpactUtils.Log("Returning interface: " + intf.getName(), ApplifierImpactDevice.class);
     				return intf;
