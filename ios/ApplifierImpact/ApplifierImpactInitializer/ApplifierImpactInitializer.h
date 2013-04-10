@@ -12,6 +12,7 @@
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
+#import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 
 @protocol ApplifierImpactInitializerDelegate <NSObject>
 
@@ -30,4 +31,9 @@
 - (void)checkForVersionAndShowAlertDialog;
 - (void)reInitialize;
 - (void)deInitialize;
+
+- (void)initCampaignManager;
+- (void)refreshCampaignManager;
+- (void)initAnalyticsUploader;
+
 @end

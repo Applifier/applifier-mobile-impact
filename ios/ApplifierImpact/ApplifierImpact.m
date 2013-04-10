@@ -22,6 +22,7 @@ NSString * const kApplifierImpactOptionGamerSIDKey = @"sid";
 
 @interface ApplifierImpact () <ApplifierImpactInitializerDelegate, ApplifierImpactMainViewControllerDelegate>
   @property (nonatomic, strong) ApplifierImpactInitializer *initializer;
+  @property (nonatomic, assign) ApplifierImpactMode impactMode;
   @property (nonatomic, assign) Boolean debug;
 @end
 
@@ -40,6 +41,10 @@ NSString * const kApplifierImpactOptionGamerSIDKey = @"sid";
 
 + (NSString *)getSDKVersion {
   return [[ApplifierImpactProperties sharedInstance] impactVersion];
+}
+
+- (void)setImpactMode:(ApplifierImpactMode)impactMode {
+  self.impactMode = impactMode;
 }
 
 - (void)setDebugMode:(BOOL)debugMode {
@@ -98,6 +103,7 @@ static ApplifierImpact *sharedImpact = nil;
   if (![ApplifierImpact isSupported]) return false;
   if ([[ApplifierImpactProperties sharedInstance] impactGameId] != nil) return false;
 	if (gameId == nil || [gameId length] == 0) return false;
+  if (self.initializer != nil) return false;
   
   NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
   [notificationCenter addObserver:self selector:@selector(notificationHandler:) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -263,6 +269,16 @@ static ApplifierImpact *sharedImpact = nil;
   return NO;
 }
 
+- (ApplifierImpactInitializer *)selectInitializerFromMode:(ApplifierImpactMode)mode {
+  switch (mode) {
+    case kApplifierImpactModeDefault:
+      return [[ApplifierImpactDefaultInitializer alloc] init];
+    case kApplifierImpactModeNoWebView:
+      break;
+  }
+  
+  return nil;
+}
 
 #pragma mark - Private data refreshing
 

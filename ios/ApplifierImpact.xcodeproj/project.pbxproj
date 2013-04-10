@@ -65,6 +65,8 @@
 		7894D8DD170EF726000CFC99 /* ApplifierImpactInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8DB170EF726000CFC99 /* ApplifierImpactInitializer.m */; };
 		7894D8E0170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7894D8DE170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.h */; };
 		7894D8E1170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8DF170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.m */; };
+		7894D8E417155F1A000CFC99 /* ApplifierImpactNoWebViewInitializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7894D8E217155F1A000CFC99 /* ApplifierImpactNoWebViewInitializer.h */; };
+		7894D8E517155F1A000CFC99 /* ApplifierImpactNoWebViewInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8E317155F1A000CFC99 /* ApplifierImpactNoWebViewInitializer.m */; };
 		78AC201A1622EFEA007DE419 /* ApplifierImpactOpenUDID.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */; };
 		78AC201B1622EFEA007DE419 /* ApplifierImpactOpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20191622EFEA007DE419 /* ApplifierImpactOpenUDID.m */; };
 		78AC20211622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */; };
@@ -143,6 +145,8 @@
 		7894D8DB170EF726000CFC99 /* ApplifierImpactInitializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactInitializer.m; sourceTree = "<group>"; };
 		7894D8DE170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactDefaultInitializer.h; sourceTree = "<group>"; };
 		7894D8DF170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactDefaultInitializer.m; sourceTree = "<group>"; };
+		7894D8E217155F1A000CFC99 /* ApplifierImpactNoWebViewInitializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactNoWebViewInitializer.h; sourceTree = "<group>"; };
+		7894D8E317155F1A000CFC99 /* ApplifierImpactNoWebViewInitializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactNoWebViewInitializer.m; sourceTree = "<group>"; };
 		78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactOpenUDID.h; sourceTree = "<group>"; };
 		78AC20191622EFEA007DE419 /* ApplifierImpactOpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactOpenUDID.m; sourceTree = "<group>"; };
 		78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactAnalyticsUploader.h; sourceTree = "<group>"; };
@@ -255,6 +259,8 @@
 				7894D8DB170EF726000CFC99 /* ApplifierImpactInitializer.m */,
 				7894D8DE170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.h */,
 				7894D8DF170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.m */,
+				7894D8E217155F1A000CFC99 /* ApplifierImpactNoWebViewInitializer.h */,
+				7894D8E317155F1A000CFC99 /* ApplifierImpactNoWebViewInitializer.m */,
 			);
 			path = ApplifierImpactInitializer;
 			sourceTree = "<group>";
@@ -426,6 +432,7 @@
 				7894D8D7170EC93A000CFC99 /* ApplifierImpactViewStateEndScreen.h in Headers */,
 				7894D8DC170EF726000CFC99 /* ApplifierImpactInitializer.h in Headers */,
 				7894D8E0170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.h in Headers */,
+				7894D8E417155F1A000CFC99 /* ApplifierImpactNoWebViewInitializer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -574,6 +581,7 @@
 				7894D8D8170EC93A000CFC99 /* ApplifierImpactViewStateEndScreen.m in Sources */,
 				7894D8DD170EF726000CFC99 /* ApplifierImpactInitializer.m in Sources */,
 				7894D8E1170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.m in Sources */,
+				7894D8E517155F1A000CFC99 /* ApplifierImpactNoWebViewInitializer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

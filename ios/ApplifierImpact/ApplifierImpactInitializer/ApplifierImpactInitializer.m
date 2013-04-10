@@ -84,4 +84,24 @@
   }
 }
 
+- (void)initCampaignManager {
+	AIAssert(![NSThread isMainThread]);
+	AILOG_DEBUG(@"");
+  [[ApplifierImpactCampaignManager sharedInstance] setDelegate:self];
+	[self refreshCampaignManager];
+}
+
+- (void)refreshCampaignManager {
+	AIAssert(![NSThread isMainThread]);
+	[[ApplifierImpactProperties sharedInstance] refreshCampaignQueryString];
+	[[ApplifierImpactCampaignManager sharedInstance] updateCampaigns];
+}
+
+- (void)initAnalyticsUploader {
+	AIAssert(![NSThread isMainThread]);
+	AILOG_DEBUG(@"");
+	[[ApplifierImpactAnalyticsUploader sharedInstance] retryFailedUploads];
+}
+
+
 @end

@@ -8,7 +8,6 @@
 
 #import "ApplifierImpactDefaultInitializer.h"
 
-#import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 #import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 #import "../ApplifierImpact.h"
 
@@ -31,8 +30,8 @@
   [ApplifierImpactWebAppController sharedInstance];
   [[ApplifierImpactWebAppController sharedInstance] setDelegate:self];
   
-  [self performSelector:@selector(_initCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
-  [self performSelector:@selector(_initAnalyticsUploader) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+  [self performSelector:@selector(initCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+  [self performSelector:@selector(initAnalyticsUploader) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 }
 
 - (BOOL)initWasSuccessfull {
@@ -46,14 +45,22 @@
   dispatch_async(self.queue, ^{
     [[ApplifierImpactWebAppController sharedInstance] setWebViewInitialized:NO];
 		[[ApplifierImpactProperties sharedInstance] refreshCampaignQueryString];
-		[self performSelector:@selector(_refreshCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
-    [self performSelector:@selector(_initAnalyticsUploader) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+		[self performSelector:@selector(refreshCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
+    [self performSelector:@selector(initAnalyticsUploader) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
 	});
 }
 
 
 #pragma mark - Private initalization
 
+- (void)initCampaignManager {
+	AIAssert(![NSThread isMainThread]);
+	AILOG_DEBUG(@"");
+  [[ApplifierImpactCampaignManager sharedInstance] setDelegate:self];
+  [super initCampaignManager];
+}
+
+/*
 - (void)_initCampaignManager {
 	AIAssert(![NSThread isMainThread]);
 	AILOG_DEBUG(@"");
@@ -71,7 +78,7 @@
 	AIAssert(![NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	[[ApplifierImpactAnalyticsUploader sharedInstance] retryFailedUploads];
-}
+}*/
 
 
 #pragma mark - ApplifierImpactCampaignManagerDelegate

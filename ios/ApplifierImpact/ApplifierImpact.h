@@ -23,7 +23,7 @@ extern NSString * const kApplifierImpactOptionGamerSIDKey;
 
 typedef enum {
   kApplifierImpactModeDefault,
-  kApplifierImpactModeNativeNoOfferscreen,
+  kApplifierImpactModeNoWebView,
 } ApplifierImpactMode;
 
 @class ApplifierImpact;
@@ -54,6 +54,7 @@ typedef enum {
 + (BOOL)isSupported;
 + (NSString *)getSDKVersion;
 - (void)setDebugMode:(BOOL)debugMode;
+- (void)setImpactMode:(ApplifierImpactMode)impactMode;
 - (BOOL)isDebugMode;
 - (void)setTestMode:(BOOL)testModeEnabled;
 - (BOOL)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController;
