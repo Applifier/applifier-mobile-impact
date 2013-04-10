@@ -76,7 +76,7 @@ public class ApplifierImpactProperties {
 			queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_SCREENDENSITY_KEY, ApplifierImpactDevice.getScreenDensity());
 		}
 		catch (Exception e) {
-			ApplifierImpactUtils.Log("Problems creating campaigns query", ApplifierImpactProperties.class);
+			ApplifierImpactUtils.Log("Problems creating campaigns query: " + e.getMessage() + e.getStackTrace().toString(), ApplifierImpactProperties.class);
 		}
 		
 		if (TESTMODE_ENABLED) {
