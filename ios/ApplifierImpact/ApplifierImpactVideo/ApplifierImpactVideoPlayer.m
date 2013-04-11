@@ -34,9 +34,9 @@
 
 - (void)playSelectedVideo {
   self.videoPosition = kVideoAnalyticsPositionUnplayed;
-  dispatch_async(dispatch_get_main_queue(), ^{
+  //dispatch_async(dispatch_get_main_queue(), ^{
     [self.delegate videoPlaybackStarted];
-  });
+  //});
 }
 
 - (void)_videoPlaybackEnded:(NSNotification *)notification {

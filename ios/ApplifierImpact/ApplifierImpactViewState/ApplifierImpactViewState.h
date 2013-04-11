@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
+#import "../ApplifierImpact.h"
 
 @protocol ApplifierImpactViewStateDelegate <NSObject>
 
@@ -18,6 +19,7 @@
 @interface ApplifierImpactViewState : NSObject
 
 @property (nonatomic, assign) id<ApplifierImpactViewStateDelegate> delegate;
+@property (nonatomic, assign) BOOL waitingToBeShown;
 
 - (ApplifierImpactViewStateType)getStateType;
 

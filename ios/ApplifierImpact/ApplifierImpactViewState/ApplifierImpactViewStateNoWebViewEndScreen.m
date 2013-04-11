@@ -1,17 +1,19 @@
 //
-//  ApplifierImpactViewStateDefaultEndScreen.m
+//  ApplifierImpactViewStateNoWebViewEndScreen.m
 //  ApplifierImpact
 //
-//  Created by Pekka Palmu on 4/4/13.
+//  Created by Pekka Palmu on 4/11/13.
 //  Copyright (c) 2013 Applifier. All rights reserved.
 //
 
-#import "ApplifierImpactViewStateDefaultEndScreen.h"
+#import "ApplifierImpactViewStateNoWebViewEndScreen.h"
+#import "../ApplifierImpactView/ApplifierImpactNoWebViewEndScreenViewController.h"
 
-#import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
-#import "../ApplifierImpactCampaign/ApplifierImpactRewardItem.h"
+@interface ApplifierImpactViewStateNoWebViewEndScreen ()
+  @property (nonatomic, strong) ApplifierImpactNoWebViewEndScreenViewController *endScreenController;
+@end
 
-@implementation ApplifierImpactViewStateDefaultEndScreen
+@implementation ApplifierImpactViewStateNoWebViewEndScreen
 
 - (ApplifierImpactViewStateType)getStateType {
   return kApplifierImpactViewStateTypeEndScreen;
@@ -22,17 +24,25 @@
   
   [super enterState:options];
   
+  if (self.endScreenController == nil) {
+    [self createEndScreenController];
+  }
+  
+  [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.endScreenController animated:NO completion:nil];
+  /*
   [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIActionVideoStartedPlaying, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key, kApplifierImpactWebViewEventDataCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+   */
 }
 
 - (void)exitState:(NSDictionary *)options {
   AILOG_DEBUG(@"");
   
   [super exitState:options];
-  
+  [[ApplifierImpactMainViewController sharedInstance] dismissViewControllerAnimated:NO completion:nil];
+
   // FIX: Doesn't always work right with rewatch (setView:None (null))
   if ([options objectForKey:kApplifierImpactWebViewEventDataRewatchKey] == nil || [[options valueForKey:kApplifierImpactWebViewEventDataRewatchKey] boolValue] == false) {
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{}];
+    //[[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{}];
   }
 }
 
@@ -48,14 +58,21 @@
   [super applyOptions:options];
   
   if ([options objectForKey:kApplifierImpactNativeEventShowSpinner] != nil) {
-    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:[options objectForKey:kApplifierImpactNativeEventShowSpinner]];
+    //[[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:[options objectForKey:kApplifierImpactNativeEventShowSpinner]];
   }
   else if ([options objectForKey:kApplifierImpactNativeEventHideSpinner] != nil) {
-    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:[options objectForKey:kApplifierImpactNativeEventHideSpinner]];
+    //[[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:[options objectForKey:kApplifierImpactNativeEventHideSpinner]];
   }
   else if ([options objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] != nil) {
     [self openAppStoreWithData:options];
   }
+}
+
+#pragma mark - Private controller handling
+
+- (void)createEndScreenController {
+  AILOG_DEBUG(@"");
+  self.endScreenController = [[ApplifierImpactNoWebViewEndScreenViewController alloc] initWithNibName:nil bundle:nil];
 }
 
 @end

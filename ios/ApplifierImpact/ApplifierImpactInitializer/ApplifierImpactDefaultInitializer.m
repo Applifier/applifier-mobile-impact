@@ -9,8 +9,6 @@
 #import "ApplifierImpactDefaultInitializer.h"
 
 #import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
-#import "../ApplifierImpact.h"
-
 #import "../ApplifierImpactViewState/ApplifierImpactViewStateDefaultOffers.h"
 #import "../ApplifierImpactViewState/ApplifierImpactViewStateDefaultVideoPlayer.h"
 #import "../ApplifierImpactViewState/ApplifierImpactViewStateDefaultEndScreen.h"
@@ -59,26 +57,6 @@
   [[ApplifierImpactCampaignManager sharedInstance] setDelegate:self];
   [super initCampaignManager];
 }
-
-/*
-- (void)_initCampaignManager {
-	AIAssert(![NSThread isMainThread]);
-	AILOG_DEBUG(@"");
-  [[ApplifierImpactCampaignManager sharedInstance] setDelegate:self];
-	[self _refreshCampaignManager];
-}
-
-- (void)_refreshCampaignManager {
-	AIAssert(![NSThread isMainThread]);
-	[[ApplifierImpactProperties sharedInstance] refreshCampaignQueryString];
-	[[ApplifierImpactCampaignManager sharedInstance] updateCampaigns];
-}
-
-- (void)_initAnalyticsUploader {
-	AIAssert(![NSThread isMainThread]);
-	AILOG_DEBUG(@"");
-	[[ApplifierImpactAnalyticsUploader sharedInstance] retryFailedUploads];
-}*/
 
 
 #pragma mark - ApplifierImpactCampaignManagerDelegate

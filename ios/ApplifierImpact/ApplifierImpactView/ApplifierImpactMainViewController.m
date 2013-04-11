@@ -106,7 +106,7 @@
 
 - (BOOL)changeState:(ApplifierImpactViewStateType)requestedState withOptions:(NSDictionary *)options {
   dispatch_async(dispatch_get_main_queue(), ^{
-    if (self.currentViewState != nil) {
+    if (self.currentViewState != nil && [[self currentViewState] getStateType] != requestedState) {
       [self.currentViewState exitState:options];
     }
     
@@ -147,9 +147,9 @@
   
   dispatch_async(dispatch_get_main_queue(), ^{
     [self selectState:requestedState];
-    if (self.currentViewState != nil) {
-      [self.delegate mainControllerWillOpen];
+    if ([self hasState:requestedState]) {
       [self.currentViewState willBeShown];
+      [self.delegate mainControllerWillOpen];
       [self changeState:requestedState withOptions:options];
       
       if (![ApplifierImpactDevice isSimulator]) {

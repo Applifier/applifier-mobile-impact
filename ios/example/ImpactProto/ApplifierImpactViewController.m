@@ -38,6 +38,7 @@
     // TEST MODE: Do not use in production apps
     [[ApplifierImpact sharedInstance] setDebugMode:YES];
     [[ApplifierImpact sharedInstance] setTestMode:YES];
+    [[ApplifierImpact sharedInstance] setImpactMode:kApplifierImpactModeNoWebView];
     
     // Initialize Applifier Impact
 	[[ApplifierImpact sharedInstance] startWithGameId:@"16" andViewController:self];

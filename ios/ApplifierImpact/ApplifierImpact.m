@@ -12,7 +12,9 @@
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "ApplifierImpactView/ApplifierImpactMainViewController.h"
 #import "ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
+
 #import "ApplifierImpactInitializer/ApplifierImpactDefaultInitializer.h"
+#import "ApplifierImpactInitializer/ApplifierImpactNoWebViewInitializer.h"
 
 NSString * const kApplifierImpactRewardItemPictureKey = @"picture";
 NSString * const kApplifierImpactRewardItemNameKey = @"name";
@@ -22,7 +24,7 @@ NSString * const kApplifierImpactOptionGamerSIDKey = @"sid";
 
 @interface ApplifierImpact () <ApplifierImpactInitializerDelegate, ApplifierImpactMainViewControllerDelegate>
   @property (nonatomic, strong) ApplifierImpactInitializer *initializer;
-  @property (nonatomic, assign) ApplifierImpactMode impactMode;
+  @property (nonatomic, assign) ApplifierImpactMode mode;
   @property (nonatomic, assign) Boolean debug;
 @end
 
@@ -44,7 +46,7 @@ NSString * const kApplifierImpactOptionGamerSIDKey = @"sid";
 }
 
 - (void)setImpactMode:(ApplifierImpactMode)impactMode {
-  self.impactMode = impactMode;
+  self.mode = impactMode;
 }
 
 - (void)setDebugMode:(BOOL)debugMode {
@@ -112,9 +114,16 @@ static ApplifierImpact *sharedImpact = nil;
 	[[ApplifierImpactProperties sharedInstance] setImpactGameId:gameId];
   [[ApplifierImpactMainViewController sharedInstance] setDelegate:self];
   
-  self.initializer = [[ApplifierImpactDefaultInitializer alloc] init];
-  [self.initializer setDelegate:self];
-  [self.initializer initImpact:nil];
+  self.initializer = [self selectInitializerFromMode:self.mode];
+  
+  if (self.initializer != nil) {
+    [self.initializer setDelegate:self];
+    [self.initializer initImpact:nil];
+  }
+  else {
+    AILOG_DEBUG(@"Initializer is null, cannot start Impact");
+    return false;
+  }
   
   return true;
 }
@@ -134,37 +143,37 @@ static ApplifierImpact *sharedImpact = nil;
 }
 
 - (BOOL)showImpact:(NSDictionary *)options {
-  AIAssertV([NSThread mainThread], NO);
-  if (![ApplifierImpact isSupported]) return NO;
-  if (![self canShowImpact]) return NO;
+  AIAssertV([NSThread mainThread], false);
+  if (![ApplifierImpact isSupported]) return false;
+  if (![self canShowImpact]) return false;
   
   ApplifierImpactViewStateType state = kApplifierImpactViewStateTypeOfferScreen;
   [[ApplifierImpactShowOptionsParser sharedInstance] parseOptions:options];
   
+  // If Impact is in "No WebView" -mode, always skip offerscreen
+  if (self.mode == kApplifierImpactModeNoWebView)
+    [[ApplifierImpactShowOptionsParser sharedInstance] setNoOfferScreen:true];
+  
   if ([[ApplifierImpactShowOptionsParser sharedInstance] noOfferScreen]) {
-    if (![self canShowCampaigns]) return NO;
+    if (![self canShowCampaigns]) return false;
     state = kApplifierImpactViewStateTypeVideoPlayer;
   }
   
   [[ApplifierImpactMainViewController sharedInstance] openImpact:[[ApplifierImpactShowOptionsParser sharedInstance] openAnimated] inState:state withOptions:options];
   
-  return YES;
+  return true;
 }
 
 - (BOOL)showImpact {
-  AIAssertV([NSThread mainThread], NO);
-  if (![ApplifierImpact isSupported]) return NO;
-  if (![self canShowImpact]) return NO;
-  [[ApplifierImpactMainViewController sharedInstance] openImpact:YES inState:kApplifierImpactViewStateTypeOfferScreen withOptions:nil];
-  return YES;
+  return [self showImpact:nil];
 }
 
 - (BOOL)hasMultipleRewardItems {
   if ([[ApplifierImpactCampaignManager sharedInstance] rewardItems] != nil && [[[ApplifierImpactCampaignManager sharedInstance] rewardItems] count] > 0) {
-    return YES;
+    return true;
   }
   
-  return NO;
+  return false;
 }
 
 - (NSArray *)getRewardItemKeys {
@@ -184,7 +193,7 @@ static ApplifierImpact *sharedImpact = nil;
     return [[ApplifierImpactCampaignManager sharedInstance] setSelectedRewardItemKey:rewardItemKey];
   }
   
-  return NO;
+  return false;
 }
 
 - (void)setDefaultRewardItemAsRewardItem {
@@ -200,8 +209,8 @@ static ApplifierImpact *sharedImpact = nil;
 }
 
 - (BOOL)hideImpact {
-  AIAssertV([NSThread mainThread], NO);
-  if (![ApplifierImpact isSupported]) NO;
+  AIAssertV([NSThread mainThread], false);
+  if (![ApplifierImpact isSupported]) false;
   return [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:YES withOptions:nil];
 }
 
@@ -209,7 +218,7 @@ static ApplifierImpact *sharedImpact = nil;
 	AIAssert([NSThread isMainThread]);
   if (![ApplifierImpact isSupported]) return;
   
-  BOOL openAnimated = NO;
+  BOOL openAnimated = false;
   if ([[ApplifierImpactProperties sharedInstance] currentViewController] == nil) {
     openAnimated = YES;
   }
@@ -261,12 +270,11 @@ static ApplifierImpact *sharedImpact = nil;
 }
 
 - (BOOL)impactCanBeShown {
-  if ([[ApplifierImpactCampaignManager sharedInstance] campaigns] != nil && [[[ApplifierImpactCampaignManager sharedInstance] campaigns] count] > 0 && [[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem] != nil && self.initializer != nil && [self.initializer initWasSuccessfull])
-		return YES;
-	else
-		return NO;
+  if ([[ApplifierImpactCampaignManager sharedInstance] campaigns] != nil && [[[ApplifierImpactCampaignManager sharedInstance] campaigns] count] > 0 && [[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem] != nil && self.initializer != nil && [self.initializer initWasSuccessfull]) {
+		return true;
+  }
   
-  return NO;
+  return false;
 }
 
 - (ApplifierImpactInitializer *)selectInitializerFromMode:(ApplifierImpactMode)mode {
@@ -274,7 +282,7 @@ static ApplifierImpact *sharedImpact = nil;
     case kApplifierImpactModeDefault:
       return [[ApplifierImpactDefaultInitializer alloc] init];
     case kApplifierImpactModeNoWebView:
-      break;
+      return [[ApplifierImpactNoWebViewInitializer alloc] init];
   }
   
   return nil;

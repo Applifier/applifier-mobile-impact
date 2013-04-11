@@ -10,19 +10,34 @@
 
 @implementation ApplifierImpactViewState
 
+
+- (id)init {
+  self = [super init];
+  self.waitingToBeShown = false;
+  return self;
+}
+
 - (void)enterState:(NSDictionary *)options {
+  AILOG_DEBUG(@"");
 }
 
 - (void)exitState:(NSDictionary *)options {
+  AILOG_DEBUG(@"");
+  self.waitingToBeShown = false;
 }
 
 - (void)willBeShown {
+  AILOG_DEBUG(@"");
+  self.waitingToBeShown = true;
 }
 
 - (void)wasShown {
+  AILOG_DEBUG(@"");
+  self.waitingToBeShown = false;
 }
 
 - (void)applyOptions:(NSDictionary *)options {
+  AILOG_DEBUG(@"");
 }
 
 - (ApplifierImpactViewStateType)getStateType {

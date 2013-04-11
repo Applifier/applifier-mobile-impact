@@ -1,19 +1,14 @@
 //
-//  ApplifierImpactViewStateDefaultVideoPlayer.m
+//  ApplifierImpactViewStateNoWebViewVideoPlayer.m
 //  ApplifierImpact
 //
-//  Created by Pekka Palmu on 4/4/13.
+//  Created by Pekka Palmu on 4/11/13.
 //  Copyright (c) 2013 Applifier. All rights reserved.
 //
 
-#import "ApplifierImpactViewStateDefaultVideoPlayer.h"
+#import "ApplifierImpactViewStateNoWebViewVideoPlayer.h"
 
-#import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
-#import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
-#import "../ApplifierImpactCampaign/ApplifierImpactRewardItem.h"
-#import "../ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
-
-@implementation ApplifierImpactViewStateDefaultVideoPlayer
+@implementation ApplifierImpactViewStateNoWebViewVideoPlayer
 
 - (ApplifierImpactViewStateType)getStateType {
   return kApplifierImpactViewStateTypeVideoPlayer;
@@ -22,6 +17,16 @@
 - (void)willBeShown {
   [super willBeShown];
   
+  // FIX: Show native spinner
+  
+  [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:nil];
+  ApplifierImpactCampaign *campaign = [[[ApplifierImpactCampaignManager sharedInstance] getViewableCampaigns] objectAtIndex:0];
+  
+  if (campaign != nil) {
+    [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:campaign];
+  }
+
+  /*
   if ([[ApplifierImpactShowOptionsParser sharedInstance] noOfferScreen]) {
     [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
     
@@ -32,7 +37,7 @@
     if (campaign != nil) {
       [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:campaign];
     }
-  }
+  }*/
 }
 
 - (void)wasShown {
@@ -67,10 +72,18 @@
     [self.delegate stateNotification:kApplifierImpactStateActionVideoStartedPlaying];
   }
   
+  /*
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
-
+  
   // Set completed view for the webview right away, so we don't get flickering after videoplay from start->end
   [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIActionVideoStartedPlaying, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key, kApplifierImpactWebViewEventDataCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+  */
+  
+  //[[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
+  
+  //if (![[ApplifierImpactMainViewController sharedInstance] isBeingPresented]) {
+  //  [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
+  //}
   
   if (!self.waitingToBeShown) {
     [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
@@ -79,9 +92,12 @@
 
 - (void)videoPlayerEncounteredError {
   AILOG_DEBUG(@"");
+  
+  /*
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventVideoCompleted data:@{kApplifierImpactNativeEventCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowError data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyVideoPlaybackError}];
+  */
   
   [self dismissVideoController];
 }
@@ -91,7 +107,9 @@
     [self.delegate stateNotification:kApplifierImpactStateActionVideoPlaybackEnded];
   }
   
+  /*
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventVideoCompleted data:@{kApplifierImpactNativeEventCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+   */
   [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeEndScreen withOptions:nil];
 }
 
@@ -100,8 +118,10 @@
   
   if (![self canViewSelectedCampaign]) return;
   
+  /*
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
-
+  */
+  
   [self startVideoPlayback:true withDelegate:self];
 }
 

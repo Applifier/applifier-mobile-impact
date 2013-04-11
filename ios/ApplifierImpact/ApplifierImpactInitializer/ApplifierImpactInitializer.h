@@ -14,6 +14,8 @@
 #import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
 #import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 
+#import "../ApplifierImpact.h"
+
 @protocol ApplifierImpactInitializerDelegate <NSObject>
 
 @required

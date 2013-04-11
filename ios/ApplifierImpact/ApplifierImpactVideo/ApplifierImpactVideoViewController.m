@@ -90,6 +90,7 @@
   return NO;
 }
 
+
 #pragma mark - Public
 
 - (void)playCampaign:(ApplifierImpactCampaign *)campaignToPlay {
@@ -103,9 +104,10 @@
   
   self.campaignToPlay = campaignToPlay;
   self.currentPlayingVideoUrl = videoURL;
+  __block AVPlayerItem *item = [AVPlayerItem playerItemWithURL:self.currentPlayingVideoUrl];
+  
   [self _createVideoView];
   [self _createVideoPlayer];
-  __block AVPlayerItem *item = [AVPlayerItem playerItemWithURL:self.currentPlayingVideoUrl];
   [self _attachVideoPlayer];
   [self.videoPlayer preparePlayer];
   
