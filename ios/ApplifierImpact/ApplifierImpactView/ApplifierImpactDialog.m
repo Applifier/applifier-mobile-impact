@@ -11,7 +11,7 @@
 
 @implementation ApplifierImpactDialog
 
-- (id)initWithFrame:(CGRect)frame useSpinner:(BOOL)createSpinner {
+- (id)initWithFrame:(CGRect)frame useSpinner:(BOOL)createSpinner useLabel:(BOOL)createLabel {
     self = [super initWithFrame:frame];
     if (self) {
       if (createSpinner) {
@@ -19,6 +19,22 @@
         [self addSubview:self.spinner];
         [self bringSubviewToFront:self.spinner];
         [self startSpin];
+      }
+      if (createLabel) {
+        CGRect rect = CGRectMake(9, 9, frame.size.width - 18, frame.size.height - 18);
+        
+        if (createSpinner) {
+          rect = CGRectMake(rect.origin.x + 51, rect.origin.y, rect.size.width - 51, rect.size.height);
+        }
+        
+        self.label = [[UILabel alloc] initWithFrame:rect];
+        [self.label setBackgroundColor:[UIColor clearColor]];
+        [self.label setTextColor:[UIColor whiteColor]];
+        [self.label setUserInteractionEnabled:false];
+        [self.label setTextAlignment:NSTextAlignmentCenter];
+        [self.label setNumberOfLines:2];
+        [self.label setText:@"Buffering..."];
+        [self addSubview:self.label];
       }
     }
     return self;

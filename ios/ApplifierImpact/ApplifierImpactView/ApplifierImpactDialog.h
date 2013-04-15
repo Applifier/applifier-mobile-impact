@@ -10,6 +10,8 @@
 
 @interface ApplifierImpactDialog : ApplifierImpactUIView
   @property (nonatomic, assign) BOOL animating;
+  @property (nonatomic, strong) UIView *spinner;
+  @property (nonatomic, strong) UILabel *label;
 
-- (id)initWithFrame:(CGRect)frame useSpinner:(BOOL)createSpinner;
+- (id)initWithFrame:(CGRect)frame useSpinner:(BOOL)createSpinner useLabel:(BOOL)createLabel;
 @end

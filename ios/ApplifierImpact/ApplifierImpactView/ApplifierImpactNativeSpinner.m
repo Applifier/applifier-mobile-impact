@@ -11,8 +11,7 @@
 
 @implementation ApplifierImpactNativeSpinner
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
       [self setBackgroundColor:[UIColor clearColor]];

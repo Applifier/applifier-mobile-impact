@@ -9,6 +9,4 @@
 #import <UIKit/UIKit.h>
 
 @interface ApplifierImpactUIView : UIView
-  @property (nonatomic, assign) BOOL drawSpinner;
-  @property (nonatomic, strong) UIView *spinner;
 @end

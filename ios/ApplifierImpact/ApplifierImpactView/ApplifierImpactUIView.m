@@ -13,7 +13,6 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-      self.drawSpinner = false;
       [self setBackgroundColor:[UIColor clearColor]];
     }
     return self;
