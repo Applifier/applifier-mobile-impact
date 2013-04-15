@@ -36,6 +36,11 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   [self.view setBackgroundColor:[UIColor blackColor]];
+  
+  if (self.delegate != nil) {
+    [self.delegate videoPlayerReady];
+  }
+  
   [self _attachVideoView];
 }
 
@@ -104,7 +109,8 @@
   
   self.campaignToPlay = campaignToPlay;
   self.currentPlayingVideoUrl = videoURL;
-  __block AVPlayerItem *item = [AVPlayerItem playerItemWithURL:self.currentPlayingVideoUrl];
+  //__block AVPlayerItem *item = [AVPlayerItem playerItemWithURL:self.currentPlayingVideoUrl];
+  AVPlayerItem *item = [AVPlayerItem playerItemWithURL:self.currentPlayingVideoUrl];
   
   [self _createVideoView];
   [self _createVideoPlayer];

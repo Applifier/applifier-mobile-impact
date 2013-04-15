@@ -10,6 +10,7 @@
 
 @interface ApplifierImpactViewStateEndScreen ()
   @property (nonatomic, strong) UIViewController *storeController;
+  @property (nonatomic, assign) UIViewController *targetController;
 @end
 
 @implementation ApplifierImpactViewStateEndScreen
@@ -21,11 +22,11 @@
   return [storeProductViewControllerClass instancesRespondToSelector:@selector(loadProductWithParameters:completionBlock:)];
 }
 
-- (void)openAppStoreWithData:(NSDictionary *)data {
+- (void)openAppStoreWithData:(NSDictionary *)data inViewController:(UIViewController *)targetViewController {
   AILOG_DEBUG(@"");
   
   if (![self _canOpenStoreProductViewController] || [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].bypassAppSheet == YES) {
-    NSString *clickUrl = [data objectForKey:@"clickUrl"];
+    NSString *clickUrl = [data objectForKey:kApplifierImpactWebViewEventDataClickUrlKey];
     if (clickUrl == nil) return;
     AILOG_DEBUG(@"Cannot open store product view controller, falling back to click URL.");
     [[ApplifierImpactAnalyticsUploader sharedInstance] sendOpenAppStoreRequest:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
@@ -41,9 +42,9 @@
   
   Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
   if ([storeProductViewControllerClass instancesRespondToSelector:@selector(loadProductWithParameters:completionBlock:)] == YES) {
-    if (![[data objectForKey:@"iTunesId"] isKindOfClass:[NSString class]]) return;
+    if (![[data objectForKey:kApplifierImpactCampaignStoreIDKey] isKindOfClass:[NSString class]]) return;
     NSString *gameId = nil;
-    gameId = [data valueForKey:@"iTunesId"];
+    gameId = [data valueForKey:kApplifierImpactCampaignStoreIDKey];
     if (gameId == nil || [gameId length] < 1) return;
     
     /*
@@ -69,7 +70,8 @@
       AILOG_DEBUG(@"RESULT: %i", result);
       if (result) {
         dispatch_async(dispatch_get_main_queue(), ^{
-          [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.storeController animated:YES completion:nil];
+          self.targetController = targetViewController;
+          [targetViewController presentViewController:self.storeController animated:YES completion:nil];
           [[ApplifierImpactAnalyticsUploader sharedInstance] sendOpenAppStoreRequest:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
         });
       }
@@ -96,7 +98,14 @@
 
 - (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
   AILOG_DEBUG(@"");
-  [[ApplifierImpactMainViewController sharedInstance] dismissViewControllerAnimated:YES completion:nil];
+  if (self.targetController != nil) {
+    [self.targetController dismissViewControllerAnimated:YES completion:nil];
+  }
+}
+
+- (void)dealloc {
+  self.targetController = nil;
+  self.storeController = nil;
 }
 
 @end

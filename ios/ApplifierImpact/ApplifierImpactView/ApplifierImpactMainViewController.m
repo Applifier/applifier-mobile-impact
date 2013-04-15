@@ -144,9 +144,10 @@
 - (BOOL)openImpact:(BOOL)animated inState:(ApplifierImpactViewStateType)requestedState withOptions:(NSDictionary *)options {
   AILOG_DEBUG(@"");
   if ([[ApplifierImpactProperties sharedInstance] currentViewController] == nil) return NO;
-  
+
+  [self selectState:requestedState];
+
   dispatch_async(dispatch_get_main_queue(), ^{
-    [self selectState:requestedState];
     if ([self hasState:requestedState]) {
       [self.currentViewState willBeShown];
       [self.delegate mainControllerWillOpen];
@@ -194,10 +195,7 @@
 #pragma mark - Private
 
 - (void)_dismissMainViewController:(BOOL)forcedToMainThread withAnimations:(BOOL)animated {
-  if ([self.currentViewState getStateType] == kApplifierImpactViewStateTypeVideoPlayer) {
-    [self dismissViewControllerAnimated:NO completion:nil];
-  }
-  
+
   if (!forcedToMainThread) {
     if (self.currentViewState != nil) {
       [self.currentViewState exitState:nil];
@@ -238,7 +236,7 @@
   
   if ([name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
     [self applyOptionsToCurrentState:@{kApplifierImpactNativeEventForceStopVideoPlayback:@true}];
-
+    
     if (self.isOpen)
       [self closeImpact:NO withAnimations:NO withOptions:nil];
   }

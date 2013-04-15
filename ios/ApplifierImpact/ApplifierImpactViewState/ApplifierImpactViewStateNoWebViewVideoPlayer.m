@@ -8,6 +8,7 @@
 
 #import "ApplifierImpactViewStateNoWebViewVideoPlayer.h"
 
+
 @implementation ApplifierImpactViewStateNoWebViewVideoPlayer
 
 - (ApplifierImpactViewStateType)getStateType {
@@ -42,7 +43,7 @@
 
 - (void)wasShown {
   [super wasShown];
-  if (self.videoController.parentViewController == nil) {
+  if (self.videoController.parentViewController == nil && [[ApplifierImpactMainViewController sharedInstance] presentedViewController] != self.videoController) {
     [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
   }
 }
@@ -50,7 +51,11 @@
 - (void)enterState:(NSDictionary *)options {
   AILOG_DEBUG(@"");
   [super enterState:options];
-  [self showPlayerAndPlaySelectedVideo];
+  [self createVideoController:self];
+  
+  if (!self.waitingToBeShown) {
+    [self showPlayerAndPlaySelectedVideo];
+  }
 }
 
 - (void)exitState:(NSDictionary *)options {
@@ -85,7 +90,7 @@
   //  [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
   //}
   
-  if (!self.waitingToBeShown) {
+  if (!self.waitingToBeShown && [[ApplifierImpactMainViewController sharedInstance] presentedViewController] != self.videoController) {
     [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
   }
 }
@@ -113,16 +118,27 @@
   [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeEndScreen withOptions:nil];
 }
 
+- (void)videoPlayerReady {
+	AILOG_DEBUG(@"");
+  if (![self.videoController isPlaying])
+    [self showPlayerAndPlaySelectedVideo];
+}
+
+
 - (void)showPlayerAndPlaySelectedVideo {
 	AILOG_DEBUG(@"");
   
   if (![self canViewSelectedCampaign]) return;
+  
   
   /*
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
   */
   
   [self startVideoPlayback:true withDelegate:self];
+
 }
+
+
 
 @end

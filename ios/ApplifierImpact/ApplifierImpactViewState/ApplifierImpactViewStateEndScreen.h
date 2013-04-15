@@ -16,5 +16,5 @@
 #import "../ApplifierImpact.h"
 
 @interface ApplifierImpactViewStateEndScreen : ApplifierImpactViewState
-- (void)openAppStoreWithData:(NSDictionary *)data;
+- (void)openAppStoreWithData:(NSDictionary *)data inViewController:(UIViewController *)targetViewController;
 @end

@@ -34,9 +34,9 @@
 
 - (void)playSelectedVideo {
   self.videoPosition = kVideoAnalyticsPositionUnplayed;
-  //dispatch_async(dispatch_get_main_queue(), ^{
+  dispatch_async(dispatch_get_main_queue(), ^{
     [self.delegate videoPlaybackStarted];
-  //});
+  });
 }
 
 - (void)_videoPlaybackEnded:(NSNotification *)notification {
@@ -107,11 +107,6 @@
       AILOG_DEBUG(@"videostartedplaying");
       __block ApplifierImpactVideoPlayer *blockSelf = self;
       
-      dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate videoStartedPlaying];
-        [self _logVideoAnalytics];
-      });
-      
       Float64 duration = [self _currentVideoDuration];
       NSMutableArray *analyticsTimeValues = [NSMutableArray array];
       [analyticsTimeValues addObject:[self _valueWithDuration:duration * .25]];
@@ -124,6 +119,11 @@
           [blockSelf _logVideoAnalytics];
         }];
       }
+      
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate videoStartedPlaying];
+        [self _logVideoAnalytics];
+      });
       
       [self play];
     }

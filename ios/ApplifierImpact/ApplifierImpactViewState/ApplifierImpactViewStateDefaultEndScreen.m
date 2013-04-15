@@ -54,7 +54,7 @@
     [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:[options objectForKey:kApplifierImpactNativeEventHideSpinner]];
   }
   else if ([options objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] != nil) {
-    [self openAppStoreWithData:options];
+    [self openAppStoreWithData:options inViewController:[ApplifierImpactMainViewController sharedInstance]];
   }
 }
 

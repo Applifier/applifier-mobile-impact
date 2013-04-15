@@ -37,7 +37,7 @@
 
 - (void)wasShown {
   [super wasShown];
-  if (self.videoController.parentViewController == nil) {
+  if (self.videoController.parentViewController == nil && [[ApplifierImpactMainViewController sharedInstance] presentedViewController] != self.videoController) {
     [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
   }
 }
@@ -45,7 +45,11 @@
 - (void)enterState:(NSDictionary *)options {
   AILOG_DEBUG(@"");
   [super enterState:options];
-  [self showPlayerAndPlaySelectedVideo];
+  [self createVideoController:self];
+  
+  if (!self.waitingToBeShown) {
+    [self showPlayerAndPlaySelectedVideo];
+  }
 }
 
 - (void)exitState:(NSDictionary *)options {
@@ -72,7 +76,7 @@
   // Set completed view for the webview right away, so we don't get flickering after videoplay from start->end
   [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIActionVideoStartedPlaying, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key, kApplifierImpactWebViewEventDataCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
   
-  if (!self.waitingToBeShown) {
+  if (!self.waitingToBeShown && [[ApplifierImpactMainViewController sharedInstance] presentedViewController] != self.videoController) {
     [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
   }
 }
@@ -93,6 +97,13 @@
   
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventVideoCompleted data:@{kApplifierImpactNativeEventCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
   [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeEndScreen withOptions:nil];
+}
+
+- (void)videoPlayerReady {
+	AILOG_DEBUG(@"");
+  
+  if (![self.videoController isPlaying])
+    [self showPlayerAndPlaySelectedVideo];
 }
 
 - (void)showPlayerAndPlaySelectedVideo {

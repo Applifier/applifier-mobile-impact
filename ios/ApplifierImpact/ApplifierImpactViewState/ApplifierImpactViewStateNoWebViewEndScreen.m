@@ -8,6 +8,9 @@
 
 #import "ApplifierImpactViewStateNoWebViewEndScreen.h"
 #import "../ApplifierImpactView/ApplifierImpactNoWebViewEndScreenViewController.h"
+#import "../ApplifierImpactView/ApplifierImpactDialog.h"
+#import "../ApplifierImpactView/ApplifierImpactNativeSpinner.h"
+
 
 @interface ApplifierImpactViewStateNoWebViewEndScreen ()
   @property (nonatomic, strong) ApplifierImpactNoWebViewEndScreenViewController *endScreenController;
@@ -26,6 +29,7 @@
   
   if (self.endScreenController == nil) {
     [self createEndScreenController];
+    [self showSpinnerDialog];
   }
   
   [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.endScreenController animated:NO completion:nil];
@@ -64,7 +68,7 @@
     //[[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:[options objectForKey:kApplifierImpactNativeEventHideSpinner]];
   }
   else if ([options objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] != nil) {
-    [self openAppStoreWithData:options];
+    [self openAppStoreWithData:options inViewController:self.endScreenController];
   }
 }
 
@@ -73,6 +77,19 @@
 - (void)createEndScreenController {
   AILOG_DEBUG(@"");
   self.endScreenController = [[ApplifierImpactNoWebViewEndScreenViewController alloc] initWithNibName:nil bundle:nil];
+}
+
+- (void)showSpinnerDialog {
+  int dialogWidth = 230;
+  int dialogHeight = 70;
+  
+  CGRect newRect = CGRectMake(([[ApplifierImpactMainViewController sharedInstance] view].bounds.size.width / 2) - (dialogWidth / 2), ([[ApplifierImpactMainViewController sharedInstance] view].bounds.size.height / 2) - (dialogHeight / 2), dialogWidth, dialogHeight);
+  
+  ApplifierImpactDialog *spinnerDialog = [[ApplifierImpactDialog alloc] initWithFrame:newRect useSpinner:true];
+  [spinnerDialog setDrawSpinner:true];
+  spinnerDialog.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
+   
+  [self.endScreenController.view addSubview:spinnerDialog];
 }
 
 @end

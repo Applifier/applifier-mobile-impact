@@ -65,9 +65,10 @@
 }
 
 - (void)startVideoPlayback:(BOOL)createVideoController withDelegate:(id)videoControllerDelegate {
+  /*
   if (createVideoController && videoControllerDelegate != nil) {
     [self createVideoController:videoControllerDelegate];
-  }
+  }*/
   [self.videoController playCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
 }
 
