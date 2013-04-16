@@ -56,10 +56,13 @@
 #pragma mark Video Observers
 
 - (void)_addObservers {
-  [self addObserver:self forKeyPath:@"self.currentItem.status" options:0 context:nil];
-  [self addObserver:self forKeyPath:@"self.currentItem.error" options:0 context:nil];
-  [self addObserver:self forKeyPath:@"self.currentItem.asset.duration" options:0 context:nil];
   
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self addObserver:self forKeyPath:@"self.currentItem.status" options:0 context:nil];
+    [self addObserver:self forKeyPath:@"self.currentItem.error" options:0 context:nil];
+    [self addObserver:self forKeyPath:@"self.currentItem.asset.duration" options:0 context:nil];
+  });
+ 
   __block ApplifierImpactVideoPlayer *blockSelf = self;
   if (![ApplifierImpactDevice isSimulator]) {
     self.timeObserver = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {

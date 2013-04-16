@@ -13,6 +13,8 @@
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
 
+#import "ApplifierImpactNativeButton.h"
+
 @interface ApplifierImpactNoWebViewEndScreenViewController ()
   @property (nonatomic, strong) UIButton *closeButton;
   @property (nonatomic, strong) UIButton *rewatchButton;
@@ -38,12 +40,10 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-	// Do any additional setup after loading the view.
 }
 
 - (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+  [super didReceiveMemoryWarning];
 }
 
 
@@ -82,40 +82,65 @@
 
 - (void)createCloseButton {
   AILOG_DEBUG(@"");
-  self.closeButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-  [self.closeButton setBackgroundColor:[UIColor blackColor]];
-  [self.closeButton setTitle:@"close" forState:UIControlStateNormal];
-  [self.view addSubview:self.closeButton];
-  self.closeButton.transform = CGAffineTransformMakeTranslation(self.view.bounds.size.width - 50, 0);
-  self.closeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
-  [self.view bringSubviewToFront:self.closeButton];
   
+  int buttonWidth = 50;
+  int buttonHeight = 50;
+  
+  UIColor *myColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
+  NSArray *gradientArray = [[NSArray alloc] initWithObjects:myColor, myColor, nil];
+  
+  self.closeButton = [[ApplifierImpactNativeButton alloc] initWithFrame:CGRectMake(0, 0, buttonWidth, buttonHeight) andBaseColors:gradientArray strokeColor:[UIColor whiteColor] withCorner:UIRectCornerBottomLeft withCornerRadius:23];
+  
+  self.closeButton.transform = CGAffineTransformMakeTranslation(0, 0);
+  self.closeButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+  self.closeButton.transform = CGAffineTransformMakeTranslation(self.view.bounds.size.width - 48, -2);
+  self.closeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+  
+  [self.closeButton.titleLabel setFont:[UIFont systemFontOfSize:33]];
+  [self.closeButton setTitle:[NSString stringWithFormat:@"\u00d7"] forState:UIControlStateNormal];
+  [self.view addSubview:self.closeButton];
   [self.closeButton addTarget:self action:@selector(closeButtonClicked) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)createRewatchButton {
   AILOG_DEBUG(@"");
-  self.rewatchButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-  [self.rewatchButton setBackgroundColor:[UIColor blackColor]];
-  [self.rewatchButton setTitle:@"rewatch" forState:UIControlStateNormal];
-  [self.view addSubview:self.rewatchButton];
+  
+  int buttonWidth = 50;
+  int buttonHeight = 50;
+  
+  UIColor *myColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
+  NSArray *gradientArray = [[NSArray alloc] initWithObjects:myColor, myColor, nil];
+  
+  self.rewatchButton = [[ApplifierImpactNativeButton alloc] initWithFrame:CGRectMake(0, 0, buttonWidth, buttonHeight) andBaseColors:gradientArray strokeColor:[UIColor whiteColor] withCorner:UIRectCornerBottomRight withCornerRadius:23];
+  
   self.rewatchButton.transform = CGAffineTransformMakeTranslation(0, 0);
   self.rewatchButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
-  [self.view bringSubviewToFront:self.rewatchButton];
+  self.rewatchButton.transform = CGAffineTransformMakeTranslation(-2, -2);
   
+  [self.rewatchButton.titleLabel setFont:[UIFont systemFontOfSize:30]];
+  [self.rewatchButton setTitle:[NSString stringWithFormat:@"\u21bb"] forState:UIControlStateNormal];
+  [self.view addSubview:self.rewatchButton];
   [self.rewatchButton addTarget:self action:@selector(rewatchButtonClicked) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)createDownloadButton {
   AILOG_DEBUG(@"");
-  self.downloadButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 120, 40)];
-  [self.downloadButton setBackgroundColor:[UIColor greenColor]];
-  [self.downloadButton setTitle:@"download" forState:UIControlStateNormal];
-  [self.view addSubview:self.downloadButton];
+  
+  int buttonWidth = 120;
+  int buttonHeight = 40;
+  
+  CGFloat red = 0.0, green = 0.0, blue = 0.0, alpha = 0.0;
+  [[UIColor greenColor] getRed:&red green:&green blue:&blue alpha:&alpha];
+  UIColor *myColor = [UIColor colorWithRed:red / 2 green:green / 2 blue:blue / 2 alpha:alpha];
+  NSArray *gradientArray = [[NSArray alloc] initWithObjects:[UIColor greenColor], myColor, nil];
+  
+  self.downloadButton = [[ApplifierImpactNativeButton alloc] initWithFrame:CGRectMake(0, 0, buttonWidth, buttonHeight) andBaseColors:gradientArray strokeColor:[UIColor greenColor]];
   self.downloadButton.transform = CGAffineTransformMakeTranslation((self.view.bounds.size.width / 2) - (120 / 2), self.view.bounds.size.height - 100);
   self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
-  [self.view bringSubviewToFront:self.downloadButton];
   
+  [self.downloadButton setTitle:@"\u21ea download" forState:UIControlStateNormal];
+  [self.view addSubview:self.downloadButton];
+  [self.view bringSubviewToFront:self.downloadButton];
   [self.downloadButton addTarget:self action:@selector(downloadButtonClicked) forControlEvents:UIControlEventTouchUpInside];
 }
 

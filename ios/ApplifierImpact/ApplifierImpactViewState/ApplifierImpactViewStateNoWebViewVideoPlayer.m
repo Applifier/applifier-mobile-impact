@@ -7,7 +7,11 @@
 //
 
 #import "ApplifierImpactViewStateNoWebViewVideoPlayer.h"
+#import "../ApplifierImpactView/ApplifierImpactDialog.h"
 
+@interface ApplifierImpactViewStateNoWebViewVideoPlayer ()
+  @property (nonatomic, strong) ApplifierImpactDialog *spinnerDialog;
+@end
 
 @implementation ApplifierImpactViewStateNoWebViewVideoPlayer
 
@@ -17,8 +21,7 @@
 
 - (void)willBeShown {
   [super willBeShown];
-  
-  // FIX: Show native spinner
+  [self showSpinner];
   
   [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:nil];
   ApplifierImpactCampaign *campaign = [[[ApplifierImpactCampaignManager sharedInstance] getViewableCampaigns] objectAtIndex:0];
@@ -26,25 +29,24 @@
   if (campaign != nil) {
     [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:campaign];
   }
-
-  /*
-  if ([[ApplifierImpactShowOptionsParser sharedInstance] noOfferScreen]) {
-    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
-    
-    [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:nil];
-    
-    ApplifierImpactCampaign *campaign = [[[ApplifierImpactCampaignManager sharedInstance] getViewableCampaigns] objectAtIndex:0];
-    
-    if (campaign != nil) {
-      [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:campaign];
-    }
-  }*/
 }
 
 - (void)wasShown {
   [super wasShown];
   if (self.videoController.parentViewController == nil && [[ApplifierImpactMainViewController sharedInstance] presentedViewController] != self.videoController) {
     [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
+    
+    if (self.spinnerDialog != nil) {
+      [self.spinnerDialog removeFromSuperview];
+      
+      int spinnerWidth = self.spinnerDialog.bounds.size.width;
+      int spinnerHeight = self.spinnerDialog.bounds.size.height;
+      
+      CGRect newRect = CGRectMake((self.videoController.view.bounds.size.width / 2) - (spinnerWidth / 2), (self.videoController.view.bounds.size.height / 2) - (spinnerHeight / 2), spinnerWidth, spinnerHeight);
+      
+      [self.spinnerDialog setFrame:newRect];
+      [self.videoController.view addSubview:self.spinnerDialog];
+    }
   }
 }
 
@@ -52,6 +54,7 @@
   AILOG_DEBUG(@"");
   [super enterState:options];
   [self createVideoController:self];
+  [self showSpinner];
   
   if (!self.waitingToBeShown) {
     [self showPlayerAndPlaySelectedVideo];
@@ -61,6 +64,7 @@
 - (void)exitState:(NSDictionary *)options {
   AILOG_DEBUG(@"");
   [super exitState:options];
+  [self hideSpinner];
 }
 
 - (void)applyOptions:(NSDictionary *)options {
@@ -77,19 +81,8 @@
     [self.delegate stateNotification:kApplifierImpactStateActionVideoStartedPlaying];
   }
   
-  /*
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
-  
-  // Set completed view for the webview right away, so we don't get flickering after videoplay from start->end
-  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIActionVideoStartedPlaying, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key, kApplifierImpactWebViewEventDataCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
-  */
-  
-  //[[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
-  
-  //if (![[ApplifierImpactMainViewController sharedInstance] isBeingPresented]) {
-  //  [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
-  //}
-  
+  [self hideSpinner];
+
   if (!self.waitingToBeShown && [[ApplifierImpactMainViewController sharedInstance] presentedViewController] != self.videoController) {
     [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
   }
@@ -97,13 +90,7 @@
 
 - (void)videoPlayerEncounteredError {
   AILOG_DEBUG(@"");
-  
-  /*
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventVideoCompleted data:@{kApplifierImpactNativeEventCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowError data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyVideoPlaybackError}];
-  */
-  
+  [self hideSpinner];
   [self dismissVideoController];
 }
 
@@ -112,9 +99,6 @@
     [self.delegate stateNotification:kApplifierImpactStateActionVideoPlaybackEnded];
   }
   
-  /*
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventVideoCompleted data:@{kApplifierImpactNativeEventCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
-   */
   [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeEndScreen withOptions:nil];
 }
 
@@ -130,15 +114,29 @@
   
   if (![self canViewSelectedCampaign]) return;
   
-  
-  /*
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
-  */
-  
   [self startVideoPlayback:true withDelegate:self];
-
 }
 
 
+- (void)showSpinner {
+  if (self.spinnerDialog == nil) {
+    int dialogWidth = 230;
+    int dialogHeight = 76;
+    
+    CGRect newRect = CGRectMake(([[ApplifierImpactMainViewController sharedInstance] view].bounds.size.width / 2) - (dialogWidth / 2), ([[ApplifierImpactMainViewController sharedInstance] view].bounds.size.height / 2) - (dialogHeight / 2), dialogWidth, dialogHeight);
+    
+    self.spinnerDialog = [[ApplifierImpactDialog alloc] initWithFrame:newRect useSpinner:true useLabel:true useButton:false];
+    self.spinnerDialog.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
+    
+    [[[ApplifierImpactMainViewController sharedInstance] view] addSubview:self.spinnerDialog];
+  }
+}
+
+- (void)hideSpinner {
+  if (self.spinnerDialog != nil) {
+    [self.spinnerDialog removeFromSuperview];
+    self.spinnerDialog = nil;
+  }
+}
 
 @end

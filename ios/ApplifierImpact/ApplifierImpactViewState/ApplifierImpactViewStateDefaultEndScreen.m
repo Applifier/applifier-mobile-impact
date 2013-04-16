@@ -30,7 +30,6 @@
   
   [super exitState:options];
   
-  // FIX: Doesn't always work right with rewatch (setView:None (null))
   if ([options objectForKey:kApplifierImpactWebViewEventDataRewatchKey] == nil || [[options valueForKey:kApplifierImpactWebViewEventDataRewatchKey] boolValue] == false) {
     [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{}];
   }

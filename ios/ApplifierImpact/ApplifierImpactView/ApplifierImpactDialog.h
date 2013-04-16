@@ -12,6 +12,7 @@
   @property (nonatomic, assign) BOOL animating;
   @property (nonatomic, strong) UIView *spinner;
   @property (nonatomic, strong) UILabel *label;
+  @property (nonatomic, strong) UIButton *button;
 
-- (id)initWithFrame:(CGRect)frame useSpinner:(BOOL)createSpinner useLabel:(BOOL)createLabel;
+- (id)initWithFrame:(CGRect)frame useSpinner:(BOOL)createSpinner useLabel:(BOOL)createLabel useButton:(BOOL)createButton;
 @end

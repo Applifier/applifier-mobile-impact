@@ -8,14 +8,16 @@
 
 #import "ApplifierImpactDialog.h"
 #import "ApplifierImpactNativeSpinner.h"
+#import "ApplifierImpactNativeButton.h"
 
 @implementation ApplifierImpactDialog
 
-- (id)initWithFrame:(CGRect)frame useSpinner:(BOOL)createSpinner useLabel:(BOOL)createLabel {
+- (id)initWithFrame:(CGRect)frame useSpinner:(BOOL)createSpinner useLabel:(BOOL)createLabel useButton:(BOOL)createButton {
     self = [super initWithFrame:frame];
     if (self) {
       if (createSpinner) {
-        self.spinner = [[ApplifierImpactNativeSpinner alloc] initWithFrame:CGRectMake(12, 12, 47, 47)];
+        int spinnerSize = 47;
+        self.spinner = [[ApplifierImpactNativeSpinner alloc] initWithFrame:CGRectMake(12, (frame.size.height / 2) - (spinnerSize / 2), spinnerSize, spinnerSize)];
         [self addSubview:self.spinner];
         [self bringSubviewToFront:self.spinner];
         [self startSpin];
@@ -23,7 +25,10 @@
       if (createLabel) {
         CGRect rect = CGRectMake(9, 9, frame.size.width - 18, frame.size.height - 18);
         
-        if (createSpinner) {
+        if (createButton) {
+          rect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - 29);
+        }
+        else if (createSpinner) {
           rect = CGRectMake(rect.origin.x + 51, rect.origin.y, rect.size.width - 51, rect.size.height);
         }
         
@@ -36,12 +41,25 @@
         [self.label setText:@"Buffering..."];
         [self addSubview:self.label];
       }
+      if (createButton) {
+        int buttonWidth = 110;
+        int buttonHeight = 25;
+        
+        CGFloat red = 0.0, green = 0.0, blue = 0.0, alpha = 0.0;
+        [[UIColor greenColor] getRed:&red green:&green blue:&blue alpha:&alpha];
+        UIColor *myColor = [UIColor colorWithRed:red / 2 green:green / 2 blue:blue / 2 alpha:alpha];
+        NSArray *gradientArray = [[NSArray alloc] initWithObjects:[UIColor greenColor], myColor, nil];
+        
+        self.button = [[ApplifierImpactNativeButton alloc] initWithFrame:CGRectMake((frame.size.width / 2) - (buttonWidth / 2), frame.size.height - buttonHeight - 9, buttonWidth, buttonHeight) andBaseColors:gradientArray strokeColor:[UIColor greenColor]];
+        [self.button setTitle:@"OK" forState:UIControlStateNormal];
+        [self addSubview:self.button];
+      }
     }
+  
     return self;
 }
 
 - (void)spinWithOptions: (UIViewAnimationOptions) options {
-  // this spin completes 360 degrees every 2 seconds
   [UIView animateWithDuration: 0.5f
                         delay: 0.0f
                       options: options
@@ -51,10 +69,8 @@
                    completion: ^(BOOL finished) {
                      if (finished) {
                        if (self.animating) {
-                         // if flag still set, keep spinning with constant speed
                          [self spinWithOptions: UIViewAnimationOptionCurveLinear];
                        } else if (options != UIViewAnimationOptionCurveEaseOut) {
-                         // one last spin, with deceleration
                          [self spinWithOptions: UIViewAnimationOptionCurveEaseOut];
                        }
                      }
@@ -69,7 +85,6 @@
 }
 
 - (void)stopSpin {
-  // set the flag to stop spinning after one last 90 degree increment
   self.animating = NO;
 }
 

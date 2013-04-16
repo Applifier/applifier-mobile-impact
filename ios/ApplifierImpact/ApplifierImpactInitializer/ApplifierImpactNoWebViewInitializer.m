@@ -25,14 +25,6 @@
   
   [[ApplifierImpactMainViewController sharedInstance] applyViewStateHandler:[[ApplifierImpactViewStateNoWebViewVideoPlayer alloc] init]];
   [[ApplifierImpactMainViewController sharedInstance] applyViewStateHandler:[[ApplifierImpactViewStateNoWebViewEndScreen alloc] init]];
-  /*
-  [[ApplifierImpactMainViewController sharedInstance] applyViewStateHandler:[[ApplifierImpactViewStateDefaultVideoPlayer alloc] init]];
-  [[ApplifierImpactMainViewController sharedInstance] applyViewStateHandler:[[ApplifierImpactViewStateDefaultEndScreen alloc] init]];
-  [[ApplifierImpactMainViewController sharedInstance] applyViewStateHandler:[[ApplifierImpactViewStateDefaultSpinner alloc] init]];
-  
-  [ApplifierImpactWebAppController sharedInstance];
-  [[ApplifierImpactWebAppController sharedInstance] setDelegate:self];
-  */
   
   [self performSelector:@selector(initCampaignManager) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];
   [self performSelector:@selector(initAnalyticsUploader) onThread:self.backgroundThread withObject:nil waitUntilDone:NO];

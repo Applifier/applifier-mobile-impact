@@ -262,7 +262,12 @@
 - (void)_updateTimeRemainingLabelWithTime:(CMTime)currentTime {
 	Float64 duration = [self _currentVideoDuration];
 	Float64 current = CMTimeGetSeconds(currentTime);
-	NSString *descriptionText = [NSString stringWithFormat:NSLocalizedString(@"This video ends in %.0f seconds.", nil), duration - current];
+  Float64 timeLeft = duration - current;
+
+  if (timeLeft < 0)
+    timeLeft = 0;
+  
+	NSString *descriptionText = [NSString stringWithFormat:NSLocalizedString(@"This video ends in %.0f seconds.", nil), timeLeft];
 	self.progressLabel.text = descriptionText;
 }
 

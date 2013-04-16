@@ -81,6 +81,8 @@
 		7894D901171C02F4000CFC99 /* ApplifierImpactDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8FF171C02F3000CFC99 /* ApplifierImpactDialog.m */; };
 		7894D904171C0E6B000CFC99 /* ApplifierImpactNativeSpinner.h in Headers */ = {isa = PBXBuildFile; fileRef = 7894D902171C0E6A000CFC99 /* ApplifierImpactNativeSpinner.h */; };
 		7894D905171C0E6B000CFC99 /* ApplifierImpactNativeSpinner.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D903171C0E6A000CFC99 /* ApplifierImpactNativeSpinner.m */; };
+		7894D908171D4FEC000CFC99 /* ApplifierImpactNativeButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 7894D906171D4FEB000CFC99 /* ApplifierImpactNativeButton.h */; };
+		7894D909171D4FEC000CFC99 /* ApplifierImpactNativeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D907171D4FEC000CFC99 /* ApplifierImpactNativeButton.m */; };
 		78AC201A1622EFEA007DE419 /* ApplifierImpactOpenUDID.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */; };
 		78AC201B1622EFEA007DE419 /* ApplifierImpactOpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20191622EFEA007DE419 /* ApplifierImpactOpenUDID.m */; };
 		78AC20211622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */; };
@@ -175,6 +177,8 @@
 		7894D8FF171C02F3000CFC99 /* ApplifierImpactDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactDialog.m; sourceTree = "<group>"; };
 		7894D902171C0E6A000CFC99 /* ApplifierImpactNativeSpinner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactNativeSpinner.h; sourceTree = "<group>"; };
 		7894D903171C0E6A000CFC99 /* ApplifierImpactNativeSpinner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactNativeSpinner.m; sourceTree = "<group>"; };
+		7894D906171D4FEB000CFC99 /* ApplifierImpactNativeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactNativeButton.h; sourceTree = "<group>"; };
+		7894D907171D4FEC000CFC99 /* ApplifierImpactNativeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactNativeButton.m; sourceTree = "<group>"; };
 		78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactOpenUDID.h; sourceTree = "<group>"; };
 		78AC20191622EFEA007DE419 /* ApplifierImpactOpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactOpenUDID.m; sourceTree = "<group>"; };
 		78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactAnalyticsUploader.h; sourceTree = "<group>"; };
@@ -265,6 +269,8 @@
 				7894D8FF171C02F3000CFC99 /* ApplifierImpactDialog.m */,
 				7894D902171C0E6A000CFC99 /* ApplifierImpactNativeSpinner.h */,
 				7894D903171C0E6A000CFC99 /* ApplifierImpactNativeSpinner.m */,
+				7894D906171D4FEB000CFC99 /* ApplifierImpactNativeButton.h */,
+				7894D907171D4FEC000CFC99 /* ApplifierImpactNativeButton.m */,
 			);
 			path = ApplifierImpactView;
 			sourceTree = "<group>";
@@ -482,6 +488,7 @@
 				7894D8FC171C020F000CFC99 /* ApplifierImpactUIView.h in Headers */,
 				7894D900171C02F4000CFC99 /* ApplifierImpactDialog.h in Headers */,
 				7894D904171C0E6B000CFC99 /* ApplifierImpactNativeSpinner.h in Headers */,
+				7894D908171D4FEC000CFC99 /* ApplifierImpactNativeButton.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -638,6 +645,7 @@
 				7894D8FD171C020F000CFC99 /* ApplifierImpactUIView.m in Sources */,
 				7894D901171C02F4000CFC99 /* ApplifierImpactDialog.m in Sources */,
 				7894D905171C0E6B000CFC99 /* ApplifierImpactNativeSpinner.m in Sources */,
+				7894D909171D4FEC000CFC99 /* ApplifierImpactNativeButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

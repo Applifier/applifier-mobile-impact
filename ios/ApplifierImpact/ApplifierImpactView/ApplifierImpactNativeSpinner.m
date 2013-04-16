@@ -27,13 +27,9 @@
   CGContextRef context = UIGraphicsGetCurrentContext();
   
   // Draw background
-  CGContextSetRGBStrokeColor(context, 1.0f, 1.0f, 1.0f, 1.0f); // white
-  //CGContextSetRGBFillColor(context, 1.0f, 1.0f, 1.0f, 0.1f); // translucent white
+  CGContextSetRGBStrokeColor(context, 1.0f, 1.0f, 1.0f, 1.0f);
   CGContextSetLineWidth(context, 3);
-  //CGContextFillEllipseInRect(context, circleRect);
   CGContextStrokeEllipseInRect(context, circleRect);
-  
-  // Draw progress
   
   CGPoint center = CGPointMake(allRect.size.width / 2, allRect.size.height / 2);
   CGFloat radius = (allRect.size.width - 4) / 2;
