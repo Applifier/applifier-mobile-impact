@@ -35,18 +35,7 @@
   [super wasShown];
   if (self.videoController.parentViewController == nil && [[ApplifierImpactMainViewController sharedInstance] presentedViewController] != self.videoController) {
     [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
-    
-    if (self.spinnerDialog != nil) {
-      [self.spinnerDialog removeFromSuperview];
-      
-      int spinnerWidth = self.spinnerDialog.bounds.size.width;
-      int spinnerHeight = self.spinnerDialog.bounds.size.height;
-      
-      CGRect newRect = CGRectMake((self.videoController.view.bounds.size.width / 2) - (spinnerWidth / 2), (self.videoController.view.bounds.size.height / 2) - (spinnerHeight / 2), spinnerWidth, spinnerHeight);
-      
-      [self.spinnerDialog setFrame:newRect];
-      [self.videoController.view addSubview:self.spinnerDialog];
-    }
+    [self moveSpinnerToVideoController];
   }
 }
 
@@ -136,6 +125,20 @@
   if (self.spinnerDialog != nil) {
     [self.spinnerDialog removeFromSuperview];
     self.spinnerDialog = nil;
+  }
+}
+
+- (void)moveSpinnerToVideoController {
+  if (self.spinnerDialog != nil) {
+    [self.spinnerDialog removeFromSuperview];
+    
+    int spinnerWidth = self.spinnerDialog.bounds.size.width;
+    int spinnerHeight = self.spinnerDialog.bounds.size.height;
+    
+    CGRect newRect = CGRectMake((self.videoController.view.bounds.size.width / 2) - (spinnerWidth / 2), (self.videoController.view.bounds.size.height / 2) - (spinnerHeight / 2), spinnerWidth, spinnerHeight);
+    
+    [self.spinnerDialog setFrame:newRect];
+    [self.videoController.view addSubview:self.spinnerDialog];
   }
 }
 

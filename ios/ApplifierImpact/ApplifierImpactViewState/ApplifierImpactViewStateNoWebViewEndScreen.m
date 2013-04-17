@@ -14,6 +14,7 @@
 
 @interface ApplifierImpactViewStateNoWebViewEndScreen ()
   @property (nonatomic, strong) ApplifierImpactNoWebViewEndScreenViewController *endScreenController;
+  @property (nonatomic, strong) ApplifierImpactDialog *dialog;
 @end
 
 @implementation ApplifierImpactViewStateNoWebViewEndScreen
@@ -29,7 +30,6 @@
   
   if (self.endScreenController == nil) {
     [self createEndScreenController];
-    [self showSpinnerDialog];
   }
   
   [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.endScreenController animated:NO completion:nil];
@@ -54,10 +54,10 @@
   [super applyOptions:options];
   
   if ([options objectForKey:kApplifierImpactNativeEventShowSpinner] != nil) {
-    //[[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:[options objectForKey:kApplifierImpactNativeEventShowSpinner]];
+    [self showDialog];
   }
   else if ([options objectForKey:kApplifierImpactNativeEventHideSpinner] != nil) {
-    //[[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:[options objectForKey:kApplifierImpactNativeEventHideSpinner]];
+    [self hideDialog];
   }
   else if ([options objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] != nil) {
     [self openAppStoreWithData:options inViewController:self.endScreenController];
@@ -71,16 +71,31 @@
   self.endScreenController = [[ApplifierImpactNoWebViewEndScreenViewController alloc] initWithNibName:nil bundle:nil];
 }
 
-- (void)showSpinnerDialog {
-  int dialogWidth = 230;
-  int dialogHeight = 76;
+- (void)showDialog {
+  if (self.dialog == nil) {
+    int dialogWidth = 230;
+    int dialogHeight = 76;
+    
+    CGRect newRect = CGRectMake((self.endScreenController.view.bounds.size.width / 2) - (dialogWidth / 2), (self.endScreenController.view.bounds.size.height / 2) - (dialogHeight / 2), dialogWidth, dialogHeight);
+    
+    self.dialog = [[ApplifierImpactDialog alloc] initWithFrame:newRect useSpinner:true useLabel:true useButton:false];
+    self.dialog.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
+    [self.dialog.label setText:@"Loading..."];
+  }
   
-  CGRect newRect = CGRectMake(([[ApplifierImpactMainViewController sharedInstance] view].window.bounds.size.width / 2) - (dialogWidth / 2), ([[ApplifierImpactMainViewController sharedInstance] view].window.bounds.size.height / 2) - (dialogHeight / 2), dialogWidth, dialogHeight);
-  
-  ApplifierImpactDialog *spinnerDialog = [[ApplifierImpactDialog alloc] initWithFrame:newRect useSpinner:false useLabel:true useButton:true];
-  spinnerDialog.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
-   
-  [self.endScreenController.view addSubview:spinnerDialog];
+  if (self.dialog.superview == nil) {
+    [self.endScreenController.view addSubview:self.dialog];
+  }
+}
+
+- (void)hideDialog {
+  if (self.dialog != nil) {
+    if (self.dialog.superview != nil) {
+      [self.dialog removeFromSuperview];
+    }
+    
+    self.dialog = nil;
+  }
 }
 
 @end

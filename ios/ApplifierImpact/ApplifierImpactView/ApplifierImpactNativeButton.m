@@ -47,7 +47,7 @@
   [self.strokeColor setFill];
   [outerPath fill];
   
-  UIBezierPath *innerPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(rect.origin.x + 2, rect.origin.y + 2, rect.size.width - 4, rect.size.height - 4) byRoundingCorners:cornerToRound cornerRadii:CGSizeMake(self.cornerRadius - 2, self.cornerRadius - 2)];
+  UIBezierPath *innerPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(rect.origin.x + 3, rect.origin.y + 3, rect.size.width - 6, rect.size.height - 6) byRoundingCorners:cornerToRound cornerRadii:CGSizeMake(self.cornerRadius - 3, self.cornerRadius - 3)];
   
   
   UIColor *firstColor = [self.baseColors objectAtIndex:0];
