@@ -98,6 +98,7 @@ extern NSString * const kApplifierImpactCampaignStoreIDKey;
 extern NSString * const kApplifierImpactCampaignCacheVideoKey;
 extern NSString * const kApplifierImpactCampaignBypassAppSheet;
 extern NSString * const kApplifierImpactCampaignExpectedFileSize;
+extern NSString * const kApplifierImpactCampaignGameIconKey;
 
 /* Reward Item JSON Properties */
 

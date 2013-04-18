@@ -14,7 +14,9 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
+      UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 3)];
+      [lineView setBackgroundColor:[UIColor whiteColor]];
+      [self addSubview:lineView];
     }
     return self;
 }
@@ -36,13 +38,6 @@
   CGColorSpaceRelease(baseSpace), baseSpace = NULL;
   
   CGContextRef context = UIGraphicsGetCurrentContext();
-
-  int bottomBarWidth = rect.size.height;
-  if (rect.size.width > bottomBarWidth)
-    bottomBarWidth = rect.size.width;
-  
-  bottomBarWidth += 40;
-  
   CGContextSaveGState(context);
   CGContextAddRect(context, rect);
   CGContextClip(context);

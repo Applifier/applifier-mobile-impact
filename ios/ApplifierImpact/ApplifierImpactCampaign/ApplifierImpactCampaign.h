@@ -12,6 +12,7 @@
 @property (nonatomic, strong) NSURL *pictureURL;
 @property (nonatomic, strong) NSURL *trailerDownloadableURL;
 @property (nonatomic, strong) NSURL *trailerStreamingURL;
+@property (nonatomic, strong) NSURL *gameIconURL;
 @property (nonatomic, strong) NSString *gameID;
 @property (nonatomic, strong) NSString *gameName;
 @property (nonatomic, strong) NSString *id;

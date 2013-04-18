@@ -36,6 +36,7 @@
     }
     
     // DOES NOT INITIALIZE WEBVIEW
+    AILOG_DEBUG(@"CLICK_URL: %@", clickUrl);
     [[ApplifierImpactWebAppController sharedInstance] openExternalUrl:clickUrl];
     return;
   }

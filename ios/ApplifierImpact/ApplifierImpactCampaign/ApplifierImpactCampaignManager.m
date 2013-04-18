@@ -88,6 +88,13 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 			AIAssertV(trailerStreamingURL != nil, nil);
 			campaign.trailerStreamingURL = trailerStreamingURL;
       
+      NSString *gameIconURLString = [campaignDictionary objectForKey:kApplifierImpactCampaignGameIconKey];
+      if (gameIconURLString == nil) continue;
+			AIAssertV([gameIconURLString isKindOfClass:[NSString class]], nil);
+			NSURL *gameIconURL = [NSURL URLWithString:gameIconURLString];
+			AIAssertV(gameIconURL != nil, nil);
+			campaign.gameIconURL = gameIconURL;
+      
 			id gameIDValue = [campaignDictionary objectForKey:kApplifierImpactCampaignGameIDKey];
       if (gameIDValue == nil) continue;
 			AIAssertV(gameIDValue != nil && ([gameIDValue isKindOfClass:[NSString class]] || [gameIDValue isKindOfClass:[NSNumber class]]), nil);

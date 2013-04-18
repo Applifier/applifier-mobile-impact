@@ -75,6 +75,7 @@ NSString * const kApplifierImpactCampaignClickURLKey = @"clickUrl";
 NSString * const kApplifierImpactCampaignPictureKey = @"picture";
 NSString * const kApplifierImpactCampaignTrailerDownloadableKey = @"trailerDownloadable";
 NSString * const kApplifierImpactCampaignTrailerStreamingKey = @"trailerStreaming";
+NSString * const kApplifierImpactCampaignGameIconKey = @"gameIcon";
 NSString * const kApplifierImpactCampaignGameIDKey = @"gameId";
 NSString * const kApplifierImpactCampaignGameNameKey = @"gameName";
 NSString * const kApplifierImpactCampaignIDKey = @"id";

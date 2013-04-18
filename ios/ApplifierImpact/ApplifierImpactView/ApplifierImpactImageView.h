@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface ApplifierImpactImageView : UIImageView <NSURLConnectionDelegate>
-  - (void)loadImageFromURL:(NSURL*)url;
+- (void)loadImageFromURL:(NSURL*)url applyScaling:(BOOL)runScaling;
 @end

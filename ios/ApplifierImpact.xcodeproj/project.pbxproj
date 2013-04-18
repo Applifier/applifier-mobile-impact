@@ -87,6 +87,10 @@
 		7894D90D171EA116000CFC99 /* ApplifierImpactImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D90B171EA115000CFC99 /* ApplifierImpactImageView.m */; };
 		7894D910171ED568000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 7894D90E171ED566000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.h */; };
 		7894D911171ED568000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D90F171ED567000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.m */; };
+		7894D914171FF7AD000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 7894D912171FF7AC000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.h */; };
+		7894D915171FF7AD000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D913171FF7AC000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m */; };
+		7894D91817200A8D000CFC99 /* ApplifierImpactImageViewRoundedCorners.h in Headers */ = {isa = PBXBuildFile; fileRef = 7894D91617200A8B000CFC99 /* ApplifierImpactImageViewRoundedCorners.h */; };
+		7894D91917200A8D000CFC99 /* ApplifierImpactImageViewRoundedCorners.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D91717200A8B000CFC99 /* ApplifierImpactImageViewRoundedCorners.m */; };
 		78AC201A1622EFEA007DE419 /* ApplifierImpactOpenUDID.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */; };
 		78AC201B1622EFEA007DE419 /* ApplifierImpactOpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20191622EFEA007DE419 /* ApplifierImpactOpenUDID.m */; };
 		78AC20211622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */; };
@@ -187,6 +191,10 @@
 		7894D90B171EA115000CFC99 /* ApplifierImpactImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactImageView.m; sourceTree = "<group>"; };
 		7894D90E171ED566000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactNoWebViewEndScreenBottomBar.h; sourceTree = "<group>"; };
 		7894D90F171ED567000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactNoWebViewEndScreenBottomBar.m; sourceTree = "<group>"; };
+		7894D912171FF7AC000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactNoWebViewEndScreenBottomBarContent.h; sourceTree = "<group>"; };
+		7894D913171FF7AC000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactNoWebViewEndScreenBottomBarContent.m; sourceTree = "<group>"; };
+		7894D91617200A8B000CFC99 /* ApplifierImpactImageViewRoundedCorners.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactImageViewRoundedCorners.h; sourceTree = "<group>"; };
+		7894D91717200A8B000CFC99 /* ApplifierImpactImageViewRoundedCorners.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactImageViewRoundedCorners.m; sourceTree = "<group>"; };
 		78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactOpenUDID.h; sourceTree = "<group>"; };
 		78AC20191622EFEA007DE419 /* ApplifierImpactOpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactOpenUDID.m; sourceTree = "<group>"; };
 		78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactAnalyticsUploader.h; sourceTree = "<group>"; };
@@ -283,6 +291,10 @@
 				7894D90B171EA115000CFC99 /* ApplifierImpactImageView.m */,
 				7894D90E171ED566000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.h */,
 				7894D90F171ED567000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.m */,
+				7894D912171FF7AC000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.h */,
+				7894D913171FF7AC000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m */,
+				7894D91617200A8B000CFC99 /* ApplifierImpactImageViewRoundedCorners.h */,
+				7894D91717200A8B000CFC99 /* ApplifierImpactImageViewRoundedCorners.m */,
 			);
 			path = ApplifierImpactView;
 			sourceTree = "<group>";
@@ -503,6 +515,8 @@
 				7894D908171D4FEC000CFC99 /* ApplifierImpactNativeButton.h in Headers */,
 				7894D90C171EA116000CFC99 /* ApplifierImpactImageView.h in Headers */,
 				7894D910171ED568000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.h in Headers */,
+				7894D914171FF7AD000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.h in Headers */,
+				7894D91817200A8D000CFC99 /* ApplifierImpactImageViewRoundedCorners.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -662,6 +676,8 @@
 				7894D909171D4FEC000CFC99 /* ApplifierImpactNativeButton.m in Sources */,
 				7894D90D171EA116000CFC99 /* ApplifierImpactImageView.m in Sources */,
 				7894D911171ED568000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.m in Sources */,
+				7894D915171FF7AD000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m in Sources */,
+				7894D91917200A8D000CFC99 /* ApplifierImpactImageViewRoundedCorners.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

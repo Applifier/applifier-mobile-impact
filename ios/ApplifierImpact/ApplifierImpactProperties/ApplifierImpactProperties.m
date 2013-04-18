@@ -31,7 +31,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
     [self setMaxNumberOfAnalyticsRetries:5];
     [self setCampaignDataUrl:@"https://impact.applifier.com/mobile/campaigns"];
     //[self setCampaignDataUrl:@"https://staging-impact.applifier.com/mobile/campaigns"];
-    //[self setCampaignDataUrl:@"http://192.168.1.152:3500/mobile/campaigns"];
+    //[self setCampaignDataUrl:@"http://192.168.1.246:3500/mobile/campaigns"];
     [self setCampaignQueryString:[self _createCampaignQueryString]];
   }
   
