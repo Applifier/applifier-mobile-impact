@@ -162,15 +162,11 @@
     if (self.landScapeImage == nil) {
       self.landScapeImage = [[ApplifierImpactImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height)];
       
-      //[self.landScapeImage loadImageFromURL:selectedCampaign.endScreenURL applyScaling:true];
-      
       [self.view addSubview:self.landScapeImage];
     }
     
     if (self.portraitImage == nil && selectedCampaign.endScreenPortraitURL != nil) {
       self.portraitImage = [[ApplifierImpactImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height)];
-      
-      //[self.portraitImage loadImageFromURL:selectedCampaign.endScreenPortraitURL applyScaling:true];
       
       [self.view addSubview:self.portraitImage];
       self.portraitImage.alpha = 0;
@@ -198,9 +194,6 @@
   self.closeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
   
   [self.closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:33]];
-  
-  //[self.closeButton setTitle:[NSString stringWithFormat:@"\u00d7"] forState:UIControlStateNormal];
-  
   [self.view addSubview:self.closeButton];
   [self.closeButton addTarget:self action:@selector(closeButtonClicked) forControlEvents:UIControlEventTouchUpInside];
 }
@@ -221,9 +214,6 @@
   self.rewatchButton.transform = CGAffineTransformMakeTranslation(-3, -3);
   
   [self.rewatchButton.titleLabel setFont:[UIFont boldSystemFontOfSize:30]];
-  
-  //[self.rewatchButton setTitle:[NSString stringWithFormat:@"\u21bb"] forState:UIControlStateNormal];
-  
   [self.view addSubview:self.rewatchButton];
   [self.rewatchButton addTarget:self action:@selector(rewatchButtonClicked) forControlEvents:UIControlEventTouchUpInside];
 }
