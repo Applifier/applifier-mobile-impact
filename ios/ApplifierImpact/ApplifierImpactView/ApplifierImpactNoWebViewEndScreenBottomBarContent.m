@@ -26,20 +26,37 @@
 
 @implementation ApplifierImpactNoWebViewEndScreenBottomBarContent
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
       [self createGameIcon];
       [self createGameNameLabel];
       [self createDownloadButton];
+      
+      [self updateViewData];
     }
     return self;
 }
 
+#pragma mark - Data update
+
+- (void)updateViewData {
+  AILOG_DEBUG(@"");
+  
+  ApplifierImpactCampaign *selectedCampaign = [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign];
+  
+  if (self.gameIcon != nil && selectedCampaign != nil) {
+    [self.gameIcon loadImageFromURL:selectedCampaign.gameIconURL];
+  }
+  if (self.gameName != nil && selectedCampaign != nil) {
+    [self.gameName setText:selectedCampaign.gameName];
+  }
+}
+
+#pragma mark - View creation
+
 - (void)createGameNameLabel {
   if (self.gameName == nil && [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] != nil) {
-    ApplifierImpactCampaign *selectedCampaign = [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign];
     self.gameName = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 200, 25)];
     self.gameName.transform = CGAffineTransformMakeTranslation((self.bounds.size.width / 2) - (150 / 2) + 38, 11);
     self.gameName.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
@@ -49,7 +66,7 @@
     [self.gameName setShadowColor:myShadowColor];
     [self.gameName setShadowOffset:CGSizeMake(0, 2)];
     [self.gameName setFont:[UIFont boldSystemFontOfSize:20]];
-    [self.gameName setText:selectedCampaign.gameName];
+    
     [self addSubview:self.gameName];
   }
 }
@@ -61,9 +78,9 @@
     
     if (selectedCampaign.gameIconURL != nil) {
       self.gameIcon = [[ApplifierImpactImageViewRoundedCorners alloc] initWithFrame:CGRectMake(0, 0, gameIconSize, gameIconSize)];
-      [self.gameIcon loadImageFromURL:selectedCampaign.gameIconURL];
       self.gameIcon.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
       self.gameIcon.transform = CGAffineTransformMakeTranslation((self.frame.size.width / 2) - (gameIconSize / 2) - 85, 0);
+      
       [self addSubview:self.gameIcon];
     }
   }

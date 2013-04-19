@@ -31,6 +31,9 @@
   if (self.endScreenController == nil) {
     [self createEndScreenController];
   }
+  else {
+    [self.endScreenController updateViewData];
+  }
   
   [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.endScreenController animated:NO completion:nil];
 }

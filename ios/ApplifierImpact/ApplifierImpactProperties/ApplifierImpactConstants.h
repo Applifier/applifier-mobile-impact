@@ -86,6 +86,7 @@ extern NSString * const kApplifierImpactJsonDataRootKey;
 
 extern NSString * const kApplifierImpactCampaignsKey;
 extern NSString * const kApplifierImpactCampaignEndScreenKey;
+extern NSString * const kApplifierImpactCampaignEndScreenPortraitKey;
 extern NSString * const kApplifierImpactCampaignClickURLKey;
 extern NSString * const kApplifierImpactCampaignPictureKey;
 extern NSString * const kApplifierImpactCampaignTrailerDownloadableKey;

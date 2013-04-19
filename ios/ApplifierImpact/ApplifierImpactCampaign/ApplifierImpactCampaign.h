@@ -8,6 +8,7 @@
 @interface ApplifierImpactCampaign : NSObject
 
 @property (nonatomic, strong) NSURL *endScreenURL;
+@property (nonatomic, strong) NSURL *endScreenPortraitURL;
 @property (nonatomic, strong) NSURL *clickURL;
 @property (nonatomic, strong) NSURL *pictureURL;
 @property (nonatomic, strong) NSURL *trailerDownloadableURL;
@@ -22,5 +23,8 @@
 @property (nonatomic, assign) BOOL viewed;
 @property (nonatomic, assign) BOOL bypassAppSheet;
 @property (nonatomic, assign) long long expectedTrailerSize;
+@property (nonatomic, assign) BOOL isValidCampaign;
+
+- (id)initWithData:(NSDictionary *)data;
 
 @end

@@ -71,6 +71,7 @@ NSString * const kApplifierImpactJsonDataRootKey = @"data";
 
 NSString * const kApplifierImpactCampaignsKey = @"campaigns";
 NSString * const kApplifierImpactCampaignEndScreenKey = @"endScreen";
+NSString * const kApplifierImpactCampaignEndScreenPortraitKey = @"endScreenPortrait";
 NSString * const kApplifierImpactCampaignClickURLKey = @"clickUrl";
 NSString * const kApplifierImpactCampaignPictureKey = @"picture";
 NSString * const kApplifierImpactCampaignTrailerDownloadableKey = @"trailerDownloadable";

@@ -52,18 +52,20 @@
   if (self.runScaling) {
     self.center = self.window.center;
     
+    float viewAspect = self.superview.bounds.size.width / self.superview.bounds.size.height;
+    float imageAspect = self.image.size.width / self.image.size.height;
+    float scaleFactor = 1;
+    
     UIViewContentMode mode = UIViewContentModeScaleAspectFill;
-    if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+    if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) && imageAspect > 1) {
+      mode = UIViewContentModeScaleAspectFit;
+    }
+    else if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation) && imageAspect < 1) {
       mode = UIViewContentModeScaleAspectFit;
     }
     
     self.contentMode = mode;
     self.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    
-    float viewAspect = self.superview.bounds.size.width / self.superview.bounds.size.height;
-    float imageAspect = self.image.size.width / self.image.size.height;
-    
-    float scaleFactor = 1;
     
     if (viewAspect < imageAspect) {
       scaleFactor = self.superview.bounds.size.height / self.image.size.height;

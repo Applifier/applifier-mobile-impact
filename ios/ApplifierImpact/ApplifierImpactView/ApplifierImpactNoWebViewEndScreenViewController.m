@@ -23,6 +23,7 @@
   @property (nonatomic, strong) UIButton *rewatchButton;
   @property (nonatomic, strong) UIButton *downloadButton;
   @property (nonatomic, strong) ApplifierImpactImageView *landScapeImage;
+  @property (nonatomic, strong) ApplifierImpactImageView *portraitImage;
   @property (nonatomic, strong) ApplifierImpactNoWebViewEndScreenBottomBarContent *bottomBarContent;
   @property (nonatomic, strong) ApplifierImpactNoWebViewEndScreenBottomBar *bottomBar;
 @end
@@ -38,6 +39,8 @@
       [self createCloseButton];
       [self createRewatchButton];
       [self createBottomBarContent];
+      
+      [self updateViewData];
     }
     return self;
 }
@@ -53,6 +56,54 @@
 
 - (void)didReceiveMemoryWarning {
   [super didReceiveMemoryWarning];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+  [self checkRotation];
+  return true;
+}
+
+- (BOOL)shouldAutorotate {
+  [self checkRotation];
+  return true;
+}
+
+- (void)checkRotation {
+  if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) && self.portraitImage != nil) {
+    [UIView beginAnimations:@"fade in" context:nil];
+    [UIView setAnimationDuration:0.3];
+    self.portraitImage.alpha = 1;
+    [UIView commitAnimations];
+  }
+  else if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation) && self.portraitImage != nil) {
+    [UIView beginAnimations:@"fade out" context:nil];
+    [UIView setAnimationDuration:0.3];
+    self.portraitImage.alpha = 0;
+    [UIView commitAnimations];
+  }
+}
+
+#pragma mark - Data update
+
+- (void)updateViewData {
+  AILOG_DEBUG(@"");
+  ApplifierImpactCampaign *selectedCampaign = [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign];
+  
+  if (self.closeButton != nil) {
+    [self.closeButton setTitle:[NSString stringWithFormat:@"\u00d7"] forState:UIControlStateNormal];
+  }
+  if (self.rewatchButton != nil) {
+    [self.rewatchButton setTitle:[NSString stringWithFormat:@"\u21bb"] forState:UIControlStateNormal];
+  }
+  if (self.bottomBarContent != nil) {
+    [self.bottomBarContent updateViewData];
+  }
+  if (self.landScapeImage != nil && selectedCampaign != nil && selectedCampaign.endScreenURL != nil) {
+    [self.landScapeImage loadImageFromURL:selectedCampaign.endScreenURL applyScaling:true];
+  }
+  if (self.portraitImage != nil && selectedCampaign != nil && selectedCampaign.endScreenPortraitURL != nil) {
+    [self.portraitImage loadImageFromURL:selectedCampaign.endScreenPortraitURL applyScaling:true];
+  }
 }
 
 
@@ -80,8 +131,7 @@
   if (self.bottomBarContent == nil && self.bottomBar != nil) {
     int bottomBarContentHeight = 109;
     CGRect refRect = [[ApplifierImpactMainViewController sharedInstance] view].window.frame;
-    //self.bottomBarContent = [[ApplifierImpactNoWebViewEndScreenBottomBarContent alloc] initWithFrame:CGRectMake(0, 0, [[ApplifierImpactMainViewController sharedInstance] view].window.frame.size.width, bottomBarContentHeight)];
-    //self.bottomBarContent.transform = CGAffineTransformMakeTranslation(160, [[ApplifierImpactMainViewController sharedInstance] view].window.frame.size.height - bottomBarContentHeight);
+
     self.bottomBarContent = [[ApplifierImpactNoWebViewEndScreenBottomBarContent alloc] initWithFrame:CGRectMake((self.view.frame.size.width / 2) - (refRect.size.width / 2), self.view.frame.size.height - bottomBarContentHeight, refRect.size.width, bottomBarContentHeight)];
 
     self.bottomBarContent.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
@@ -111,8 +161,23 @@
     
     if (self.landScapeImage == nil) {
       self.landScapeImage = [[ApplifierImpactImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height)];
-      [self.landScapeImage loadImageFromURL:selectedCampaign.endScreenURL applyScaling:true];
+      
+      //[self.landScapeImage loadImageFromURL:selectedCampaign.endScreenURL applyScaling:true];
+      
       [self.view addSubview:self.landScapeImage];
+    }
+    
+    if (self.portraitImage == nil && selectedCampaign.endScreenPortraitURL != nil) {
+      self.portraitImage = [[ApplifierImpactImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height)];
+      
+      //[self.portraitImage loadImageFromURL:selectedCampaign.endScreenPortraitURL applyScaling:true];
+      
+      [self.view addSubview:self.portraitImage];
+      self.portraitImage.alpha = 0;
+      
+      if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+        self.portraitImage.alpha = 1;
+      }
     }
   }
 }
@@ -133,7 +198,9 @@
   self.closeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
   
   [self.closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:33]];
-  [self.closeButton setTitle:[NSString stringWithFormat:@"\u00d7"] forState:UIControlStateNormal];
+  
+  //[self.closeButton setTitle:[NSString stringWithFormat:@"\u00d7"] forState:UIControlStateNormal];
+  
   [self.view addSubview:self.closeButton];
   [self.closeButton addTarget:self action:@selector(closeButtonClicked) forControlEvents:UIControlEventTouchUpInside];
 }
@@ -154,7 +221,9 @@
   self.rewatchButton.transform = CGAffineTransformMakeTranslation(-3, -3);
   
   [self.rewatchButton.titleLabel setFont:[UIFont boldSystemFontOfSize:30]];
-  [self.rewatchButton setTitle:[NSString stringWithFormat:@"\u21bb"] forState:UIControlStateNormal];
+  
+  //[self.rewatchButton setTitle:[NSString stringWithFormat:@"\u21bb"] forState:UIControlStateNormal];
+  
   [self.view addSubview:self.rewatchButton];
   [self.rewatchButton addTarget:self action:@selector(rewatchButtonClicked) forControlEvents:UIControlEventTouchUpInside];
 }
