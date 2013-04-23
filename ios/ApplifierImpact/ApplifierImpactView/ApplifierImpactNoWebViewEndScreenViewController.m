@@ -34,13 +34,6 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
       [self.view setBackgroundColor:[UIColor blackColor]];
-      [self createBackgroundImage];
-      [self createBottomBar];
-      [self createCloseButton];
-      [self createRewatchButton];
-      [self createBottomBarContent];
-      
-      [self updateViewData];
     }
     return self;
 }
@@ -51,7 +44,13 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-
+  [self createBackgroundImage];
+  [self createBottomBar];
+  [self createCloseButton];
+  [self createRewatchButton];
+  [self createBottomBarContent];
+  
+  [self updateViewData];  
 }
 
 - (void)didReceiveMemoryWarning {

@@ -67,26 +67,6 @@
   self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
-/*
-- (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData {
-  AILOG_DEBUG(@"");
-  
-  if (self.data == nil) {
-    self.data = [[NSMutableData alloc] initWithCapacity:2048];
-  }
-  
-  [self.data appendData:incrementalData];
-}
-
-
-- (void)connectionDidFinishLoading:(NSURLConnection*)theConnection {
-  AILOG_DEBUG(@"");
-  self.connection = nil;
-  self.roundedImage = [UIImage imageWithData:self.data];
-  [self setNeedsDisplay];
-  self.data = nil;
-}*/
-
 
 #pragma mark - NSURLConnectionDelegate
 
