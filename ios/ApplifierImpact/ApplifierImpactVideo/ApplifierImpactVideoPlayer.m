@@ -16,16 +16,23 @@
 @interface ApplifierImpactVideoPlayer ()
   @property (nonatomic, assign) id timeObserver;
   @property (nonatomic, assign) id analyticsTimeObserver;
+  @property (nonatomic, assign) NSTimer *timeOutTimer;
   @property (nonatomic) VideoAnalyticsPosition videoPosition;
+  @property (nonatomic, assign) BOOL isPlaying;
+  @property (nonatomic, assign) BOOL hasPlayed;
 @end
 
 @implementation ApplifierImpactVideoPlayer
 
 - (void)preparePlayer {
+  self.isPlaying = false;
+  self.hasPlayed = false;
   [self _addObservers];
 }
 
 - (void)clearPlayer {
+  self.isPlaying = false;
+  self.hasPlayed = false;
   [self _removeObservers];
 }
 
@@ -48,12 +55,25 @@
   [self _logVideoAnalytics];
 
   dispatch_async(dispatch_get_main_queue(), ^{
+    self.hasPlayed = true;
+    self.isPlaying = false;
     [self.delegate videoPlaybackEnded];
   });
 }
 
 
 #pragma mark Video Observers
+
+- (void)checkIfPlayed {
+  AILOG_DEBUG(@"");
+  
+  if (!self.hasPlayed && !self.isPlaying) {
+    AILOG_DEBUG(@"Video hasn't played and video is not playing! Seems that video is timing out.");
+    [self.timeOutTimer invalidate];
+    self.timeOutTimer = nil;
+    [self.delegate videoPlaybackError];
+  }
+}
 
 - (void)_addObservers {
   
@@ -69,6 +89,8 @@
       [blockSelf _videoPositionChanged:time];
     }];
   }
+  
+  self.timeOutTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(checkIfPlayed) userInfo:nil repeats:false];
   
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
 }
@@ -87,6 +109,11 @@
     self.analyticsTimeObserver = nil;
   }
   
+  if (self.timeOutTimer != nil) {
+    [self.timeOutTimer invalidate];
+    self.timeOutTimer = nil;
+  }
+
   [self removeObserver:self forKeyPath:@"self.currentItem.status"];
   [self removeObserver:self forKeyPath:@"self.currentItem.error"];
   [self removeObserver:self forKeyPath:@"self.currentItem.asset.duration"];
@@ -95,6 +122,8 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
   if ([keyPath isEqual:@"self.currentItem.error"] && self.currentItem.error != nil) {
     dispatch_async(dispatch_get_main_queue(), ^{
+      self.isPlaying = false;
+      self.hasPlayed = false;
       [self.delegate videoPlaybackError];
     });
     AILOG_DEBUG(@"VIDEOPLAYER_ERROR: %@", self.currentItem.error);
@@ -124,6 +153,8 @@
       }
       
       dispatch_async(dispatch_get_main_queue(), ^{
+        self.hasPlayed = false;
+        self.isPlaying = true;
         [self.delegate videoStartedPlaying];
         [self _logVideoAnalytics];
       });
@@ -133,6 +164,8 @@
     else if (playerStatus == AVPlayerStatusFailed) {
       AILOG_DEBUG(@"Player failed");
       dispatch_async(dispatch_get_main_queue(), ^{
+        self.hasPlayed = false;
+        self.isPlaying = false;
         [self.delegate videoPlaybackError];
       });
     }
