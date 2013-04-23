@@ -19,9 +19,9 @@
 #import "../ApplifierImpactView/ApplifierImpactNoWebViewEndScreenBottomBarContent.h"
 
 @interface ApplifierImpactNoWebViewEndScreenViewController ()
-  @property (nonatomic, strong) UIButton *closeButton;
-  @property (nonatomic, strong) UIButton *rewatchButton;
-  @property (nonatomic, strong) UIButton *downloadButton;
+  @property (nonatomic, strong) ApplifierImpactNativeButton *closeButton;
+  @property (nonatomic, strong) ApplifierImpactNativeButton *rewatchButton;
+  @property (nonatomic, strong) ApplifierImpactNativeButton *downloadButton;
   @property (nonatomic, strong) ApplifierImpactImageView *landScapeImage;
   @property (nonatomic, strong) ApplifierImpactImageView *portraitImage;
   @property (nonatomic, strong) ApplifierImpactNoWebViewEndScreenBottomBarContent *bottomBarContent;
@@ -82,6 +82,7 @@
     [UIView commitAnimations];
   }
 }
+
 
 #pragma mark - Data update
 
@@ -216,6 +217,68 @@
   [self.rewatchButton.titleLabel setFont:[UIFont boldSystemFontOfSize:30]];
   [self.view addSubview:self.rewatchButton];
   [self.rewatchButton addTarget:self action:@selector(rewatchButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+}
+
+
+#pragma mark - View clearing
+
+- (void)destroyView {
+  
+  if (self.closeButton != nil) {
+    if (self.closeButton.superview != nil) {
+      [self.closeButton removeFromSuperview];
+    }
+    [self.closeButton destroyView];
+    self.closeButton = nil;
+  }
+  
+  if (self.rewatchButton != nil) {
+    if (self.rewatchButton.superview != nil) {
+      [self.rewatchButton removeFromSuperview];
+    }
+    [self.rewatchButton destroyView];
+    self.rewatchButton = nil;
+  }
+  
+  if (self.downloadButton != nil) {
+    if (self.downloadButton.superview != nil) {
+      [self.downloadButton removeFromSuperview];
+    }
+    [self.downloadButton destroyView];
+    self.downloadButton = nil;
+  }
+  
+  if (self.landScapeImage != nil) {
+    if (self.landScapeImage.superview != nil) {
+      [self.landScapeImage removeFromSuperview];
+    }
+    [self.landScapeImage destroyView];
+    self.landScapeImage = nil;
+  }
+  
+  if (self.portraitImage != nil) {
+    if (self.portraitImage.superview != nil) {
+      [self.portraitImage removeFromSuperview];
+    }
+    [self.portraitImage destroyView];
+    self.portraitImage = nil;
+  }
+  
+  if (self.bottomBarContent != nil) {
+    if (self.bottomBarContent.superview != nil) {
+      [self.bottomBarContent removeFromSuperview];
+    }
+    [self.bottomBarContent destroyView];
+    self.bottomBarContent = nil;
+  }
+  
+  if (self.bottomBar != nil) {
+    if (self.bottomBar.superview != nil) {
+      [self.bottomBar removeFromSuperview];
+    }
+    [self.bottomBar destroyView];
+    self.bottomBar = nil;
+  }
 }
 
 @end

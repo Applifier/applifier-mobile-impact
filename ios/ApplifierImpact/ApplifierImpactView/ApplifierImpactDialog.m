@@ -8,7 +8,6 @@
 
 #import "ApplifierImpactDialog.h"
 #import "ApplifierImpactNativeSpinner.h"
-#import "ApplifierImpactNativeButton.h"
 
 @implementation ApplifierImpactDialog
 
@@ -86,6 +85,34 @@
 
 - (void)stopSpin {
   self.animating = NO;
+}
+
+- (void)destroyView {
+  [super destroyView];
+
+  if (self.spinner != nil) {
+    if (self.spinner.superview != nil) {
+      [self.spinner removeFromSuperview];
+    }
+    self.spinner = nil;
+  }
+  
+  if (self.label != nil) {
+    if (self.label.superview != nil) {
+      [self.label removeFromSuperview];
+    }
+    [self.label setText:@""];
+    self.label = nil;
+  }
+  
+  if (self.button != nil) {
+    if (self.button.superview != nil) {
+      [self.button removeFromSuperview];
+    }
+    [self.button.titleLabel setText:@""];
+    [self.button destroyView];
+    self.button = nil;
+  }
 }
 
 @end

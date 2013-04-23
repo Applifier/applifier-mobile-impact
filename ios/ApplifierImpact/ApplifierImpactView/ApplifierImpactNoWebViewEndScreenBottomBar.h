@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface ApplifierImpactNoWebViewEndScreenBottomBar : UIView
-
+- (void)destroyView;
 @end

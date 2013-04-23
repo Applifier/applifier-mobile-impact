@@ -28,4 +28,7 @@
   [blackPath fill];
 }
 
+- (void)destroyView {
+}
+
 @end

@@ -7,12 +7,13 @@
 //
 
 #import "ApplifierImpactUIView.h"
+#import "ApplifierImpactNativeButton.h"
 
 @interface ApplifierImpactDialog : ApplifierImpactUIView
   @property (nonatomic, assign) BOOL animating;
   @property (nonatomic, strong) UIView *spinner;
   @property (nonatomic, strong) UILabel *label;
-  @property (nonatomic, strong) UIButton *button;
+  @property (nonatomic, strong) ApplifierImpactNativeButton *button;
 
 - (id)initWithFrame:(CGRect)frame useSpinner:(BOOL)createSpinner useLabel:(BOOL)createLabel useButton:(BOOL)createButton;
 @end

@@ -11,4 +11,5 @@
 @interface ApplifierImpactNoWebViewEndScreenViewController : UIViewController
 - (void)initController;
 - (void)updateViewData;
+- (void)destroyView;
 @end

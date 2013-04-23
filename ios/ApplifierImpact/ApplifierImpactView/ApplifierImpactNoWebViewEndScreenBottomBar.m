@@ -10,8 +10,7 @@
 
 @implementation ApplifierImpactNoWebViewEndScreenBottomBar
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
       UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 3)];
@@ -47,6 +46,9 @@
   
   CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, 0);
   CGGradientRelease(gradient), gradient = NULL;
+}
+
+- (void)destroyView {  
 }
 
 @end

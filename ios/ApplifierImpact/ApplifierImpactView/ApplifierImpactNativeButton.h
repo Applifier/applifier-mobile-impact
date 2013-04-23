@@ -12,4 +12,6 @@
 - (id)initWithFrame:(CGRect)frame andBaseColors:(NSArray *)baseColors strokeColor:(UIColor *)strokeColor;
 - (id)initWithFrame:(CGRect)frame andBaseColors:(NSArray *)baseColors strokeColor:(UIColor *)strokeColor withCorner:(UIRectCorner)roundedCorner;
 - (id)initWithFrame:(CGRect)frame andBaseColors:(NSArray *)baseColors strokeColor:(UIColor *)strokeColor withCorner:(UIRectCorner)roundedCorner withCornerRadius:(int)cornerRadius;
+- (id)initWithFrame:(CGRect)frame andBaseColors:(NSArray *)baseColors strokeColor:(UIColor *)strokeColor withCorner:(UIRectCorner)roundedCorner withCornerRadius:(int)cornerRadius withIcon:(UIView *)iconView;
+- (void)destroyView;
 @end

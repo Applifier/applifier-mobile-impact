@@ -10,4 +10,5 @@
 
 @interface ApplifierImpactNoWebViewEndScreenBottomBarContent : UIView
 - (void)updateViewData;
+- (void)destroyView;
 @end

@@ -13,6 +13,7 @@
   @property (nonatomic, strong) NSURLConnection* connection;
   @property (nonatomic, strong) NSMutableData* data;
   @property (nonatomic, strong) UIImage *roundedImage;
+  @property (nonatomic, assign) BOOL retriedPictureDownload;
 @end
 
 @implementation ApplifierImpactImageViewRoundedCorners
@@ -66,6 +67,7 @@
   self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
+/*
 - (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData {
   AILOG_DEBUG(@"");
   
@@ -83,6 +85,47 @@
   self.roundedImage = [UIImage imageWithData:self.data];
   [self setNeedsDisplay];
   self.data = nil;
+}*/
+
+
+#pragma mark - NSURLConnectionDelegate
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+  AILOG_DEBUG(@"");
 }
 
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+  AILOG_DEBUG(@"");
+  
+  if (self.data == nil) {
+    self.data = [[NSMutableData alloc] initWithCapacity:2048];
+  }
+  
+  [self.data appendData:data];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+  AILOG_DEBUG(@"");
+  self.connection = nil;
+  self.roundedImage = [UIImage imageWithData:self.data];
+  [self setNeedsDisplay];
+  self.data = nil;
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+  if (!self.retriedPictureDownload) {
+    self.retriedPictureDownload = true;
+    
+    if (connection != nil) {
+      [self loadImageFromURL:connection.originalRequest.URL];
+    }
+  }
+}
+
+
+- (void)destroyView {
+  self.connection = nil;
+  self.data = nil;
+  self.roundedImage = nil;
+}
 @end

@@ -10,4 +10,5 @@
 
 @interface ApplifierImpactImageView : UIImageView <NSURLConnectionDelegate>
 - (void)loadImageFromURL:(NSURL*)url applyScaling:(BOOL)runScaling;
+- (void)destroyView;
 @end

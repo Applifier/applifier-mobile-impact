@@ -13,6 +13,7 @@
   @property (nonatomic, strong) NSURLConnection* connection;
   @property (nonatomic, strong) NSMutableData* data;
   @property (nonatomic, assign) BOOL runScaling;
+  @property (nonatomic, assign) BOOL retriedPictureDownload;
 @end
 
 @implementation ApplifierImpactImageView
@@ -21,6 +22,7 @@
     self = [super initWithFrame:frame];
     if (self) {
       self.runScaling = true;
+      self.retriedPictureDownload = false;
     }
     return self;
 }
@@ -34,17 +36,24 @@
   self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
-- (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData {
+
+#pragma mark - NSURLConnectionDelegate
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+  AILOG_DEBUG(@"");
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
   AILOG_DEBUG(@"");
   
   if (self.data == nil) {
     self.data = [[NSMutableData alloc] initWithCapacity:2048];
   }
   
-  [self.data appendData:incrementalData];
+  [self.data appendData:data];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection*)theConnection {
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
   AILOG_DEBUG(@"");
   self.connection = nil;
   [self setImage:[UIImage imageWithData:self.data]];
@@ -80,8 +89,27 @@
     [self setFrame:newPos];
     [self setNeedsLayout];
   }
-
+  
   self.data = nil;
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+  if (!self.retriedPictureDownload) {
+    self.retriedPictureDownload = true;
+    
+    if (connection != nil) {
+      [self loadImageFromURL:connection.originalRequest.URL applyScaling:self.runScaling];
+    }
+  }
+}
+
+
+#pragma mark - View destruction
+
+- (void)destroyView {
+  self.connection = nil;
+  self.data = nil;
+  self.runScaling = false;
 }
 
 @end

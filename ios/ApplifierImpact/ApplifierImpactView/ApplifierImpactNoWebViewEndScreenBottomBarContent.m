@@ -20,7 +20,7 @@
 
 @interface ApplifierImpactNoWebViewEndScreenBottomBarContent ()
   @property (nonatomic, strong) ApplifierImpactImageViewRoundedCorners *gameIcon;
-  @property (nonatomic, strong) UIButton *downloadButton;
+  @property (nonatomic, strong) ApplifierImpactNativeButton *downloadButton;
   @property (nonatomic, strong) UILabel *gameName;
 @end
 
@@ -97,15 +97,24 @@
   UIColor *myColor = [UIColor colorWithRed:red / 2 green:green / 2 blue:blue / 2 alpha:alpha];
   NSArray *gradientArray = [[NSArray alloc] initWithObjects:[UIColor greenColor], myColor, nil];
   
-  self.downloadButton = [[ApplifierImpactNativeButton alloc] initWithFrame:CGRectMake(0, 0, buttonWidth, buttonHeight) andBaseColors:gradientArray strokeColor:[UIColor clearColor]];
+  UILabel *downloadButtonIcon = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 19, 25)];
+  downloadButtonIcon.font = [UIFont boldSystemFontOfSize:26];
+  [downloadButtonIcon setBackgroundColor:[UIColor clearColor]];
+  [downloadButtonIcon setTextColor:[UIColor whiteColor]];
+  [downloadButtonIcon setText:@"\u21ea"];
+  downloadButtonIcon.transform = CGAffineTransformMakeRotation((180 / 180.0 * M_PI));
+  
+  self.downloadButton = [[ApplifierImpactNativeButton alloc] initWithFrame:CGRectMake(0, 0, buttonWidth, buttonHeight) andBaseColors:gradientArray strokeColor:[UIColor clearColor] withCorner:UIRectCornerAllCorners withCornerRadius:10 withIcon:downloadButtonIcon];
   self.downloadButton.transform = CGAffineTransformMakeTranslation((self.bounds.size.width / 2) - (buttonWidth / 2) + 33, self.bounds.size.height - 53);
   self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
   
   UIColor *myShadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.6];
+  [downloadButtonIcon setShadowColor:myShadowColor];
+  [downloadButtonIcon setShadowOffset:CGSizeMake(0, 1)];
+  
   [self.downloadButton.titleLabel setShadowColor:myShadowColor];
   [self.downloadButton.titleLabel setShadowOffset:CGSizeMake(0, -1)];
-  
-  [self.downloadButton setTitle:@"\u21ea download" forState:UIControlStateNormal];
+  [self.downloadButton setTitle:@"    Download" forState:UIControlStateNormal];
   [self.downloadButton setUserInteractionEnabled:true];
   [self.downloadButton addTarget:self action:@selector(downloadButtonClicked) forControlEvents:UIControlEventTouchUpInside];
   
@@ -122,5 +131,33 @@
   [[ApplifierImpactMainViewController sharedInstance] applyOptionsToCurrentState:data];
 }
 
+- (void)destroyView {
+  
+  if (self.gameIcon != nil) {
+    if (self.gameIcon.superview != nil) {
+      [self.gameIcon removeFromSuperview];
+    }
+    
+    [self.gameIcon destroyView];
+    self.gameIcon = nil;
+  }
+  
+  if (self.downloadButton != nil) {
+    if (self.downloadButton.superview != nil) {
+      [self.downloadButton removeFromSuperview];
+    }
+    
+    [self.downloadButton destroyView];
+    self.downloadButton = nil;
+  }
+
+  if (self.gameName != nil) {
+    if (self.gameName.superview != nil) {
+      [self.gameName removeFromSuperview];
+    }
+    
+    self.gameName = nil;
+  }
+}
 
 @end

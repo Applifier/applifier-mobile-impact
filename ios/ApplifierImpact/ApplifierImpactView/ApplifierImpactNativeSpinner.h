@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface ApplifierImpactNativeSpinner : UIView
-
+- (void)destroyView;
 @end

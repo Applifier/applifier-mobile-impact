@@ -42,4 +42,7 @@
   CGContextFillPath(context);
 }
 
+- (void)destroyView {
+}
+
 @end
