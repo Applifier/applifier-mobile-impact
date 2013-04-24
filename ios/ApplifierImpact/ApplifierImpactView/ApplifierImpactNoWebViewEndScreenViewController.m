@@ -38,10 +38,6 @@
     return self;
 }
 
-- (void)initController {
-
-}
-
 - (void)viewDidLoad {
   [super viewDidLoad];
   [self createBackgroundImage];
@@ -51,6 +47,11 @@
   [self createBottomBarContent];
   
   [self updateViewData];  
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+  [super viewDidAppear:animated];
+  self.bottomBarContent.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -79,6 +80,15 @@
     [UIView setAnimationDuration:0.3];
     self.portraitImage.alpha = 0;
     [UIView commitAnimations];
+  }
+  
+  CGRect size = [self calcBottomBarContentSize];
+  
+  if (!CGRectIsNull(size)) {
+    [self.bottomBarContent setFrame:size];
+  }
+  else {
+    AILOG_DEBUG(@"CGRect is NULL");
   }
 }
 
@@ -127,15 +137,54 @@
 
 #pragma mark - View creation
 
-- (void)createBottomBarContent {
-  if (self.bottomBarContent == nil && self.bottomBar != nil) {
+- (CGRect)calcBottomBarContentSize {
+  ApplifierImpactCampaign *selectedCampaign = [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign];
+  
+  if (selectedCampaign != nil) {
     int bottomBarContentHeight = 109;
-    CGRect refRect = [[ApplifierImpactMainViewController sharedInstance] view].window.frame;
+    int gameIconSize = 65;
+    int margin = 15;
+    int downloadButtonWidth = 200;
+    
+    CGRect refRect = CGRectNull;
+    
+    if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+      refRect = CGRectMake(0, 0, fmin(self.view.frame.size.height, self.view.frame.size.width), fmax(self.view.frame.size.height, self.view.frame.size.width));
+    }
+    else {
+      refRect = CGRectMake(0, 0, fmax(self.view.frame.size.height, self.view.frame.size.width), fmin(self.view.frame.size.height, self.view.frame.size.width));
+    }
+    
+    NSString *testString = [NSString stringWithFormat:@"%@", selectedCampaign.gameName];
+    CGSize size = [testString sizeWithFont:[UIFont boldSystemFontOfSize:20]];
+    
+    int requiredWidth = gameIconSize + margin + size.width;
+    int minWidth = gameIconSize + margin + downloadButtonWidth;
+    int usedWidth = fmax(requiredWidth, minWidth);
+    int minSize = refRect.size.width;
+    
+    if (usedWidth > minSize - (margin * 2)) {
+      usedWidth = minSize - (margin * 2);
+    }
+    
+    return CGRectMake((refRect.size.width / 2) - (usedWidth / 2), refRect.size.height - bottomBarContentHeight, usedWidth, bottomBarContentHeight);
+  }
+  
+  return CGRectNull;
+}
 
-    self.bottomBarContent = [[ApplifierImpactNoWebViewEndScreenBottomBarContent alloc] initWithFrame:CGRectMake((self.view.frame.size.width / 2) - (refRect.size.width / 2), self.view.frame.size.height - bottomBarContentHeight, refRect.size.width, bottomBarContentHeight)];
-
-    self.bottomBarContent.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
-    [self.view addSubview:self.bottomBarContent];
+- (void)createBottomBarContent {
+  AILOG_DEBUG(@"");
+  ApplifierImpactCampaign *selectedCampaign = [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign];
+  
+  if (self.bottomBarContent == nil && self.bottomBar != nil && selectedCampaign != nil) {
+    CGRect size = [self calcBottomBarContentSize];
+    
+    if (!CGRectIsNull(size)) {
+      self.bottomBarContent = [[ApplifierImpactNoWebViewEndScreenBottomBarContent alloc] initWithFrame:size];
+      self.bottomBarContent.autoresizingMask = UIViewAutoresizingNone;
+      [self.view addSubview:self.bottomBarContent];
+    }
   }
 }
 

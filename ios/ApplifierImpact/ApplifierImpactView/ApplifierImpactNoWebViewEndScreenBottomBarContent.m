@@ -10,7 +10,6 @@
 #import "ApplifierImpactMainViewController.h"
 #import "ApplifierImpactImageView.h"
 #import "ApplifierImpactImageViewRoundedCorners.h"
-#import "ApplifierImpactNativeButton.h"
 
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
@@ -20,7 +19,6 @@
 
 @interface ApplifierImpactNoWebViewEndScreenBottomBarContent ()
   @property (nonatomic, strong) ApplifierImpactImageViewRoundedCorners *gameIcon;
-  @property (nonatomic, strong) ApplifierImpactNativeButton *downloadButton;
   @property (nonatomic, strong) UILabel *gameName;
 @end
 
@@ -34,9 +32,11 @@
       [self createDownloadButton];
       
       [self updateViewData];
+      [self setBackgroundColor:[UIColor clearColor]];
     }
     return self;
 }
+
 
 #pragma mark - Data update
 
@@ -53,13 +53,14 @@
   }
 }
 
+
 #pragma mark - View creation
 
 - (void)createGameNameLabel {
   if (self.gameName == nil && [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] != nil) {
-    self.gameName = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 200, 25)];
-    self.gameName.transform = CGAffineTransformMakeTranslation((self.bounds.size.width / 2) - (150 / 2) + 38, 11);
-    self.gameName.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+    self.gameName = [[UILabel alloc] initWithFrame:CGRectMake(0, 11, self.frame.size.width - 65 - 15, 25)];
+    self.gameName.transform = CGAffineTransformMakeTranslation(65 + 15, 11);
+    self.gameName.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
     [self.gameName setBackgroundColor:[UIColor clearColor]];
     [self.gameName setTextColor:[UIColor whiteColor]];
     UIColor *myShadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.6];
@@ -78,8 +79,7 @@
     
     if (selectedCampaign.gameIconURL != nil) {
       self.gameIcon = [[ApplifierImpactImageViewRoundedCorners alloc] initWithFrame:CGRectMake(0, 0, gameIconSize, gameIconSize)];
-      self.gameIcon.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
-      self.gameIcon.transform = CGAffineTransformMakeTranslation((self.frame.size.width / 2) - (gameIconSize / 2) - 85, 0);
+      self.gameIcon.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
       
       [self addSubview:self.gameIcon];
     }
@@ -89,7 +89,7 @@
 - (void)createDownloadButton {
   AILOG_DEBUG(@"");
   
-  int buttonWidth = 150;
+  int buttonWidth = 200;
   int buttonHeight = 40;
   
   CGFloat red = 0.0, green = 0.0, blue = 0.0, alpha = 0.0;
@@ -105,8 +105,8 @@
   downloadButtonIcon.transform = CGAffineTransformMakeRotation((180 / 180.0 * M_PI));
   
   self.downloadButton = [[ApplifierImpactNativeButton alloc] initWithFrame:CGRectMake(0, 0, buttonWidth, buttonHeight) andBaseColors:gradientArray strokeColor:[UIColor clearColor] withCorner:UIRectCornerAllCorners withCornerRadius:10 withIcon:downloadButtonIcon];
-  self.downloadButton.transform = CGAffineTransformMakeTranslation((self.bounds.size.width / 2) - (buttonWidth / 2) + 33, self.bounds.size.height - 53);
-  self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+  self.downloadButton.transform = CGAffineTransformMakeTranslation(65 + 10, 65 - 6);
+  self.downloadButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
   
   UIColor *myShadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.6];
   [downloadButtonIcon setShadowColor:myShadowColor];
@@ -114,7 +114,7 @@
   
   [self.downloadButton.titleLabel setShadowColor:myShadowColor];
   [self.downloadButton.titleLabel setShadowOffset:CGSizeMake(0, -1)];
-  [self.downloadButton setTitle:@"    Download" forState:UIControlStateNormal];
+  [self.downloadButton setTitle:@"    Download Free" forState:UIControlStateNormal];
   [self.downloadButton setUserInteractionEnabled:true];
   [self.downloadButton addTarget:self action:@selector(downloadButtonClicked) forControlEvents:UIControlEventTouchUpInside];
   

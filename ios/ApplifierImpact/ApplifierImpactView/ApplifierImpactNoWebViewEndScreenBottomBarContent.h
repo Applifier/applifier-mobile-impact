@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ApplifierImpactNativeButton.h"
 
 @interface ApplifierImpactNoWebViewEndScreenBottomBarContent : UIView
+@property (nonatomic, strong) ApplifierImpactNativeButton *downloadButton;
 - (void)updateViewData;
 - (void)destroyView;
 @end
