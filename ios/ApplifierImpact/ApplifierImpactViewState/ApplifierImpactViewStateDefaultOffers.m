@@ -14,6 +14,7 @@
 #import "../ApplifierImpactCampaign/ApplifierImpactRewardItem.h"
 #import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
 #import "../ApplifierImpact.h"
+#import "../ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
 
 @implementation ApplifierImpactViewStateDefaultOffers
 
@@ -26,7 +27,7 @@
   
   [super enterState:options];
   
-  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
+  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key, kApplifierImpactWebViewAPIDeveloperOptions:[[ApplifierImpactShowOptionsParser sharedInstance] getOptionsAsJson]}];
   
   if (![[[[ApplifierImpactWebAppController sharedInstance] webView] superview] isEqual:[[ApplifierImpactMainViewController sharedInstance] view]]) {
     [[[ApplifierImpactMainViewController sharedInstance] view] addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];

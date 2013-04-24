@@ -21,6 +21,7 @@ NSString * const kApplifierImpactRewardItemNameKey = @"name";
 NSString * const kApplifierImpactOptionNoOfferscreenKey = @"noOfferScreen";
 NSString * const kApplifierImpactOptionOpenAnimatedKey = @"openAnimated";
 NSString * const kApplifierImpactOptionGamerSIDKey = @"sid";
+NSString * const kApplifierImpactOptionMuteVideoSounds = @"muteVideoSounds";
 
 @interface ApplifierImpact () <ApplifierImpactInitializerDelegate, ApplifierImpactMainViewControllerDelegate>
   @property (nonatomic, strong) ApplifierImpactInitializer *initializer;

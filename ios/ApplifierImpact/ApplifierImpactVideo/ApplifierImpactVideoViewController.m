@@ -11,13 +11,16 @@
 #import "ApplifierImpactVideoViewController.h"
 #import "ApplifierImpactVideoPlayer.h"
 #import "ApplifierImpactVideoView.h"
+#import "../ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
+#import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 
 @interface ApplifierImpactVideoViewController ()
   @property (nonatomic, strong) ApplifierImpactVideoView *videoView;
   @property (nonatomic, strong) ApplifierImpactVideoPlayer *videoPlayer;
   @property (nonatomic, assign) ApplifierImpactCampaign *campaignToPlay;
   @property (nonatomic, strong) UILabel *progressLabel;
-  @property (nonatomic, strong) UIView *progressView;
+  @property (nonatomic, strong) UIButton *skipLabel;
+  @property (nonatomic, strong) UIView *videoOverlayView;
   @property (nonatomic, assign) dispatch_queue_t videoControllerQueue;
   @property (nonatomic, strong) NSURL *currentPlayingVideoUrl;
 @end
@@ -53,7 +56,10 @@
   [self _detachVideoView];
   [self _destroyVideoPlayer];
   [self _destroyVideoView];
-  [self _destroyProgressLabel];
+  
+  [self destroyProgressLabel];
+  [self destroyVideoSkipLabel];
+  [self destroyVideoOverlayView];
   
   [super viewDidDisappear:animated];
 }
@@ -61,8 +67,12 @@
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
   [self _makeOrientation];
-  [self _createProgressLabel];
-  [self.view bringSubviewToFront:self.progressView];
+  
+  [self createVideoOverlayView];
+  [self createProgressLabel];
+  [self createVideoSkipLabel];
+  
+  [self.view bringSubviewToFront:self.videoOverlayView];
 }
 
 - (void)_makeOrientation {
@@ -109,8 +119,30 @@
   
   self.campaignToPlay = campaignToPlay;
   self.currentPlayingVideoUrl = videoURL;
-  //__block AVPlayerItem *item = [AVPlayerItem playerItemWithURL:self.currentPlayingVideoUrl];
-  AVPlayerItem *item = [AVPlayerItem playerItemWithURL:self.currentPlayingVideoUrl];
+  
+  AVURLAsset *asset = [AVURLAsset URLAssetWithURL:self.currentPlayingVideoUrl options:nil];
+  AVMutableAudioMix *audioZeroMix = nil;
+  
+  if ([[ApplifierImpactShowOptionsParser sharedInstance] muteVideoSounds]) {
+    NSArray *audioTracks = [asset tracksWithMediaType:AVMediaTypeAudio];
+    NSMutableArray *allAudioParams = [NSMutableArray array];
+    
+    for (AVAssetTrack *track in audioTracks) {
+      AVMutableAudioMixInputParameters *audioInputParams =[AVMutableAudioMixInputParameters audioMixInputParameters];
+      [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+      [audioInputParams setTrackID:[track trackID]];
+      [allAudioParams addObject:audioInputParams];
+    }
+    
+    audioZeroMix = [AVMutableAudioMix audioMix];
+    [audioZeroMix setInputParameters:allAudioParams];
+  }
+  
+  AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:asset];
+  
+  if ([[ApplifierImpactShowOptionsParser sharedInstance] muteVideoSounds]) {
+    [item setAudioMix:audioZeroMix];
+  }
   
   [self _createVideoView];
   [self _createVideoPlayer];
@@ -192,7 +224,7 @@
 }
 
 - (void)videoPositionChanged:(CMTime)time {
-  [self _updateTimeRemainingLabelWithTime:time];
+  [self updateLabelsWithCMTime:time];
 }
 
 - (void)videoPlaybackStarted {
@@ -220,19 +252,66 @@
 }
 
 
+#pragma mark - Video Overlay View
+
+- (void)createVideoOverlayView {
+  if (self.videoOverlayView == nil) {
+    self.videoOverlayView = [[UIView alloc] initWithFrame:self.view.bounds];
+    [self.videoOverlayView setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.videoOverlayView];
+    [self.view bringSubviewToFront:self.videoOverlayView];
+  }
+}
+
+- (void)destroyVideoOverlayView {
+  if (self.videoOverlayView != nil) {
+    [self.videoOverlayView removeFromSuperview];
+    self.videoOverlayView = nil;
+  }
+}
+
+
+#pragma mark - Video Skip Label
+
+- (void)createVideoSkipLabel {
+  if (self.skipLabel == nil && self.videoOverlayView != nil && [[ApplifierImpactProperties sharedInstance] allowVideoSkipInSeconds] > 0) {
+    AILOG_DEBUG(@"Create video skip label");
+    self.skipLabel = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 205, 20)];
+    self.skipLabel.backgroundColor = [UIColor clearColor];
+    self.skipLabel.titleLabel.textColor = [UIColor whiteColor];
+    self.skipLabel.titleLabel.font = [UIFont systemFontOfSize:12.0];
+    self.skipLabel.titleLabel.textAlignment = UITextAlignmentLeft;
+    [self.skipLabel setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.skipLabel setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    self.skipLabel.titleLabel.shadowColor = [UIColor blackColor];
+    self.skipLabel.titleLabel.shadowOffset = CGSizeMake(0, 1.0);
+    //self.skipLabel.transform = CGAffineTransformMakeTranslation(self.view.bounds.size.width - 303, self.view.bounds.size.height - 23);
+    
+    [self.videoOverlayView addSubview:self.skipLabel];
+    [self.videoOverlayView bringSubviewToFront:self.skipLabel];
+    self.videoOverlayView.hidden = NO;
+  }
+}
+
+- (void)destroyVideoSkipLabel {
+  if (self.skipLabel != nil) {
+    [self.skipLabel removeFromSuperview];
+    self.skipLabel = nil;
+  }
+}
+
+- (void)skipButtonPressed {
+  AILOG_DEBUG(@"");
+  [self videoPlaybackEnded];
+}
+
+
 #pragma mark - Video Progress Label
 
-- (void)_createProgressLabel {
+- (void)createProgressLabel {
   AILOG_DEBUG(@"");
 
-  if (self.progressView == nil) {
-    self.progressView = [[UIView alloc] initWithFrame:self.view.bounds];
-    [self.progressView setBackgroundColor:[UIColor clearColor]];
-    [self.view addSubview:self.progressView];
-    [self.view bringSubviewToFront:self.progressView];
-  }
-  
-  if (self.progressLabel == nil) {
+  if (self.progressLabel == nil && self.videoOverlayView != nil) {
     self.progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 20)];
     self.progressLabel.backgroundColor = [UIColor clearColor];
     self.progressLabel.textColor = [UIColor whiteColor];
@@ -240,32 +319,62 @@
     self.progressLabel.textAlignment = UITextAlignmentRight;
     self.progressLabel.shadowColor = [UIColor blackColor];
     self.progressLabel.shadowOffset = CGSizeMake(0, 1.0);
-    [self.progressView addSubview:self.progressLabel];
     self.progressLabel.transform = CGAffineTransformMakeTranslation(self.view.bounds.size.width - 303, self.view.bounds.size.height - 23);
-    [self.progressView bringSubviewToFront:self.progressLabel];
-    self.progressLabel.hidden = NO;
-    self.progressView.hidden = NO;
+    
+    [self.videoOverlayView addSubview:self.progressLabel];
+    [self.videoOverlayView bringSubviewToFront:self.progressLabel];
+    self.videoOverlayView.hidden = NO;
   }
 }
 
-- (void)_destroyProgressLabel {
+- (void)destroyProgressLabel {
   if (self.progressLabel != nil) {
     [self.progressLabel removeFromSuperview];
     self.progressLabel = nil;
   }
-  if (self.progressView != nil) {
-    [self.progressView removeFromSuperview];
-    self.progressView = nil;
-  }
 }
 
-- (void)_updateTimeRemainingLabelWithTime:(CMTime)currentTime {
+- (void)updateLabelsWithCMTime:(CMTime)currentTime {
 	Float64 duration = [self _currentVideoDuration];
 	Float64 current = CMTimeGetSeconds(currentTime);
   Float64 timeLeft = duration - current;
-
+  Float64 timeUntilSkip = -1;
+  
+  if ([[ApplifierImpactProperties sharedInstance] allowVideoSkipInSeconds] > 0) {
+    timeUntilSkip = [[ApplifierImpactProperties sharedInstance] allowVideoSkipInSeconds] - current;
+  }
+  
   if (timeLeft < 0)
     timeLeft = 0;
+  
+  if (timeUntilSkip > -1) {
+    if (timeUntilSkip < 0)
+      timeUntilSkip = 0;
+    
+    NSString *skipText = [NSString stringWithFormat:NSLocalizedString(@"You can skip this video in %.0f seconds.", nil), timeUntilSkip];
+    
+    if (timeUntilSkip == 0) {
+      skipText = [NSString stringWithFormat:@"Skip Video"];
+      NSArray *actions = [self.skipLabel actionsForTarget:self forControlEvent:UIControlEventTouchUpInside];
+      
+      BOOL actionAdded = false;
+      
+      for (NSString *action in actions) {
+        if ([action isEqualToString:@"skipButtonPressed"]) {
+          actionAdded = true;
+          break;
+        }
+      }
+      
+      if (!actionAdded) {
+        [self.skipLabel addTarget:self action:@selector(skipButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+      }
+    }
+    
+    if (self.skipLabel != nil) {
+      [self.skipLabel setTitle:skipText forState:UIControlStateNormal];
+    }
+  }
   
 	NSString *descriptionText = [NSString stringWithFormat:NSLocalizedString(@"This video ends in %.0f seconds.", nil), timeLeft];
 	self.progressLabel.text = descriptionText;

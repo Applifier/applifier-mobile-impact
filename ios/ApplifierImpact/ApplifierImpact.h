@@ -20,6 +20,8 @@ extern NSString * const kApplifierImpactRewardItemNameKey;
 extern NSString * const kApplifierImpactOptionNoOfferscreenKey;
 extern NSString * const kApplifierImpactOptionOpenAnimatedKey;
 extern NSString * const kApplifierImpactOptionGamerSIDKey;
+extern NSString * const kApplifierImpactOptionMuteVideoSounds;
+//public static final String APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS = "muteVideoSounds";
 
 typedef enum {
   kApplifierImpactModeDefault,

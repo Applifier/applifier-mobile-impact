@@ -22,6 +22,7 @@ NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateTo";
 NSString * const kApplifierImpactWebViewAPIInitComplete = @"initComplete";
 NSString * const kApplifierImpactWebViewAPIClose = @"close";
 NSString * const kApplifierImpactWebViewAPIOpen = @"open";
+NSString * const kApplifierImpactWebViewAPIDeveloperOptions = @"developerOptions";
 NSString * const kApplifierImpactWebViewAPIAppStore = @"appStore";
 NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying = @"video_started_playing";
 
@@ -85,6 +86,7 @@ NSString * const kApplifierImpactCampaignStoreIDKey = @"iTunesId";
 NSString * const kApplifierImpactCampaignCacheVideoKey = @"cacheVideo";
 NSString * const kApplifierImpactCampaignBypassAppSheet = @"bypassAppSheet";
 NSString * const kApplifierImpactCampaignExpectedFileSize = @"trailerSize";
+NSString * const kApplifierImpactCampaignAllowVideoSkipKey = @"allowSkipVideoInSeconds";
 
 /* Reward Item JSON Properties */
 

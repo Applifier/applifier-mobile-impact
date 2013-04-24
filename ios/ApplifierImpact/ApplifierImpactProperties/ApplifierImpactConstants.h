@@ -36,6 +36,7 @@ extern NSString * const kApplifierImpactWebViewAPINavigateTo;
 extern NSString * const kApplifierImpactWebViewAPIInitComplete;
 extern NSString * const kApplifierImpactWebViewAPIClose;
 extern NSString * const kApplifierImpactWebViewAPIOpen;
+extern NSString * const kApplifierImpactWebViewAPIDeveloperOptions;
 extern NSString * const kApplifierImpactWebViewAPIAppStore;
 extern NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying;
 
@@ -100,6 +101,7 @@ extern NSString * const kApplifierImpactCampaignCacheVideoKey;
 extern NSString * const kApplifierImpactCampaignBypassAppSheet;
 extern NSString * const kApplifierImpactCampaignExpectedFileSize;
 extern NSString * const kApplifierImpactCampaignGameIconKey;
+extern NSString * const kApplifierImpactCampaignAllowVideoSkipKey;
 
 /* Reward Item JSON Properties */
 
