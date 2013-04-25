@@ -84,7 +84,9 @@
     }
     
     CGRect rect = CGRectMake(0, 0, self.image.size.width * scaleFactor, self.image.size.height * scaleFactor);
-    CGRect newPos = CGRectMake((self.superview.bounds.size.width / 2) - (rect.size.width / 2), (self.superview.bounds.size.height / 2) - (rect.size.height / 2), rect.size.width, rect.size.height);
+    CGRect newPos = CGRectMake((self.superview.bounds.size.width / 2) - (rect.size.width / 2), (self.superview.bounds.size.height / 2) - (rect.size.height / 2) - 58, rect.size.width, rect.size.height);
+    
+    //[self setTransform:CGAffineTransformMakeTranslation(0, -(109 / 2))];
     
     [self setFrame:newPos];
     [self setNeedsLayout];

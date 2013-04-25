@@ -52,6 +52,7 @@
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
   self.bottomBarContent.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+  [self checkRotation];
 }
 
 - (void)didReceiveMemoryWarning {
