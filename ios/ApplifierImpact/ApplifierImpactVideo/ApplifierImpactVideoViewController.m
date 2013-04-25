@@ -128,7 +128,7 @@
     NSMutableArray *allAudioParams = [NSMutableArray array];
     
     for (AVAssetTrack *track in audioTracks) {
-      AVMutableAudioMixInputParameters *audioInputParams =[AVMutableAudioMixInputParameters audioMixInputParameters];
+      AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParameters];
       [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
       [audioInputParams setTrackID:[track trackID]];
       [allAudioParams addObject:audioInputParams];
@@ -378,10 +378,6 @@
   
 	NSString *descriptionText = [NSString stringWithFormat:NSLocalizedString(@"This video ends in %.0f seconds.", nil), timeLeft];
 	self.progressLabel.text = descriptionText;
-}
-
-- (void)_displayProgressLabel {
-	self.progressLabel.hidden = NO;
 }
 
 - (Float64)_currentVideoDuration {
