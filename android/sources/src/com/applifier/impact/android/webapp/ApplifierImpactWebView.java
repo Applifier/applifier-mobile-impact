@@ -328,7 +328,17 @@ public class ApplifierImpactWebView extends WebView {
 		
 		@Override
 		public void run() {
-			loadUrl(_jsString);
+			if (_jsString != null) {
+				try {
+					loadUrl(_jsString);
+				}
+				catch (Exception e) {
+					ApplifierImpactUtils.Log("Error while processing JavaScriptString!", this);
+				}
+			}
+			else {
+				ApplifierImpactUtils.Log("Could not process JavaScript, the string is NULL", this);
+			}
 		}		
 	}
 }
