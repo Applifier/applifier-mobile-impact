@@ -7,8 +7,10 @@ import java.util.TimerTask;
 
 import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.view.ApplifierImpactBufferingView;
+import com.applifier.impact.android.webapp.ApplifierImpactInstrumentation;
 import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
 import android.content.Context;
@@ -30,6 +32,9 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	private RelativeLayout _skipText = null;
 	private TextView _timeLeftUntilSkip = null;
 	private int _skipTimeInSeconds = 0;
+	
+	private long _bufferingStartedMillis = 0;
+	private long _bufferingCompledtedMillis = 0;
 	
 	private IApplifierImpactVideoPlayerListener _listener;
 	private Timer _videoPausedTimer = null;
@@ -75,6 +80,11 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				purgeVideoPausedTimer();
 				if (_listener != null)
 					_listener.onVideoPlaybackError();
+				
+				//Map<String, Object> values = new HashMap<String, Object>();
+				//values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, bufferingDuration);
+				ApplifierImpactInstrumentation.gaInstrumentationVideoError(ApplifierImpactProperties.SELECTED_CAMPAIGN, null);
+				
 				return true;
 			}
 		});
@@ -88,11 +98,15 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			purgeVideoPausedTimer();
 			if (_listener != null)
 				_listener.onVideoPlaybackError();
+			
+			ApplifierImpactInstrumentation.gaInstrumentationVideoError(ApplifierImpactProperties.SELECTED_CAMPAIGN, null);
+
 			return;
 		}
 		
 		if (!_videoPlaybackErrors) {
 			_timeLeftInSecondsText.setText("" + Math.round(Math.ceil(_videoView.getDuration() / 1000)));
+			_bufferingStartedMillis = System.currentTimeMillis();
 			startVideo();
 		}
 	}
@@ -383,7 +397,10 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
-		switch (keyCode) {
+    	long bufferingDuration = 0;
+    	Map<String, Object> values = null;
+    	
+    	switch (keyCode) {
 			case KeyEvent.KEYCODE_BACK:
 				ApplifierImpactUtils.Log("onKeyDown", this);
 				clearVideoPlayer();
@@ -391,7 +408,23 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				if (_listener != null)
 					_listener.onBackButtonClicked(this);
 				
+				_bufferingCompledtedMillis = System.currentTimeMillis();
+				bufferingDuration = _bufferingCompledtedMillis - _bufferingStartedMillis;
+				values = new HashMap<String, Object>();
+				values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, bufferingDuration);
+				values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_BACK);
+				ApplifierImpactInstrumentation.gaInstrumentationVideoAbort(ApplifierImpactProperties.SELECTED_CAMPAIGN, values);				
+				
 		    	return true;
+			case KeyEvent.KEYCODE_HOME:
+				_bufferingCompledtedMillis = System.currentTimeMillis();
+				bufferingDuration = _bufferingCompledtedMillis - _bufferingStartedMillis;
+				values = new HashMap<String, Object>();
+				values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, bufferingDuration);
+				values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_EXIT);
+				ApplifierImpactInstrumentation.gaInstrumentationVideoAbort(ApplifierImpactProperties.SELECTED_CAMPAIGN, values);				
+				
+				return false;
 		}
     	
     	return false;
@@ -539,6 +572,11 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 								_videoPlaybackStartedSent = true;
 								ApplifierImpactUtils.Log("onVideoPlaybackStarted sent to listener", this);
 								_listener.onVideoPlaybackStarted();
+								_bufferingCompledtedMillis = System.currentTimeMillis();
+								long bufferingDuration = _bufferingCompledtedMillis - _bufferingStartedMillis;
+								Map<String, Object> values = new HashMap<String, Object>();
+								values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, bufferingDuration);
+								ApplifierImpactInstrumentation.gaInstrumentationVideoPlay(ApplifierImpactProperties.SELECTED_CAMPAIGN, values);
 							}
 							
 							if (!_sentPositionEvents.containsKey(ApplifierVideoPosition.Start)) {

@@ -1,16 +1,22 @@
 package com.applifier.impact.android.campaign;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.cache.ApplifierImpactDownloader;
 import com.applifier.impact.android.cache.IApplifierImpactDownloadListener;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.webapp.ApplifierImpactInstrumentation;
 
 public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadListener {
 	
 	private ArrayList<String> _downloadList = null;
 	private ApplifierImpactCampaign _campaign = null;
 	private IApplifierImpactCampaignHandlerListener _handlerListener = null;
+	private long _cacheStartMillis = 0;
+	private long _cacheSolvedMillis = 0;
 	//private boolean _cancelledDownloads = false;
 	
 	
@@ -26,22 +32,40 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 		return _campaign;
 	}
 	
+	public long getCachingDurationInMillis () {
+		if (_cacheStartMillis > 0 && _cacheSolvedMillis > 0) {
+			return _cacheSolvedMillis - _cacheStartMillis;
+		}
+		
+		return 0;
+	}
+	
 	public void setListener (IApplifierImpactCampaignHandlerListener listener) {
 		_handlerListener = listener;
 	}
 	
 	@Override
 	public void onFileDownloadCompleted (String downloadUrl) {
-		if (finishDownload(downloadUrl))
+		if (finishDownload(downloadUrl)) {
 			ApplifierImpactUtils.Log("Reporting campaign download completion: " + _campaign.getCampaignId(), this);
-		
+			
+			// Analytics / Instrumentation
+			Map<String, Object> values = new HashMap<String, Object>();
+			values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOCACHING_COMPLETED);
+			values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, getCachingDurationInMillis());
+			ApplifierImpactInstrumentation.gaInstrumentationVideoCaching(_campaign, values);		
+		}
 	}
 	
 	@Override
 	public void onFileDownloadCancelled (String downloadUrl) {	
 		if (finishDownload(downloadUrl)) {
 			ApplifierImpactUtils.Log("Download cancelled: " + _campaign.getCampaignId(), this);
-			//_cancelledDownloads = true;
+			
+			// Analytics / Instrumentation
+			Map<String, Object> values = new HashMap<String, Object>();
+			values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOCACHING_FAILED);			
+			ApplifierImpactInstrumentation.gaInstrumentationVideoCaching(_campaign, values);	
 		}
 	}
 	
@@ -59,7 +83,7 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 		}
 		*/
 	}
-	
+		
 	public void clearData () {
 		if (_handlerListener != null)
 			_handlerListener = null;
@@ -78,6 +102,7 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 	/* INTERNAL METHODS */
 	
 	private boolean finishDownload (String downloadUrl) {
+		_cacheSolvedMillis = System.currentTimeMillis();
 		removeDownload(downloadUrl);
 		
 		if (_downloadList != null && _downloadList.size() == 0 && _handlerListener != null) {
@@ -94,7 +119,7 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 			if (!hasDownloads())
 				ApplifierImpactDownloader.addListener(this);
 			
-			addCampaignToDownloads();
+			addCampaignToDownloads();			
 		}
 		else if (_campaign.shouldCacheVideo() && !isFileOk(fileUrl) && ApplifierImpactUtils.canUseExternalStorage()) {
 			ApplifierImpactUtils.Log("The file was not okay, redownloading", this);
@@ -127,6 +152,13 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 		if (_downloadList == null) _downloadList = new ArrayList<String>();
 		
 		_downloadList.add(_campaign.getVideoUrl());
+		_cacheStartMillis = System.currentTimeMillis();
+		
+		// Analytics / Instrumentation
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOCACHING_START);			
+		ApplifierImpactInstrumentation.gaInstrumentationVideoCaching(_campaign, values);
+		
 		ApplifierImpactDownloader.addDownload(_campaign);
 	}
 

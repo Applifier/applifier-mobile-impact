@@ -68,11 +68,14 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 		// Active -list contains campaigns that came with the videoPlan
 		if (activeList != null) {
 			_totalCampaigns = activeList.size();
-			ApplifierImpactUtils.Log("Updating cache: Going through active campaigns", this);			
+			ApplifierImpactUtils.Log("Updating cache: Going through active campaigns: " + _totalCampaigns, this);			
 			for (ApplifierImpactCampaign campaign : activeList) {
+				ApplifierImpactUtils.Log("Campaign: " + campaign.getCampaignId(), this);			
 				ApplifierImpactCampaignHandler campaignHandler = new ApplifierImpactCampaignHandler(campaign);
 				addToUpdatingHandlers(campaignHandler);
+				ApplifierImpactUtils.Log("Adding listener", this);			
 				campaignHandler.setListener(this);
+				ApplifierImpactUtils.Log("Init campaign", this);			
 				campaignHandler.initCampaign();
 				
 				if (campaignHandler.hasDownloads()) {
