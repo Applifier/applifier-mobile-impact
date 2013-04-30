@@ -133,8 +133,15 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BACK:
+				/*
 				ApplifierImpactUtils.Log("onKeyDown", this);
-				sendActionToListener(ApplifierImpactMainViewAction.BackButtonPressed);
+				ApplifierImpactUtils.Log("BLAA: " + _currentState.toString(), this);
+				if (_currentState != ApplifierImpactMainViewState.VideoPlayer || 
+					(_currentState == ApplifierImpactMainViewState.VideoPlayer && videoplayerview != null && videoplayerview.getSecondsUntilBackButtonAllowed() == 0)) {
+					ApplifierImpactUtils.Log("BLAA2: " + videoplayerview.getSecondsUntilBackButtonAllowed(), this);
+					sendActionToListener(ApplifierImpactMainViewAction.BackButtonPressed);
+				}*/
+				onBackButtonClicked(this);
 		    	return true;
 		}
     	
@@ -207,7 +214,21 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	// IApplifierImpactViewListener
 	@Override
 	public void onBackButtonClicked (View view) {
-		sendActionToListener(ApplifierImpactMainViewAction.BackButtonPressed);
+		ApplifierImpactUtils.Log("Current state: " + _currentState.toString(), this);
+		
+		if (videoplayerview != null) {
+			ApplifierImpactUtils.Log("Seconds: " + videoplayerview.getSecondsUntilBackButtonAllowed(), this);
+		}
+		
+		if ((ApplifierImpactProperties.SELECTED_CAMPAIGN != null &&
+			ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed()) ||
+			_currentState != ApplifierImpactMainViewState.VideoPlayer || 
+			(_currentState == ApplifierImpactMainViewState.VideoPlayer && videoplayerview != null && videoplayerview.getSecondsUntilBackButtonAllowed() == 0)) {
+			sendActionToListener(ApplifierImpactMainViewAction.BackButtonPressed);
+		}
+		else {
+			ApplifierImpactUtils.Log("Prevented back-button", this);
+		}
 	}
 	
 	// IApplifierImpactVideoPlayerListener
@@ -272,11 +293,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 			ApplifierImpactUtils.Log("onVideoPlaybackError", this);		
 			ApplifierImpact.webdata.sendAnalyticsRequest(ApplifierImpactConstants.IMPACT_ANALYTICS_EVENTTYPE_VIDEOERROR, ApplifierImpactProperties.SELECTED_CAMPAIGN);
 			
-			// FIX: Replace with afterVideoPlaybackOperations?
-			//videoplayerview.setKeepScreenOn(false);
-			//destroyVideoPlayerView();
-			//setViewState(ApplifierImpactMainViewState.WebView);
-			
 			JSONObject errorParams = new JSONObject();
 			JSONObject spinnerParams = new JSONObject();
 			JSONObject params = new JSONObject();
@@ -294,7 +310,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 			webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
 			webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, spinnerParams);
 			webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START);
-			//ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+			
 			ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 			ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
 			_retriedVideoPlaybackOnce = false;
@@ -317,7 +333,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 			ApplifierImpactUtils.Log("Could not create JSON", this);
 		}
 		
-		//ApplifierImpact.webdata.sendAnalyticsRequest(ApplifierImpactConstants.IMPACT_ANALYTICS_EVENTTYPE_SKIPVIDEO, ApplifierImpactProperties.SELECTED_CAMPAIGN);
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
 		sendActionToListener(ApplifierImpactMainViewAction.VideoEnd);
 	}

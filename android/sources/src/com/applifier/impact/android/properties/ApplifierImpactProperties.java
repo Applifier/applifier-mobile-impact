@@ -27,6 +27,7 @@ public class ApplifierImpactProperties {
 	public static Boolean IMPACT_DEBUG_MODE = false;
 	public static Map<String, Object> IMPACT_DEVELOPER_OPTIONS = null;
 	public static int ALLOW_VIDEO_SKIP = 0;
+	public static int ALLOW_BACK_BUTTON_SKIP = 0;
 	
 	public static String TEST_DATA = null;
 	public static String TEST_URL = null;

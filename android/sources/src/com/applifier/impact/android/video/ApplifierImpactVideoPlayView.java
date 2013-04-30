@@ -35,6 +35,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	
 	private long _bufferingStartedMillis = 0;
 	private long _bufferingCompledtedMillis = 0;
+	private long _videoStartedPlayingMillis = 0;
 	
 	private IApplifierImpactVideoPlayerListener _listener;
 	private Timer _videoPausedTimer = null;
@@ -151,6 +152,21 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		
 		_countDownText = null;
 		_timeLeftInSecondsText = null;
+	}
+	
+	public int getSecondsUntilBackButtonAllowed () {
+		int timeUntilBackButton = 0;
+		
+		if (ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP > 0 && _videoStartedPlayingMillis > 0) {
+			timeUntilBackButton = Math.round((ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP * 1000) - (System.currentTimeMillis() - _videoStartedPlayingMillis));
+			if (timeUntilBackButton < 0)
+				timeUntilBackButton = 0;
+		}
+		else if (ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP > 0 && _videoStartedPlayingMillis <= 0){
+			return 1;
+		}
+		
+		return timeUntilBackButton;
 	}
 	
 	
@@ -403,17 +419,21 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
     	switch (keyCode) {
 			case KeyEvent.KEYCODE_BACK:
 				ApplifierImpactUtils.Log("onKeyDown", this);
-				clearVideoPlayer();
+				ApplifierImpactUtils.Log("DATA: " + ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP + ", " + getSecondsUntilBackButtonAllowed(), this);
+				
+				if (ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP > 0 && getSecondsUntilBackButtonAllowed() == 0) {
+					clearVideoPlayer();
+					
+					_bufferingCompledtedMillis = System.currentTimeMillis();
+					bufferingDuration = _bufferingCompledtedMillis - _bufferingStartedMillis;
+					values = new HashMap<String, Object>();
+					values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, bufferingDuration);
+					values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_BACK);
+					ApplifierImpactInstrumentation.gaInstrumentationVideoAbort(ApplifierImpactProperties.SELECTED_CAMPAIGN, values);				
+				}
 				
 				if (_listener != null)
 					_listener.onBackButtonClicked(this);
-				
-				_bufferingCompledtedMillis = System.currentTimeMillis();
-				bufferingDuration = _bufferingCompledtedMillis - _bufferingStartedMillis;
-				values = new HashMap<String, Object>();
-				values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, bufferingDuration);
-				values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_BACK);
-				ApplifierImpactInstrumentation.gaInstrumentationVideoAbort(ApplifierImpactProperties.SELECTED_CAMPAIGN, values);				
 				
 		    	return true;
 			case KeyEvent.KEYCODE_HOME:
@@ -573,6 +593,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 								ApplifierImpactUtils.Log("onVideoPlaybackStarted sent to listener", this);
 								_listener.onVideoPlaybackStarted();
 								_bufferingCompledtedMillis = System.currentTimeMillis();
+								_videoStartedPlayingMillis = System.currentTimeMillis();
 								long bufferingDuration = _bufferingCompledtedMillis - _bufferingStartedMillis;
 								Map<String, Object> values = new HashMap<String, Object>();
 								values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, bufferingDuration);

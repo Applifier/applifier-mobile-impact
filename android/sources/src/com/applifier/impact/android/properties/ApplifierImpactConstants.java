@@ -76,6 +76,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_CAMPAIGN_CACHE_VIDEO_KEY = "cacheVideo";
 	public static final String IMPACT_CAMPAIGN_BYPASSAPPSHEET_KEY = "bypassAppSheet";
 	public static final String IMPACT_CAMPAIGN_ALLOWVIDEOSKIP_KEY = "allowSkipVideoInSeconds";
+	public static final String IMPACT_CAMPAIGN_DISABLEBACKBUTTON_KEY = "disableBackButtonForSeconds";
 	
 	/* Reward Item JSON Properties */
 	public static final String IMPACT_REWARD_ITEMKEY_KEY = "itemKey";
@@ -160,7 +161,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_BACK = "back";
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_EXIT = "exit";
 	
-	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOPLAY_HLSL = "hlsl";
+	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOPLAY_HLSL = "stream";
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOPLAY_CACHED = "cached";
 	
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOCACHING_START = "start";

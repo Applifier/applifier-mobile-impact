@@ -487,6 +487,10 @@ public class ApplifierImpactWebData {
 					_currentRewardItem = _defaultRewardItem;
 				}
 				
+				if (data.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_DISABLEBACKBUTTON_KEY)) {
+					ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP = data.getInt(ApplifierImpactConstants.IMPACT_CAMPAIGN_DISABLEBACKBUTTON_KEY);
+				}
+				
 				// Parse possible multiple reward items
 				if (validData && data.has(ApplifierImpactConstants.IMPACT_REWARD_ITEMS_KEY)) {
 					JSONArray rewardItems = data.getJSONArray(ApplifierImpactConstants.IMPACT_REWARD_ITEMS_KEY);
