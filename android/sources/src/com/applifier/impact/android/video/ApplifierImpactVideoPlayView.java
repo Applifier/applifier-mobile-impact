@@ -77,15 +77,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			@Override
 			public boolean onError(MediaPlayer mp, int what, int extra) {
 				ApplifierImpactUtils.Log("For some reason the device failed to play the video (error: " + what + ", " + extra + "), a crash was prevented.", this);
-				_videoPlaybackErrors = true;
-				purgeVideoPausedTimer();
-				if (_listener != null)
-					_listener.onVideoPlaybackError();
-				
-				//Map<String, Object> values = new HashMap<String, Object>();
-				//values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, bufferingDuration);
-				ApplifierImpactInstrumentation.gaInstrumentationVideoError(ApplifierImpactProperties.SELECTED_CAMPAIGN, null);
-				
+				videoErrorOperations();
 				return true;
 			}
 		});
@@ -95,13 +87,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		}
 		catch (Exception e) {
 			ApplifierImpactUtils.Log("For some reason the device failed to play the video, a crash was prevented.", this);
-			_videoPlaybackErrors = true;
-			purgeVideoPausedTimer();
-			if (_listener != null)
-				_listener.onVideoPlaybackError();
-			
-			ApplifierImpactInstrumentation.gaInstrumentationVideoError(ApplifierImpactProperties.SELECTED_CAMPAIGN, null);
-
+			videoErrorOperations();
 			return;
 		}
 		
@@ -171,6 +157,15 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	
 	
 	/* INTERNAL METHODS */
+	private void videoErrorOperations () {
+		_videoPlaybackErrors = true;
+		purgeVideoPausedTimer();
+		if (_listener != null)
+			_listener.onVideoPlaybackError();
+		
+		ApplifierImpactInstrumentation.gaInstrumentationVideoError(ApplifierImpactProperties.SELECTED_CAMPAIGN, null);		
+	}
+	
 	
 	private void startVideo () {
 		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
@@ -419,7 +414,6 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
     	switch (keyCode) {
 			case KeyEvent.KEYCODE_BACK:
 				ApplifierImpactUtils.Log("onKeyDown", this);
-				ApplifierImpactUtils.Log("DATA: " + ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP + ", " + getSecondsUntilBackButtonAllowed(), this);
 				
 				if (ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP > 0 && getSecondsUntilBackButtonAllowed() == 0) {
 					clearVideoPlayer();
@@ -573,6 +567,17 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				ApplifierImpactUtils.Log("Could not get videoView buffering percentage", this);
 			}
 			
+			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && !_playHeadHasMoved && _bufferingStartedMillis > 0 && 
+				(System.currentTimeMillis() - _bufferingStartedMillis) > (ApplifierImpactProperties.MAX_BUFFERING_WAIT_SECONDS * 1000)) {
+				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						ApplifierImpactUtils.Log("Buffering taking too long.. cancelling video play", this);
+						videoErrorOperations();
+					}
+				});
+			}
+						
 			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && _videoView != null && bufferPercentage < 15 && _videoView.getParent() == null) {				
 				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {					
 					@Override

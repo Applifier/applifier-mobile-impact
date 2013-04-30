@@ -1,7 +1,10 @@
 package com.applifier.impact.android.properties;
 
 import java.net.URLEncoder;
+import java.util.Iterator;
 import java.util.Map;
+
+import org.json.JSONObject;
 
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
@@ -38,6 +41,7 @@ public class ApplifierImpactProperties {
 	private static Map<String, String> TEST_EXTRA_PARAMS = null; 
 
 	public static final int MAX_NUMBER_OF_ANALYTICS_RETRIES = 5;
+	public static final int MAX_BUFFERING_WAIT_SECONDS = 20;
 	
 	private static String _campaignQueryString = null; 
 	
@@ -96,6 +100,30 @@ public class ApplifierImpactProperties {
 				ApplifierImpactUtils.Log("Feature: OpenGLES " + feature.getGlEsVersion(), ApplifierImpactProperties.class);
 		}
 		*/
+	}
+	
+	public static JSONObject getDeveloperOptionsAsJson () {
+		if (IMPACT_DEVELOPER_OPTIONS != null) {
+			Iterator<String> i = IMPACT_DEVELOPER_OPTIONS.keySet().iterator();
+			JSONObject options = new JSONObject();
+			
+			while (i.hasNext()) {
+				String key = i.next();
+				
+				if (IMPACT_DEVELOPER_OPTIONS.containsKey(key) && IMPACT_DEVELOPER_OPTIONS.get(key) != null) {
+					try {
+						options.put(key, IMPACT_DEVELOPER_OPTIONS.get(key));
+					}
+					catch (Exception e) {
+						ApplifierImpactUtils.Log("Couldn't create JSON", ApplifierImpactProperties.class);
+					}
+				}
+			}
+			
+			return options;
+		}
+		
+		return null;
 	}
 	
 	public static String getCampaignQueryUrl () {

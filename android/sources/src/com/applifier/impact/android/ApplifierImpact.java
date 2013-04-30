@@ -531,6 +531,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		try  {
 			data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN);
 			data.put(ApplifierImpactConstants.IMPACT_REWARD_ITEMKEY_KEY, webdata.getCurrentRewardItemKey());
+			data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_DEVELOPER_OPTIONS, ApplifierImpactProperties.getDeveloperOptionsAsJson());
 		}
 		catch (Exception e) {
 			dataOk = false;

@@ -38,7 +38,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	// Listener
 	private IApplifierImpactMainViewListener _listener = null;
 	private ApplifierImpactMainViewState _currentState = ApplifierImpactMainViewState.WebView;
-	private Boolean _retriedVideoPlaybackOnce = false;
 
 	public ApplifierImpactMainView(Context context, IApplifierImpactMainViewListener listener) {
 		super(context);
@@ -133,14 +132,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BACK:
-				/*
-				ApplifierImpactUtils.Log("onKeyDown", this);
-				ApplifierImpactUtils.Log("BLAA: " + _currentState.toString(), this);
-				if (_currentState != ApplifierImpactMainViewState.VideoPlayer || 
-					(_currentState == ApplifierImpactMainViewState.VideoPlayer && videoplayerview != null && videoplayerview.getSecondsUntilBackButtonAllowed() == 0)) {
-					ApplifierImpactUtils.Log("BLAA2: " + videoplayerview.getSecondsUntilBackButtonAllowed(), this);
-					sendActionToListener(ApplifierImpactMainViewAction.BackButtonPressed);
-				}*/
 				onBackButtonClicked(this);
 		    	return true;
 		}
@@ -268,7 +259,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	
 	@Override
 	public void onCompletion(MediaPlayer mp) {
-		_retriedVideoPlaybackOnce = false;
 		ApplifierImpactUtils.Log("onCompletion", this);
 		afterVideoPlaybackOperations();
 		onEventPositionReached(ApplifierVideoPosition.End);
@@ -289,37 +279,30 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	public void onVideoPlaybackError () {
 		afterVideoPlaybackOperations();
 		
-		if (_retriedVideoPlaybackOnce) {
-			ApplifierImpactUtils.Log("onVideoPlaybackError", this);		
-			ApplifierImpact.webdata.sendAnalyticsRequest(ApplifierImpactConstants.IMPACT_ANALYTICS_EVENTTYPE_VIDEOERROR, ApplifierImpactProperties.SELECTED_CAMPAIGN);
-			
-			JSONObject errorParams = new JSONObject();
-			JSONObject spinnerParams = new JSONObject();
-			JSONObject params = new JSONObject();
-			
-			try {
-				errorParams.put(ApplifierImpactConstants.IMPACT_TEXTKEY_KEY, ApplifierImpactConstants.IMPACT_TEXTKEY_VIDEOPLAYBACKERROR);
-				spinnerParams.put(ApplifierImpactConstants.IMPACT_TEXTKEY_KEY, ApplifierImpactConstants.IMPACT_TEXTKEY_BUFFERING);
-				params.put(ApplifierImpactConstants.IMPACT_NATIVEEVENT_CAMPAIGNID_KEY, ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId());
-			}
-			catch (Exception e) {
-				ApplifierImpactUtils.Log("Could not create JSON", this);
-			}
-			
-			webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_SHOWERROR, errorParams);
-			webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
-			webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, spinnerParams);
-			webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START);
-			
-			ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
-			ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
-			_retriedVideoPlaybackOnce = false;
+		ApplifierImpactUtils.Log("onVideoPlaybackError", this);		
+		ApplifierImpact.webdata.sendAnalyticsRequest(ApplifierImpactConstants.IMPACT_ANALYTICS_EVENTTYPE_VIDEOERROR, ApplifierImpactProperties.SELECTED_CAMPAIGN);
+
+		webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START);
+		
+		JSONObject errorParams = new JSONObject();
+		JSONObject spinnerParams = new JSONObject();
+		JSONObject params = new JSONObject();
+		
+		try {
+			errorParams.put(ApplifierImpactConstants.IMPACT_TEXTKEY_KEY, ApplifierImpactConstants.IMPACT_TEXTKEY_VIDEOPLAYBACKERROR);
+			spinnerParams.put(ApplifierImpactConstants.IMPACT_TEXTKEY_KEY, ApplifierImpactConstants.IMPACT_TEXTKEY_BUFFERING);
+			params.put(ApplifierImpactConstants.IMPACT_NATIVEEVENT_CAMPAIGNID_KEY, ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId());
 		}
-		else {
-			ApplifierImpactUtils.Log("Sending RequestRetryVideoPlay Something went wrong", this);
-			_retriedVideoPlaybackOnce = true;
-			sendActionToListener(ApplifierImpactMainViewAction.RequestRetryVideoPlay);
+		catch (Exception e) {
+			ApplifierImpactUtils.Log("Could not create JSON", this);
 		}
+		
+		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_SHOWERROR, errorParams);
+		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
+		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, spinnerParams);
+		
+		ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
+		ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
 	}
 	
 	public void onVideoSkip () {
