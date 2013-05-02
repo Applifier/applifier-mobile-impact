@@ -51,10 +51,18 @@ static ApplifierImpactShowOptionsParser *sharedOptionsParser = nil;
   }
 }
 
-- (NSString *)getOptionsAsJson {
-  NSDictionary *options = @{kApplifierImpactOptionNoOfferscreenKey:[NSNumber numberWithBool:self.noOfferScreen], kApplifierImpactOptionOpenAnimatedKey:[NSNumber numberWithBool:self.openAnimated], kApplifierImpactOptionGamerSIDKey:self.gamerSID};
+- (NSDictionary *)getOptionsAsJson {
+  NSMutableDictionary *options = [NSMutableDictionary dictionary];
   
-  return [options JSONRepresentation];
+  [options setObject:@(self.noOfferScreen) forKey:kApplifierImpactOptionNoOfferscreenKey];
+  [options setObject:@(self.openAnimated) forKey:kApplifierImpactOptionOpenAnimatedKey];
+  [options setObject:@(self.muteVideoSounds) forKey:kApplifierImpactOptionMuteVideoSounds];
+  
+  if (self.gamerSID != nil) {
+    [options setObject:self.gamerSID forKey:kApplifierImpactOptionGamerSIDKey];
+  }
+  
+  return options;
 }
 
 - (void)resetToDefaults {
