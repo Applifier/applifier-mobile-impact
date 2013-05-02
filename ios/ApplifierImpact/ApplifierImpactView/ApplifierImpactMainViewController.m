@@ -27,6 +27,7 @@
   @property (nonatomic, strong) ApplifierImpactViewState *currentViewState;
   @property (nonatomic, assign) BOOL isOpen;
   @property (nonatomic, strong) NSMutableArray *viewStateHandlers;
+  @property (nonatomic, assign) BOOL simulatorOpeningSupportCallSent;
 @end
 
 @implementation ApplifierImpactMainViewController
@@ -38,9 +39,21 @@
       // Add notification listener
       NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
       [notificationCenter addObserver:self selector:@selector(notificationHandler:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+      self.simulatorOpeningSupportCallSent = false;
     }
   
     return self;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+  [super viewDidAppear:animated];
+  
+  if ([ApplifierImpactDevice isSimulator] && !self.simulatorOpeningSupportCallSent) {
+    AILOG_DEBUG(@"");
+    self.simulatorOpeningSupportCallSent = true;
+    [self.currentViewState wasShown];
+    [self.delegate mainControllerDidOpen];
+  }
 }
 
 
@@ -138,6 +151,10 @@
     [self _dismissMainViewController:forceMainThread withAnimations:animated];
   }
   
+  if ([ApplifierImpactDevice isSimulator]) {
+    self.simulatorOpeningSupportCallSent = false;
+  }
+  
   return YES;
 }
 
@@ -167,9 +184,6 @@
             }
           };
         }
-      }
-      else {
-        [self.delegate mainControllerDidOpen];
       }
       
       [[[ApplifierImpactProperties sharedInstance] currentViewController] presentViewController:self animated:animated completion:self.openHandler];
