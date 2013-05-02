@@ -3,19 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ApplifierImpactMobile : MonoBehaviour {
-	
-	public bool showTestButton = false;
+
 	public string gameId = "";
 	public bool debugModeEnabled = false;
 	public bool testModeEnabled = false;
 	public bool openAnimated = false;
 	public bool noOfferscreen = false;
 	
+	private static ApplifierImpactMobile sharedInstance;
 	private static bool _campaignsAvailable = false;
-	private static bool _initRun = false;
 	private static bool _impactOpen = false;
-	private static bool _gotAwake = false;
-	private static string _gameObjectName = null;
 	private static float _savedTimeScale = 1f;
 	private static float _savedAudioVolume = 1f;
 	private static string _gamerSID = "";
@@ -59,11 +56,26 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		_videoStartedDelegate = action;
 	}
 	
+	public static ApplifierImpactMobile SharedInstance {
+		get {
+			if(!sharedInstance) {
+				sharedInstance = (ApplifierImpactMobile) FindObjectOfType(typeof(ApplifierImpactMobile));
+
+				#if (UNITY_IPHONE || UNITY_ANDROID) && !UNITY_EDITOR
+				ApplifierImpactMobileExternal.init(sharedInstance.gameId, sharedInstance.testModeEnabled, sharedInstance.debugModeEnabled && Debug.isDebugBuild, sharedInstance.gameObject.name);
+				#endif
+			}
+
+			return sharedInstance;
+		}
+	}
 	
 	public void Awake () {
-		if (_gotAwake == false) {
-			_gotAwake = true;
-			this.init(this.gameId, this.testModeEnabled, this.debugModeEnabled);
+		if(gameObject == SharedInstance.gameObject) {
+			DontDestroyOnLoad(gameObject);
+		}
+		else {
+			Destroy (gameObject);
 		}
 	}
 	
@@ -75,28 +87,8 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		_videoCompletedDelegate = null;
 		_videoStartedDelegate = null;
 	}
-	
-	public void init (string gameId, bool testModeEnabled, bool debugModeEnabled) {
-		if (!_initRun) {
-			_initRun = true;
-			_gameObjectName = gameObject.name;
-			ApplifierImpactMobileExternal.init(gameId, testModeEnabled, debugModeEnabled, _gameObjectName);
-		}
-	}
-	
-	
+
 	/* Static Methods */
-	
-	public static ApplifierImpactMobile getCurrentInstance () {
-		GameObject applifierImpact = GameObject.FindWithTag("ApplifierImpactMobile");
-		ApplifierImpactMobile applifierImpactMobile = applifierImpact.GetComponent<ApplifierImpactMobile>();
-		return applifierImpactMobile;
-	}
-	
-	
-	public static bool getTestButtonVisibility () {
-		return getCurrentInstance().showTestButton;
-	}
 	
 	public static bool isSupported () {
 		return ApplifierImpactMobileExternal.isSupported();
@@ -215,27 +207,29 @@ public class ApplifierImpactMobile : MonoBehaviour {
 	
 	public static bool showImpact () {
 		if (!_impactOpen && _campaignsAvailable) {
-			ApplifierImpactMobile instance = getCurrentInstance();
+			ApplifierImpactMobile instance = SharedInstance;
 			
-			bool animated = false;
-			bool noOfferscreen = false;
-			string gamerSID = _gamerSID;
-			
-			if (instance != null) {
-				animated = instance.openAnimated;
-				noOfferscreen = instance.noOfferscreen;
-			}
-			
-			if (ApplifierImpactMobileExternal.showImpact(animated, noOfferscreen, gamerSID)) {				
-				if (_impactOpenDelegate != null)
-					_impactOpenDelegate();
+			if(instance) {
+				bool animated = false;
+				bool noOfferscreen = false;
+				string gamerSID = _gamerSID;
 				
-				_impactOpen = true;
-				_savedTimeScale = Time.timeScale;
-				_savedAudioVolume = AudioListener.volume;
-				AudioListener.pause = true;
-				AudioListener.volume = 0;
-				Time.timeScale = 0;
+				if (instance != null) {
+					animated = instance.openAnimated;
+					noOfferscreen = instance.noOfferscreen;
+				}
+				
+				if (ApplifierImpactMobileExternal.showImpact(animated, noOfferscreen, gamerSID)) {				
+					if (_impactOpenDelegate != null)
+						_impactOpenDelegate();
+					
+					_impactOpen = true;
+					_savedTimeScale = Time.timeScale;
+					_savedAudioVolume = AudioListener.volume;
+					AudioListener.pause = true;
+					AudioListener.volume = 0;
+					Time.timeScale = 0;
+				}
 			}
 		}
 		
@@ -258,7 +252,6 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		}
 	}
 
-	
 	/* Events */
 	
 	public void onImpactClose () {
@@ -306,5 +299,4 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		
 		ApplifierImpactMobileExternal.Log("onCampaignsFetchFailed");
 	}
-	
 }

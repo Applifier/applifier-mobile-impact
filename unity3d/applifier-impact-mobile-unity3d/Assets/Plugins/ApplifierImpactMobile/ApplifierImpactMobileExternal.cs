@@ -3,12 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-public class ApplifierImpactMobileExternal : MonoBehaviour {
+public static class ApplifierImpactMobileExternal {
 
 	private static string _logTag = "ApplifierImpactMobile";
 	
 	public static void Log (string message) {
-		Debug.Log(_logTag + "/" + message);
+		ApplifierImpactMobile applifierImpactMobileInstance = ApplifierImpactMobile.SharedInstance;
+		
+		if(applifierImpactMobileInstance) {
+			if(applifierImpactMobileInstance.debugModeEnabled && Debug.isDebugBuild)
+				Debug.Log(_logTag + "/" + message);
+		}
 	}
 	
 #if UNITY_EDITOR
@@ -136,7 +141,6 @@ public class ApplifierImpactMobileExternal : MonoBehaviour {
 	[DllImport ("__Internal")]
 	public static extern string getRewardItemDetailsKeys ();
 
-	
 #elif UNITY_ANDROID
 	private static AndroidJavaObject applifierImpact;
 	private static AndroidJavaObject applifierImpactUnity;
