@@ -1,11 +1,11 @@
 package com.applifier.impact.android.properties;
 
 import java.net.URLEncoder;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.json.JSONObject;
 
+import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
@@ -89,37 +89,39 @@ public class ApplifierImpactProperties {
 		}
 		
 		_campaignQueryString = queryString;
-		
-		/*
-		PackageManager manager = ApplifierImpactProperties.CURRENT_ACTIVITY.getPackageManager();
-		FeatureInfo[] features = manager.getSystemAvailableFeatures();
-		for (FeatureInfo feature : features) {
-			if (feature.name != null)
-				ApplifierImpactUtils.Log("Feature:" + feature.name, ApplifierImpactProperties.class);
-			else
-				ApplifierImpactUtils.Log("Feature: OpenGLES " + feature.getGlEsVersion(), ApplifierImpactProperties.class);
-		}
-		*/
 	}
 	
 	public static JSONObject getDeveloperOptionsAsJson () {
 		if (IMPACT_DEVELOPER_OPTIONS != null) {
-			Iterator<String> i = IMPACT_DEVELOPER_OPTIONS.keySet().iterator();
 			JSONObject options = new JSONObject();
 			
-			while (i.hasNext()) {
-				String key = i.next();
-				
-				if (IMPACT_DEVELOPER_OPTIONS.containsKey(key) && IMPACT_DEVELOPER_OPTIONS.get(key) != null) {
-					try {
-						options.put(key, IMPACT_DEVELOPER_OPTIONS.get(key));
-					}
-					catch (Exception e) {
-						ApplifierImpactUtils.Log("Couldn't create JSON", ApplifierImpactProperties.class);
-					}
-				}
-			}
+			boolean noOfferscreen = false;
+			boolean openAnimated = false;
+			boolean muteVideoSounds = false;
 			
+			try {
+				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY))
+					noOfferscreen = (Boolean)IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY);
+				
+				options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, noOfferscreen);
+				
+				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY))
+					openAnimated = (Boolean)IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY);
+				
+				options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, openAnimated);
+				
+				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS))
+					muteVideoSounds = (Boolean)IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS);
+				
+				options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, muteVideoSounds);
+				
+				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY))
+					options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY));
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("Could not create JSON", ApplifierImpactProperties.class);
+			}
+
 			return options;
 		}
 		
