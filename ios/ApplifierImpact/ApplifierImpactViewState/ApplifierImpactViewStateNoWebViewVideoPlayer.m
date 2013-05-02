@@ -33,6 +33,7 @@
 
 - (void)wasShown {
   [super wasShown];
+  
   if (self.videoController.parentViewController == nil && [[ApplifierImpactMainViewController sharedInstance] presentedViewController] != self.videoController) {
     [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
     [self moveSpinnerToVideoController];
@@ -102,7 +103,6 @@
 	AILOG_DEBUG(@"");
   
   if (![self canViewSelectedCampaign]) return;
-  
   [self startVideoPlayback:true withDelegate:self];
 }
 
