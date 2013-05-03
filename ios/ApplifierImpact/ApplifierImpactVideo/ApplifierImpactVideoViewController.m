@@ -39,6 +39,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   [self.view setBackgroundColor:[UIColor blackColor]];
+  self.view.clipsToBounds = true;
   
   if (self.delegate != nil) {
     [self.delegate videoPlayerReady];
@@ -76,12 +77,14 @@
 }
 
 - (void)_makeOrientation {
-  if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
-    double maxValue = fmax(self.view.superview.bounds.size.width, self.view.superview.bounds.size.height);
-    double minValue = fmin(self.view.superview.bounds.size.width, self.view.superview.bounds.size.height);
-    self.view.bounds = CGRectMake(0, 0, maxValue, minValue);
-    self.view.transform = CGAffineTransformMakeRotation(M_PI / 2);
-    AILOG_DEBUG(@"NEW DIMENSIONS: %f, %f", minValue, maxValue);
+  if (![[ApplifierImpactShowOptionsParser sharedInstance] useDeviceOrientationForVideo]) {
+    if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+      double maxValue = fmax(self.view.superview.bounds.size.width, self.view.superview.bounds.size.height);
+      double minValue = fmin(self.view.superview.bounds.size.width, self.view.superview.bounds.size.height);
+      self.view.bounds = CGRectMake(0, 0, maxValue, minValue);
+      self.view.transform = CGAffineTransformMakeRotation(M_PI / 2);
+      AILOG_DEBUG(@"NEW DIMENSIONS: %f, %f", minValue, maxValue);
+    }
   }
   
   if (self.videoView != nil) {
@@ -94,6 +97,9 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+  if ([[ApplifierImpactShowOptionsParser sharedInstance] useDeviceOrientationForVideo]) {
+    return YES;
+  }
   return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
@@ -102,6 +108,9 @@
 }
 
 - (BOOL)shouldAutorotate {
+  if ([[ApplifierImpactShowOptionsParser sharedInstance] useDeviceOrientationForVideo]) {
+    return YES;
+  }
   return NO;
 }
 
@@ -162,7 +171,9 @@
 
 - (void)_createVideoView {
   if (self.videoView == nil) {
-    self.videoView = [[ApplifierImpactVideoView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.videoView = [[ApplifierImpactVideoView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    [self.videoView setVideoFillMode:AVLayerVideoGravityResizeAspect];
+    self.videoView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
   }
 }
 
@@ -258,6 +269,8 @@
   if (self.videoOverlayView == nil) {
     self.videoOverlayView = [[UIView alloc] initWithFrame:self.view.bounds];
     [self.videoOverlayView setBackgroundColor:[UIColor clearColor]];
+    self.videoOverlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
     [self.view addSubview:self.videoOverlayView];
     [self.view bringSubviewToFront:self.videoOverlayView];
   }
@@ -276,7 +289,7 @@
 - (void)createVideoSkipLabel {
   if (self.skipLabel == nil && self.videoOverlayView != nil && [[ApplifierImpactProperties sharedInstance] allowVideoSkipInSeconds] > 0) {
     AILOG_DEBUG(@"Create video skip label");
-    self.skipLabel = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 205, 20)];
+    self.skipLabel = [[UIButton alloc] initWithFrame:CGRectMake(3, 0, 205, 20)];
     self.skipLabel.backgroundColor = [UIColor clearColor];
     self.skipLabel.titleLabel.textColor = [UIColor whiteColor];
     self.skipLabel.titleLabel.font = [UIFont systemFontOfSize:12.0];
@@ -312,15 +325,14 @@
   AILOG_DEBUG(@"");
 
   if (self.progressLabel == nil && self.videoOverlayView != nil) {
-    self.progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 20)];
+    self.progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - 303, self.view.bounds.size.height - 23, 300, 20)];
+    self.progressLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
     self.progressLabel.backgroundColor = [UIColor clearColor];
     self.progressLabel.textColor = [UIColor whiteColor];
     self.progressLabel.font = [UIFont systemFontOfSize:12.0];
     self.progressLabel.textAlignment = UITextAlignmentRight;
     self.progressLabel.shadowColor = [UIColor blackColor];
     self.progressLabel.shadowOffset = CGSizeMake(0, 1.0);
-    self.progressLabel.transform = CGAffineTransformMakeTranslation(self.view.bounds.size.width - 303, self.view.bounds.size.height - 23);
-    
     [self.videoOverlayView addSubview:self.progressLabel];
     [self.videoOverlayView bringSubviewToFront:self.progressLabel];
     self.videoOverlayView.hidden = NO;

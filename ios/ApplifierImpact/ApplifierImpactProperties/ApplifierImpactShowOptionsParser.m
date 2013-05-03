@@ -48,6 +48,9 @@ static ApplifierImpactShowOptionsParser *sharedOptionsParser = nil;
       self.muteVideoSounds = YES;
     }
 
+    if ([options objectForKey:kApplifierImpactOptionVideoUsesDeviceOrientation] != nil && [[options objectForKey:kApplifierImpactOptionVideoUsesDeviceOrientation] boolValue] == YES) {
+      self.useDeviceOrientationForVideo = YES;
+    }
   }
 }
 
@@ -57,6 +60,7 @@ static ApplifierImpactShowOptionsParser *sharedOptionsParser = nil;
   [options setObject:@(self.noOfferScreen) forKey:kApplifierImpactOptionNoOfferscreenKey];
   [options setObject:@(self.openAnimated) forKey:kApplifierImpactOptionOpenAnimatedKey];
   [options setObject:@(self.muteVideoSounds) forKey:kApplifierImpactOptionMuteVideoSounds];
+  [options setObject:@(self.useDeviceOrientationForVideo) forKey:kApplifierImpactOptionVideoUsesDeviceOrientation];
   
   if (self.gamerSID != nil) {
     [options setObject:self.gamerSID forKey:kApplifierImpactOptionGamerSIDKey];
@@ -70,6 +74,7 @@ static ApplifierImpactShowOptionsParser *sharedOptionsParser = nil;
   self.openAnimated = YES;
   self.gamerSID = NULL;
   self.muteVideoSounds = NO;
+  self.useDeviceOrientationForVideo = NO;
 }
 
 @end

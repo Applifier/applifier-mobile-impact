@@ -47,8 +47,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   NSString *queryParams = @"?";
   
   // Mandatory params
-  queryParams = [NSString stringWithFormat:@"%@%@=%@", queryParams, kApplifierImpactInitQueryParamDeviceIdKey, [ApplifierImpactDevice md5DeviceId]];
-  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamPlatformKey, @"ios"];
+  queryParams = [NSString stringWithFormat:@"%@%@=%@", queryParams, kApplifierImpactInitQueryParamPlatformKey, @"ios"];
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamGameIdKey, [self impactGameId]];
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamOpenUdidKey, [ApplifierImpactDevice md5OpenUDIDString]];
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamMacAddressKey, [ApplifierImpactDevice md5MACAddressString]];

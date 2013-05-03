@@ -14,6 +14,7 @@
 @property (nonatomic, assign) BOOL noOfferScreen;
 @property (nonatomic, assign) NSString *gamerSID;
 @property (nonatomic, assign) BOOL muteVideoSounds;
+@property (nonatomic, assign) BOOL useDeviceOrientationForVideo;
 
 + (ApplifierImpactShowOptionsParser *)sharedInstance;
 - (void)parseOptions:(NSDictionary *)options;
