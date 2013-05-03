@@ -7,14 +7,7 @@
 //
 
 #import "ApplifierImpactViewState.h"
-#import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 #import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
-#import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
-#import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
-#import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
-
-#import "../ApplifierImpact.h"
 
 @interface ApplifierImpactViewStateEndScreen : ApplifierImpactViewState
-- (void)openAppStoreWithData:(NSDictionary *)data inViewController:(UIViewController *)targetViewController;
 @end

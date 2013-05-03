@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 #import "../ApplifierImpact.h"
+#import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
+#import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
+#import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 
 @protocol ApplifierImpactViewStateDelegate <NSObject>
 
@@ -30,4 +33,6 @@
 - (void)wasShown;
 
 - (void)applyOptions:(NSDictionary *)options;
+
+- (void)openAppStoreWithData:(NSDictionary *)data inViewController:(UIViewController *)targetViewController;
 @end

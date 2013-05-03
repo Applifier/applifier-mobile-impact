@@ -56,4 +56,12 @@
   }
 }
 
+- (void)applyOptions:(NSDictionary *)options {
+  [super applyOptions:options];
+  
+  if ([options objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] != nil) {
+    [self openAppStoreWithData:options inViewController:[ApplifierImpactMainViewController sharedInstance]];
+  }
+}
+
 @end
