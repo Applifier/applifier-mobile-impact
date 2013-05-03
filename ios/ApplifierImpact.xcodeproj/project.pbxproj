@@ -107,8 +107,23 @@
 		78AC20421622F01F007DE419 /* ApplifierImpact.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC203C1622F01F007DE419 /* ApplifierImpact.m */; };
 		78CB843A16255FAA00E94915 /* ApplifierImpactURLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CB843816255FAA00E94915 /* ApplifierImpactURLProtocol.h */; };
 		78CB843B16255FAA00E94915 /* ApplifierImpactURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */; };
+		CC095C961733A2C300A0BD3C /* mute_button.png in Resources */ = {isa = PBXBuildFile; fileRef = CC095C951733A2C300A0BD3C /* mute_button.png */; };
+		CC095C991733A30E00A0BD3C /* ApplifierImpactBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */; };
+		CC095C9A1733A30E00A0BD3C /* ApplifierImpactBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */; };
 		CC158911150789ED00B3D188 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC15890F150789ED00B3D188 /* InfoPlist.strings */; };
+		CCF83B891733A13200DA12C1 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCF83B881733A13200DA12C1 /* CoreFoundation.framework */; };
+		CCF83B8F1733A13200DA12C1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CCF83B8D1733A13200DA12C1 /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CC095C9B1733A54B00A0BD3C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CC1588FD150789ED00B3D188 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CCF83B851733A13200DA12C1;
+			remoteInfo = ApplifierImpactBundle;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		78057A0E1643CADB005EF487 /* ApplifierImpactProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactProperties.h; sourceTree = "<group>"; };
@@ -211,10 +226,18 @@
 		78AC203C1622F01F007DE419 /* ApplifierImpact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpact.m; sourceTree = "<group>"; };
 		78CB843816255FAA00E94915 /* ApplifierImpactURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactURLProtocol.h; sourceTree = "<group>"; };
 		78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactURLProtocol.m; sourceTree = "<group>"; };
+		CC095C951733A2C300A0BD3C /* mute_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mute_button.png; sourceTree = "<group>"; };
+		CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactBundle.h; sourceTree = "<group>"; };
+		CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactBundle.m; sourceTree = "<group>"; };
 		CC15890A150789ED00B3D188 /* ApplifierImpact.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ApplifierImpact.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC15890E150789ED00B3D188 /* ApplifierImpact-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ApplifierImpact-Info.plist"; sourceTree = "<group>"; };
 		CC158910150789ED00B3D188 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CC158912150789ED00B3D188 /* ApplifierImpact-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ApplifierImpact-Prefix.pch"; sourceTree = "<group>"; };
+		CCF83B861733A13200DA12C1 /* ApplifierImpact.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ApplifierImpact.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		CCF83B881733A13200DA12C1 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		CCF83B8C1733A13200DA12C1 /* ApplifierImpactBundle-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ApplifierImpactBundle-Info.plist"; sourceTree = "<group>"; };
+		CCF83B8E1733A13200DA12C1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CCF83B901733A13200DA12C1 /* ApplifierImpactBundle-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ApplifierImpactBundle-Prefix.pch"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -222,6 +245,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCF83B831733A13200DA12C1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CCF83B891733A13200DA12C1 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,10 +401,19 @@
 			path = ApplifierImpactURLProtocol;
 			sourceTree = "<group>";
 		};
+		CC095C941733A2A800A0BD3C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CC095C951733A2C300A0BD3C /* mute_button.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		CC1588FB150789ED00B3D188 = {
 			isa = PBXGroup;
 			children = (
 				CC15890C150789ED00B3D188 /* ApplifierImpact */,
+				CCF83B871733A13200DA12C1 /* Frameworks */,
 				CC15890B150789ED00B3D188 /* Products */,
 			);
 			indentWidth = 2;
@@ -384,6 +424,7 @@
 			isa = PBXGroup;
 			children = (
 				CC15890A150789ED00B3D188 /* ApplifierImpact.framework */,
+				CCF83B861733A13200DA12C1 /* ApplifierImpact.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -391,6 +432,7 @@
 		CC15890C150789ED00B3D188 /* ApplifierImpact */ = {
 			isa = PBXGroup;
 			children = (
+				CCF83B8A1733A13200DA12C1 /* ApplifierImpactBundle */,
 				78AC203B1622F01F007DE419 /* ApplifierImpact.h */,
 				78AC203C1622F01F007DE419 /* ApplifierImpact.m */,
 				7894D8D9170EF56B000CFC99 /* ApplifierImpactInitializer */,
@@ -460,6 +502,35 @@
 			path = ApplifierImpactOpenUDID;
 			sourceTree = "<group>";
 		};
+		CCF83B871733A13200DA12C1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CCF83B881733A13200DA12C1 /* CoreFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CCF83B8A1733A13200DA12C1 /* ApplifierImpactBundle */ = {
+			isa = PBXGroup;
+			children = (
+				CC095C941733A2A800A0BD3C /* Resources */,
+				CCF83B8B1733A13200DA12C1 /* Supporting Files */,
+				CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */,
+				CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */,
+			);
+			path = ApplifierImpactBundle;
+			sourceTree = "<group>";
+		};
+		CCF83B8B1733A13200DA12C1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CCF83B8C1733A13200DA12C1 /* ApplifierImpactBundle-Info.plist */,
+				CCF83B8D1733A13200DA12C1 /* InfoPlist.strings */,
+				CCF83B901733A13200DA12C1 /* ApplifierImpactBundle-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -517,6 +588,7 @@
 				7894D910171ED568000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.h in Headers */,
 				7894D914171FF7AD000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.h in Headers */,
 				7894D91817200A8D000CFC99 /* ApplifierImpactImageViewRoundedCorners.h in Headers */,
+				CC095C991733A30E00A0BD3C /* ApplifierImpactBundle.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -538,10 +610,28 @@
 			buildRules = (
 			);
 			dependencies = (
+				CC095C9C1733A54B00A0BD3C /* PBXTargetDependency */,
 			);
 			name = ApplifierImpact;
 			productName = ApplifierImpact;
 			productReference = CC15890A150789ED00B3D188 /* ApplifierImpact.framework */;
+			productType = "com.apple.product-type.bundle";
+		};
+		CCF83B851733A13200DA12C1 /* ApplifierImpactBundle */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CCF83B931733A13200DA12C1 /* Build configuration list for PBXNativeTarget "ApplifierImpactBundle" */;
+			buildPhases = (
+				CCF83B821733A13200DA12C1 /* Sources */,
+				CCF83B831733A13200DA12C1 /* Frameworks */,
+				CCF83B841733A13200DA12C1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ApplifierImpactBundle;
+			productName = ApplifierImpactBundle;
+			productReference = CCF83B861733A13200DA12C1 /* ApplifierImpact.bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -566,6 +656,7 @@
 			projectRoot = "";
 			targets = (
 				CC158909150789ED00B3D188 /* ApplifierImpact */,
+				CCF83B851733A13200DA12C1 /* ApplifierImpactBundle */,
 			);
 		};
 /* End PBXProject section */
@@ -576,6 +667,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC158911150789ED00B3D188 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCF83B841733A13200DA12C1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CCF83B8F1733A13200DA12C1 /* InfoPlist.strings in Resources */,
+				CC095C961733A2C300A0BD3C /* mute_button.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -678,16 +778,40 @@
 				7894D911171ED568000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.m in Sources */,
 				7894D915171FF7AD000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m in Sources */,
 				7894D91917200A8D000CFC99 /* ApplifierImpactImageViewRoundedCorners.m in Sources */,
+				CC095C9A1733A30E00A0BD3C /* ApplifierImpactBundle.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCF83B821733A13200DA12C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CC095C9C1733A54B00A0BD3C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CCF83B851733A13200DA12C1 /* ApplifierImpactBundle */;
+			targetProxy = CC095C9B1733A54B00A0BD3C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		CC15890F150789ED00B3D188 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				CC158910150789ED00B3D188 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		CCF83B8D1733A13200DA12C1 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CCF83B8E1733A13200DA12C1 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -702,7 +826,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				BUILD_DIR = "$(SRCROOT)/build";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -795,6 +919,65 @@
 			};
 			name = Release;
 		};
+		CCF83B911733A13200DA12C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ApplifierImpact/ApplifierImpactBundle/ApplifierImpactBundle-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpactBundle/ApplifierImpactBundle-Info.plist";
+				INSTALL_PATH = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = ApplifierImpact;
+				SDKROOT = iphoneos6.1;
+				SKIP_INSTALL = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		CCF83B921733A13200DA12C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ApplifierImpact/ApplifierImpactBundle/ApplifierImpactBundle-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpactBundle/ApplifierImpactBundle-Info.plist";
+				INSTALL_PATH = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = ApplifierImpact;
+				SDKROOT = iphoneos6.1;
+				SKIP_INSTALL = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -812,6 +995,15 @@
 			buildConfigurations = (
 				CC158916150789ED00B3D188 /* Debug */,
 				CC158917150789ED00B3D188 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CCF83B931733A13200DA12C1 /* Build configuration list for PBXNativeTarget "ApplifierImpactBundle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CCF83B911733A13200DA12C1 /* Debug */,
+				CCF83B921733A13200DA12C1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
