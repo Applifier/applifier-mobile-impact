@@ -25,10 +25,12 @@ import com.applifier.impact.android.webapp.*;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
 
 
 public class ApplifierImpact implements IApplifierImpactCacheListener, 
@@ -60,6 +62,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private boolean _openRequestFromDeveloper = false;
 	private AlertDialog _alertDialog = null;
 		
+	private TimerTask _pauseScreenTimer = null;
+	private Timer _pauseTimer = null;
 	
 	// Listeners
 	private IApplifierImpactListener _impactListener = null;
@@ -303,6 +307,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			case VideoStart:
 				if (_impactListener != null)
 					_impactListener.onVideoStarted();
+				cancelPauseScreenTimer();
 				break;
 			case VideoEnd:
 				if (_impactListener != null && ApplifierImpactProperties.SELECTED_CAMPAIGN != null && !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed()) {
@@ -520,6 +525,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	private void close () {
+		cancelPauseScreenTimer();
 		ApplifierImpactCloseRunner closeRunner = new ApplifierImpactCloseRunner();
 		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(closeRunner);
 	}
@@ -634,6 +640,37 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		}
 	}
 	
+	private void cancelPauseScreenTimer () {
+		if (_pauseScreenTimer != null) {
+			_pauseScreenTimer.cancel();
+		}
+		
+		if (_pauseTimer != null) {
+			_pauseTimer.cancel();
+			_pauseTimer.purge();
+		}
+		
+		_pauseScreenTimer = null;
+		_pauseTimer = null;
+	}
+	
+	private void createPauseScreenTimer () {
+		_pauseScreenTimer = new TimerTask() {
+			@Override
+			public void run() {
+				PowerManager pm = (PowerManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext().getSystemService(Context.POWER_SERVICE);			
+				if (!pm.isScreenOn()) {
+					mainview.webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, new JSONObject());
+					close();
+					cancelPauseScreenTimer();
+				}
+			}
+		};
+		
+		_pauseTimer = new Timer();
+		_pauseTimer.scheduleAtFixedRate(_pauseScreenTimer, 0, 50);
+	}
+	
 	
 	/* INTERNAL CLASSES */
 
@@ -692,6 +729,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	private class ApplifierImpactPlayVideoRunner implements Runnable {
+		
 		@Override
 		public void run() {			
 			ApplifierImpactUtils.Log("Running videoplayrunner", this);
@@ -708,6 +746,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				}
 				
 				mainview.webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_SHOWSPINNER, data);
+				
+				createPauseScreenTimer();
 				
 				String playUrl = ApplifierImpactUtils.getCacheDirectory() + "/" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getVideoFilename();
 				if (!ApplifierImpactUtils.isFileInCache(ApplifierImpactProperties.SELECTED_CAMPAIGN.getVideoFilename()))
