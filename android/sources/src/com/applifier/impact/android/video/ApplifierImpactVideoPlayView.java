@@ -415,7 +415,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			case KeyEvent.KEYCODE_BACK:
 				ApplifierImpactUtils.Log("onKeyDown", this);
 				
-				if (ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP > 0 && getSecondsUntilBackButtonAllowed() == 0) {
+				if (ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP == 0 || (ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP > 0 && getSecondsUntilBackButtonAllowed() == 0)) {
 					clearVideoPlayer();
 					
 					_bufferingCompledtedMillis = System.currentTimeMillis();
@@ -430,15 +430,6 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 					_listener.onBackButtonClicked(this);
 				
 		    	return true;
-			case KeyEvent.KEYCODE_HOME:
-				_bufferingCompledtedMillis = System.currentTimeMillis();
-				bufferingDuration = _bufferingCompledtedMillis - _bufferingStartedMillis;
-				values = new HashMap<String, Object>();
-				values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, bufferingDuration);
-				values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_EXIT);
-				ApplifierImpactInstrumentation.gaInstrumentationVideoAbort(ApplifierImpactProperties.SELECTED_CAMPAIGN, values);				
-				
-				return false;
 		}
     	
     	return false;
