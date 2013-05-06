@@ -472,33 +472,62 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	public void onOpenPlayStore (JSONObject data) {
 	    ApplifierImpactUtils.Log("onOpenPlayStore", this);
-		if (ApplifierImpactProperties.SELECTED_CAMPAIGN != null && ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId() != null) {
-			try {
-				if (!ApplifierImpactProperties.SELECTED_CAMPAIGN.shouldBypassAppSheet()) {
-					ApplifierImpactUtils.Log("Opening playstore activity with storeId: " + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId(), this);
-					ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId())));
-				}
-				else {
-					openPlayStoreInBrowser();
-				}
-			} 
-			catch (android.content.ActivityNotFoundException anfe) {
-				openPlayStoreInBrowser();
-			}
-			
-			webdata.sendAnalyticsRequest(ApplifierImpactConstants.IMPACT_ANALYTICS_EVENTTYPE_OPENAPPSTORE, ApplifierImpactProperties.SELECTED_CAMPAIGN);
-		}
-		else {
-		    ApplifierImpactUtils.Log("Selected campaign (" + ApplifierImpactProperties.SELECTED_CAMPAIGN + ") or couldn't get storeId", this);
-		}
+
+	    if (data != null) {
+	    	
+	    	ApplifierImpactUtils.Log(data.toString(), this);
+	    	
+	    	String playStoreId = null;
+	    	String clickUrl = null;
+	    	Boolean bypassAppSheet = false;
+	    	
+	    	if (data.has(ApplifierImpactConstants.IMPACT_PLAYSTORE_ITUNESID_KEY)) {
+	    		try {
+		    		playStoreId = data.getString(ApplifierImpactConstants.IMPACT_PLAYSTORE_ITUNESID_KEY);
+	    		}
+	    		catch (Exception e) {
+	    			ApplifierImpactUtils.Log("Could not fetch playStoreId", this);
+	    		}
+	    	}
+	    	
+	    	if (data.has(ApplifierImpactConstants.IMPACT_PLAYSTORE_CLICKURL_KEY)) {
+	    		try {
+	    			clickUrl = data.getString(ApplifierImpactConstants.IMPACT_PLAYSTORE_CLICKURL_KEY);
+	    		}
+	    		catch (Exception e) {
+	    			ApplifierImpactUtils.Log("Could not fetch clickUrl", this);
+	    		}
+	    	}
+	    	
+	    	if (data.has(ApplifierImpactConstants.IMPACT_PLAYSTORE_BYPASSAPPSHEET_KEY)) {
+	    		try {
+	    			bypassAppSheet = data.getBoolean(ApplifierImpactConstants.IMPACT_PLAYSTORE_BYPASSAPPSHEET_KEY);
+	    		}
+	    		catch (Exception e) {
+	    			ApplifierImpactUtils.Log("Could not fetch bypassAppSheet", this);
+	    		}
+	    	}
+	    	
+	    	if (playStoreId != null && !bypassAppSheet) {
+	    		openPlayStoreAsIntent(playStoreId);
+	    	}
+	    	else if (clickUrl != null ){
+	    		openPlayStoreInBrowser(clickUrl);
+	    	}
+	    }
 	}
 	
 
 	/* PRIVATE METHODS */
 	
-	private void openPlayStoreInBrowser () {
-	    ApplifierImpactUtils.Log("Could not open PlayStore activity, opening in browser with storeId: " + ApplifierImpactProperties.SELECTED_CAMPAIGN.getStoreId(), this);
-		ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ApplifierImpactProperties.SELECTED_CAMPAIGN.getClickUrl())));
+	private void openPlayStoreAsIntent (String playStoreId) {
+		ApplifierImpactUtils.Log("Opening playstore activity with storeId: " + playStoreId, this);
+		ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + playStoreId)));
+	}
+	
+	private void openPlayStoreInBrowser (String url) {
+	    ApplifierImpactUtils.Log("Could not open PlayStore activity, opening in browser with url: " + url, this);
+		ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 	}
 	
 	private void init (Activity activity, String gameId, IApplifierImpactListener listener) {
