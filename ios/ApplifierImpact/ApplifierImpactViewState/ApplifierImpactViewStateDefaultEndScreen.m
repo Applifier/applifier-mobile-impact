@@ -53,13 +53,7 @@
 - (void)applyOptions:(NSDictionary *)options {
   [super applyOptions:options];
   
-  if ([options objectForKey:kApplifierImpactNativeEventShowSpinner] != nil) {
-    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:[options objectForKey:kApplifierImpactNativeEventShowSpinner]];
-  }
-  else if ([options objectForKey:kApplifierImpactNativeEventHideSpinner] != nil) {
-    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:[options objectForKey:kApplifierImpactNativeEventHideSpinner]];
-  }
-  else if ([options objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] != nil) {
+  if ([options objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] != nil) {
     [self openAppStoreWithData:options inViewController:[ApplifierImpactMainViewController sharedInstance]];
   }
 }

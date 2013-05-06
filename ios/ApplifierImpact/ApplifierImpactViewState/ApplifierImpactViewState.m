@@ -45,6 +45,13 @@
 
 - (void)applyOptions:(NSDictionary *)options {
   AILOG_DEBUG(@"");
+  
+  if ([options objectForKey:kApplifierImpactNativeEventShowSpinner] != nil) {
+    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:[options objectForKey:kApplifierImpactNativeEventShowSpinner]];
+  }
+  else if ([options objectForKey:kApplifierImpactNativeEventHideSpinner] != nil) {
+    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:[options objectForKey:kApplifierImpactNativeEventHideSpinner]];
+  }
 }
 
 - (ApplifierImpactViewStateType)getStateType {
