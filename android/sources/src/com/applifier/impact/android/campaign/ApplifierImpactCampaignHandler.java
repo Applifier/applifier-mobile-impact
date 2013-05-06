@@ -52,7 +52,7 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 			// Analytics / Instrumentation
 			Map<String, Object> values = new HashMap<String, Object>();
 			values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOCACHING_COMPLETED);
-			values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, getCachingDurationInMillis());
+			values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_CACHINGDURATION_KEY, getCachingDurationInMillis());
 			ApplifierImpactInstrumentation.gaInstrumentationVideoCaching(_campaign, values);		
 		}
 	}

@@ -178,6 +178,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_CONNECTIONTYPE_KEY = "connectionType";
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOPLAYBACKTYPE_KEY = "videoPlaybackType";
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY = "bufferingDuration";
+	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_CACHINGDURATION_KEY = "cachingDuration";
 	
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY = "eventValue";
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_TYPE_KEY = "eventType";
