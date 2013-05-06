@@ -26,16 +26,19 @@
   @property (nonatomic, assign) dispatch_queue_t videoControllerQueue;
   @property (nonatomic, strong) NSURL *currentPlayingVideoUrl;
   @property (nonatomic, strong) ApplifierImpactVideoMuteButton *muteButton;
+  @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 @end
 
 @implementation ApplifierImpactVideoViewController
+
+@synthesize muteButton = _muteButton;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
       self.videoControllerQueue = dispatch_queue_create("com.applifier.impact.videocontroller", NULL);
-      self.muteButton = [[ApplifierImpactVideoMuteButton alloc] initWithIcon:[ApplifierImpactBundle imageWithName:@"mute_button" ofType:@"png"] title:@"0"];
-      [self.muteButton addTarget:self action:@selector(muteVideoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+      self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
       self.isPlaying = NO;
     }
     return self;
@@ -49,12 +52,22 @@
   if (self.delegate != nil) {
     [self.delegate videoPlayerReady];
   }
-  
+  self.tapGestureRecognizer.cancelsTouchesInView = NO;
+  [self.view addGestureRecognizer:self.tapGestureRecognizer];
+  self.tapGestureRecognizer.delegate = self;
+  self.muteButton = [[ApplifierImpactVideoMuteButton alloc] initWithIcon:[ApplifierImpactBundle imageWithName:@"mute_button" ofType:@"png"] title:@"0"];
+  [self.muteButton addTarget:self action:@selector(muteVideoButtonPressed:) forControlEvents:UIControlEventTouchDown];  
   [self _attachVideoView];
 }
 
 - (void)dealloc {
   dispatch_release(self.videoControllerQueue);
+}
+
+- (void) handleTapFrom: (UITapGestureRecognizer *)recognizer
+{
+  // TODO: Show controlls
+  AILOG_DEBUG(@"SHOW CONTROLLS");
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -111,9 +124,12 @@
     }
   }
   
+  // Position in lower left corner.
+  [self.muteButton setFrame:CGRectMake(0.0f, self.view.bounds.size.height - self.muteButton.frame.size.height, self.muteButton.frame.size.width, self.muteButton.frame.size.height)];
   if (self.videoView != nil) {
     [self.videoView setFrame:self.view.bounds];
   }
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -357,12 +373,17 @@
     self.progressLabel.textAlignment = UITextAlignmentRight;
     self.progressLabel.shadowColor = [UIColor blackColor];
     self.progressLabel.shadowOffset = CGSizeMake(0, 1.0);
-    [self.videoOverlayView addSubview:self.muteButton];
-    [self.videoOverlayView bringSubviewToFront:self.muteButton];
- 
-      [self.muteButton hideButtonAfter:3.0f];
+    
+
+    
     [self.videoOverlayView addSubview:self.progressLabel];
     [self.videoOverlayView bringSubviewToFront:self.progressLabel];
+    [self.videoOverlayView addSubview:self.muteButton];
+    [self.videoOverlayView bringSubviewToFront:self.muteButton];
+   // self.muteButton.frame = CGRectMake(0, 100, self.muteButton.frame.size.width, self.muteButton.frame.size.height);
+
+    //[self.muteButton hideButtonAfter:3.0f];
+
     self.videoOverlayView.hidden = NO;
   }
 }
@@ -430,6 +451,13 @@
 - (NSValue *)_valueWithDuration:(Float64)duration {
   CMTime time = CMTimeMakeWithSeconds(duration, NSEC_PER_SEC);
 	return [NSValue valueWithCMTime:time];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+  if ([touch.view isKindOfClass:[UIControl class]]) {
+    return NO; // ignore the touch
+  }
+  return YES; // handle the touch
 }
 
 @end
