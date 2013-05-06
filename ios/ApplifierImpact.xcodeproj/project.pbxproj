@@ -108,12 +108,14 @@
 		78CB843A16255FAA00E94915 /* ApplifierImpactURLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CB843816255FAA00E94915 /* ApplifierImpactURLProtocol.h */; };
 		78CB843B16255FAA00E94915 /* ApplifierImpactURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */; };
 		CC095C961733A2C300A0BD3C /* mute_button.png in Resources */ = {isa = PBXBuildFile; fileRef = CC095C951733A2C300A0BD3C /* mute_button.png */; };
-		CC095C991733A30E00A0BD3C /* ApplifierImpactBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */; };
+		CC095C991733A30E00A0BD3C /* ApplifierImpactBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */; settings = {ATTRIBUTES = (); }; };
 		CC095C9A1733A30E00A0BD3C /* ApplifierImpactBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */; };
 		CC095CAE17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095CAC17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h */; };
 		CC095CAF17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CC095CAD17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.m */; };
 		CC095CB41737804E00A0BD3C /* mute_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CC095CB21737800200A0BD3C /* mute_button@2x.png */; };
 		CC158911150789ED00B3D188 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC15890F150789ED00B3D188 /* InfoPlist.strings */; };
+		CCBAF0321737B008005EA0FC /* ApplifierImpactVideoOverlay.h in Headers */ = {isa = PBXBuildFile; fileRef = CCBAF0301737B008005EA0FC /* ApplifierImpactVideoOverlay.h */; };
+		CCBAF0331737B008005EA0FC /* ApplifierImpactVideoOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = CCBAF0311737B008005EA0FC /* ApplifierImpactVideoOverlay.m */; };
 		CCF83B891733A13200DA12C1 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCF83B881733A13200DA12C1 /* CoreFoundation.framework */; };
 		CCF83B8F1733A13200DA12C1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CCF83B8D1733A13200DA12C1 /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
@@ -239,6 +241,8 @@
 		CC15890E150789ED00B3D188 /* ApplifierImpact-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ApplifierImpact-Info.plist"; sourceTree = "<group>"; };
 		CC158910150789ED00B3D188 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CC158912150789ED00B3D188 /* ApplifierImpact-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ApplifierImpact-Prefix.pch"; sourceTree = "<group>"; };
+		CCBAF0301737B008005EA0FC /* ApplifierImpactVideoOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactVideoOverlay.h; sourceTree = "<group>"; };
+		CCBAF0311737B008005EA0FC /* ApplifierImpactVideoOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactVideoOverlay.m; sourceTree = "<group>"; };
 		CCF83B861733A13200DA12C1 /* ApplifierImpact.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ApplifierImpact.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCF83B881733A13200DA12C1 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		CCF83B8C1733A13200DA12C1 /* ApplifierImpactBundle-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ApplifierImpactBundle-Info.plist"; sourceTree = "<group>"; };
@@ -298,6 +302,8 @@
 				787893A4165CE94F00134FC3 /* ApplifierImpactVideoView.m */,
 				78353779166365BB00D46B7C /* ApplifierImpactVideoViewController.h */,
 				7835377A166365BB00D46B7C /* ApplifierImpactVideoViewController.m */,
+				CCBAF0301737B008005EA0FC /* ApplifierImpactVideoOverlay.h */,
+				CCBAF0311737B008005EA0FC /* ApplifierImpactVideoOverlay.m */,
 			);
 			path = ApplifierImpactVideo;
 			sourceTree = "<group>";
@@ -599,6 +605,7 @@
 				7894D91817200A8D000CFC99 /* ApplifierImpactImageViewRoundedCorners.h in Headers */,
 				CC095C991733A30E00A0BD3C /* ApplifierImpactBundle.h in Headers */,
 				CC095CAE17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h in Headers */,
+				CCBAF0321737B008005EA0FC /* ApplifierImpactVideoOverlay.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -791,6 +798,7 @@
 				7894D91917200A8D000CFC99 /* ApplifierImpactImageViewRoundedCorners.m in Sources */,
 				CC095C9A1733A30E00A0BD3C /* ApplifierImpactBundle.m in Sources */,
 				CC095CAF17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.m in Sources */,
+				CCBAF0331737B008005EA0FC /* ApplifierImpactVideoOverlay.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -851,7 +859,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -870,7 +878,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -880,10 +888,7 @@
 		CC158916150789ED00B3D188 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(VALID_ARCHS)";
 				CONTENTS_FOLDER_PATH = "$(WRAPPER_NAME)/Versions/$(FRAMEWORK_VERSION)";
 				DEAD_CODE_STRIPPING = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -907,10 +912,7 @@
 		CC158917150789ED00B3D188 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(VALID_ARCHS)";
 				CONTENTS_FOLDER_PATH = "$(WRAPPER_NAME)/Versions/$(FRAMEWORK_VERSION)";
 				DEAD_CODE_STRIPPING = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -950,7 +952,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpactBundle/ApplifierImpactBundle-Info.plist";
 				INSTALL_PATH = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = ApplifierImpact;
@@ -980,7 +982,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpactBundle/ApplifierImpactBundle-Info.plist";
 				INSTALL_PATH = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = ApplifierImpact;
 				SDKROOT = iphoneos;
