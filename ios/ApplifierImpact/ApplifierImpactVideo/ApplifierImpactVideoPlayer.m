@@ -39,6 +39,10 @@
 
 #pragma mark Video Playback
 
+- (void) muteVideo {
+  
+}
+
 - (void)playSelectedVideo {
   self.videoPosition = kVideoAnalyticsPositionUnplayed;
   dispatch_async(dispatch_get_main_queue(), ^{

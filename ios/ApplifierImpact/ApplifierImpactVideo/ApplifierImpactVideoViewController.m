@@ -13,6 +13,8 @@
 #import "ApplifierImpactVideoView.h"
 #import "../ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
+#import "ApplifierImpactVideoMuteButton.h"
+#import "../ApplifierImpactBundle/ApplifierImpactBundle.h"
 
 @interface ApplifierImpactVideoViewController ()
   @property (nonatomic, strong) ApplifierImpactVideoView *videoView;
@@ -23,6 +25,7 @@
   @property (nonatomic, strong) UIView *videoOverlayView;
   @property (nonatomic, assign) dispatch_queue_t videoControllerQueue;
   @property (nonatomic, strong) NSURL *currentPlayingVideoUrl;
+  @property (nonatomic, strong) ApplifierImpactVideoMuteButton *muteButton;
 @end
 
 @implementation ApplifierImpactVideoViewController
@@ -31,6 +34,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
       self.videoControllerQueue = dispatch_queue_create("com.applifier.impact.videocontroller", NULL);
+      self.muteButton = [[ApplifierImpactVideoMuteButton alloc] initWithIcon:[ApplifierImpactBundle imageWithName:@"mute_button" ofType:@"png"] title:@"0"];
+      [self.muteButton addTarget:self action:@selector(muteVideoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
       self.isPlaying = NO;
     }
     return self;
@@ -74,6 +79,25 @@
   [self createVideoSkipLabel];
   
   [self.view bringSubviewToFront:self.videoOverlayView];
+}
+
+-(void)muteVideoButtonPressed:(id)sender {
+  AILOG_DEBUG(@"mute");
+  AVPlayerItem *item = [self.videoPlayer currentItem];
+  AVMutableAudioMix *audioZeroMix = nil;
+  NSArray *audioTracks = [item.asset tracksWithMediaType:AVMediaTypeAudio];
+  NSMutableArray *allAudioParams = [NSMutableArray array];
+
+  for (AVAssetTrack *track in audioTracks) {
+    AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParameters];
+    [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+    [audioInputParams setTrackID:[track trackID]];
+    [allAudioParams addObject:audioInputParams];
+  }
+
+  audioZeroMix = [AVMutableAudioMix audioMix];
+  [audioZeroMix setInputParameters:allAudioParams];
+  [item setAudioMix:audioZeroMix];
 }
 
 - (void)_makeOrientation {
@@ -333,6 +357,10 @@
     self.progressLabel.textAlignment = UITextAlignmentRight;
     self.progressLabel.shadowColor = [UIColor blackColor];
     self.progressLabel.shadowOffset = CGSizeMake(0, 1.0);
+    [self.videoOverlayView addSubview:self.muteButton];
+    [self.videoOverlayView bringSubviewToFront:self.muteButton];
+ 
+      [self.muteButton hideButtonAfter:3.0f];
     [self.videoOverlayView addSubview:self.progressLabel];
     [self.videoOverlayView bringSubviewToFront:self.progressLabel];
     self.videoOverlayView.hidden = NO;

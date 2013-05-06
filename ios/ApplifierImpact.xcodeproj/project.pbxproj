@@ -110,6 +110,9 @@
 		CC095C961733A2C300A0BD3C /* mute_button.png in Resources */ = {isa = PBXBuildFile; fileRef = CC095C951733A2C300A0BD3C /* mute_button.png */; };
 		CC095C991733A30E00A0BD3C /* ApplifierImpactBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */; };
 		CC095C9A1733A30E00A0BD3C /* ApplifierImpactBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */; };
+		CC095CAE17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095CAC17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h */; };
+		CC095CAF17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CC095CAD17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.m */; };
+		CC095CB41737804E00A0BD3C /* mute_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CC095CB21737800200A0BD3C /* mute_button@2x.png */; };
 		CC158911150789ED00B3D188 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC15890F150789ED00B3D188 /* InfoPlist.strings */; };
 		CCF83B891733A13200DA12C1 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCF83B881733A13200DA12C1 /* CoreFoundation.framework */; };
 		CCF83B8F1733A13200DA12C1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CCF83B8D1733A13200DA12C1 /* InfoPlist.strings */; };
@@ -229,6 +232,9 @@
 		CC095C951733A2C300A0BD3C /* mute_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mute_button.png; sourceTree = "<group>"; };
 		CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactBundle.h; sourceTree = "<group>"; };
 		CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactBundle.m; sourceTree = "<group>"; };
+		CC095CAC17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactVideoMuteButton.h; sourceTree = "<group>"; };
+		CC095CAD17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactVideoMuteButton.m; sourceTree = "<group>"; };
+		CC095CB21737800200A0BD3C /* mute_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mute_button@2x.png"; sourceTree = "<group>"; };
 		CC15890A150789ED00B3D188 /* ApplifierImpact.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ApplifierImpact.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC15890E150789ED00B3D188 /* ApplifierImpact-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ApplifierImpact-Info.plist"; sourceTree = "<group>"; };
 		CC158910150789ED00B3D188 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -284,6 +290,8 @@
 		786F5D6A1635359400FD34C4 /* ApplifierImpactVideo */ = {
 			isa = PBXGroup;
 			children = (
+				CC095CAC17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h */,
+				CC095CAD17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.m */,
 				786F5D6B1635359400FD34C4 /* ApplifierImpactVideoPlayer.h */,
 				786F5D6C1635359400FD34C4 /* ApplifierImpactVideoPlayer.m */,
 				787893A3165CE94F00134FC3 /* ApplifierImpactVideoView.h */,
@@ -404,6 +412,7 @@
 		CC095C941733A2A800A0BD3C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CC095CB21737800200A0BD3C /* mute_button@2x.png */,
 				CC095C951733A2C300A0BD3C /* mute_button.png */,
 			);
 			path = Resources;
@@ -589,6 +598,7 @@
 				7894D914171FF7AD000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.h in Headers */,
 				7894D91817200A8D000CFC99 /* ApplifierImpactImageViewRoundedCorners.h in Headers */,
 				CC095C991733A30E00A0BD3C /* ApplifierImpactBundle.h in Headers */,
+				CC095CAE17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -640,7 +650,7 @@
 		CC1588FD150789ED00B3D188 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = Applifier;
 			};
 			buildConfigurationList = CC158900150789ED00B3D188 /* Build configuration list for PBXProject "ApplifierImpact" */;
@@ -676,6 +686,7 @@
 			files = (
 				CCF83B8F1733A13200DA12C1 /* InfoPlist.strings in Resources */,
 				CC095C961733A2C300A0BD3C /* mute_button.png in Resources */,
+				CC095CB41737804E00A0BD3C /* mute_button@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -779,6 +790,7 @@
 				7894D915171FF7AD000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m in Sources */,
 				7894D91917200A8D000CFC99 /* ApplifierImpactImageViewRoundedCorners.m in Sources */,
 				CC095C9A1733A30E00A0BD3C /* ApplifierImpactBundle.m in Sources */,
+				CC095CAF17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -942,7 +954,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = ApplifierImpact;
-				SDKROOT = iphoneos6.1;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = bundle;
@@ -971,7 +983,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = ApplifierImpact;
-				SDKROOT = iphoneos6.1;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = bundle;
