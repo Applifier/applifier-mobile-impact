@@ -270,6 +270,36 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 	return foundCampaign;
 }
 
+- (ApplifierImpactCampaign *)getCampaignWithITunesId:(NSString *)iTunesId {
+	AILOG_DEBUG(@"");
+	AIAssertV([NSThread isMainThread], nil);
+	ApplifierImpactCampaign *foundCampaign = nil;
+	
+	for (ApplifierImpactCampaign *campaign in self.campaigns) {
+		if ([campaign.itunesID isEqualToString:iTunesId]) {
+			foundCampaign = campaign;
+			break;
+		}
+	}
+	
+	return foundCampaign;
+}
+
+- (ApplifierImpactCampaign *)getCampaignWithClickUrl:(NSString *)clickUrl {
+	AILOG_DEBUG(@"");
+	AIAssertV([NSThread isMainThread], nil);
+	ApplifierImpactCampaign *foundCampaign = nil;
+	
+	for (ApplifierImpactCampaign *campaign in self.campaigns) {
+		if ([[campaign.clickURL absoluteString] isEqualToString:clickUrl]) {
+			foundCampaign = campaign;
+			break;
+		}
+	}
+	
+	return foundCampaign;
+}
+
 - (NSArray *)getViewableCampaigns {
 	AILOG_DEBUG(@"");
   NSMutableArray *retAr = [[NSMutableArray alloc] init];

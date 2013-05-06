@@ -33,6 +33,8 @@
 - (NSURL *)getVideoURLForCampaign:(ApplifierImpactCampaign *)campaign;
 - (void)cancelAllDownloads;
 - (ApplifierImpactCampaign *)getCampaignWithId:(NSString *)campaignId;
+- (ApplifierImpactCampaign *)getCampaignWithITunesId:(NSString *)iTunesId;
+- (ApplifierImpactCampaign *)getCampaignWithClickUrl:(NSString *)clickUrl;
 - (NSArray *)getViewableCampaigns;
 - (BOOL)setSelectedRewardItemKey:(NSString *)rewardItemKey;
 - (ApplifierImpactRewardItem *)getCurrentRewardItem;

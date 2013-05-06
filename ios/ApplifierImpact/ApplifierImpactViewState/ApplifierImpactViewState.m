@@ -54,28 +54,44 @@
 - (void)openAppStoreWithData:(NSDictionary *)data inViewController:(UIViewController *)targetViewController {
   AILOG_DEBUG(@"");
   
-  if (![self _canOpenStoreProductViewController] || [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].bypassAppSheet == YES) {
-    NSString *clickUrl = [data objectForKey:kApplifierImpactWebViewEventDataClickUrlKey];
-    if (clickUrl == nil) return;
-    AILOG_DEBUG(@"Cannot open store product view controller, falling back to click URL.");
-    [[ApplifierImpactAnalyticsUploader sharedInstance] sendOpenAppStoreRequest:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
-    
-    if (self.delegate != nil) {
-      [self.delegate stateNotification:kApplifierImpactStateActionWillLeaveApplication];
+  BOOL bypassAppSheet = false;
+  NSString *iTunesId = nil;
+  NSString *clickUrl = nil;
+  
+  if (data != nil) {
+    if ([data objectForKey:kApplifierImpactWebViewEventDataBypassAppSheetKey] != nil) {
+      bypassAppSheet = [[data objectForKey:kApplifierImpactWebViewEventDataBypassAppSheetKey] boolValue];
     }
-    
-    // DOES NOT INITIALIZE WEBVIEW
-    AILOG_DEBUG(@"CLICK_URL: %@", clickUrl);
-    [[ApplifierImpactWebAppController sharedInstance] openExternalUrl:clickUrl];
-    return;
+    if ([data objectForKey:kApplifierImpactCampaignStoreIDKey] != nil && [[data objectForKey:kApplifierImpactCampaignStoreIDKey] isKindOfClass:[NSString class]]) {
+      iTunesId = [data objectForKey:kApplifierImpactCampaignStoreIDKey];
+    }
+    if ([data objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] != nil && [[data objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] isKindOfClass:[NSString class]]) {
+      clickUrl = [data objectForKey:kApplifierImpactWebViewEventDataClickUrlKey];
+    }
   }
   
+  if (iTunesId != nil && !bypassAppSheet && [self _canOpenStoreProductViewController]) {
+    AILOG_DEBUG(@"Opening Appstore in AppSheet: %@", iTunesId);
+    [self openAppSheetWithId:iTunesId toViewController:targetViewController];
+  }
+  else if (clickUrl != nil) {
+    AILOG_DEBUG(@"Opening Appstore with clickUrl: %@", clickUrl);
+    [self openAppStoreWithUrl:clickUrl];
+  }
+}
+
+
+#pragma mark - AppStore opening
+
+- (BOOL)_canOpenStoreProductViewController {
+  Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
+  return [storeProductViewControllerClass instancesRespondToSelector:@selector(loadProductWithParameters:completionBlock:)];
+}
+
+- (void)openAppSheetWithId:(NSString *)iTunesId toViewController:(UIViewController *)targetViewController {
   Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
   if ([storeProductViewControllerClass instancesRespondToSelector:@selector(loadProductWithParameters:completionBlock:)] == YES) {
-    if (![[data objectForKey:kApplifierImpactCampaignStoreIDKey] isKindOfClass:[NSString class]]) return;
-    NSString *gameId = nil;
-    gameId = [data valueForKey:kApplifierImpactCampaignStoreIDKey];
-    if (gameId == nil || [gameId length] < 1) return;
+    if (![iTunesId isKindOfClass:[NSString class]] || iTunesId == nil || [iTunesId length] < 1) return;
     
     /*
      FIX: This _could_ bug someday. The key @"id" is written literally (and
@@ -88,7 +104,7 @@
      HOWTOFIX: Find a way to reflect global constant SKStoreProductParameterITunesItemIdentifier
      by using string value and not the constant itself.
      */
-    NSDictionary *productParams = @{@"id":gameId};
+    NSDictionary *productParams = @{@"id":iTunesId};
     
     self.storeController = [[storeProductViewControllerClass alloc] init];
     
@@ -97,12 +113,16 @@
     }
     
     void (^storeControllerComplete)(BOOL result, NSError *error) = ^(BOOL result, NSError *error) {
-      AILOG_DEBUG(@"RESULT: %i", result);
+      AILOG_DEBUG(@"Result: %i", result);
       if (result) {
         dispatch_async(dispatch_get_main_queue(), ^{
           self.targetController = targetViewController;
           [targetViewController presentViewController:self.storeController animated:YES completion:nil];
-          [[ApplifierImpactAnalyticsUploader sharedInstance] sendOpenAppStoreRequest:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
+          ApplifierImpactCampaign *campaign = [[ApplifierImpactCampaignManager sharedInstance] getCampaignWithITunesId:iTunesId];
+          
+          if (campaign != nil) {
+            [[ApplifierImpactAnalyticsUploader sharedInstance] sendOpenAppStoreRequest:campaign];
+          }
         });
       }
       else {
@@ -124,12 +144,24 @@
   }
 }
 
-#pragma mark - AppStore opening
-
-- (BOOL)_canOpenStoreProductViewController {
-  Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
-  return [storeProductViewControllerClass instancesRespondToSelector:@selector(loadProductWithParameters:completionBlock:)];
+- (void)openAppStoreWithUrl:(NSString *)clickUrl {
+  if (clickUrl == nil) return;
+  
+  ApplifierImpactCampaign *campaign = [[ApplifierImpactCampaignManager sharedInstance] getCampaignWithClickUrl:clickUrl];
+  
+  if (campaign != nil) {
+    [[ApplifierImpactAnalyticsUploader sharedInstance] sendOpenAppStoreRequest:campaign];
+  }
+  
+  if (self.delegate != nil) {
+    [self.delegate stateNotification:kApplifierImpactStateActionWillLeaveApplication];
+  }
+  
+  // DOES NOT INITIALIZE WEBVIEW
+  [[ApplifierImpactWebAppController sharedInstance] openExternalUrl:clickUrl];
+  return;
 }
+
 
 #pragma mark - SKStoreProductViewControllerDelegate
 

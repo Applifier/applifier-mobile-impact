@@ -43,6 +43,7 @@ NSString * const kApplifierImpactWebViewDataParamIosVersionKey = @"iOSVersion";
 NSString * const kApplifierImpactWebViewEventDataCampaignIdKey = @"campaignId";
 NSString * const kApplifierImpactWebViewEventDataRewatchKey = @"rewatch";
 NSString * const kApplifierImpactWebViewEventDataClickUrlKey = @"clickUrl";
+NSString * const kApplifierImpactWebViewEventDataBypassAppSheetKey = @"bypassAppSheet";
 
 
 /* Native Events */

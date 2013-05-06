@@ -57,7 +57,7 @@ extern NSString * const kApplifierImpactWebViewDataParamIosVersionKey;
 extern NSString * const kApplifierImpactWebViewEventDataCampaignIdKey;
 extern NSString * const kApplifierImpactWebViewEventDataRewatchKey;
 extern NSString * const kApplifierImpactWebViewEventDataClickUrlKey;
-
+extern NSString * const kApplifierImpactWebViewEventDataBypassAppSheetKey;
 
 
 /* Native Events */
