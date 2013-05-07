@@ -74,6 +74,9 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   if ([self testModeEnabled]) {
     queryParams = [NSString stringWithFormat:@"%@&%@=true", queryParams, kApplifierImpactInitQueryParamTestKey];
   }
+  else {
+    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamEncryptionKey, [ApplifierImpactDevice isEncrypted] ? @"true" : @"false"];
+  }
   
   return queryParams;
 }

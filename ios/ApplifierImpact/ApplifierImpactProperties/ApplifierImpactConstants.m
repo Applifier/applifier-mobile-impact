@@ -180,6 +180,7 @@ NSString * const kApplifierImpactInitQueryParamHardwareVersionKey = @"hardwareVe
 NSString * const kApplifierImpactInitQueryParamSdkVersionKey = @"sdkVersion";
 NSString * const kApplifierImpactInitQueryParamConnectionTypeKey = @"connectionType";
 NSString * const kApplifierImpactInitQueryParamTestKey = @"test";
+NSString * const kApplifierImpactInitQueryParamEncryptionKey = @"encrypted";
 
 @implementation ApplifierImpactConstants
 

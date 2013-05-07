@@ -192,6 +192,7 @@ extern NSString * const kApplifierImpactInitQueryParamHardwareVersionKey;
 extern NSString * const kApplifierImpactInitQueryParamSdkVersionKey;
 extern NSString * const kApplifierImpactInitQueryParamConnectionTypeKey;
 extern NSString * const kApplifierImpactInitQueryParamTestKey;
+extern NSString * const kApplifierImpactInitQueryParamEncryptionKey;
 
 
 @interface ApplifierImpactConstants : NSObject
