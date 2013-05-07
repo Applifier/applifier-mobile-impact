@@ -182,6 +182,22 @@ NSString * const kApplifierImpactInitQueryParamConnectionTypeKey = @"connectionT
 NSString * const kApplifierImpactInitQueryParamTestKey = @"test";
 NSString * const kApplifierImpactInitQueryParamEncryptionKey = @"encrypted";
 
+
+/* Google Analytics Instrumentation */
+
+NSString * const kApplifierImpactGoogleAnalyticsEventKey = @"googleAnalyticsEvent";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoPlayKey = @"videoAnalyticsEventPlay";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoErrorKey = @"videoAnalyticsEventError";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoAbortKey = @"videoAnalyticsEventAbort";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoCachingKey = @"videoAnalyticsEventCaching";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortBack = @"back";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortExit = @"exit";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlayStream = @"stream";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlayCached = @"cached";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingStart = @"start";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingCompleted = @"completed";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingFailed = @"failed";
+
 @implementation ApplifierImpactConstants
 
 @end

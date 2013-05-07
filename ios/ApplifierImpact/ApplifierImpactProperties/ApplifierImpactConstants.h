@@ -195,6 +195,21 @@ extern NSString * const kApplifierImpactInitQueryParamTestKey;
 extern NSString * const kApplifierImpactInitQueryParamEncryptionKey;
 
 
+/* Google Analytics Instrumentation */
+
+extern NSString * const kApplifierImpactGoogleAnalyticsEventKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoPlayKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoErrorKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoAbortKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoCachingKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortBack;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortExit;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlayStream;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlayCached;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingStart;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingCompleted;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingFailed;
+
 @interface ApplifierImpactConstants : NSObject
 
 @end
