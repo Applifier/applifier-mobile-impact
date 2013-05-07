@@ -198,6 +198,14 @@ NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingStart = @"start
 NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingCompleted = @"completed";
 NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingFailed = @"failed";
 
+NSString * const kApplifierImpactGoogleAnalyticsEventCampaignIdKey = @"campaignId";
+NSString * const kApplifierImpactGoogleAnalyticsEventConnectionTypeKey = @"connectionType";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlaybackTypeKey = @"videoPlaybackType";
+NSString * const kApplifierImpactGoogleAnalyticsEventBufferingDurationKey = @"bufferingDuration";
+NSString * const kApplifierImpactGoogleAnalyticsEventCachingDurationKey = @"cachingDuration";
+NSString * const kApplifierImpactGoogleAnalyticsEventValueKey = @"eventValue";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeKey = @"eventType";
+
 @implementation ApplifierImpactConstants
 
 @end

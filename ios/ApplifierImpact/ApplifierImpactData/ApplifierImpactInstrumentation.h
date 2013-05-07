@@ -7,7 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 
 @interface ApplifierImpactInstrumentation : NSObject
 
-@end
++ (void)gaInstrumentationVideoPlay:(ApplifierImpactCampaign *)campaign withValuesFrom:(NSDictionary *)additionalValues;
++ (void)gaInstrumentationVideoError:(ApplifierImpactCampaign *)campaign withValuesFrom:(NSDictionary *)additionalValues;
++ (void)gaInstrumentationVideoAbort:(ApplifierImpactCampaign *)campaign withValuesFrom:(NSDictionary *)additionalValues;
++ (void)gaInstrumentationVideoCaching:(ApplifierImpactCampaign *)campaign withValuesFrom:(NSDictionary *)additionalValues;
+
+  @end

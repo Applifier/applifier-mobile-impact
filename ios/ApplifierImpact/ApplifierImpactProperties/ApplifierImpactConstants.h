@@ -210,6 +210,14 @@ extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingStart;
 extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingCompleted;
 extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingFailed;
 
+extern NSString * const kApplifierImpactGoogleAnalyticsEventCampaignIdKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventConnectionTypeKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlaybackTypeKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventBufferingDurationKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventCachingDurationKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventValueKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeKey;
+
 @interface ApplifierImpactConstants : NSObject
 
 @end
