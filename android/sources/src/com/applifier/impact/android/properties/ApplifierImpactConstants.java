@@ -115,6 +115,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_INIT_QUERYPARAM_SDKVERSION_KEY = "sdkVersion";
 	public static final String IMPACT_INIT_QUERYPARAM_CONNECTIONTYPE_KEY = "connectionType";
 	public static final String IMPACT_INIT_QUERYPARAM_TEST_KEY = "test";
+	public static final String IMPACT_INIT_QUERYPARAM_ENCRYPTED_KEY = "encrypted";
 	public static final String IMPACT_INIT_QUERYPARAM_SCREENDENSITY_KEY = "screenDensity";
 	public static final String IMPACT_INIT_QUERYPARAM_SCREENSIZE_KEY = "screenSize";
 	

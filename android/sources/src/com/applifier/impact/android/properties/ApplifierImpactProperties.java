@@ -87,6 +87,11 @@ public class ApplifierImpactProperties {
 		if (TESTMODE_ENABLED) {
 			queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_TEST_KEY, "true");
 		}
+		else {
+			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ENCRYPTED_KEY, ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.CURRENT_ACTIVITY) ? "false" : "true");
+			}
+		}
 		
 		_campaignQueryString = queryString;
 	}
