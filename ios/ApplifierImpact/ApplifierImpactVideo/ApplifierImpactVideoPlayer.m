@@ -12,6 +12,8 @@
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
+#import "../ApplifierImpactData/ApplifierImpactInstrumentation.h"
+#import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 
 @interface ApplifierImpactVideoPlayer ()
   @property (nonatomic, assign) id timeObserver;
@@ -45,9 +47,12 @@
 
 - (void)playSelectedVideo {
   self.videoPosition = kVideoAnalyticsPositionUnplayed;
+  /*
   dispatch_async(dispatch_get_main_queue(), ^{
     [self.delegate videoPlaybackStarted];
-  });
+  });*/
+  
+  [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].videoBufferingStartTime = [[NSDate date] timeIntervalSince1970] * 1000;
 }
 
 - (void)_videoPlaybackEnded:(NSNotification *)notification {
@@ -76,6 +81,7 @@
     [self.timeOutTimer invalidate];
     self.timeOutTimer = nil;
     [self.delegate videoPlaybackError];
+    [ApplifierImpactInstrumentation gaInstrumentationVideoError:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] withValuesFrom:nil];
   }
 }
 
@@ -129,6 +135,7 @@
       self.isPlaying = false;
       self.hasPlayed = false;
       [self.delegate videoPlaybackError];
+      [ApplifierImpactInstrumentation gaInstrumentationVideoError:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] withValuesFrom:nil];
     });
     AILOG_DEBUG(@"VIDEOPLAYER_ERROR: %@", self.currentItem.error);
   }
@@ -164,6 +171,11 @@
       });
       
       [self play];
+      
+      [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].videoBufferingEndTime = [[NSDate date] timeIntervalSince1970] * 1000;
+      long long bufferingCompleted = [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].videoBufferingEndTime - [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].videoBufferingStartTime;
+      
+      [ApplifierImpactInstrumentation gaInstrumentationVideoPlay:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] withValuesFrom:@{kApplifierImpactGoogleAnalyticsEventBufferingDurationKey:@(bufferingCompleted)}];
     }
     else if (playerStatus == AVPlayerStatusFailed) {
       AILOG_DEBUG(@"Player failed");
@@ -171,6 +183,7 @@
         self.hasPlayed = false;
         self.isPlaying = false;
         [self.delegate videoPlaybackError];
+        [ApplifierImpactInstrumentation gaInstrumentationVideoError:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] withValuesFrom:nil];
       });
     }
     else if (playerStatus == AVPlayerStatusUnknown) {

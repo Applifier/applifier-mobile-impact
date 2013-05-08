@@ -186,10 +186,10 @@ NSString * const kApplifierImpactInitQueryParamEncryptionKey = @"encrypted";
 /* Google Analytics Instrumentation */
 
 NSString * const kApplifierImpactGoogleAnalyticsEventKey = @"googleAnalyticsEvent";
-NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoPlayKey = @"videoAnalyticsEventPlay";
-NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoErrorKey = @"videoAnalyticsEventError";
-NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoAbortKey = @"videoAnalyticsEventAbort";
-NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoCachingKey = @"videoAnalyticsEventCaching";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoPlay = @"videoAnalyticsEventPlay";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoError = @"videoAnalyticsEventError";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoAbort = @"videoAnalyticsEventAbort";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoCaching = @"videoAnalyticsEventCaching";
 NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortBack = @"back";
 NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortExit = @"exit";
 NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlayStream = @"stream";

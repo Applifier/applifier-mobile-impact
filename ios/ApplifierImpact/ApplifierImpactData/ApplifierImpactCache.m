@@ -6,6 +6,8 @@
 #import "../ApplifierImpact.h"
 #import "ApplifierImpactCache.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
+#import "ApplifierImpactInstrumentation.h"
+#import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 
 NSString * const kApplifierImpactCacheCampaignKey = @"kApplifierImpactCacheCampaignKey";
 NSString * const kApplifierImpactCacheConnectionKey = @"kApplifierImpactCacheConnectionKey";
@@ -141,6 +143,13 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	[self.currentDownload setObject:urlConnection forKey:kApplifierImpactCacheConnectionKey];
 	[urlConnection start];
 	
+  ApplifierImpactCampaign *campaign = [self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey];
+  if (campaign != nil) {
+    long long cachingStarted = [[NSDate date] timeIntervalSince1970] * 1000;
+    campaign.videoCachingStartTime = cachingStarted;
+    [ApplifierImpactInstrumentation gaInstrumentationVideoCaching:campaign withValuesFrom:@{kApplifierImpactGoogleAnalyticsEventValueKey:kApplifierImpactGoogleAnalyticsEventVideoCachingStart}];
+  }
+  
 	[self.downloadQueue removeObjectAtIndex:0];
 	
 	AILOG_DEBUG(@"starting download %@", self.currentDownload);
@@ -160,8 +169,10 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
   NSError *err;
 	[self.fileHandle closeFile];
 	self.fileHandle = nil;
+  long long cachingFinished = [[NSDate date] timeIntervalSince1970] * 1000;
 	ApplifierImpactCampaign *campaign = [self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey];
-
+  campaign.videoCachingEndTime = cachingFinished;
+  
   // Check that file came through OK
   if (!failure) {
     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
@@ -173,6 +184,8 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
       if (campaign.expectedTrailerSize > 0 && fileSize != campaign.expectedTrailerSize) {
         AILOG_DEBUG(@"Problems with file size, expected: %lld, got: %lld", campaign.expectedTrailerSize, fileSize);
         [[NSFileManager defaultManager] removeItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
+        NSDictionary *data = @{kApplifierImpactGoogleAnalyticsEventValueKey:kApplifierImpactGoogleAnalyticsEventVideoCachingFailed};
+        [ApplifierImpactInstrumentation gaInstrumentationVideoCaching:campaign withValuesFrom:data];
       }
     }
     else {
@@ -186,11 +199,18 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
   
 	if (failure) {		
 		[self _queueCampaignDownload:campaign];
-    if ([self isCampaignVideoCached:campaign])
+    if ([self isCampaignVideoCached:campaign]) {
       [[NSFileManager defaultManager] removeItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
+    }
+    NSDictionary *data = @{kApplifierImpactGoogleAnalyticsEventValueKey:kApplifierImpactGoogleAnalyticsEventVideoCachingFailed};
+    [ApplifierImpactInstrumentation gaInstrumentationVideoCaching:campaign withValuesFrom:data];
 	}
-	else
+	else {
 		[self.delegate cache:self finishedCachingCampaign:[self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey]];
+    NSDictionary *data = @{kApplifierImpactGoogleAnalyticsEventValueKey:kApplifierImpactGoogleAnalyticsEventVideoCachingCompleted,
+                           kApplifierImpactGoogleAnalyticsEventCachingDurationKey:@(campaign.videoCachingEndTime - campaign.videoCachingStartTime)};
+    [ApplifierImpactInstrumentation gaInstrumentationVideoCaching:campaign withValuesFrom:data];
+  }
 	
 	self.currentDownload = nil;
 	

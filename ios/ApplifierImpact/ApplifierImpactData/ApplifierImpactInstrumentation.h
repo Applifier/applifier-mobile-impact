@@ -16,4 +16,4 @@
 + (void)gaInstrumentationVideoAbort:(ApplifierImpactCampaign *)campaign withValuesFrom:(NSDictionary *)additionalValues;
 + (void)gaInstrumentationVideoCaching:(ApplifierImpactCampaign *)campaign withValuesFrom:(NSDictionary *)additionalValues;
 
-  @end
+@end

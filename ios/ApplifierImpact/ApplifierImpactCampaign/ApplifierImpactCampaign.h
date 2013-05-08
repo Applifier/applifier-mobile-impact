@@ -24,6 +24,11 @@
 @property (nonatomic, assign) BOOL bypassAppSheet;
 @property (nonatomic, assign) long long expectedTrailerSize;
 @property (nonatomic, assign) BOOL isValidCampaign;
+@property (nonatomic, assign) long long videoCachingStartTime;
+@property (nonatomic, assign) long long videoCachingEndTime;
+@property (nonatomic, assign) long long videoBufferingStartTime;
+@property (nonatomic, assign) long long videoBufferingEndTime;
+
 
 - (id)initWithData:(NSDictionary *)data;
 
