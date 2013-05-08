@@ -380,9 +380,6 @@
     [self.videoOverlayView bringSubviewToFront:self.progressLabel];
     [self.videoOverlayView addSubview:self.muteButton];
     [self.videoOverlayView bringSubviewToFront:self.muteButton];
-   // self.muteButton.frame = CGRectMake(0, 100, self.muteButton.frame.size.width, self.muteButton.frame.size.height);
-
-    //[self.muteButton hideButtonAfter:3.0f];
 
     self.videoOverlayView.hidden = NO;
   }
@@ -400,7 +397,6 @@
 	Float64 current = CMTimeGetSeconds(currentTime);
   Float64 timeLeft = duration - current;
   Float64 timeUntilSkip = -1;
-  
   if ([[ApplifierImpactProperties sharedInstance] allowVideoSkipInSeconds] > 0) {
     timeUntilSkip = [[ApplifierImpactProperties sharedInstance] allowVideoSkipInSeconds] - current;
   }
@@ -428,6 +424,7 @@
       }
       
       if (!actionAdded) {
+        [self hideOverlayAfter:3.0f];
         [self.skipLabel addTarget:self action:@selector(skipButtonPressed) forControlEvents:UIControlEventTouchUpInside];
       }
     }
@@ -435,6 +432,8 @@
     if (self.skipLabel != nil) {
       [self.skipLabel setTitle:skipText forState:UIControlStateNormal];
     }
+  } else {
+    [self hideOverlayAfter:3.0f];
   }
   
 	NSString *descriptionText = [NSString stringWithFormat:NSLocalizedString(@"This video ends in %.0f seconds.", nil), timeLeft];
@@ -458,6 +457,29 @@
     return NO; // ignore the touch
   }
   return YES; // handle the touch
+}
+
+
+- (void) showOverlay {
+  [UIView beginAnimations:nil context:nil];
+  [UIView setAnimationDuration:1.0];
+  [self.videoOverlayView setAlpha:1.0f];
+  [UIView commitAnimations];
+}
+
+- (void) hideOverlay {
+  [UIView beginAnimations:nil context:nil];
+  [UIView setAnimationDuration:1.0];
+  [self.videoOverlayView setAlpha:0.0f];
+  [UIView commitAnimations];
+}
+
+- (void) hideOverlayAfter:(CGFloat)seconds {
+  // do not double fire.
+  if(self.videoOverlayView.alpha == 1.0f) {
+    self.videoOverlayView.alpha = 0.99999f;
+    [self performSelector:@selector(hideOverlay) withObject:nil afterDelay:seconds];
+  }
 }
 
 @end

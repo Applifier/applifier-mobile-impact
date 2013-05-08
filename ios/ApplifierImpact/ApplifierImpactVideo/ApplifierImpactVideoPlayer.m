@@ -88,11 +88,11 @@
   });
  
   __block ApplifierImpactVideoPlayer *blockSelf = self;
-  if (![ApplifierImpactDevice isSimulator]) {
+  //if (![ApplifierImpactDevice isSimulator]) {
     self.timeObserver = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
       [blockSelf _videoPositionChanged:time];
     }];
-  }
+  //}
   
   self.timeOutTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(checkIfPlayed) userInfo:nil repeats:false];
   
