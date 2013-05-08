@@ -23,6 +23,7 @@
 @interface ApplifierImpactVideoViewController : UIViewController <ApplifierImpactVideoPlayerDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic, assign) id<ApplifierImpactVideoControllerDelegate> delegate;
 @property (nonatomic, assign) BOOL isPlaying;
+@property (nonatomic, assign) BOOL isMuted;
 - (void)playCampaign:(ApplifierImpactCampaign *)campaignToPlay;
 - (void)forceStopVideoPlayer;
 @end
