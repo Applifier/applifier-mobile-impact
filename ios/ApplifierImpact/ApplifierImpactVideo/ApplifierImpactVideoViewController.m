@@ -67,6 +67,7 @@
 - (void) handleTapFrom: (UITapGestureRecognizer *)recognizer
 {
   // TODO: Show controlls
+    [self showOverlay];
   AILOG_DEBUG(@"SHOW CONTROLLS");
 }
 
@@ -481,5 +482,6 @@
     [self performSelector:@selector(hideOverlay) withObject:nil afterDelay:seconds];
   }
 }
+
 
 @end
