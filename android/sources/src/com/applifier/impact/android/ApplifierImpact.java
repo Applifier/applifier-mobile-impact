@@ -47,6 +47,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public static final String APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY = "openAnimated";
 	public static final String APPLIFIER_IMPACT_OPTION_GAMERSID_KEY = "sid";
 	public static final String APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS = "muteVideoSounds";
+	public static final String APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION = "useDeviceOrientationForVideo";
 
 	// Impact components
 	public static ApplifierImpact instance = null;

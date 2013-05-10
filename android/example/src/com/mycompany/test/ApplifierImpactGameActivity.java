@@ -34,6 +34,7 @@ public class ApplifierImpactGameActivity extends Activity implements IApplifierI
 				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, false);
 				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, "gom");
 				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, false);
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION, true);
 				
 				ApplifierImpact.instance.showImpact(optionsMap);
 				

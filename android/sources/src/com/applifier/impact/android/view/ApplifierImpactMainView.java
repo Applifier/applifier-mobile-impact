@@ -241,10 +241,19 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		sendActionToListener(ApplifierImpactMainViewAction.VideoStart);
 		bringChildToFront(videoplayerview);
 		
-		if (Build.VERSION.SDK_INT < 9) 
+		// SENSOR_LANDSCAPE
+		int targetOrientation = 6;
+		
+		if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null && 
+			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION) && 
+			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION).equals(true)) {
 			ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		else
-			ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(6);
+			
+			// UNSPECIFIED
+			targetOrientation = -1;
+		}
+		
+		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(targetOrientation);
 		
 		focusToView(videoplayerview);
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, spinnerParams);

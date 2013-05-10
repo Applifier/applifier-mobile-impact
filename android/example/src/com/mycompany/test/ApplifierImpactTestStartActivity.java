@@ -1,3 +1,4 @@
+
 package com.mycompany.test;
 
 import com.applifier.impact.android.ApplifierImpact;
