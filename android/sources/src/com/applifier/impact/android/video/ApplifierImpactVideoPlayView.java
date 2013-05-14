@@ -1,5 +1,6 @@
 package com.applifier.impact.android.video;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -7,9 +8,11 @@ import java.util.TimerTask;
 
 import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.data.ApplifierImpactGraphicsBundle;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.view.ApplifierImpactBufferingView;
+import com.applifier.impact.android.view.ApplifierImpactMuteVideoButton;
 import com.applifier.impact.android.webapp.ApplifierImpactInstrumentation;
 import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
@@ -20,6 +23,7 @@ import android.os.PowerManager;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -194,6 +198,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 
 	private void createView () {
 		ApplifierImpactUtils.Log("Creating custom view", this);
+				
 		setBackgroundColor(0xFF000000);
 		_videoView = new VideoView(getContext());
 		_videoView.setId(3001);
@@ -278,6 +283,13 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				}
 			}
 		});
+		
+		RelativeLayout.LayoutParams muteButtonParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		muteButtonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		muteButtonParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		ApplifierImpactMuteVideoButton test = new ApplifierImpactMuteVideoButton(getContext());
+		test.setLayoutParams(muteButtonParams);
+		addView(test);
 	}
 	
 	private void createAndAddPausedView () {
