@@ -42,6 +42,7 @@
   AILOG_DEBUG(@"");
   
   [super exitState:options];
+  self.endScreenController = nil;
   [[ApplifierImpactMainViewController sharedInstance] dismissViewControllerAnimated:NO completion:nil];
 }
 
