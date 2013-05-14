@@ -43,6 +43,15 @@ NSString * const kApplifierImpactOptionVideoUsesDeviceOrientation = @"useDeviceO
   return YES;
 }
 
+- (void)setTestDeveloperId:(NSString *)developerId {
+  [[ApplifierImpactProperties sharedInstance] setDeveloperId:developerId];
+}
+
+- (void)setTestOptionsId:(NSString *)optionsId {
+  [[ApplifierImpactProperties sharedInstance] setOptionsId:optionsId];
+}
+
+
 + (NSString *)getSDKVersion {
   return [[ApplifierImpactProperties sharedInstance] impactVersion];
 }

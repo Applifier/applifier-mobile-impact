@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		78057A121643CADB005EF487 /* ApplifierImpactProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 78057A0E1643CADB005EF487 /* ApplifierImpactProperties.h */; };
+		78057A121643CADB005EF487 /* ApplifierImpactProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 78057A0E1643CADB005EF487 /* ApplifierImpactProperties.h */; settings = {ATTRIBUTES = (); }; };
 		78057A131643CADB005EF487 /* ApplifierImpactProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 78057A0F1643CADB005EF487 /* ApplifierImpactProperties.m */; };
 		7835377B166365BB00D46B7C /* ApplifierImpactVideoViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 78353779166365BB00D46B7C /* ApplifierImpactVideoViewController.h */; };
 		7835377C166365BB00D46B7C /* ApplifierImpactVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7835377A166365BB00D46B7C /* ApplifierImpactVideoViewController.m */; };

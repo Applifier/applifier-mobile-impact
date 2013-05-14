@@ -73,6 +73,13 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   
   if ([self testModeEnabled]) {
     queryParams = [NSString stringWithFormat:@"%@&%@=true", queryParams, kApplifierImpactInitQueryParamTestKey];
+    
+    if ([self optionsId] != nil) {
+      queryParams = [NSString stringWithFormat:@"%@&optionsId=%@", queryParams, [self optionsId]];
+    }
+    if ([self developerId] != nil) {
+      queryParams = [NSString stringWithFormat:@"%@&developerId=%@", queryParams, [self developerId]];
+    }
   }
   else {
     queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamEncryptionKey, [ApplifierImpactDevice isEncrypted] ? @"true" : @"false"];

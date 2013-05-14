@@ -23,6 +23,8 @@
   @property (nonatomic, assign) int maxNumberOfAnalyticsRetries;
   @property (nonatomic, strong) NSString *expectedSdkVersion;
   @property (nonatomic, assign) int allowVideoSkipInSeconds;
+  @property (nonatomic, strong) NSString *developerId;
+  @property (nonatomic, strong) NSString *optionsId;
 
 + (ApplifierImpactProperties *)sharedInstance;
 - (void)refreshCampaignQueryString;

@@ -55,10 +55,14 @@ typedef enum {
 + (ApplifierImpact *)sharedInstance;
 + (BOOL)isSupported;
 + (NSString *)getSDKVersion;
+
+- (void)setTestDeveloperId:(NSString *)developerId;
+- (void)setTestOptionsId:(NSString *)optionsId;
 - (void)setDebugMode:(BOOL)debugMode;
 - (void)setImpactMode:(ApplifierImpactMode)impactMode;
-- (BOOL)isDebugMode;
 - (void)setTestMode:(BOOL)testModeEnabled;
+
+- (BOOL)isDebugMode;
 - (BOOL)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController;
 - (BOOL)startWithGameId:(NSString *)gameId;
 - (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact;
