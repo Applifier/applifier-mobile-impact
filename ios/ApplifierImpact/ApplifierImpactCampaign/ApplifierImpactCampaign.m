@@ -26,6 +26,7 @@
   BOOL failedData = false;
   
   self.viewed = NO;
+  self.nativeTrackingQuerySent = false;
   
   NSString *endScreenURLString = [data objectForKey:kApplifierImpactCampaignEndScreenKey];
   if (endScreenURLString == nil) failedData = true;
@@ -42,7 +43,7 @@
     AILOG_DEBUG(@"Found endScreenPortraitURL");
     self.endScreenPortraitURL = endScreenPortraitURL;
   }
-  
+    
   NSString *clickURLString = [data objectForKey:kApplifierImpactCampaignClickURLKey];
   if (clickURLString == nil) failedData = true;
   AIAssertV([clickURLString isKindOfClass:[NSString class]], nil);
@@ -137,6 +138,21 @@
   if (!failedData) {
     self.isValidCampaign = true;
   }
+
+  /*
+  NSString *customClickURLString = [data objectForKey:kApplifierImpactCampaignCustomClickURLKey];
+  if (customClickURLString == nil) failedData = true;
+  AIAssertV([customClickURLString isKindOfClass:[NSString class]], nil);
+  
+  if (customClickURLString != nil && [customClickURLString length] > 4) {
+    AILOG_DEBUG(@"CustomClickUrl=%@ for CampaignID=%@", customClickURLString, idString);
+    NSURL *customClickURL = [NSURL URLWithString:customClickURLString];
+    AIAssertV(customClickURL != nil, nil);
+    self.customClickURL = customClickURL;
+  }
+  else {
+    AILOG_DEBUG(@"Not a valid URL: %@", customClickURLString);
+  }*/
   
   data = nil;
 }

@@ -8,6 +8,7 @@
 
 #import "ApplifierImpactViewStateNoWebViewVideoPlayer.h"
 #import "../ApplifierImpactView/ApplifierImpactDialog.h"
+#import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 
 @interface ApplifierImpactViewStateNoWebViewVideoPlayer ()
   @property (nonatomic, strong) ApplifierImpactDialog *spinnerDialog;
@@ -76,6 +77,17 @@
   if (!self.waitingToBeShown && [[ApplifierImpactMainViewController sharedInstance] presentedViewController] != self.videoController) {
     [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
   }
+  
+  /*
+  if ([[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] != nil &&
+      ![[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].nativeTrackingQuerySent &&
+      [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL != nil &&
+      [[[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL absoluteString] length] > 4) {
+    
+    AILOG_DEBUG(@"Sending tracking call");
+    [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].nativeTrackingQuerySent = true;
+    [[ApplifierImpactAnalyticsUploader sharedInstance] queueUrl:[[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL absoluteString]];
+  }*/
 }
 
 - (void)videoPlayerEncounteredError {

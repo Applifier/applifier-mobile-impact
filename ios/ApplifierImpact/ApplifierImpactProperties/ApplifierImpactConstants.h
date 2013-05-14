@@ -89,6 +89,7 @@ extern NSString * const kApplifierImpactCampaignsKey;
 extern NSString * const kApplifierImpactCampaignEndScreenKey;
 extern NSString * const kApplifierImpactCampaignEndScreenPortraitKey;
 extern NSString * const kApplifierImpactCampaignClickURLKey;
+extern NSString * const kApplifierImpactCampaignCustomClickURLKey;
 extern NSString * const kApplifierImpactCampaignPictureKey;
 extern NSString * const kApplifierImpactCampaignTrailerDownloadableKey;
 extern NSString * const kApplifierImpactCampaignTrailerStreamingKey;

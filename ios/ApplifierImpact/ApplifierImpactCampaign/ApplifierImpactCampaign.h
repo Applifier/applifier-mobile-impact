@@ -10,6 +10,7 @@
 @property (nonatomic, strong) NSURL *endScreenURL;
 @property (nonatomic, strong) NSURL *endScreenPortraitURL;
 @property (nonatomic, strong) NSURL *clickURL;
+@property (nonatomic, strong) NSURL *customClickURL;
 @property (nonatomic, strong) NSURL *pictureURL;
 @property (nonatomic, strong) NSURL *trailerDownloadableURL;
 @property (nonatomic, strong) NSURL *trailerStreamingURL;
@@ -28,6 +29,7 @@
 @property (nonatomic, assign) long long videoCachingEndTime;
 @property (nonatomic, assign) long long videoBufferingStartTime;
 @property (nonatomic, assign) long long videoBufferingEndTime;
+@property (nonatomic, assign) BOOL nativeTrackingQuerySent;
 
 
 - (id)initWithData:(NSDictionary *)data;
