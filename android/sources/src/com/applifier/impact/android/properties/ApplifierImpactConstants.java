@@ -8,7 +8,7 @@ public class ApplifierImpactConstants {
 	public static final String PENDING_REQUESTS_FILENAME = "pendingrequests.dat";
 
 	/* Impact */
-	public static final String IMPACT_VERSION = "1.0.3";
+	public static final String IMPACT_VERSION = "104";
 	public static final String IMPACT_REQUEST_METHOD_POST = "POST";
 	public static final String IMPACT_REQUEST_METHOD_GET = "GET";
 	
@@ -32,6 +32,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_DATAPARAM_OPENUDID_KEY = "openUdid";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_MACADDRESS_KEY = "macAddress";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SDKVERSION_KEY = "sdkVersion";
+	public static final String IMPACT_WEBVIEW_DATAPARAM_SDK_IS_CURRENT_KEY = "sdkIsCurrent";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SOFTWAREVERSION_KEY = "softwareVersion";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SCREENDENSITY_KEY = "screenDensity";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SCREENSIZE_KEY = "screenSize";
@@ -167,6 +168,7 @@ public class ApplifierImpactConstants {
 	
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_BACK = "back";
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_EXIT = "exit";
+	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_SKIP = "skip";
 	
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOPLAY_HLSL = "stream";
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOPLAY_CACHED = "cached";
