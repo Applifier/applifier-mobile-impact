@@ -103,6 +103,7 @@ public class ApplifierImpactProperties {
 			boolean noOfferscreen = false;
 			boolean openAnimated = false;
 			boolean muteVideoSounds = false;
+			boolean videoUsesDeviceOrientation = false;
 			
 			try {
 				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY))
@@ -121,7 +122,13 @@ public class ApplifierImpactProperties {
 				options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, muteVideoSounds);
 				
 				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY))
-					options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY));
+					options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY));
+				
+				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION))
+					videoUsesDeviceOrientation = (Boolean)IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION);
+				
+				options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION, videoUsesDeviceOrientation);
+
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Could not create JSON", ApplifierImpactProperties.class);

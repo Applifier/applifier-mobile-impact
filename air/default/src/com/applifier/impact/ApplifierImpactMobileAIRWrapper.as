@@ -32,7 +32,7 @@ package com.applifier.impact
 		public function setTestMode (testMode:Boolean) : void {
 		}
 		
-		public function showImpact (noOfferscreen:Boolean = false, openAnimated:Boolean = false, gamerSID:String = null) : Boolean {
+		public function showImpact (noOfferscreen:Boolean = false, openAnimated:Boolean = false, gamerSID:String = null, muteVideoSounds:Boolean = false, useDeviceOrientationForVideo:Boolean = false) : Boolean {
 			return false;
 		}
 		

@@ -322,6 +322,12 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	}
 	
 	public void onVideoSkip () {
+		Map<String, Object> values = null;
+		values = new HashMap<String, Object>();
+		values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, videoplayerview.getBufferingDuration());
+		values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_SKIP);
+		ApplifierImpactInstrumentation.gaInstrumentationVideoAbort(ApplifierImpactProperties.SELECTED_CAMPAIGN, values);
+				
 		afterVideoPlaybackOperations();
 		JSONObject params = new JSONObject();
 		
@@ -331,12 +337,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		catch (Exception e) {
 			ApplifierImpactUtils.Log("Could not create JSON", this);
 		}
-		
-		Map<String, Object> values = null;
-		values = new HashMap<String, Object>();
-		values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, videoplayerview.getBufferingDuration());
-		values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_SKIP);
-		ApplifierImpactInstrumentation.gaInstrumentationVideoAbort(ApplifierImpactProperties.SELECTED_CAMPAIGN, values);
 		
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
 		sendActionToListener(ApplifierImpactMainViewAction.VideoEnd);

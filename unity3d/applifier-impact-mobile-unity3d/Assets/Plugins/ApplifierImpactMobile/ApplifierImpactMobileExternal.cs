@@ -21,7 +21,7 @@ public static class ApplifierImpactMobileExternal {
 		Log ("UnityEditor: init(), gameId=" + gameId + ", testModeEnabled=" + testModeEnabled + ", gameObjectName=" + gameObjectName + ", debugModeEnabled=" + debugModeEnabled);
 	}
 	
-	public static bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID) {
+	public static bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID, bool muteVideoSounds, bool videoUsesDeviceOrientation) {
 		Log ("UnityEditor: showImpact()");
 		return false;
 	}
@@ -97,7 +97,7 @@ public static class ApplifierImpactMobileExternal {
 	public static extern void init (string gameId, bool testModeEnabled, bool debugModeEnabled, string gameObjectName);
 	
 	[DllImport ("__Internal")]
-	public static extern bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID);
+	public static extern bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID, bool muteVideoSounds, bool videoUsesDeviceOrientation);
 	
 	[DllImport ("__Internal")]
 	public static extern void hideImpact ();
@@ -154,9 +154,9 @@ public static class ApplifierImpactMobileExternal {
 		applifierImpactUnity.Call("init", gameId, activity, testModeEnabled, debugModeEnabled, gameObjectName);
 	}
 	
-	public static bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID) {
+	public static bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID, bool muteVideoSounds, bool videoUsesDeviceOrientation) {
 		Log ("UnityAndroid: showImpact()");
-		return applifierImpactUnity.Call<bool>("showImpact", openAnimated, noOfferscreen, gamerSID);
+		return applifierImpactUnity.Call<bool>("showImpact", openAnimated, noOfferscreen, gamerSID, muteVideoSounds, videoUsesDeviceOrientation);
 	}
 	
 	public static void hideImpact () {

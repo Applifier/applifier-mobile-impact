@@ -54,9 +54,9 @@ package com.applifier.impact
 			_extensionContext.call("setTestMode", testMode);
 		}
 		
-		public function showImpact (noOfferscreen:Boolean = false, openAnimated:Boolean = false, gamerSID:String = null) : Boolean {
+		public function showImpact (noOfferscreen:Boolean = false, openAnimated:Boolean = false, gamerSID:String = null, muteVideoSounds:Boolean = false, useDeviceOrientationForVideo:Boolean = false) : Boolean {
 			if (!canUseExtensionContext()) return false;
-			return _extensionContext.call("showImpact", noOfferscreen, openAnimated, gamerSID) as Boolean;
+			return _extensionContext.call("showImpact", noOfferscreen, openAnimated, gamerSID, muteVideoSounds, useDeviceOrientationForVideo) as Boolean;
 		}
 		
 		public function hideImpact () : Boolean {

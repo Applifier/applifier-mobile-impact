@@ -27,12 +27,17 @@ public class ApplifierImpactShowImpact implements FREFunction {
 		if (ApplifierImpact.instance != null) {
 			Boolean noOfferscreen = false;
 			Boolean openAnimated = false;
+			Boolean muteVideoSounds = false;
+			Boolean useDeviceOrientationForVideo = false;
 			String gamerSID = null;
 			
 			try {
 				noOfferscreen = arg1[0].getAsBool();
 				openAnimated = arg1[1].getAsBool();
 				gamerSID = arg1[2].getAsString();
+				muteVideoSounds = arg1[3].getAsBool();
+				useDeviceOrientationForVideo = arg1[4].getAsBool();
+				
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Some option was not available: " + e.getStackTrace(), this);
@@ -41,6 +46,8 @@ public class ApplifierImpactShowImpact implements FREFunction {
 			Map<String, Object> openOptions = new HashMap<String, Object>();
 			openOptions.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, noOfferscreen);
 			openOptions.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, openAnimated);
+			openOptions.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, muteVideoSounds);
+			openOptions.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION, useDeviceOrientationForVideo);
 			
 			if (gamerSID != null)
 				openOptions.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, gamerSID);
