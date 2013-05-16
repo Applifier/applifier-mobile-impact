@@ -18,6 +18,9 @@
 
 @implementation ApplifierImpactImageView
 
+@synthesize data = _data;
+@synthesize connection = _connection;
+
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -25,6 +28,17 @@
       self.retriedPictureDownload = false;
     }
     return self;
+}
+
+- (void)dealloc {
+  if(self.connection != nil) {
+    [self.connection cancel];
+    self.connection = nil;
+  }
+  if(self.data != nil) {
+    self.data = nil;
+  }
+  AILOG_DEBUG(@"dealloc");
 }
 
 - (void)loadImageFromURL:(NSURL*)url applyScaling:(BOOL)runScaling {
