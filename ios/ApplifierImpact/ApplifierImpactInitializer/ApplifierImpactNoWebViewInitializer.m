@@ -72,11 +72,13 @@
   AILOG_DEBUG(@"Campaign data received.");
   
   self.campaignDataReceived = true;
+  [self checkForVersionAndShowAlertDialog];
   
   dispatch_async(dispatch_get_main_queue(), ^{
     if (self.delegate != nil) {
       [self.delegate initComplete];
     }});
+  
 }
 
 - (void)campaignManagerCampaignDataFailed {

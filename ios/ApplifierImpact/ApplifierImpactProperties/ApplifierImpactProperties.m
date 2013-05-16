@@ -11,7 +11,7 @@
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 
-NSString * const kApplifierImpactVersion = @"1.0.3";
+NSString * const kApplifierImpactVersion = @"104";
 
 @implementation ApplifierImpactProperties
 
@@ -34,6 +34,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
     //[self setCampaignDataUrl:@"https://staging-impact.applifier.com/mobile/campaigns"];
     //[self setCampaignDataUrl:@"http://192.168.1.246:3500/mobile/campaigns"];
     [self setCampaignQueryString:[self _createCampaignQueryString]];
+    [self setSdkIsCurrent:true];
   }
   
   return self;

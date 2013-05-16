@@ -63,7 +63,9 @@
 }
 
 - (void)checkForVersionAndShowAlertDialog {
-  if ([[ApplifierImpactProperties sharedInstance] expectedSdkVersion] != nil && ![[[ApplifierImpactProperties sharedInstance] expectedSdkVersion] isEqualToString:[[ApplifierImpactProperties sharedInstance] impactVersion]]) {
+  AILOG_DEBUG(@"");
+  
+  if (![[ApplifierImpactProperties sharedInstance] sdkIsCurrent]) {
     AILOG_DEBUG(@"Got different sdkVersions, checking further.");
     
     if (![ApplifierImpactDevice isEncrypted]) {

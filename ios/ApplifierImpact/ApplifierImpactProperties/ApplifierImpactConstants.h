@@ -52,6 +52,7 @@ extern NSString * const kApplifierImpactWebViewDataParamDeviceTypeKey;
 extern NSString * const kApplifierImpactWebViewDataParamOpenUdidIdKey;
 extern NSString * const kApplifierImpactWebViewDataParamMacAddressKey;
 extern NSString * const kApplifierImpactWebViewDataParamSdkVersionKey;
+extern NSString * const kApplifierImpactWebViewDataParamSdkIsCurrentKey;
 extern NSString * const kApplifierImpactWebViewDataParamIosVersionKey;
 
 extern NSString * const kApplifierImpactWebViewEventDataCampaignIdKey;

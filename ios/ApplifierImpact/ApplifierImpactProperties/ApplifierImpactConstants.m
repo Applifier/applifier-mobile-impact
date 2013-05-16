@@ -39,6 +39,7 @@ NSString * const kApplifierImpactWebViewDataParamOpenUdidIdKey = @"openUdid";
 NSString * const kApplifierImpactWebViewDataParamMacAddressKey = @"macAddress";
 NSString * const kApplifierImpactWebViewDataParamSdkVersionKey = @"sdkVersion";
 NSString * const kApplifierImpactWebViewDataParamIosVersionKey = @"iOSVersion";
+NSString * const kApplifierImpactWebViewDataParamSdkIsCurrentKey = @"sdkIsCurrent";
 
 NSString * const kApplifierImpactWebViewEventDataCampaignIdKey = @"campaignId";
 NSString * const kApplifierImpactWebViewEventDataRewatchKey = @"rewatch";

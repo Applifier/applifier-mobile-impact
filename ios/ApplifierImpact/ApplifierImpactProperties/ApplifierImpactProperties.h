@@ -25,6 +25,7 @@
   @property (nonatomic, assign) int allowVideoSkipInSeconds;
   @property (nonatomic, strong) NSString *developerId;
   @property (nonatomic, strong) NSString *optionsId;
+  @property (nonatomic, assign) BOOL sdkIsCurrent;
 
 + (ApplifierImpactProperties *)sharedInstance;
 - (void)refreshCampaignQueryString;

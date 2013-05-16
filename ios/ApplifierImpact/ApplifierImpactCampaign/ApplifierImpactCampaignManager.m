@@ -193,6 +193,10 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
         AILOG_DEBUG(@"Got SDK Version: %@", [[ApplifierImpactProperties sharedInstance] expectedSdkVersion]);
       }
       
+      if ([jsonDictionary objectForKey:kApplifierImpactWebViewDataParamSdkIsCurrentKey] != nil) {
+        [[ApplifierImpactProperties sharedInstance] setSdkIsCurrent:[[jsonDictionary objectForKey:kApplifierImpactWebViewDataParamSdkIsCurrentKey] boolValue]];
+      }
+
       NSString *gamerId = [jsonDictionary objectForKey:kApplifierImpactGamerIDKey];
       
       [[ApplifierImpactProperties sharedInstance] setGamerId:gamerId];

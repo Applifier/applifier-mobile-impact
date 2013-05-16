@@ -98,7 +98,9 @@
     AILOG_DEBUG(@"Sending tracking call");
     [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].nativeTrackingQuerySent = true;
     
-    [self createWebViewAndSendTracking:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL];
+    if ([[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL != nil) {
+      [self createWebViewAndSendTracking:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL];
+    }
   }
 }
 
@@ -184,17 +186,13 @@
 #pragma mark - UIWebViewDelegate
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-	NSURL *url = [request URL];
-	AILOG_DEBUG(@"url %@", url);
 	return YES;
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
-	AILOG_DEBUG(@"");
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-	AILOG_DEBUG(@"DESTROYING WEBVIEW");
   [self.webView setDelegate:nil];
   [[NSURLCache sharedURLCache] removeAllCachedResponses];
   self.webView = nil;
@@ -202,7 +200,6 @@
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-	AILOG_DEBUG(@"%@", error);
   [self.webView setDelegate:nil];
   [[NSURLCache sharedURLCache] removeAllCachedResponses];
   self.webView = nil;

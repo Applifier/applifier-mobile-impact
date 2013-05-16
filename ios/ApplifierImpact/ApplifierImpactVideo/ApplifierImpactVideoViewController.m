@@ -58,10 +58,8 @@
   self.tapGestureRecognizer.cancelsTouchesInView = NO;
   [self.view addGestureRecognizer:self.tapGestureRecognizer];
   self.tapGestureRecognizer.delegate = self;
-  self.muteButton = [[ApplifierImpactVideoMuteButton alloc] initWithIcon:[ApplifierImpactBundle imageWithName:@"audio_on" ofType:@"png"] title:@""];
-  [self.muteButton setImage:[ApplifierImpactBundle imageWithName:@"audio_mute" ofType:@"png"] forState:UIControlStateSelected];
-
-  [self.muteButton addTarget:self action:@selector(muteVideoButtonPressed:) forControlEvents:UIControlEventTouchDown];  
+  
+  
   [self _attachVideoView];
 }
 
@@ -97,6 +95,7 @@
   [self createVideoOverlayView];
   [self createProgressLabel];
   [self createVideoSkipLabel];
+  [self createMuteButton];
   
   [self.view bringSubviewToFront:self.videoOverlayView];
 }
@@ -296,6 +295,7 @@
   AILOG_DEBUG(@"");
   self.isPlaying = YES;
   [self.delegate videoPlayerStartedPlaying];
+  [self showMuteButton];
 }
 
 - (void)videoPlaybackEnded {
@@ -355,6 +355,19 @@
   }
 }
 
+- (void)createMuteButton {
+  self.muteButton = [[ApplifierImpactVideoMuteButton alloc] initWithIcon:[ApplifierImpactBundle imageWithName:@"audio_on" ofType:@"png"] title:@""];
+  [self.muteButton setImage:[ApplifierImpactBundle imageWithName:@"audio_mute" ofType:@"png"] forState:UIControlStateSelected];
+  [self.muteButton addTarget:self action:@selector(muteVideoButtonPressed:) forControlEvents:UIControlEventTouchDown];
+  [self.muteButton setFrame:CGRectMake(0.0f, self.view.bounds.size.height - self.muteButton.bounds.size.height + 16, self.muteButton.frame.size.width, self.muteButton.frame.size.height)];
+}
+
+- (void)showMuteButton {
+  [self.muteButton setFrame:CGRectMake(0.0f, self.view.bounds.size.height - self.muteButton.bounds.size.height + 16, self.muteButton.frame.size.width, self.muteButton.frame.size.height)];
+  [self.videoOverlayView addSubview:self.muteButton];
+  [self.videoOverlayView bringSubviewToFront:self.muteButton];
+}
+
 - (void)destroyVideoSkipLabel {
   if (self.skipLabel != nil) {
     [self.skipLabel removeFromSuperview];
@@ -390,8 +403,7 @@
     
     [self.videoOverlayView addSubview:self.progressLabel];
     [self.videoOverlayView bringSubviewToFront:self.progressLabel];
-    [self.videoOverlayView addSubview:self.muteButton];
-    [self.videoOverlayView bringSubviewToFront:self.muteButton];
+
 
     self.videoOverlayView.hidden = NO;
   }

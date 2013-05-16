@@ -154,7 +154,7 @@
   }
 
   NSString *customClickURLString = [data objectForKey:kApplifierImpactCampaignCustomClickURLKey];
-  customClickURLString = @"http://www.google.com/";
+  //customClickURLString = @"http://www.google.com/";
   if (customClickURLString == nil) failedData = true;
   AIAssertV([customClickURLString isKindOfClass:[NSString class]], nil);
   

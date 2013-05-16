@@ -470,6 +470,7 @@ int main(int argc, char *argv[]);
   
   if (sysctl(mib, 6, buf, &len, NULL, 0) < 0) {
     //NSLog(@"ODIN-1.1: sysctl 2 error");
+    free(buf);
     return nil;
   }
   
@@ -499,6 +500,7 @@ int main(int argc, char *argv[]);
   CFStringLowercase(string, CFLocaleGetSystem());
   //NSLog(@"ODIN-1: %@", string);
   
+  CFRelease(data);
   free(buf);
   
   return (__bridge NSString*)string;
