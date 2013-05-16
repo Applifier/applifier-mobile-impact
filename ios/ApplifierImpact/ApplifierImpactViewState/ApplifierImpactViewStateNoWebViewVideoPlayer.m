@@ -17,7 +17,7 @@
 
 @implementation ApplifierImpactViewStateNoWebViewVideoPlayer
 
-@synthesize webView;
+@synthesize webView = _webView;
 @synthesize spinnerDialog;
 
 
@@ -61,6 +61,8 @@
   AILOG_DEBUG(@"");
   [super exitState:options];
   [self hideSpinner];
+  [[NSURLCache sharedURLCache] removeAllCachedResponses];
+  
 }
 
 - (void)applyOptions:(NSDictionary *)options {
@@ -186,6 +188,7 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
 	AILOG_DEBUG(@"DESTROYING WEBVIEW");
   [self.webView setDelegate:nil];
+  [[NSURLCache sharedURLCache] removeAllCachedResponses];
   self.webView = nil;
 }
 

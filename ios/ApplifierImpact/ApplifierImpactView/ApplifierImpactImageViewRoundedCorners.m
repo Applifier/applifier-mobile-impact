@@ -40,6 +40,8 @@
   if(self.data != nil) {
     self.data = nil;
   }
+  NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
+	[NSURLCache setSharedURLCache:sharedCache];
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -77,7 +79,9 @@
 }
 
 - (void)loadImageFromURL:(NSURL*)url {
-  NSURLRequest* request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+  NSURLRequest* request = [NSURLRequest requestWithURL:url cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:60.0];
+  NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
+	[NSURLCache setSharedURLCache:sharedCache];
   self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 

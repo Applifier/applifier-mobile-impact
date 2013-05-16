@@ -38,6 +38,8 @@
   if(self.data != nil) {
     self.data = nil;
   }
+  NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
+	[NSURLCache setSharedURLCache:sharedCache];
   AILOG_DEBUG(@"dealloc");
 }
 
@@ -45,8 +47,9 @@
   self.runScaling = runScaling;
   self.connection = nil;
   self.data = nil;
-  
-  NSURLRequest* request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+  NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
+	[NSURLCache setSharedURLCache:sharedCache];
+  NSURLRequest* request = [NSURLRequest requestWithURL:url cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:60.0];
   self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 

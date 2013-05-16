@@ -34,12 +34,12 @@
 
 - (void)exitState:(NSDictionary *)options {
   AILOG_DEBUG(@"");
-  
   [super exitState:options];
   
   if ([options objectForKey:kApplifierImpactWebViewEventDataRewatchKey] == nil || [[options valueForKey:kApplifierImpactWebViewEventDataRewatchKey] boolValue] == false) {
     [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{}];
   }
+  
 }
 
 - (void)willBeShown {

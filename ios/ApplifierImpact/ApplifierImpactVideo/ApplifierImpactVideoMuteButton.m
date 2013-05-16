@@ -24,6 +24,8 @@
     return self;
 }
 
+-(void) dealloc {}
+
 - (id)initWithFrame:(CGRect)frame icon:(UIImage *)img title:(NSString *)title {
   self = [super initWithFrame:frame];
   if (self) {
