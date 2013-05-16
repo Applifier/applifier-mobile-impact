@@ -18,6 +18,10 @@
 
 @implementation ApplifierImpactImageViewRoundedCorners
 
+@synthesize data = _data;
+@synthesize connection = _connection;
+@synthesize roundedImage = _roundedImage;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -26,6 +30,16 @@
       self.contentMode = UIViewContentModeRedraw;
     }
     return self;
+}
+
+- (void) dealloc {
+  if(self.connection != nil) {
+    [self.connection cancel];
+    self.connection = nil;
+  }
+  if(self.data != nil) {
+    self.data = nil;
+  }
 }
 
 - (void)drawRect:(CGRect)rect {
