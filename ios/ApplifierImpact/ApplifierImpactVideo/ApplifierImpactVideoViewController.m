@@ -300,12 +300,6 @@
 
 - (void)videoPlaybackEnded {
   AILOG_DEBUG(@"");
-  //self.campaignToPlay.viewed = YES;
-  
-  if (self.delegate == nil) {
-    AILOG_DEBUG(@"ALERT DELEGATE IS NIL");
-  }
-  
   [self.delegate videoPlayerPlaybackEnded];
   self.isPlaying = NO;
   self.campaignToPlay = nil;

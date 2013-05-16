@@ -22,6 +22,8 @@
 
 @implementation ApplifierImpactCampaignManager
 
+@synthesize campaignDownloadData = _campaignDownloadData;
+
 static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 
 + (id)sharedInstance {
@@ -206,6 +208,8 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
       });
     }
   }
+  
+  self.campaignDownloadData = nil;
 }
 
 
@@ -384,6 +388,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
   [self _campaignDataReceived];
+  [[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -407,6 +412,8 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
       [self.delegate campaignManagerCampaignDataFailed];
     });
   }
+  
+  [[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
 
 
@@ -419,6 +426,8 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self.delegate campaignManager:self updatedWithCampaigns:self.campaigns rewardItem:self.defaultRewardItem gamerID:[[ApplifierImpactProperties sharedInstance] gamerId]];
 	});
+  
+  [[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
 
 @end

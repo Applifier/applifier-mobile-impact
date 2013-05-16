@@ -99,7 +99,8 @@
    
     AILOG_DEBUG(@"Sending tracking call");
     [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].nativeTrackingQuerySent = true;
-    [self createWebViewAndSendTracking:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL];
+    
+    //[self createWebViewAndSendTracking:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL];
   }
 }
 
