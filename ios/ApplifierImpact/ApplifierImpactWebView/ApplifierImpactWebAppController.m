@@ -127,14 +127,9 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 }
 
 - (void)runJavascriptDependingOnPlatform:(NSString *)javaScriptString {
-  if (![ApplifierImpactDevice isSimulator]) {
     dispatch_async(dispatch_get_main_queue(), ^{
       [self runJavascript:javaScriptString];
     });
-  }
-  else {
-    [self runJavascript:javaScriptString];
-  }
 }
 
 - (void)runJavascript:(NSString *)javaScriptString {
