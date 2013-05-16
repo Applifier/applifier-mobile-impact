@@ -249,7 +249,8 @@
   AILOG_DEBUG(@"Notification: %@", name);
   
   if ([name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
-    [self applyOptionsToCurrentState:@{kApplifierImpactNativeEventForceStopVideoPlayback:@true}];
+    [self applyOptionsToCurrentState:@{kApplifierImpactNativeEventForceStopVideoPlayback:@true, @"sendAbortInstrumentation":@true, @"type":kApplifierImpactGoogleAnalyticsEventVideoAbortExit}];
+    
     
     if (self.isOpen)
       [self closeImpact:NO withAnimations:NO withOptions:nil];

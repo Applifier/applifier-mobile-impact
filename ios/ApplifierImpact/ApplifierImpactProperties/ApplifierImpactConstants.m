@@ -193,6 +193,7 @@ NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoAbort = @"videoAna
 NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoCaching = @"videoAnalyticsEventCaching";
 NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortBack = @"back";
 NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortExit = @"exit";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortSkip = @"skip";
 NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlayStream = @"stream";
 NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlayCached = @"cached";
 NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingStart = @"start";

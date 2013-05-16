@@ -12,6 +12,10 @@
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactRewardItem.h"
 #import "../ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
+#import "../ApplifierImpactData/ApplifierImpactInstrumentation.h"
+
+@interface ApplifierImpactViewStateDefaultVideoPlayer ()
+@end
 
 @implementation ApplifierImpactViewStateDefaultVideoPlayer
 
@@ -65,6 +69,19 @@
 }
 
 - (void)applyOptions:(NSDictionary *)options {
+  AILOG_DEBUG(@"");
+  if (options != nil) {
+    if ([options objectForKey:@"sendAbortInstrumentation"] != nil && [[options objectForKey:@"sendAbortInstrumentation"] boolValue] == true) {
+      NSString *eventType = nil;
+      
+      if ([options objectForKey:@"type"] != nil) {
+        
+        eventType = [options objectForKey:@"type"];
+        [ApplifierImpactInstrumentation gaInstrumentationVideoAbort:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] withValuesFrom:@{kApplifierImpactGoogleAnalyticsEventValueKey:eventType, kApplifierImpactGoogleAnalyticsEventBufferingDurationKey:@([[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] geBufferingDuration])}];
+      }
+    }
+  }
+  
   [super applyOptions:options];
 }
 
@@ -98,6 +115,7 @@
 }
 
 - (void)videoPlayerPlaybackEnded {
+  AILOG_DEBUG(@"");
   if (self.delegate != nil) {
     [self.delegate stateNotification:kApplifierImpactStateActionVideoPlaybackEnded];
   }

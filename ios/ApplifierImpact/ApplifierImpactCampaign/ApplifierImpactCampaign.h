@@ -33,5 +33,5 @@
 
 
 - (id)initWithData:(NSDictionary *)data;
-
+- (long long)geBufferingDuration;
 @end

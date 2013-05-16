@@ -9,16 +9,18 @@
 #import "ApplifierImpactViewStateNoWebViewVideoPlayer.h"
 #import "../ApplifierImpactView/ApplifierImpactDialog.h"
 #import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
+#import "../ApplifierImpactData/ApplifierImpactInstrumentation.h"
 
 @interface ApplifierImpactViewStateNoWebViewVideoPlayer () <UIWebViewDelegate>
   @property (nonatomic, strong) ApplifierImpactDialog *spinnerDialog;
   @property (nonatomic, strong) UIWebView *webView;
+  @property (nonatomic, assign) BOOL abortInstrumentationSent;
 @end
 
 @implementation ApplifierImpactViewStateNoWebViewVideoPlayer
 
 @synthesize webView = _webView;
-@synthesize spinnerDialog;
+@synthesize spinnerDialog = _spinnerDialog;
 
 
 - (ApplifierImpactViewStateType)getStateType {
@@ -48,6 +50,7 @@
 
 - (void)enterState:(NSDictionary *)options {
   AILOG_DEBUG(@"");
+  self.abortInstrumentationSent = false;
   [super enterState:options];
   [self createVideoController:self];
   [self showSpinner];
@@ -66,6 +69,10 @@
 }
 
 - (void)applyOptions:(NSDictionary *)options {
+  AILOG_DEBUG(@"");
+  
+
+  
   [super applyOptions:options];
 }
 
@@ -103,6 +110,8 @@
 }
 
 - (void)videoPlayerPlaybackEnded {
+  AILOG_DEBUG(@"");
+
   if (self.delegate != nil) {
     [self.delegate stateNotification:kApplifierImpactStateActionVideoPlaybackEnded];
   }
@@ -126,50 +135,50 @@
 
 
 - (void)showSpinner {
-  if (self.spinnerDialog == nil) {
+  if (_spinnerDialog == nil) {
     int dialogWidth = 230;
     int dialogHeight = 76;
     
     CGRect newRect = CGRectMake(([[ApplifierImpactMainViewController sharedInstance] view].bounds.size.width / 2) - (dialogWidth / 2), ([[ApplifierImpactMainViewController sharedInstance] view].bounds.size.height / 2) - (dialogHeight / 2), dialogWidth, dialogHeight);
     
-    self.spinnerDialog = [[ApplifierImpactDialog alloc] initWithFrame:newRect useSpinner:true useLabel:true useButton:false];
-    self.spinnerDialog.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
+    _spinnerDialog = [[ApplifierImpactDialog alloc] initWithFrame:newRect useSpinner:true useLabel:true useButton:false];
+    _spinnerDialog.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
     
-    [[[ApplifierImpactMainViewController sharedInstance] view] addSubview:self.spinnerDialog];
+    [[[ApplifierImpactMainViewController sharedInstance] view] addSubview:_spinnerDialog];
   }
 }
 
 - (void)hideSpinner {
-  if (self.spinnerDialog != nil) {
-    [self.spinnerDialog removeFromSuperview];
-    self.spinnerDialog = nil;
+  if (_spinnerDialog != nil) {
+    [_spinnerDialog removeFromSuperview];
+    _spinnerDialog = nil;
   }
 }
 
 - (void)moveSpinnerToVideoController {
-  if (self.spinnerDialog != nil) {
-    [self.spinnerDialog removeFromSuperview];
+  if (_spinnerDialog != nil) {
+    [_spinnerDialog removeFromSuperview];
     
-    int spinnerWidth = self.spinnerDialog.bounds.size.width;
-    int spinnerHeight = self.spinnerDialog.bounds.size.height;
+    int spinnerWidth = _spinnerDialog.bounds.size.width;
+    int spinnerHeight = _spinnerDialog.bounds.size.height;
     
     CGRect newRect = CGRectMake((self.videoController.view.bounds.size.width / 2) - (spinnerWidth / 2), (self.videoController.view.bounds.size.height / 2) - (spinnerHeight / 2), spinnerWidth, spinnerHeight);
     
-    [self.spinnerDialog setFrame:newRect];
-    [self.videoController.view addSubview:self.spinnerDialog];
+    [_spinnerDialog setFrame:newRect];
+    [self.videoController.view addSubview:_spinnerDialog];
   }
 }
 
 - (void)createWebViewAndSendTracking:(NSURL *)trackingUrl {
-  if (self.webView == nil) {
-    self.webView = [[UIWebView alloc] initWithFrame:[[ApplifierImpactMainViewController sharedInstance] view].bounds];
-    self.webView.delegate = self;
-    self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.webView.scalesPageToFit = NO;
-    [self.webView setBackgroundColor:[UIColor blackColor]];
+  if (_webView == nil) {
+    _webView = [[UIWebView alloc] initWithFrame:[[ApplifierImpactMainViewController sharedInstance] view].bounds];
+    _webView.delegate = self;
+    _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _webView.scalesPageToFit = NO;
+    [_webView setBackgroundColor:[UIColor blackColor]];
   }
   
-  [self.webView loadRequest:[NSURLRequest requestWithURL:trackingUrl]];
+  [_webView loadRequest:[NSURLRequest requestWithURL:trackingUrl]];
 }
 
 
@@ -187,9 +196,9 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
 	AILOG_DEBUG(@"DESTROYING WEBVIEW");
-  [self.webView setDelegate:nil];
+  [_webView setDelegate:nil];
   [[NSURLCache sharedURLCache] removeAllCachedResponses];
-  self.webView = nil;
+  _webView = nil;
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {

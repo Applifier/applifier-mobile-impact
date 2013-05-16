@@ -17,6 +17,7 @@
 
 @implementation ApplifierImpactViewState
 
+@synthesize storeController;
 
 - (id)init {
   self = [super init];

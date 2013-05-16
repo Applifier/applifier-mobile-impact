@@ -15,6 +15,7 @@
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "ApplifierImpactVideoMuteButton.h"
 #import "../ApplifierImpactBundle/ApplifierImpactBundle.h"
+#import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
 
 @interface ApplifierImpactVideoViewController ()
   @property (nonatomic, strong) ApplifierImpactVideoView *videoView;
@@ -300,6 +301,11 @@
 - (void)videoPlaybackEnded {
   AILOG_DEBUG(@"");
   //self.campaignToPlay.viewed = YES;
+  
+  if (self.delegate == nil) {
+    AILOG_DEBUG(@"ALERT DELEGATE IS NIL");
+  }
+  
   [self.delegate videoPlayerPlaybackEnded];
   self.isPlaying = NO;
   self.campaignToPlay = nil;
@@ -362,9 +368,12 @@
   }
 }
 
+
+
 - (void)skipButtonPressed {
   AILOG_DEBUG(@"");
   [self videoPlaybackEnded];
+  [[ApplifierImpactMainViewController sharedInstance] applyOptionsToCurrentState:@{@"sendAbortInstrumentation":@true, @"type":kApplifierImpactGoogleAnalyticsEventVideoAbortSkip}];
 }
 
 

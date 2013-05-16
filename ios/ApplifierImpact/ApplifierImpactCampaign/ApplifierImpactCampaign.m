@@ -22,11 +22,25 @@
   return self;
 }
 
+- (long long)geBufferingDuration {
+  if (self.videoBufferingEndTime == 0) {
+    self.videoBufferingEndTime = [[NSDate date] timeIntervalSince1970] * 1000;
+  }
+  
+  if (self.videoBufferingStartTime > 0) {
+    return self.videoBufferingEndTime - self.videoBufferingStartTime;
+  }
+  
+  return 0;
+}
+
 - (void)setupFromData:(NSDictionary *)data {
   BOOL failedData = false;
   
   self.viewed = NO;
   self.nativeTrackingQuerySent = false;
+  self.videoBufferingEndTime = 0;
+  self.videoBufferingStartTime  = 0;
   
   NSString *endScreenURLString = [data objectForKey:kApplifierImpactCampaignEndScreenKey];
   if (endScreenURLString == nil) failedData = true;

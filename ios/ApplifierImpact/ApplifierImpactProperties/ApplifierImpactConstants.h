@@ -205,6 +205,7 @@ extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoAbort;
 extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoCaching;
 extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortBack;
 extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortExit;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortSkip;
 extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlayStream;
 extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlayCached;
 extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingStart;
