@@ -22,7 +22,6 @@
 @synthesize webView = _webView;
 @synthesize spinnerDialog = _spinnerDialog;
 
-
 - (ApplifierImpactViewStateType)getStateType {
   return kApplifierImpactViewStateTypeVideoPlayer;
 }
@@ -65,7 +64,6 @@
   [super exitState:options];
   [self hideSpinner];
   [[NSURLCache sharedURLCache] removeAllCachedResponses];
-  
 }
 
 - (void)applyOptions:(NSDictionary *)options {
@@ -100,7 +98,7 @@
     AILOG_DEBUG(@"Sending tracking call");
     [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].nativeTrackingQuerySent = true;
     
-    //[self createWebViewAndSendTracking:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL];
+    [self createWebViewAndSendTracking:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL];
   }
 }
 
@@ -150,36 +148,36 @@
 }
 
 - (void)hideSpinner {
-  if (_spinnerDialog != nil) {
-    [_spinnerDialog removeFromSuperview];
-    _spinnerDialog = nil;
+  if (self.spinnerDialog != nil) {
+    [self.spinnerDialog removeFromSuperview];
+    self.spinnerDialog = nil;
   }
 }
 
 - (void)moveSpinnerToVideoController {
-  if (_spinnerDialog != nil) {
-    [_spinnerDialog removeFromSuperview];
+  if (self.spinnerDialog != nil) {
+    [self.spinnerDialog removeFromSuperview];
     
-    int spinnerWidth = _spinnerDialog.bounds.size.width;
-    int spinnerHeight = _spinnerDialog.bounds.size.height;
+    int spinnerWidth = self.spinnerDialog.bounds.size.width;
+    int spinnerHeight = self.spinnerDialog.bounds.size.height;
     
     CGRect newRect = CGRectMake((self.videoController.view.bounds.size.width / 2) - (spinnerWidth / 2), (self.videoController.view.bounds.size.height / 2) - (spinnerHeight / 2), spinnerWidth, spinnerHeight);
     
-    [_spinnerDialog setFrame:newRect];
+    [self.spinnerDialog setFrame:newRect];
     [self.videoController.view addSubview:_spinnerDialog];
   }
 }
 
 - (void)createWebViewAndSendTracking:(NSURL *)trackingUrl {
-  if (_webView == nil) {
-    _webView = [[UIWebView alloc] initWithFrame:[[ApplifierImpactMainViewController sharedInstance] view].bounds];
-    _webView.delegate = self;
-    _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _webView.scalesPageToFit = NO;
-    [_webView setBackgroundColor:[UIColor blackColor]];
+  if (self.webView == nil) {
+    self.webView = [[UIWebView alloc] initWithFrame:[[ApplifierImpactMainViewController sharedInstance] view].bounds];
+    self.webView.delegate = self;
+    self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.webView.scalesPageToFit = NO;
+    [self.webView setBackgroundColor:[UIColor blackColor]];
   }
   
-  [_webView loadRequest:[NSURLRequest requestWithURL:trackingUrl]];
+  [self.webView loadRequest:[NSURLRequest requestWithURL:trackingUrl]];
 }
 
 
@@ -197,13 +195,18 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
 	AILOG_DEBUG(@"DESTROYING WEBVIEW");
-  [_webView setDelegate:nil];
+  [self.webView setDelegate:nil];
   [[NSURLCache sharedURLCache] removeAllCachedResponses];
-  _webView = nil;
+  self.webView = nil;
+  return;
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
 	AILOG_DEBUG(@"%@", error);
+  [self.webView setDelegate:nil];
+  [[NSURLCache sharedURLCache] removeAllCachedResponses];
+  self.webView = nil;
+  return;
 }
 
 

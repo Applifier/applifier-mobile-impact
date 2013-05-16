@@ -40,6 +40,9 @@
   if(self.data != nil) {
     self.data = nil;
   }
+  if(self.roundedImage != nil) {
+    self.roundedImage = nil;
+  }
   NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
 	[NSURLCache setSharedURLCache:sharedCache];
 }
@@ -107,7 +110,6 @@
   self.connection = nil;
   self.roundedImage = [UIImage imageWithData:self.data];
   [self setNeedsDisplay];
-  self.data = nil;
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
