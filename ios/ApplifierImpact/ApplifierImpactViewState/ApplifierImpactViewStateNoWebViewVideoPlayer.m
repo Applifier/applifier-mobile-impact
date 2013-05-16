@@ -10,11 +10,16 @@
 #import "../ApplifierImpactView/ApplifierImpactDialog.h"
 #import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 
-@interface ApplifierImpactViewStateNoWebViewVideoPlayer ()
+@interface ApplifierImpactViewStateNoWebViewVideoPlayer () <UIWebViewDelegate>
   @property (nonatomic, strong) ApplifierImpactDialog *spinnerDialog;
+  @property (nonatomic, strong) UIWebView *webView;
 @end
 
 @implementation ApplifierImpactViewStateNoWebViewVideoPlayer
+
+@synthesize webView;
+@synthesize spinnerDialog;
+
 
 - (ApplifierImpactViewStateType)getStateType {
   return kApplifierImpactViewStateTypeVideoPlayer;
@@ -78,16 +83,15 @@
     [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
   }
   
-  /*
   if ([[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] != nil &&
       ![[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].nativeTrackingQuerySent &&
       [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL != nil &&
       [[[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL absoluteString] length] > 4) {
-    
+   
     AILOG_DEBUG(@"Sending tracking call");
     [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].nativeTrackingQuerySent = true;
-    [[ApplifierImpactAnalyticsUploader sharedInstance] queueUrl:[[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL absoluteString]];
-  }*/
+    [self createWebViewAndSendTracking:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].customClickURL];
+  }
 }
 
 - (void)videoPlayerEncounteredError {
@@ -153,5 +157,41 @@
     [self.videoController.view addSubview:self.spinnerDialog];
   }
 }
+
+- (void)createWebViewAndSendTracking:(NSURL *)trackingUrl {
+  if (self.webView == nil) {
+    self.webView = [[UIWebView alloc] initWithFrame:[[ApplifierImpactMainViewController sharedInstance] view].bounds];
+    self.webView.delegate = self;
+    self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.webView.scalesPageToFit = NO;
+    [self.webView setBackgroundColor:[UIColor blackColor]];
+  }
+  
+  [self.webView loadRequest:[NSURLRequest requestWithURL:trackingUrl]];
+}
+
+
+#pragma mark - UIWebViewDelegate
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+	NSURL *url = [request URL];
+	AILOG_DEBUG(@"url %@", url);
+	return YES;
+}
+
+- (void)webViewDidStartLoad:(UIWebView *)webView {
+	AILOG_DEBUG(@"");
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+	AILOG_DEBUG(@"DESTROYING WEBVIEW");
+  [self.webView setDelegate:nil];
+  self.webView = nil;
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+	AILOG_DEBUG(@"%@", error);
+}
+
 
 @end

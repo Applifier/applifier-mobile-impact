@@ -139,8 +139,8 @@
     self.isValidCampaign = true;
   }
 
-  /*
   NSString *customClickURLString = [data objectForKey:kApplifierImpactCampaignCustomClickURLKey];
+  customClickURLString = @"http://www.google.com/";
   if (customClickURLString == nil) failedData = true;
   AIAssertV([customClickURLString isKindOfClass:[NSString class]], nil);
   
@@ -152,7 +152,7 @@
   }
   else {
     AILOG_DEBUG(@"Not a valid URL: %@", customClickURLString);
-  }*/
+  }
   
   data = nil;
 }
