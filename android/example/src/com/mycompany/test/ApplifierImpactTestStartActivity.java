@@ -1,7 +1,11 @@
 
 package com.mycompany.test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.applifier.impact.android.ApplifierImpact;
+import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.IApplifierImpactListener;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
@@ -25,7 +29,7 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
     	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactTestStartActivity->onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        ((ImageView)findViewById(R.id.playbtn)).setAlpha(80);
+        //((ImageView)findViewById(R.id.playbtn)).setAlpha(80);
 		Log.d(ApplifierImpactConstants.LOG_NAME, "Init impact");
 		ApplifierImpact.setDebugMode(true);
 		ApplifierImpact.setTestMode(true);
@@ -93,6 +97,7 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
     @Override
 	public void onCampaignsAvailable () {
     	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactTestStartActivity->onCampaignsAvailable()");
+    	/*
     	((ImageView)findViewById(R.id.playbtn)).setAlpha(255);
     	((ImageView)findViewById(R.id.playbtn)).setOnClickListener(new View.OnClickListener() {			
 			@Override
@@ -101,10 +106,86 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
 				newIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivity(newIntent);
 			}
-		});  
+		});*/  
 	}
     
     @Override
     public void onCampaignsFetchFailed () {
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    /*
+       ((ImageView)findViewById(R.id.plissken)).setAlpha(60);
+        ((ImageView)findViewById(R.id.unlock)).setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				ApplifierImpactUtils.Log("Opening with key: " + ApplifierImpact.instance.getCurrentRewardItemKey(), this);
+				
+				// Open with options test
+				Map<String, Object> optionsMap = new HashMap<String, Object>();
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, false);
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, false);
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, "gom");
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, false);
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION, false);
+				
+				ApplifierImpact.instance.showImpact(optionsMap);
+				
+				// Open without options (defaults)
+				//ApplifierImpact.instance.showImpact();
+			}
+		});
+        
+        ApplifierImpact.instance.setImpactListener(this);
+        
+        */
+    
+    
+    /*
+         @Override
+    public void onResume () {
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactGameActivity->onResume()");
+    	super.onResume();
+    	
+    	ApplifierImpact.instance.changeActivity(this);
+		ApplifierImpact.instance.setImpactListener(this);
+		
+		if (!ApplifierImpact.instance.canShowCampaigns()) {
+			((ImageView)findViewById(R.id.unlock)).setVisibility(View.INVISIBLE);
+		}
+    }
+    
+    public void onImpactClose () {
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Impact close");
+    }
+    
+    public void onImpactOpen () {   	
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Impact open");
+    }
+    
+	public void onVideoStarted () {
+		Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Video started!");
+	}
+	
+	public void onVideoCompleted (String rewardItemKey) {
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactGameActivity->onVideoCompleted()");
+    	((ImageView)findViewById(R.id.plissken)).setAlpha(255);
+    	((ImageView)findViewById(R.id.unlock)).setVisibility(View.INVISIBLE);
+    	Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Video completed!");
+	}
+	
+    @Override
+	public void onCampaignsAvailable () {
+	}
+    
+    @Override
+    public void onCampaignsFetchFailed () {
+    }
+    */
 }
