@@ -97,6 +97,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		ApplifierImpactProperties.TESTMODE_ENABLED = testModeEnabled;
 	}
 	
+	public static void setTestDeveloperId (String testDeveloperId) {
+		ApplifierImpactProperties.TEST_DEVELOPER_ID = testDeveloperId;
+	}
+	
+	public static void setTestOptionsId (String testOptionsId) {
+		ApplifierImpactProperties.TEST_OPTIONS_ID = testOptionsId;
+	}
+	
 	public static String getSDKVersion () {
 		return ApplifierImpactConstants.IMPACT_VERSION;
 	}
