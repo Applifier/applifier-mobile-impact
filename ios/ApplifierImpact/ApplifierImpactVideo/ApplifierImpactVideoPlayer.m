@@ -85,8 +85,7 @@
   
   if (!self.hasPlayed && !self.isPlaying) {
     AILOG_DEBUG(@"Video hasn't played and video is not playing! Seems that video is timing out.");
-    [self.timeOutTimer invalidate];
-    self.timeOutTimer = nil;
+    [self clearTimeOutTimer];
     [self.delegate videoPlaybackError];
     [ApplifierImpactInstrumentation gaInstrumentationVideoError:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] withValuesFrom:nil];
   }

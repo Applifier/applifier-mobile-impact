@@ -43,6 +43,9 @@
   [super wasShown];
   if (self.videoController.parentViewController == nil && [[ApplifierImpactMainViewController sharedInstance] presentedViewController] != self.videoController) {
     [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
+    [[[ApplifierImpactWebAppController sharedInstance] webView] removeFromSuperview];
+    [self.videoController.view addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];
+    [[[ApplifierImpactWebAppController sharedInstance] webView] setFrame:self.videoController.view.bounds];
   }
 }
 
@@ -95,12 +98,19 @@
     [self.delegate stateNotification:kApplifierImpactStateActionVideoStartedPlaying];
   }
   
+  if ([[ApplifierImpactWebAppController sharedInstance] webView].superview != nil) {
+    [[[ApplifierImpactWebAppController sharedInstance] webView] removeFromSuperview];
+    [[[ApplifierImpactMainViewController sharedInstance] view] addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];
+    [[[ApplifierImpactWebAppController sharedInstance] webView] setFrame:[[ApplifierImpactMainViewController sharedInstance] view].bounds];
+  }
+  
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
 
   // Set completed view for the webview right away, so we don't get flickering after videoplay from start->end
   [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIActionVideoStartedPlaying, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key, kApplifierImpactWebViewEventDataCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
   
   if (!self.waitingToBeShown && [[ApplifierImpactMainViewController sharedInstance] presentedViewController] != self.videoController) {
+    AILOG_DEBUG(@"Placing videoview to hierarchy");
     [[ApplifierImpactMainViewController sharedInstance] presentViewController:self.videoController animated:NO completion:nil];
   }
 }
@@ -110,6 +120,12 @@
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventVideoCompleted data:@{kApplifierImpactNativeEventCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowError data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyVideoPlaybackError}];
+  
+  if ([[ApplifierImpactWebAppController sharedInstance] webView].superview != nil) {
+    [[[ApplifierImpactWebAppController sharedInstance] webView] removeFromSuperview];
+    [[[ApplifierImpactMainViewController sharedInstance] view] addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];
+    [[[ApplifierImpactWebAppController sharedInstance] webView] setFrame:[[ApplifierImpactMainViewController sharedInstance] view].bounds];
+  }
   
   [self dismissVideoController];
 }

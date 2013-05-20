@@ -184,6 +184,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
       if (campaign.expectedTrailerSize > 0 && fileSize != campaign.expectedTrailerSize) {
         AILOG_DEBUG(@"Problems with file size, expected: %lld, got: %lld", campaign.expectedTrailerSize, fileSize);
         [[NSFileManager defaultManager] removeItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
+        AILOG_DEBUG(@"Removing file at: %@", [self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey]);
         NSDictionary *data = @{kApplifierImpactGoogleAnalyticsEventValueKey:kApplifierImpactGoogleAnalyticsEventVideoCachingFailed};
         [ApplifierImpactInstrumentation gaInstrumentationVideoCaching:campaign withValuesFrom:data];
       }
