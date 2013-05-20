@@ -1,6 +1,5 @@
 package com.applifier.impact.android.video;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -8,22 +7,22 @@ import java.util.TimerTask;
 
 import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactUtils;
-import com.applifier.impact.android.data.ApplifierImpactGraphicsBundle;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.view.ApplifierImpactBufferingView;
 import com.applifier.impact.android.view.ApplifierImpactMuteVideoButton;
+import com.applifier.impact.android.view.ApplifierImpactMuteVideoButton.ApplifierImpactMuteVideoButtonState;
 import com.applifier.impact.android.webapp.ApplifierImpactInstrumentation;
 import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.PowerManager;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -47,11 +46,14 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	private String _videoFileName = null;
 	private ApplifierImpactBufferingView _bufferingView = null;
 	private ApplifierImpactVideoPausedView _pausedView = null;
+	private ApplifierImpactMuteVideoButton _muteButton = null;
 	private boolean _videoPlayheadPrepared = false;
 	private Map<ApplifierVideoPosition, Boolean> _sentPositionEvents = new HashMap<ApplifierVideoPosition, Boolean>();
 	private boolean _videoPlaybackStartedSent = false;
 	private boolean _videoPlaybackErrors = false;
 	private MediaPlayer _mediaPlayer = null;
+	private boolean _muted = false;
+	private float _volumeBeforeMute = 0.5f;
 	
 	public ApplifierImpactVideoPlayView(Context context, IApplifierImpactVideoPlayerListener listener) {
 		super(context);
@@ -169,6 +171,20 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	
 	
 	/* INTERNAL METHODS */
+	private void storeVolume () {
+		AudioManager am = ((AudioManager)((Context)ApplifierImpactProperties.CURRENT_ACTIVITY).getSystemService(Context.AUDIO_SERVICE));
+		int curVol = 0;
+		int maxVol = 0;
+		
+		if (am != null) {
+			curVol = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+			maxVol = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+			float parts = 1f / (float)maxVol;
+			_volumeBeforeMute = parts * (float)curVol;
+			ApplifierImpactUtils.Log("Storing volume: " + curVol + ", " + maxVol + ", " + parts + ", " + _volumeBeforeMute, this);
+		}
+	}
+	
 	private void videoErrorOperations () {
 		_videoPlaybackErrors = true;
 		purgeVideoPausedTimer();
@@ -225,6 +241,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null && 
 					ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS) && 
 					ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS).equals(true)) {
+					_muted = true;
+					storeVolume();
 					_mediaPlayer.setVolume(0f, 0f);
 				}
 				
@@ -292,12 +310,37 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			}
 		});
 		
+		
+		createAndAddMuteButton();
+	}
+	
+	private void createAndAddMuteButton () {
 		RelativeLayout.LayoutParams muteButtonParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		muteButtonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		muteButtonParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		ApplifierImpactMuteVideoButton test = new ApplifierImpactMuteVideoButton(getContext());
-		test.setLayoutParams(muteButtonParams);
-		addView(test);
+		
+		_muteButton = new ApplifierImpactMuteVideoButton(getContext());
+		_muteButton.setLayoutParams(muteButtonParams);
+		_muteButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (_videoPlayheadPrepared && _videoPlaybackStartedSent) {
+					if (_muted) {
+						_muted = false;
+						_muteButton.setState(ApplifierImpactMuteVideoButtonState.UnMuted);
+						_mediaPlayer.setVolume(_volumeBeforeMute, _volumeBeforeMute);
+					}
+					else {
+						_muted = true;
+						_muteButton.setState(ApplifierImpactMuteVideoButtonState.Muted);
+						storeVolume();
+						_mediaPlayer.setVolume(0f, 0f);
+					}
+				}
+			}
+		});
+		
+		addView(_muteButton);
 	}
 	
 	private void createAndAddPausedView () {
