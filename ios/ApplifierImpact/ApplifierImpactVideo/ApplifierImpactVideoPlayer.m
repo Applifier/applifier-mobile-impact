@@ -26,6 +26,8 @@
 
 @implementation ApplifierImpactVideoPlayer
 
+@synthesize timeOutTimer = _timeOutTimer;
+
 - (void)preparePlayer {
   self.isPlaying = false;
   self.hasPlayed = false;
@@ -99,15 +101,20 @@
   });
  
   __block ApplifierImpactVideoPlayer *blockSelf = self;
-  //if (![ApplifierImpactDevice isSimulator]) {
     self.timeObserver = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
       [blockSelf _videoPositionChanged:time];
     }];
-  //}
   
   self.timeOutTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(checkIfPlayed) userInfo:nil repeats:false];
   
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
+}
+
+- (void)clearTimeOutTimer {
+  if (self.timeOutTimer != nil) {
+    [self.timeOutTimer invalidate];
+    self.timeOutTimer = nil;
+  }
 }
 
 - (void)_removeObservers {
@@ -124,10 +131,7 @@
     self.analyticsTimeObserver = nil;
   }
   
-  if (self.timeOutTimer != nil) {
-    [self.timeOutTimer invalidate];
-    self.timeOutTimer = nil;
-  }
+  [self clearTimeOutTimer];
 
   [self removeObserver:self forKeyPath:@"self.currentItem.status"];
   [self removeObserver:self forKeyPath:@"self.currentItem.error"];
@@ -154,6 +158,8 @@
     if (playerStatus == AVPlayerStatusReadyToPlay) {
       AILOG_DEBUG(@"videostartedplaying");
       __block ApplifierImpactVideoPlayer *blockSelf = self;
+      
+      [self clearTimeOutTimer];
       
       Float64 duration = [self _currentVideoDuration];
       NSMutableArray *analyticsTimeValues = [NSMutableArray array];
@@ -189,6 +195,7 @@
         self.isPlaying = false;
         [self.delegate videoPlaybackError];
         [ApplifierImpactInstrumentation gaInstrumentationVideoError:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] withValuesFrom:nil];
+        [self clearTimeOutTimer];
       });
     }
     else if (playerStatus == AVPlayerStatusUnknown) {
