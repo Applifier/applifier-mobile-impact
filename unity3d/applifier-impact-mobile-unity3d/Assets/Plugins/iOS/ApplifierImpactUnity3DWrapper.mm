@@ -1,3 +1,11 @@
+//
+//  ApplifierImpactUnity3DWrapper.m
+//  ApplifierImpactUnity
+//
+//  Created by Pekka Palmu on 3/8/13.
+//  Copyright (c) 2013 Pekka Palmu. All rights reserved.
+//
+
 #import "ApplifierImpactUnity3DWrapper.h"
 #import "AppController.h"
 
@@ -85,7 +93,7 @@ extern "C" {
         }
     }
     
-	bool showImpact (bool openAnimated, bool noOfferscreen, const char *gamerSID) {
+	bool showImpact (bool openAnimated, bool noOfferscreen, const char *gamerSID, bool muteVideoSounds, bool useDeviceOrientationForVideo) {
         NSNumber *noOfferscreenObjectiveC = [NSNumber numberWithBool:noOfferscreen];
         NSNumber *openAnimatedObjectiveC = [NSNumber numberWithBool:openAnimated];
         

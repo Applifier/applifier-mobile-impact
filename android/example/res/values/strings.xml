@@ -3,5 +3,14 @@
 
     <string name="hello">Hello World, ApplifierImpactTestStartActivity!</string>
     <string name="app_name">Impact of AssaultWing</string>
-
+	<string name="pi">π</string>
+	
+	<string name="developer_id">Developer ID</string>
+	<string name="options_id">Options ID</string>
+	
+	<string name="openText">Open</string>
+	<string name="startText">Start</string>
+	
+	<string name="helpTextStart">Press \"Start\" or select additional options by pressing the \"pi\" -sign.</string>
+	<string name="helpTextLoaded">Press \"Open\" to show Impact.</string>
 </resources>

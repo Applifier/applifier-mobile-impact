@@ -144,6 +144,14 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_timeLeftInSecondsText = null;
 	}
 	
+	public long getBufferingDuration () {
+		if (_bufferingCompledtedMillis == 0) {
+			_bufferingCompledtedMillis = System.currentTimeMillis();
+		}
+		
+		return _bufferingCompledtedMillis - _bufferingStartedMillis;
+	}
+	
 	public int getSecondsUntilBackButtonAllowed () {
 		int timeUntilBackButton = 0;
 		
@@ -430,8 +438,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				if (ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP == 0 || (ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP > 0 && getSecondsUntilBackButtonAllowed() == 0)) {
 					clearVideoPlayer();
 					
-					_bufferingCompledtedMillis = System.currentTimeMillis();
-					bufferingDuration = _bufferingCompledtedMillis - _bufferingStartedMillis;
+					bufferingDuration = getBufferingDuration();
 					values = new HashMap<String, Object>();
 					values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, bufferingDuration);
 					values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_BACK);

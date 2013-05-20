@@ -93,7 +93,7 @@ extern "C" {
         }
     }
     
-	bool showImpact (bool openAnimated, bool noOfferscreen, const char *gamerSID) {
+	bool showImpact (bool openAnimated, bool noOfferscreen, const char *gamerSID, bool muteVideoSounds, bool useDeviceOrientationForVideo) {
         NSNumber *noOfferscreenObjectiveC = [NSNumber numberWithBool:noOfferscreen];
         NSNumber *openAnimatedObjectiveC = [NSNumber numberWithBool:openAnimated];
         

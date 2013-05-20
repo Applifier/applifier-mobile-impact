@@ -5,11 +5,26 @@
     android:orientation="vertical"
     android:id="@+id/main">
     
-    <ImageView android:layout_width="fill_parent" android:layout_height="fill_parent" android:src="@drawable/bg" android:scaleType="centerCrop" android:id="@+id/bg"/>
+    <ImageView android:layout_width="fill_parent" 
+        	   android:layout_height="fill_parent" 
+        	   android:src="@drawable/impact_main" 
+        	   android:scaleType="centerCrop" android:id="@+id/bg" 
+        	   android:contentDescription="@+string/backgroundImage"/>    
     
-    <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/impact" android:scaleType="centerCrop" android:id="@+id/logo"
-        android:layout_centerHorizontal="true" android:layout_marginTop="30dip"/>
-        
+    <Button android:background="@android:color/transparent"
+        	android:layout_alignParentRight="true"
+        	android:layout_marginRight="89dp"
+        	android:layout_alignParentTop="true"
+        	android:layout_marginTop="116dp"
+        	android:id="@+id/sandrabullock"
+            android:text="@string/pi"
+            android:textSize="40sp" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:textColor="#FF002060"/>
+    
+    <!--  
     <ImageView 
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content" 
@@ -19,5 +34,107 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dip" />
+    -->
     
+    <Button android:background="@drawable/shipselection"
+    		 android:id="@+id/startImpactButton" 
+    		 android:contentDescription="@+string/startButton" 
+    		 android:layout_alignParentBottom="true" 
+    		 android:layout_centerHorizontal="true"
+    		 android:layout_marginBottom="30dp"
+    		 android:layout_width="wrap_content" 
+        	 android:layout_height="wrap_content"
+        	 android:text="@string/startText"
+        	 android:textColor="@android:color/white"
+        	 android:width="120dp"
+        	 android:height="36dp"
+        	 android:visibility="visible"/>
+    
+    <Button android:background="@drawable/shipselection"
+        		 android:id="@+id/openImpactButton" 
+        		 android:contentDescription="@+string/openButton" 
+        		 android:layout_alignParentBottom="true" 
+        		 android:layout_centerHorizontal="true"
+        		 android:layout_marginBottom="30dp"
+        		 android:layout_width="wrap_content" 
+            	 android:layout_height="wrap_content"
+            	 android:text="@string/openText"
+            	 android:textColor="@android:color/white"
+            	 android:width="120dp"
+            	 android:height="36dp"
+            	 android:visibility="invisible"/>
+    
+    <ImageView android:id="@+id/impact_status"
+         	   android:layout_alignParentBottom="true" 
+        	   android:layout_centerHorizontal="true"
+        	   android:layout_width="wrap_content" 
+               android:layout_height="wrap_content"
+               android:src="@drawable/impact_loading"
+               android:contentDescription="@+string/loadingstatus"
+               android:layout_marginBottom="59dp"
+               android:visibility="invisible"
+               />
+    
+    <TextView android:width="240dp"
+              android:height="240dp"
+              android:gravity="center"
+              android:textColor="#80001030"
+              android:layout_centerInParent="true"
+              android:textSize="16sp"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/helpTextStart"
+              android:id="@+id/instructionsText"/>
+    
+    <RelativeLayout android:layout_width="wrap_content" 
+        			android:layout_height="wrap_content"
+        			android:padding="20dp"
+        			android:background="#90002040"
+        			android:layout_centerInParent="true"
+        			android:visibility="invisible"
+        			android:id="@+id/optionsView">
+        
+        <TextView android:text="@string/developer_id"
+            	  android:id="@+id/developerIdHeading"
+            	  android:width="200dp"
+            	  android:height="30dp"
+            	  android:gravity="center"
+            	  android:textColor="#FFFFFFFF"
+            	  android:layout_width="wrap_content"
+            	  android:layout_height="wrap_content"/>
+
+        <EditText android:text=""
+            	  android:width="180dp"
+            	  android:height="20dp"
+            	  android:layout_width="wrap_content"
+            	  android:layout_height="wrap_content"
+            	  android:layout_centerHorizontal="true"
+            	  android:inputType="textNoSuggestions"
+            	  android:layout_below="@id/developerIdHeading"
+            	  android:layout_marginTop="5dp"
+            	  android:id="@+id/developer_id_data"/>
+
+		<TextView android:text="@string/options_id"
+            	  android:id="@+id/optionsIdHeading"
+            	  android:width="200dp"
+            	  android:height="30dp"
+            	  android:gravity="center"
+            	  android:textColor="#FFFFFFFF"
+            	  android:layout_width="wrap_content"
+            	  android:layout_height="wrap_content"
+            	  android:layout_below="@id/developer_id_data"
+            	  android:layout_marginTop="15dp"/>
+
+        <EditText android:text=""
+            	  android:width="180dp"
+            	  android:height="20dp"
+            	  android:layout_width="wrap_content"
+            	  android:layout_height="wrap_content"
+            	  android:layout_centerHorizontal="true"
+            	  android:inputType="textNoSuggestions"
+            	  android:layout_below="@id/optionsIdHeading"
+            	  android:layout_marginTop="5dp"
+            	  android:id="@+id/options_id_data"/>
+        
+    </RelativeLayout>
 </RelativeLayout>

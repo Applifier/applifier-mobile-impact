@@ -78,16 +78,18 @@ public class ApplifierImpactUnity3DWrapper implements IApplifierImpactListener {
 		}
 	}
 	
-	public boolean showImpact (boolean openAnimated, boolean noOfferscreen, final String gamerSID) {
+	public boolean showImpact (boolean openAnimated, boolean noOfferscreen, final String gamerSID, boolean muteVideoSounds, boolean useDeviceOrientationForVideo) {
 		if (_applifierImpact != null && _applifierImpact.canShowCampaigns() && _applifierImpact.canShowImpact()) {
 			HashMap<String, Object> params = new HashMap<String, Object>();
 			params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, openAnimated);
 			params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, noOfferscreen);
+			params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, muteVideoSounds);
+			params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION, useDeviceOrientationForVideo);
 			
 			if (gamerSID != null && gamerSID.length() > 0)
 				params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, gamerSID);
 			
-			ApplifierImpactUtils.Log("Opening with: openAnimated=" + openAnimated + ", noOfferscreen=" + noOfferscreen + ", gamerSID=" + gamerSID, this);
+			ApplifierImpactUtils.Log("Opening with: openAnimated=" + openAnimated + ", noOfferscreen=" + noOfferscreen + ", gamerSID=" + gamerSID + ", muteVideoSounds=" + muteVideoSounds + ", useDeviceOrientationForVideo=" + useDeviceOrientationForVideo, this);
 			return _applifierImpact.showImpact(params);
 		}
 		

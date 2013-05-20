@@ -97,6 +97,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		ApplifierImpactProperties.TESTMODE_ENABLED = testModeEnabled;
 	}
 	
+	public static void setTestDeveloperId (String testDeveloperId) {
+		ApplifierImpactProperties.TEST_DEVELOPER_ID = testDeveloperId;
+	}
+	
+	public static void setTestOptionsId (String testOptionsId) {
+		ApplifierImpactProperties.TEST_OPTIONS_ID = testOptionsId;
+	}
+	
 	public static String getSDKVersion () {
 		return ApplifierImpactConstants.IMPACT_VERSION;
 	}
@@ -350,7 +358,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public void onWebDataCompleted () {
 		JSONObject jsonData = null;
 		boolean dataFetchFailed = false;
-		String nativeSdkVersion = null;
+		boolean sdkIsCurrent = true;
 		
 		if (webdata.getData() != null && webdata.getData().has(ApplifierImpactConstants.IMPACT_JSON_DATA_ROOTKEY)) {
 			try {
@@ -361,9 +369,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			}
 			
 			if (!dataFetchFailed) {
-				if (jsonData.has(ApplifierImpactConstants.IMPACT_NATIVESDKVERSION_KEY)) {
+				if (jsonData.has(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDK_IS_CURRENT_KEY)) {
 					try {
-						nativeSdkVersion = jsonData.getString(ApplifierImpactConstants.IMPACT_NATIVESDKVERSION_KEY);
+						sdkIsCurrent = jsonData.getBoolean(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDK_IS_CURRENT_KEY);
 					}
 					catch (Exception e) {
 						dataFetchFailed = true;
@@ -372,20 +380,18 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			}
 		}
 		
-		if (nativeSdkVersion != null && !dataFetchFailed && ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.CURRENT_ACTIVITY)) {
-			if (!nativeSdkVersion.equals(ApplifierImpactConstants.IMPACT_VERSION)) {
-				_alertDialog = new AlertDialog.Builder(ApplifierImpactProperties.CURRENT_ACTIVITY).create();
-				_alertDialog.setTitle("Applifier Impact");
-				_alertDialog.setMessage("You are not running the latest version of Applifier Impact android. Please update your version (this dialog won't appear in release builds).");
-				_alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						_alertDialog.dismiss();
-					}
-				});
-				
-				_alertDialog.show();
-			}
+		if (!dataFetchFailed && !sdkIsCurrent && ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.CURRENT_ACTIVITY)) {
+			_alertDialog = new AlertDialog.Builder(ApplifierImpactProperties.CURRENT_ACTIVITY).create();
+			_alertDialog.setTitle("Applifier Impact");
+			_alertDialog.setMessage("You are not running the latest version of Applifier Impact android. Please update your version (this dialog won't appear in release builds).");
+			_alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					_alertDialog.dismiss();
+				}
+			});
+			
+			_alertDialog.show();
 		}
 		
 		setup();

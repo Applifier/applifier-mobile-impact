@@ -1,5 +1,8 @@
 package com.applifier.impact.android.view;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONObject;
 
 import com.applifier.impact.android.ApplifierImpact;
@@ -9,6 +12,7 @@ import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.video.ApplifierImpactVideoPlayView;
 import com.applifier.impact.android.video.IApplifierImpactVideoPlayerListener;
+import com.applifier.impact.android.webapp.ApplifierImpactInstrumentation;
 import com.applifier.impact.android.webapp.ApplifierImpactWebBridge;
 import com.applifier.impact.android.webapp.ApplifierImpactWebView;
 import com.applifier.impact.android.webapp.IApplifierImpactWebViewListener;
@@ -244,6 +248,9 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		// SENSOR_LANDSCAPE
 		int targetOrientation = 6;
 		
+		if (Build.VERSION.SDK_INT < 9)
+			targetOrientation = 0;
+		
 		if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null && 
 			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION) && 
 			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION).equals(true)) {
@@ -315,6 +322,12 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	}
 	
 	public void onVideoSkip () {
+		Map<String, Object> values = null;
+		values = new HashMap<String, Object>();
+		values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, videoplayerview.getBufferingDuration());
+		values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_SKIP);
+		ApplifierImpactInstrumentation.gaInstrumentationVideoAbort(ApplifierImpactProperties.SELECTED_CAMPAIGN, values);
+				
 		afterVideoPlaybackOperations();
 		JSONObject params = new JSONObject();
 		
