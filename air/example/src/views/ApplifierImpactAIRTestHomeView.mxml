@@ -23,7 +23,7 @@
 				_impact.setTestMode(true);
 				
 				// Init Applifier Impact
-				_impact.init("16");
+				_impact.init("16", true);
 				
 				_impact.addEventListener(ApplifierImpactMobileEvent.IMPACT_INIT_COMPLETE, onInitComplete);
 				_impact.addEventListener(ApplifierImpactMobileEvent.IMPACT_INIT_FAILED, onInitFailed);
@@ -42,7 +42,7 @@
 			{
 				if (_impact.isSupported() && _impact.canShowImpact()) 
 				{
-					_impact.showImpact(false, false, "Seppo", true, false); 
+					_impact.showImpact(false, false, "Seppo", true, true); 
 				}
 			}
 			

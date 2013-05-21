@@ -17,8 +17,8 @@ public static class ApplifierImpactMobileExternal {
 	}
 	
 #if UNITY_EDITOR
-	public static void init (string gameId, bool testModeEnabled, bool debugModeEnabled, string gameObjectName) {
-		Log ("UnityEditor: init(), gameId=" + gameId + ", testModeEnabled=" + testModeEnabled + ", gameObjectName=" + gameObjectName + ", debugModeEnabled=" + debugModeEnabled);
+	public static void init (string gameId, bool testModeEnabled, bool debugModeEnabled, string gameObjectName, bool useNativeUIWhenPossible) {
+		Log ("UnityEditor: init(), gameId=" + gameId + ", testModeEnabled=" + testModeEnabled + ", gameObjectName=" + gameObjectName + ", debugModeEnabled=" + debugModeEnabled + ", useNativeUIWhenPossible=" + useNativeUIWhenPossible);
 	}
 	
 	public static bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID, bool muteVideoSounds, bool videoUsesDeviceOrientation) {
@@ -94,7 +94,7 @@ public static class ApplifierImpactMobileExternal {
 	
 #elif UNITY_IPHONE
 	[DllImport ("__Internal")]
-	public static extern void init (string gameId, bool testModeEnabled, bool debugModeEnabled, string gameObjectName);
+	public static extern void init (string gameId, bool testModeEnabled, bool debugModeEnabled, string gameObjectName, bool useNativeUIWhenPossible);
 	
 	[DllImport ("__Internal")]
 	public static extern bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID, bool muteVideoSounds, bool videoUsesDeviceOrientation);
@@ -146,7 +146,11 @@ public static class ApplifierImpactMobileExternal {
 	private static AndroidJavaObject applifierImpactUnity;
 	private static AndroidJavaClass applifierImpactClass;
 	
-	public static void init (string gameId, bool testModeEnabled, bool debugModeEnabled, string gameObjectName) {
+	public static void init (string gameId, bool testModeEnabled, bool debugModeEnabled, string gameObjectName, bool useNativeUIWhenPossible) {
+		if (useNativeUIWhenPossible) {
+			Log ("Native UI not supported on Android, using WebView");
+		}
+		
 		Log("UnityAndroid: init(), gameId=" + gameId + ", testModeEnabled=" + testModeEnabled + ", gameObjectName=" + gameObjectName + ", debugModeEnabled=" + debugModeEnabled);
 		AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
 		AndroidJavaObject activity = jc.GetStatic<AndroidJavaObject>("currentActivity");

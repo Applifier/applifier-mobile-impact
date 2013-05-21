@@ -11,6 +11,7 @@ public class ApplifierImpactMobile : MonoBehaviour {
 	public bool noOfferscreen = false;
 	public bool videoUsesDeviceOrientation = false;
 	public bool muteVideoSounds = false;
+	public bool useNativeUiWhenPossible = false;
 	
 	private static ApplifierImpactMobile sharedInstance;
 	private static bool _campaignsAvailable = false;
@@ -64,7 +65,7 @@ public class ApplifierImpactMobile : MonoBehaviour {
 				sharedInstance = (ApplifierImpactMobile) FindObjectOfType(typeof(ApplifierImpactMobile));
 
 				#if (UNITY_IPHONE || UNITY_ANDROID) && !UNITY_EDITOR
-				ApplifierImpactMobileExternal.init(sharedInstance.gameId, sharedInstance.testModeEnabled, sharedInstance.debugModeEnabled && Debug.isDebugBuild, sharedInstance.gameObject.name);
+				ApplifierImpactMobileExternal.init(sharedInstance.gameId, sharedInstance.testModeEnabled, sharedInstance.debugModeEnabled && Debug.isDebugBuild, sharedInstance.gameObject.name, sharedInstance.useNativeUiWhenPossible);
 				#endif
 			}
 

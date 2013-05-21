@@ -130,6 +130,7 @@
       AILOG_DEBUG(@"NEW DIMENSIONS: %f, %f", minValue, maxValue);
     }
   }
+  
   [self.muteButton setFrame:CGRectMake(0.0f, self.view.bounds.size.height - self.muteButton.bounds.size.height + 16, self.muteButton.frame.size.width, self.muteButton.frame.size.height)];
   AILOG_DEBUG("Mutebutton frame: %f x %f - %f x %f",self.muteButton.frame.size.height,self.muteButton.frame.size.width,self.muteButton.frame.origin.x,self.muteButton.frame.origin.y);
   
@@ -399,11 +400,8 @@
     self.progressLabel.shadowColor = [UIColor blackColor];
     self.progressLabel.shadowOffset = CGSizeMake(0, 1.0);
     
-
-    
     [self.videoOverlayView addSubview:self.progressLabel];
     [self.videoOverlayView bringSubviewToFront:self.progressLabel];
-
 
     self.videoOverlayView.hidden = NO;
   }

@@ -147,6 +147,7 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 #pragma mark - Video analytics
 
 - (void)logVideoAnalyticsWithPosition:(VideoAnalyticsPosition)videoPosition campaign:(ApplifierImpactCampaign *)campaign {
+  AILOG_DEBUG(@"");
 	if (campaign == nil) {
 		AILOG_DEBUG(@"Campaign is nil.");
 		return;
@@ -165,10 +166,10 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 			positionString = kApplifierImpactAnalyticsEventTypeVideoThirdQuartile;
 		else if (videoPosition == kVideoAnalyticsPositionEnd)
 			positionString = kApplifierImpactAnalyticsEventTypeVideoEnd;
-		
+
     if (positionString != nil) {
       NSString *trackingQuery = [NSString stringWithFormat:@"%@/video/%@/%@/%@?%@=%@", [[ApplifierImpactProperties sharedInstance] gamerId], positionString, campaign.id, [[ApplifierImpactProperties sharedInstance] impactGameId], kApplifierImpactAnalyticsQueryParamRewardItemKey, [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey]];
-      
+
       if ([[ApplifierImpactShowOptionsParser sharedInstance] gamerSID] != nil) {
         trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [[ApplifierImpactShowOptionsParser sharedInstance] gamerSID]];
       }
@@ -181,8 +182,6 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 }
 
 - (void)sendTrackingCallWithQueryString:(NSString *)queryString {
-	AIAssert(![NSThread isMainThread]);
-	
   NSArray *queryStringComponents = [queryString componentsSeparatedByString:@"?"];
   NSString *trackingPath = [queryStringComponents objectAtIndex:0];
   queryString = [queryStringComponents objectAtIndex:1];
@@ -198,8 +197,6 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 }
 
 - (void)sendAnalyticsRequestWithQueryString:(NSString *)queryString {
-	AIAssert(![NSThread isMainThread]);
-	
 	if (queryString == nil || [queryString length] == 0) {
 		AILOG_DEBUG(@"Invalid input.");
 		return;
@@ -211,9 +208,7 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 
 #pragma mark - Install tracking
 
-- (void)sendInstallTrackingCallWithQueryDictionary:(NSDictionary *)queryDictionary {
-	AIAssert( ! [NSThread isMainThread]);
-	
+- (void)sendInstallTrackingCallWithQueryDictionary:(NSDictionary *)queryDictionary {	
 	if (queryDictionary == nil) {
 		AILOG_DEBUG(@"Invalid input.");
 		return;
@@ -234,8 +229,6 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 #pragma mark - Error handling
 
 - (void)retryFailedUploads {
-	AIAssert( ! [NSThread isMainThread]);
-	
 	NSArray *uploads = [[NSUserDefaults standardUserDefaults] arrayForKey:kApplifierImpactAnalyticsSavedUploadsKey];
 	if (uploads != nil) {
 		for (NSDictionary *upload in uploads) {

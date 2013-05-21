@@ -11,7 +11,7 @@ package com.applifier.impact
 		
 		/* Interface */
 		
-		public function init (gameId:String) : void {
+		public function init (gameId:String, useNativeUIWhenPossible:Boolean) : void {
 		}
 		
 		public function isSupported () : Boolean {

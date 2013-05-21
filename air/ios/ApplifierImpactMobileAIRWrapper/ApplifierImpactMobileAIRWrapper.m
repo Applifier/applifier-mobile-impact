@@ -111,10 +111,17 @@ FREObject init(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) 
     uint32_t gameIdLength;
     const uint8_t *gameIdCString;
     NSString *gameId = nil;
+    uint32_t useNativeUIWhenPossible = 0;
     
     if (FRE_OK == FREGetObjectAsUTF8(argv[0], &gameIdLength, &gameIdCString)) {
         gameId = [NSString stringWithUTF8String:(char*)gameIdCString];
         [[ApplifierImpactMobileAIRWrapper sharedInstance] startWithGameId:gameId];
+    }
+    
+    if (FRE_OK == FREGetObjectAsBool(argv[1], &useNativeUIWhenPossible)) {
+        if (useNativeUIWhenPossible == true) {
+            [[ApplifierImpact sharedInstance] setImpactMode:kApplifierImpactModeNoWebView];
+        }
     }
     
     return NULL;
@@ -176,6 +183,8 @@ FREObject showImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
     
     uint32_t noOfferscreen = 0;
     uint32_t openAnimated = 0;
+    uint32_t useDeviceOrientationForVideo = 0;
+    uint32_t muteVideoSounds = 0;
     
     uint32_t gamerSIDLength;
     const uint8_t *gamerSIDCString;
@@ -191,10 +200,18 @@ FREObject showImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
         gamerSID = [NSString stringWithUTF8String:(char*)gamerSIDCString];
     }
     
+    if (FRE_OK == FREGetObjectAsBool(argv[3], &muteVideoSounds)) {
+    }
+    
+    if (FRE_OK == FREGetObjectAsBool(argv[4], &useDeviceOrientationForVideo)) {
+    }
+    
     NSNumber *noOfferscreenObjC = [NSNumber numberWithUnsignedInt:noOfferscreen];
     NSNumber *openAnimatedObjC = [NSNumber numberWithUnsignedInt:openAnimated];
+    NSNumber *muteVideoSoundsObjC = [NSNumber numberWithUnsignedInt:muteVideoSounds];
+    NSNumber *useDeviceOrientationForVideoObjC = [NSNumber numberWithUnsignedInt:useDeviceOrientationForVideo];
     
-    NSMutableDictionary *openOptions = [NSMutableDictionary dictionaryWithDictionary:@{kApplifierImpactOptionNoOfferscreenKey:noOfferscreenObjC, kApplifierImpactOptionOpenAnimatedKey:openAnimatedObjC}];
+    NSMutableDictionary *openOptions = [NSMutableDictionary dictionaryWithDictionary:@{kApplifierImpactOptionNoOfferscreenKey:noOfferscreenObjC, kApplifierImpactOptionOpenAnimatedKey:openAnimatedObjC, kApplifierImpactOptionMuteVideoSounds:muteVideoSoundsObjC, kApplifierImpactOptionVideoUsesDeviceOrientation:useDeviceOrientationForVideoObjC}];
     
     if (gamerSID != nil)
         [openOptions setValue:gamerSID forKey:kApplifierImpactOptionGamerSIDKey];
@@ -221,7 +238,7 @@ FREObject hideImpact(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
 
 FREObject canShowCampaigns(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
 	NSLog(@"canShowCampaigns");
-    uint32_t value = [[ApplifierImpact sharedInstance] canShowAds];
+    uint32_t value = [[ApplifierImpact sharedInstance] canShowCampaigns];
     
     FREObject retBool = nil;
     FRENewObjectFromBool(value, &retBool);

@@ -35,15 +35,20 @@ extern "C" {
 
 @implementation ApplifierImpactUnity3DWrapper
 
-- (id)initWithGameId:(NSString*)gameId testModeOn:(bool)testMode debugModeOn:(bool)debugMode withGameObjectName:(NSString*)gameObjectName {
+- (id)initWithGameId:(NSString*)gameId testModeOn:(bool)testMode debugModeOn:(bool)debugMode withGameObjectName:(NSString*)gameObjectName useNativeUI:(bool)useNativeWhenPossible {
     self = [super init];
     
     if (self != nil) {
         self.gameObjectName = gameObjectName;
         self.gameId = gameId;
+        
+        if (useNativeWhenPossible) {
+            [[ApplifierImpact sharedInstance] setImpactMode:kApplifierImpactModeNoWebView];
+        }
+        
         [[ApplifierImpact sharedInstance] setDelegate:self];
         [[ApplifierImpact sharedInstance] setDebugMode:debugMode];
-        [[ApplifierImpact sharedInstance] setTestMode:testMode];
+        [[ApplifierImpact sharedInstance] setTestMode:testMode];        
         [[ApplifierImpact sharedInstance] startWithGameId:gameId andViewController:UnityGetGLViewController()];
     }
     
@@ -87,18 +92,18 @@ extern "C" {
 
 
 extern "C" {
-    void init (const char *gameId, bool testMode, bool debugMode, const char *gameObjectName) {
+    void init (const char *gameId, bool testMode, bool debugMode, const char *gameObjectName, bool useNativeUI) {
         if (applifierImpact == NULL) {
-            applifierImpact = [[ApplifierImpactUnity3DWrapper alloc] initWithGameId:ImpactCreateNSString(gameId) testModeOn:testMode debugModeOn:debugMode withGameObjectName:ImpactCreateNSString(gameObjectName)];
+            applifierImpact = [[ApplifierImpactUnity3DWrapper alloc] initWithGameId:ImpactCreateNSString(gameId) testModeOn:testMode debugModeOn:debugMode withGameObjectName:ImpactCreateNSString(gameObjectName) useNativeUI:useNativeUI];
         }
     }
     
 	bool showImpact (bool openAnimated, bool noOfferscreen, const char *gamerSID, bool muteVideoSounds, bool useDeviceOrientationForVideo) {
         NSNumber *noOfferscreenObjectiveC = [NSNumber numberWithBool:noOfferscreen];
         NSNumber *openAnimatedObjectiveC = [NSNumber numberWithBool:openAnimated];
-        
-        if ([[ApplifierImpact sharedInstance] canShowAds] && [[ApplifierImpact sharedInstance] canShowImpact]) {
-            NSDictionary *props = @{kApplifierImpactOptionGamerSIDKey: ImpactCreateNSString(gamerSID), kApplifierImpactOptionNoOfferscreenKey: noOfferscreenObjectiveC, kApplifierImpactOptionOpenAnimatedKey: openAnimatedObjectiveC};
+
+        if ([[ApplifierImpact sharedInstance] canShowCampaigns] && [[ApplifierImpact sharedInstance] canShowImpact]) {
+            NSDictionary *props = @{kApplifierImpactOptionGamerSIDKey: ImpactCreateNSString(gamerSID), kApplifierImpactOptionNoOfferscreenKey: noOfferscreenObjectiveC, kApplifierImpactOptionOpenAnimatedKey: openAnimatedObjectiveC, kApplifierImpactOptionVideoUsesDeviceOrientation:@(useDeviceOrientationForVideo), kApplifierImpactOptionMuteVideoSounds:@(muteVideoSounds)};
             return [[ApplifierImpact sharedInstance] showImpact:props];
         }
         

@@ -24,9 +24,9 @@ package com.applifier.impact
 		/* Interface */
 		
 		
-		public function init (gameId:String) : void {
+		public function init (gameId:String, useNativeUIWhenPossible:Boolean) : void {
 			if (!canUseExtensionContext()) return;			
-			_extensionContext.call("init", gameId);
+			_extensionContext.call("init", gameId, useNativeUIWhenPossible);
 		}
 		
 		public function isSupported () : Boolean {
