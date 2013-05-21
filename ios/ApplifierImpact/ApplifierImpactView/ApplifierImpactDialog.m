@@ -19,6 +19,10 @@
 
 @implementation ApplifierImpactDialog
 
+@synthesize spinner = _spinner;
+@synthesize label = _label;
+@synthesize button = _button;
+
 - (id)initWithFrame:(CGRect)frame useSpinner:(BOOL)createSpinner useLabel:(BOOL)createLabel useButton:(BOOL)createButton {
     self = [super initWithFrame:frame];
     if (self) {

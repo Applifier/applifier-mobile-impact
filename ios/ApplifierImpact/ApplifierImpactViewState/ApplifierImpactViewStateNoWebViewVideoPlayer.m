@@ -13,6 +13,7 @@
 
 @interface ApplifierImpactViewStateNoWebViewVideoPlayer () <UIWebViewDelegate>
   @property (nonatomic, strong) ApplifierImpactDialog *spinnerDialog;
+  @property (nonatomic, strong) ApplifierImpactDialog *videoPlaybackErrorDialog;
   @property (nonatomic, strong) UIWebView *webView;
   @property (nonatomic, assign) BOOL abortInstrumentationSent;
 @end
@@ -21,6 +22,7 @@
 
 @synthesize webView = _webView;
 @synthesize spinnerDialog = _spinnerDialog;
+@synthesize videoPlaybackErrorDialog = _videoPlaybackErrorDialog;
 
 - (ApplifierImpactViewStateType)getStateType {
   return kApplifierImpactViewStateTypeVideoPlayer;
@@ -108,6 +110,7 @@
   AILOG_DEBUG(@"");
   [self hideSpinner];
   [self dismissVideoController];
+  [self showVideoPlaybackError];
 }
 
 - (void)videoPlayerPlaybackEnded {
@@ -132,6 +135,36 @@
   
   if (![self canViewSelectedCampaign]) return;
   [self startVideoPlayback:true withDelegate:self];
+}
+
+
+- (void)showVideoPlaybackError {
+  AILOG_DEBUG(@"");
+  int dialogWidth = 200;
+  int dialogHeight = 86;
+  
+  CGRect newRect = CGRectMake(([[ApplifierImpactMainViewController sharedInstance] view].bounds.size.width / 2) - (dialogWidth / 2), ([[ApplifierImpactMainViewController sharedInstance] view].bounds.size.height / 2) - (dialogHeight / 2), dialogWidth, dialogHeight);
+  
+  self.videoPlaybackErrorDialog = [[ApplifierImpactDialog alloc] initWithFrame:newRect useSpinner:false useLabel:true useButton:true];
+  self.videoPlaybackErrorDialog.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
+  
+  [self.videoPlaybackErrorDialog.label setText:@"Video playback error"];
+  [self.videoPlaybackErrorDialog.button addTarget:self action:@selector(videoPlaybackErrorConfirmed) forControlEvents:UIControlEventTouchUpInside];
+  
+  [[[ApplifierImpactMainViewController sharedInstance] view] addSubview:self.videoPlaybackErrorDialog];
+}
+
+- (void)videoPlaybackErrorConfirmed {
+  [self hideVideoPlaybackError];
+  [[ApplifierImpact sharedInstance] hideImpact];
+}
+
+- (void)hideVideoPlaybackError {
+  if (self.videoPlaybackErrorDialog != nil) {
+    [self.videoPlaybackErrorDialog.button removeTarget:self action:@selector(videoPlaybackErrorConfirmed) forControlEvents:UIControlEventTouchUpInside];
+    [self.videoPlaybackErrorDialog removeFromSuperview];
+    self.videoPlaybackErrorDialog = nil;
+  }
 }
 
 

@@ -49,16 +49,10 @@
 #pragma mark Video Playback
 
 - (void) muteVideo {
-  
 }
 
 - (void)playSelectedVideo {
   self.videoPosition = kVideoAnalyticsPositionUnplayed;
-  /*
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [self.delegate videoPlaybackStarted];
-  });*/
-  
   [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].videoBufferingStartTime = [[NSDate date] timeIntervalSince1970] * 1000;
 }
 
@@ -104,7 +98,7 @@
       [blockSelf _videoPositionChanged:time];
     }];
   
-  self.timeOutTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(checkIfPlayed) userInfo:nil repeats:false];
+  self.timeOutTimer = [NSTimer scheduledTimerWithTimeInterval:25 target:self selector:@selector(checkIfPlayed) userInfo:nil repeats:false];
   
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoPlaybackEnded:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
 }
