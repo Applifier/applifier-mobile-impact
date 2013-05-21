@@ -28,6 +28,7 @@
 		9017B0AB161086A600ACFC04 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9017B0AA161086A600ACFC04 /* SystemConfiguration.framework */; };
 		907454421609C20C00454427 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907454411609C20C00454427 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		90B1F7DC1601AC900080A74C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 90B1F7DB1601AC900080A74C /* Default-568h@2x.png */; };
+		CCBAF02F173782A9005EA0FC /* ApplifierImpact.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CCBAF02E173782A9005EA0FC /* ApplifierImpact.bundle */; };
 		F642682F16088B7C0005B83A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F642682E16088B7C0005B83A /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -37,7 +38,7 @@
 		785829E516676A2D00605539 /* impact-loaded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impact-loaded.png"; sourceTree = "<group>"; };
 		785829E71667762600605539 /* impact-open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impact-open.png"; sourceTree = "<group>"; };
 		785829E916677A9D00605539 /* impact-reward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "impact-reward.png"; sourceTree = "<group>"; };
-		785829EB166790EC00605539 /* ApplifierImpact.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplifierImpact.framework; path = "../build/Release-iphoneos/ApplifierImpact.framework"; sourceTree = "<group>"; };
+		785829EB166790EC00605539 /* ApplifierImpact.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplifierImpact.framework; path = "../build/Debug-iphoneos/ApplifierImpact.framework"; sourceTree = "<group>"; };
 		78CC133715D3D84A00972EA6 /* icon_57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_57.png; sourceTree = "<group>"; };
 		78CC133915D3D85400972EA6 /* icon_114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_114.png; sourceTree = "<group>"; };
 		78ED794915C66FC6007C5BD5 /* ImpactProto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImpactProto.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +59,7 @@
 		9017B0AA161086A600ACFC04 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		907454411609C20C00454427 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		90B1F7DB1601AC900080A74C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
+		CCBAF02E173782A9005EA0FC /* ApplifierImpact.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ApplifierImpact.bundle; path = "../build/Debug-iphoneos/ApplifierImpact.bundle"; sourceTree = "<group>"; };
 		F642682E16088B7C0005B83A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -84,6 +86,7 @@
 		78ED793E15C66FC6007C5BD5 = {
 			isa = PBXGroup;
 			children = (
+				CCBAF02E173782A9005EA0FC /* ApplifierImpact.bundle */,
 				78CC133915D3D85400972EA6 /* icon_114.png */,
 				78CC133715D3D84A00972EA6 /* icon_57.png */,
 				78ED797315C67398007C5BD5 /* Assets */,
@@ -209,6 +212,7 @@
 			files = (
 				78ED795815C66FC6007C5BD5 /* InfoPlist.strings in Resources */,
 				78ED796415C66FC6007C5BD5 /* ApplifierImpactViewController.xib in Resources */,
+				CCBAF02F173782A9005EA0FC /* ApplifierImpact.bundle in Resources */,
 				78CC133815D3D84A00972EA6 /* icon_57.png in Resources */,
 				78CC133A15D3D85400972EA6 /* icon_114.png in Resources */,
 				90B1F7DC1601AC900080A74C /* Default-568h@2x.png in Resources */,
@@ -281,6 +285,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
@@ -306,6 +311,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -317,10 +323,7 @@
 		78ED796815C66FC6007C5BD5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv7,
-					armv6,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -334,10 +337,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = "ImpactProto/ImpactProto-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_LDFLAGS = (
-					"-weak_library",
-					/usr/lib/libSystem.B.dylib,
-				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -349,10 +349,7 @@
 		78ED796915C66FC6007C5BD5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv7,
-					armv6,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -397,6 +394,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -408,10 +406,7 @@
 		78ED799815C6B8F9007C5BD5 /* Ad Hoc Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv7,
-					armv6,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

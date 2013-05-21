@@ -11,13 +11,16 @@
 
 @interface ApplifierImpactViewController : UIViewController
 
-@property (nonatomic, retain) IBOutlet UIButton *buttonView;
+@property (nonatomic, retain) IBOutlet UIButton *startButton;
+@property (nonatomic, retain) IBOutlet UIButton *openButton;
+@property (nonatomic, retain) IBOutlet UIButton *optionsButton;
+@property (nonatomic, retain) IBOutlet UIView *optionsView;
+@property (nonatomic, retain) IBOutlet UITextField *developerId;
+@property (nonatomic, retain) IBOutlet UITextField *optionsId;
+@property (nonatomic, retain) IBOutlet UILabel *instructionsText;
+
 @property (nonatomic, retain) IBOutlet UIImageView *loadingImage;
 @property (nonatomic, retain) IBOutlet UIView *contentView;
-@property (nonatomic) int currentPhase;
-@property (nonatomic, retain) AVPlayer *avPlayer;
-@property (nonatomic, retain) AVPlayerLayer *avPlayerLayer;
-@property (nonatomic, retain) AVAsset *avAsset;
-@property (nonatomic, retain) AVPlayerItem *avPlayerItem;
+@property (nonatomic, retain) IBOutlet UISwitch *webviewSwitch;
 
 @end

@@ -22,6 +22,7 @@ NSString * const kApplifierImpactWebViewAPINavigateTo = @"navigateTo";
 NSString * const kApplifierImpactWebViewAPIInitComplete = @"initComplete";
 NSString * const kApplifierImpactWebViewAPIClose = @"close";
 NSString * const kApplifierImpactWebViewAPIOpen = @"open";
+NSString * const kApplifierImpactWebViewAPIDeveloperOptions = @"developerOptions";
 NSString * const kApplifierImpactWebViewAPIAppStore = @"appStore";
 NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying = @"video_started_playing";
 
@@ -38,10 +39,12 @@ NSString * const kApplifierImpactWebViewDataParamOpenUdidIdKey = @"openUdid";
 NSString * const kApplifierImpactWebViewDataParamMacAddressKey = @"macAddress";
 NSString * const kApplifierImpactWebViewDataParamSdkVersionKey = @"sdkVersion";
 NSString * const kApplifierImpactWebViewDataParamIosVersionKey = @"iOSVersion";
+NSString * const kApplifierImpactWebViewDataParamSdkIsCurrentKey = @"sdkIsCurrent";
 
 NSString * const kApplifierImpactWebViewEventDataCampaignIdKey = @"campaignId";
 NSString * const kApplifierImpactWebViewEventDataRewatchKey = @"rewatch";
 NSString * const kApplifierImpactWebViewEventDataClickUrlKey = @"clickUrl";
+NSString * const kApplifierImpactWebViewEventDataBypassAppSheetKey = @"bypassAppSheet";
 
 
 /* Native Events */
@@ -51,7 +54,7 @@ NSString * const kApplifierImpactNativeEventShowSpinner = @"showSpinner";
 NSString * const kApplifierImpactNativeEventShowError = @"showError";
 NSString * const kApplifierImpactNativeEventVideoCompleted = @"videoCompleted";
 NSString * const kApplifierImpactNativeEventCampaignIdKey = @"campaignId";
-
+NSString * const kApplifierImpactNativeEventForceStopVideoPlayback = @"forceStopVideoPlayback";
 
 /* Native Event Params */
 
@@ -71,10 +74,13 @@ NSString * const kApplifierImpactJsonDataRootKey = @"data";
 
 NSString * const kApplifierImpactCampaignsKey = @"campaigns";
 NSString * const kApplifierImpactCampaignEndScreenKey = @"endScreen";
+NSString * const kApplifierImpactCampaignEndScreenPortraitKey = @"endScreenPortrait";
 NSString * const kApplifierImpactCampaignClickURLKey = @"clickUrl";
+NSString * const kApplifierImpactCampaignCustomClickURLKey = @"customClickUrl";
 NSString * const kApplifierImpactCampaignPictureKey = @"picture";
 NSString * const kApplifierImpactCampaignTrailerDownloadableKey = @"trailerDownloadable";
 NSString * const kApplifierImpactCampaignTrailerStreamingKey = @"trailerStreaming";
+NSString * const kApplifierImpactCampaignGameIconKey = @"gameIcon";
 NSString * const kApplifierImpactCampaignGameIDKey = @"gameId";
 NSString * const kApplifierImpactCampaignGameNameKey = @"gameName";
 NSString * const kApplifierImpactCampaignIDKey = @"id";
@@ -83,6 +89,7 @@ NSString * const kApplifierImpactCampaignStoreIDKey = @"iTunesId";
 NSString * const kApplifierImpactCampaignCacheVideoKey = @"cacheVideo";
 NSString * const kApplifierImpactCampaignBypassAppSheet = @"bypassAppSheet";
 NSString * const kApplifierImpactCampaignExpectedFileSize = @"trailerSize";
+NSString * const kApplifierImpactCampaignAllowVideoSkipKey = @"allowSkipVideoInSeconds";
 
 /* Reward Item JSON Properties */
 
@@ -175,6 +182,32 @@ NSString * const kApplifierImpactInitQueryParamHardwareVersionKey = @"hardwareVe
 NSString * const kApplifierImpactInitQueryParamSdkVersionKey = @"sdkVersion";
 NSString * const kApplifierImpactInitQueryParamConnectionTypeKey = @"connectionType";
 NSString * const kApplifierImpactInitQueryParamTestKey = @"test";
+NSString * const kApplifierImpactInitQueryParamEncryptionKey = @"encrypted";
+
+
+/* Google Analytics Instrumentation */
+
+NSString * const kApplifierImpactGoogleAnalyticsEventKey = @"googleAnalyticsEvent";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoPlay = @"videoAnalyticsEventPlay";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoError = @"videoAnalyticsEventError";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoAbort = @"videoAnalyticsEventAbort";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoCaching = @"videoAnalyticsEventCaching";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortBack = @"back";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortExit = @"exit";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortSkip = @"skip";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlayStream = @"stream";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlayCached = @"cached";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingStart = @"start";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingCompleted = @"completed";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingFailed = @"failed";
+
+NSString * const kApplifierImpactGoogleAnalyticsEventCampaignIdKey = @"campaignId";
+NSString * const kApplifierImpactGoogleAnalyticsEventConnectionTypeKey = @"connectionType";
+NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlaybackTypeKey = @"videoPlaybackType";
+NSString * const kApplifierImpactGoogleAnalyticsEventBufferingDurationKey = @"bufferingDuration";
+NSString * const kApplifierImpactGoogleAnalyticsEventCachingDurationKey = @"cachingDuration";
+NSString * const kApplifierImpactGoogleAnalyticsEventValueKey = @"eventValue";
+NSString * const kApplifierImpactGoogleAnalyticsEventTypeKey = @"eventType";
 
 @implementation ApplifierImpactConstants
 

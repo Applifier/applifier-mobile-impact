@@ -14,7 +14,7 @@
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
-#import "../ApplifierImpactMainViewController.h"
+#import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 
@@ -99,12 +99,7 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 		if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo]) {
       if ([data objectForKey:kApplifierImpactWebViewEventDataCampaignIdKey] != nil) {
         [self _selectCampaignWithID:[data objectForKey:kApplifierImpactWebViewEventDataCampaignIdKey]];
-        BOOL checkIfWatched = YES;
-        if ([data objectForKey:kApplifierImpactWebViewEventDataRewatchKey] != nil && [[data valueForKey:kApplifierImpactWebViewEventDataRewatchKey] boolValue] == true) {
-          checkIfWatched = NO;
-        }
-        
-        [[ApplifierImpactMainViewController sharedInstance] showPlayerAndPlaySelectedVideo:checkIfWatched];
+        [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeVideoPlayer withOptions:data];
       }
 		}
 		else if ([type isEqualToString:kApplifierImpactWebViewAPINavigateTo]) {
@@ -115,12 +110,12 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 		}
 		else if ([type isEqualToString:kApplifierImpactWebViewAPIAppStore]) {
       if ([data objectForKey:kApplifierImpactWebViewEventDataClickUrlKey] != nil) {
-        [[ApplifierImpactMainViewController sharedInstance] openAppStoreWithData:data];
+        [[ApplifierImpactMainViewController sharedInstance] applyOptionsToCurrentState:data];
       }    
 		}
 	}
 	else if ([type isEqualToString:kApplifierImpactWebViewAPIClose]) {
-    [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:YES];
+    [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:YES withOptions:nil];
 	}
 	else if ([type isEqualToString:kApplifierImpactWebViewAPIInitComplete]) {
     self.webViewInitialized = YES;
@@ -132,14 +127,9 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 }
 
 - (void)runJavascriptDependingOnPlatform:(NSString *)javaScriptString {
-  if (![ApplifierImpactDevice isSimulator]) {
     dispatch_async(dispatch_get_main_queue(), ^{
       [self runJavascript:javaScriptString];
     });
-  }
-  else {
-    [self runJavascript:javaScriptString];
-  }
 }
 
 - (void)runJavascript:(NSString *)javaScriptString {

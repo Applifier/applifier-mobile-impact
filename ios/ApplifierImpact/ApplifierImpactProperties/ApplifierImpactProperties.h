@@ -18,11 +18,14 @@
   @property (nonatomic, strong) NSString *campaignQueryString;
   @property (nonatomic, strong) NSString *impactGameId;
   @property (nonatomic, strong) NSString *gamerId;
-  @property (nonatomic, strong) NSString *gamerSID;
   @property (nonatomic) BOOL testModeEnabled;
   @property (nonatomic, assign) UIViewController *currentViewController;
   @property (nonatomic, assign) int maxNumberOfAnalyticsRetries;
   @property (nonatomic, strong) NSString *expectedSdkVersion;
+  @property (nonatomic, assign) int allowVideoSkipInSeconds;
+  @property (nonatomic, strong) NSString *developerId;
+  @property (nonatomic, strong) NSString *optionsId;
+  @property (nonatomic, assign) BOOL sdkIsCurrent;
 
 + (ApplifierImpactProperties *)sharedInstance;
 - (void)refreshCampaignQueryString;

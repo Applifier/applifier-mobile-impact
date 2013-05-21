@@ -10,5 +10,8 @@
 @property (nonatomic, strong) NSString *key;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSURL *pictureURL;
+@property (nonatomic, assign) BOOL isValidRewardItem;
+
+- (id)initWithData:(NSDictionary *)data;
 
 @end

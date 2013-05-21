@@ -49,7 +49,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     [self.viewController.loadingImage setImage:[UIImage imageNamed:@"impact-loading"]];
-    [self.viewController.buttonView setEnabled:NO];
+    [self.viewController.openButton setEnabled:NO];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {

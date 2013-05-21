@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 #import "ApplifierImpactVideoPlayer.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
 
@@ -16,11 +17,13 @@
 - (void)videoPlayerStartedPlaying;
 - (void)videoPlayerPlaybackEnded;
 - (void)videoPlayerEncounteredError;
+- (void)videoPlayerReady;
 @end
 
-@interface ApplifierImpactVideoViewController : UIViewController <ApplifierImpactVideoPlayerDelegate>
+@interface ApplifierImpactVideoViewController : UIViewController <ApplifierImpactVideoPlayerDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic, assign) id<ApplifierImpactVideoControllerDelegate> delegate;
 @property (nonatomic, assign) BOOL isPlaying;
+@property (nonatomic, assign) BOOL isMuted;
 - (void)playCampaign:(ApplifierImpactCampaign *)campaignToPlay;
 - (void)forceStopVideoPlayer;
 @end

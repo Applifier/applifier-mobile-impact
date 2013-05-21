@@ -11,7 +11,7 @@
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 
-NSString * const kApplifierImpactVersion = @"1.0.3";
+NSString * const kApplifierImpactVersion = @"104";
 
 @implementation ApplifierImpactProperties
 
@@ -29,10 +29,12 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
 - (ApplifierImpactProperties *)init {
   if (self = [super init]) {
     [self setMaxNumberOfAnalyticsRetries:5];
+    [self setAllowVideoSkipInSeconds:0];
     [self setCampaignDataUrl:@"https://impact.applifier.com/mobile/campaigns"];
     //[self setCampaignDataUrl:@"https://staging-impact.applifier.com/mobile/campaigns"];
-    //[self setCampaignDataUrl:@"http://192.168.1.152:3500/mobile/campaigns"];
+    //[self setCampaignDataUrl:@"http://192.168.1.246:3500/mobile/campaigns"];
     [self setCampaignQueryString:[self _createCampaignQueryString]];
+    [self setSdkIsCurrent:true];
   }
   
   return self;
@@ -46,8 +48,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   NSString *queryParams = @"?";
   
   // Mandatory params
-  queryParams = [NSString stringWithFormat:@"%@%@=%@", queryParams, kApplifierImpactInitQueryParamDeviceIdKey, [ApplifierImpactDevice md5DeviceId]];
-  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamPlatformKey, @"ios"];
+  queryParams = [NSString stringWithFormat:@"%@%@=%@", queryParams, kApplifierImpactInitQueryParamPlatformKey, @"ios"];
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamGameIdKey, [self impactGameId]];
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamOpenUdidKey, [ApplifierImpactDevice md5OpenUDIDString]];
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamMacAddressKey, [ApplifierImpactDevice md5MACAddressString]];
@@ -73,6 +74,16 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   
   if ([self testModeEnabled]) {
     queryParams = [NSString stringWithFormat:@"%@&%@=true", queryParams, kApplifierImpactInitQueryParamTestKey];
+    
+    if ([self optionsId] != nil) {
+      queryParams = [NSString stringWithFormat:@"%@&optionsId=%@", queryParams, [self optionsId]];
+    }
+    if ([self developerId] != nil) {
+      queryParams = [NSString stringWithFormat:@"%@&developerId=%@", queryParams, [self developerId]];
+    }
+  }
+  else {
+    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamEncryptionKey, [ApplifierImpactDevice isEncrypted] ? @"true" : @"false"];
   }
   
   return queryParams;

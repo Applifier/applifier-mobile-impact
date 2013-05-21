@@ -20,6 +20,13 @@ extern NSString * const kApplifierImpactRewardItemNameKey;
 extern NSString * const kApplifierImpactOptionNoOfferscreenKey;
 extern NSString * const kApplifierImpactOptionOpenAnimatedKey;
 extern NSString * const kApplifierImpactOptionGamerSIDKey;
+extern NSString * const kApplifierImpactOptionMuteVideoSounds;
+extern NSString * const kApplifierImpactOptionVideoUsesDeviceOrientation;
+
+typedef enum {
+  kApplifierImpactModeDefault,
+  kApplifierImpactModeNoWebView,
+} ApplifierImpactMode;
 
 @class ApplifierImpact;
 @class SKStoreProductViewController;
@@ -48,13 +55,18 @@ extern NSString * const kApplifierImpactOptionGamerSIDKey;
 + (ApplifierImpact *)sharedInstance;
 + (BOOL)isSupported;
 + (NSString *)getSDKVersion;
+
+- (void)setTestDeveloperId:(NSString *)developerId;
+- (void)setTestOptionsId:(NSString *)optionsId;
 - (void)setDebugMode:(BOOL)debugMode;
-- (BOOL)isDebugMode;
+- (void)setImpactMode:(ApplifierImpactMode)impactMode;
 - (void)setTestMode:(BOOL)testModeEnabled;
+
+- (BOOL)isDebugMode;
 - (BOOL)startWithGameId:(NSString *)gameId andViewController:(UIViewController *)viewController;
 - (BOOL)startWithGameId:(NSString *)gameId;
 - (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact;
-- (BOOL)canShowAds;
+- (BOOL)canShowCampaigns;
 - (BOOL)canShowImpact;
 - (BOOL)showImpact:(NSDictionary *)options;
 - (BOOL)showImpact;

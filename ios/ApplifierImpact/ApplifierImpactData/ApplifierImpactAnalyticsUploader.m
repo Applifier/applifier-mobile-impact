@@ -10,6 +10,7 @@
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
+#import "../ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
 
 @interface ApplifierImpactAnalyticsUploader () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSMutableArray *uploadQueue;
@@ -117,6 +118,21 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 }
 
 
+#pragma mark - Public
+
+- (void)queueUrl:(NSString *)url {
+  if (url != nil) {
+    AIAssert(![NSThread isMainThread]);
+    
+    NSArray *queryStringComponents = [url componentsSeparatedByString:@"?"];
+    NSString *urlPath = [queryStringComponents objectAtIndex:0];
+    NSString *queryString = [queryStringComponents objectAtIndex:1];
+    
+    [self _queueWithURLString:urlPath queryString:queryString httpMethod:@"GET" retries:[NSNumber numberWithInt:0]];
+  }
+}
+
+
 #pragma mark - Click track
 
 - (void)sendOpenAppStoreRequest:(ApplifierImpactCampaign *)campaign {
@@ -153,8 +169,8 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
     if (positionString != nil) {
       NSString *trackingQuery = [NSString stringWithFormat:@"%@/video/%@/%@/%@?%@=%@", [[ApplifierImpactProperties sharedInstance] gamerId], positionString, campaign.id, [[ApplifierImpactProperties sharedInstance] impactGameId], kApplifierImpactAnalyticsQueryParamRewardItemKey, [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey]];
       
-      if ([[ApplifierImpactProperties sharedInstance] gamerSID] != nil) {
-        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [[ApplifierImpactProperties sharedInstance] gamerSID]];
+      if ([[ApplifierImpactShowOptionsParser sharedInstance] gamerSID] != nil) {
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [[ApplifierImpactShowOptionsParser sharedInstance] gamerSID]];
       }
       
       if (!campaign.viewed) {

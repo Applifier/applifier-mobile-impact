@@ -11,10 +11,19 @@
 /* WebView */
 
 typedef enum {
-  kApplifierImpactViewStateWebView,
-  kApplifierImpactViewStateVideoPlayer,
-  kApplifierImpactViewStateNone
-} ApplifierImpactViewState;
+  kApplifierImpactViewStateTypeOfferScreen,
+  kApplifierImpactViewStateTypeEndScreen,
+  kApplifierImpactViewStateTypeVideoPlayer,
+  kApplifierImpactViewStateTypeNone,
+  kApplifierImpactViewStateTypeSpinner,
+  kApplifierImpactViewStateTypeInvalid
+} ApplifierImpactViewStateType;
+
+typedef enum {
+  kApplifierImpactStateActionWillLeaveApplication,
+  kApplifierImpactStateActionVideoStartedPlaying,
+  kApplifierImpactStateActionVideoPlaybackEnded
+} ApplifierImpactViewStateAction;
 
 extern NSString * const kApplifierImpactWebViewJSPrefix;
 extern NSString * const kApplifierImpactWebViewJSInit;
@@ -27,6 +36,7 @@ extern NSString * const kApplifierImpactWebViewAPINavigateTo;
 extern NSString * const kApplifierImpactWebViewAPIInitComplete;
 extern NSString * const kApplifierImpactWebViewAPIClose;
 extern NSString * const kApplifierImpactWebViewAPIOpen;
+extern NSString * const kApplifierImpactWebViewAPIDeveloperOptions;
 extern NSString * const kApplifierImpactWebViewAPIAppStore;
 extern NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying;
 
@@ -42,12 +52,13 @@ extern NSString * const kApplifierImpactWebViewDataParamDeviceTypeKey;
 extern NSString * const kApplifierImpactWebViewDataParamOpenUdidIdKey;
 extern NSString * const kApplifierImpactWebViewDataParamMacAddressKey;
 extern NSString * const kApplifierImpactWebViewDataParamSdkVersionKey;
+extern NSString * const kApplifierImpactWebViewDataParamSdkIsCurrentKey;
 extern NSString * const kApplifierImpactWebViewDataParamIosVersionKey;
 
 extern NSString * const kApplifierImpactWebViewEventDataCampaignIdKey;
 extern NSString * const kApplifierImpactWebViewEventDataRewatchKey;
 extern NSString * const kApplifierImpactWebViewEventDataClickUrlKey;
-
+extern NSString * const kApplifierImpactWebViewEventDataBypassAppSheetKey;
 
 
 /* Native Events */
@@ -57,7 +68,7 @@ extern NSString * const kApplifierImpactNativeEventShowSpinner;
 extern NSString * const kApplifierImpactNativeEventShowError;
 extern NSString * const kApplifierImpactNativeEventVideoCompleted;
 extern NSString * const kApplifierImpactNativeEventCampaignIdKey;
-
+extern NSString * const kApplifierImpactNativeEventForceStopVideoPlayback;
 
 /* Native Event Params */
 
@@ -77,7 +88,9 @@ extern NSString * const kApplifierImpactJsonDataRootKey;
 
 extern NSString * const kApplifierImpactCampaignsKey;
 extern NSString * const kApplifierImpactCampaignEndScreenKey;
+extern NSString * const kApplifierImpactCampaignEndScreenPortraitKey;
 extern NSString * const kApplifierImpactCampaignClickURLKey;
+extern NSString * const kApplifierImpactCampaignCustomClickURLKey;
 extern NSString * const kApplifierImpactCampaignPictureKey;
 extern NSString * const kApplifierImpactCampaignTrailerDownloadableKey;
 extern NSString * const kApplifierImpactCampaignTrailerStreamingKey;
@@ -89,6 +102,8 @@ extern NSString * const kApplifierImpactCampaignStoreIDKey;
 extern NSString * const kApplifierImpactCampaignCacheVideoKey;
 extern NSString * const kApplifierImpactCampaignBypassAppSheet;
 extern NSString * const kApplifierImpactCampaignExpectedFileSize;
+extern NSString * const kApplifierImpactCampaignGameIconKey;
+extern NSString * const kApplifierImpactCampaignAllowVideoSkipKey;
 
 /* Reward Item JSON Properties */
 
@@ -179,7 +194,32 @@ extern NSString * const kApplifierImpactInitQueryParamHardwareVersionKey;
 extern NSString * const kApplifierImpactInitQueryParamSdkVersionKey;
 extern NSString * const kApplifierImpactInitQueryParamConnectionTypeKey;
 extern NSString * const kApplifierImpactInitQueryParamTestKey;
+extern NSString * const kApplifierImpactInitQueryParamEncryptionKey;
 
+
+/* Google Analytics Instrumentation */
+
+extern NSString * const kApplifierImpactGoogleAnalyticsEventKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoPlay;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoError;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoAbort;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeVideoCaching;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortBack;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortExit;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoAbortSkip;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlayStream;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlayCached;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingStart;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingCompleted;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoCachingFailed;
+
+extern NSString * const kApplifierImpactGoogleAnalyticsEventCampaignIdKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventConnectionTypeKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventVideoPlaybackTypeKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventBufferingDurationKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventCachingDurationKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventValueKey;
+extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeKey;
 
 @interface ApplifierImpactConstants : NSObject
 
