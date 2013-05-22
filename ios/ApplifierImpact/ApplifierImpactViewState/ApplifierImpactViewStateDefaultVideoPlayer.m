@@ -127,7 +127,10 @@
     [[[ApplifierImpactWebAppController sharedInstance] webView] setFrame:[[ApplifierImpactMainViewController sharedInstance] view].bounds];
   }
   
-  [self dismissVideoController];
+  if (![[ApplifierImpactShowOptionsParser sharedInstance] noOfferScreen]) {
+    [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeOfferScreen withOptions:nil];
+  }
+  //[self dismissVideoController];
 }
 
 - (void)videoPlayerPlaybackEnded {
@@ -148,13 +151,15 @@
 }
 
 - (void)showPlayerAndPlaySelectedVideo {
-	AILOG_DEBUG(@"");
-  
-  if (![self canViewSelectedCampaign]) return;
-  
-  [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
-
-  [self startVideoPlayback:true withDelegate:self];
+  if ([[ApplifierImpactMainViewController sharedInstance] isOpen]) {
+    AILOG_DEBUG(@"");
+    
+    if (![self canViewSelectedCampaign]) return;
+    
+    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
+    
+    [self startVideoPlayback:true withDelegate:self];
+  }
 }
 
 @end

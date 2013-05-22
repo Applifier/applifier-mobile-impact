@@ -23,6 +23,7 @@
 
 @property (nonatomic, assign) id<ApplifierImpactViewStateDelegate> delegate;
 @property (nonatomic, assign) BOOL waitingToBeShown;
+@property (nonatomic, strong) UIViewController *storeController;
 
 - (ApplifierImpactViewStateType)getStateType;
 
@@ -34,5 +35,6 @@
 
 - (void)applyOptions:(NSDictionary *)options;
 
+- (void)preloadAppSheetWithId:(NSString *)iTunesId;
 - (void)openAppStoreWithData:(NSDictionary *)data inViewController:(UIViewController *)targetViewController;
 @end

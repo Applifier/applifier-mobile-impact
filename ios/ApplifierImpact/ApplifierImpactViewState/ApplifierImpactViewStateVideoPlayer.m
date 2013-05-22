@@ -13,7 +13,15 @@
 
 - (void)enterState:(NSDictionary *)options {
   [super enterState:options];
-
+  
+  AILOG_DEBUG(@"campaign=%@  byPassAppSheet=%i", [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign], [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].bypassAppSheet);
+  
+  if ([[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] != nil &&
+      ![[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].bypassAppSheet &&
+      ![[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed) {
+    [self preloadAppSheetWithId:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].itunesID];
+  }
+  
   self.checkIfWatched = YES;
   if ([options objectForKey:kApplifierImpactWebViewEventDataRewatchKey] != nil && [[options valueForKey:kApplifierImpactWebViewEventDataRewatchKey] boolValue] == true) {
     self.checkIfWatched = NO;
@@ -24,6 +32,10 @@
   AILOG_DEBUG(@"");
   [super exitState:options];
   [self dismissVideoController];
+  
+  if (self.storeController != nil) {
+    self.storeController = nil;
+  }
 }
 
 - (void)applyOptions:(NSDictionary *)options {
@@ -65,7 +77,9 @@
 }
 
 - (void)startVideoPlayback:(BOOL)createVideoController withDelegate:(id)videoControllerDelegate {
-  [self.videoController playCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
+  if ([[ApplifierImpactMainViewController sharedInstance] isOpen]) {
+    [self.videoController playCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
+  }
 }
 
 @end

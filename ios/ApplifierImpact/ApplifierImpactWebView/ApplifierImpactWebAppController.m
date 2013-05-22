@@ -98,8 +98,14 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 	{
 		if ([type isEqualToString:kApplifierImpactWebViewAPIPlayVideo]) {
       if ([data objectForKey:kApplifierImpactWebViewEventDataCampaignIdKey] != nil) {
-        [self _selectCampaignWithID:[data objectForKey:kApplifierImpactWebViewEventDataCampaignIdKey]];
-        [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeVideoPlayer withOptions:data];
+        if ([[[ApplifierImpactMainViewController sharedInstance] getCurrentViewState] getStateType] != kApplifierImpactViewStateTypeVideoPlayer &&
+            ![[ApplifierImpactMainViewController sharedInstance] isClosing]) {
+          [self _selectCampaignWithID:[data objectForKey:kApplifierImpactWebViewEventDataCampaignIdKey]];
+          [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeVideoPlayer withOptions:data];
+        }
+        else {
+           AILOG_DEBUG(@"Cannot start video: %i, %i", [[ApplifierImpactMainViewController sharedInstance] isClosing], [[[ApplifierImpactMainViewController sharedInstance] getCurrentViewState] getStateType]);
+        }
       }
 		}
 		else if ([type isEqualToString:kApplifierImpactWebViewAPINavigateTo]) {
@@ -115,7 +121,13 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 		}
 	}
 	else if ([type isEqualToString:kApplifierImpactWebViewAPIClose]) {
-    [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:YES withOptions:nil];
+    if ([[[ApplifierImpactMainViewController sharedInstance] getCurrentViewState] getStateType] != kApplifierImpactViewStateTypeVideoPlayer &&
+        ![[ApplifierImpactMainViewController sharedInstance] isClosing]) {
+      [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:YES withOptions:nil];
+    }
+    else {
+      AILOG_DEBUG(@"Preventing sending close from WebView: %i, %i", [[ApplifierImpactMainViewController sharedInstance] isClosing], [[[ApplifierImpactMainViewController sharedInstance] getCurrentViewState] getStateType]);
+    }
 	}
 	else if ([type isEqualToString:kApplifierImpactWebViewAPIInitComplete]) {
     self.webViewInitialized = YES;

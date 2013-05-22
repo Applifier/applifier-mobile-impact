@@ -26,6 +26,9 @@
 @interface ApplifierImpactMainViewController : UIViewController <ApplifierImpactViewStateDelegate>
 
 @property (nonatomic, assign) id<ApplifierImpactMainViewControllerDelegate> delegate;
+@property (nonatomic, assign) BOOL isClosing;
+@property (nonatomic, assign) BOOL isOpen;
+
 
 + (id)sharedInstance;
 
@@ -36,5 +39,5 @@
 - (BOOL)mainControllerVisible;
 - (void)applyOptionsToCurrentState:(NSDictionary *)options;
 - (void)applyViewStateHandler:(ApplifierImpactViewState *)viewState;
-
+- (ApplifierImpactViewState *)getCurrentViewState;
 @end

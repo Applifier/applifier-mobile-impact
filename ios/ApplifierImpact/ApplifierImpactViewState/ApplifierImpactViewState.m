@@ -11,13 +11,12 @@
 
 
 @interface ApplifierImpactViewState ()
-  @property (nonatomic, strong) UIViewController *storeController;
   @property (nonatomic, assign) UIViewController *targetController;
 @end
 
 @implementation ApplifierImpactViewState
 
-@synthesize storeController;
+@synthesize storeController = _storeController;
 
 - (id)init {
   self = [super init];
@@ -90,6 +89,66 @@
 
 
 #pragma mark - AppStore opening
+
+- (void)preloadAppSheetWithId:(NSString *)iTunesId {
+  AILOG_DEBUG(@"");
+  if ([self _canOpenStoreProductViewController]) {
+    AILOG_DEBUG(@"Can open storeProductViewController");
+    if (![iTunesId isKindOfClass:[NSString class]] || iTunesId == nil || [iTunesId length] < 1) return;
+    Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
+    /*
+     FIX: This _could_ bug someday. The key @"id" is written literally (and
+     not using SKStoreProductParameterITunesItemIdentifier), so that
+     with some compiler options (or linker flags) you wouldn't get errors.
+     
+     The way this could bug someday is that Apple changes the contents of
+     SKStoreProductParameterITunesItemIdentifier.
+     
+     HOWTOFIX: Find a way to reflect global constant SKStoreProductParameterITunesItemIdentifier
+     by using string value and not the constant itself.
+     */
+    NSDictionary *productParams = @{@"id":iTunesId};
+    self.storeController = [[storeProductViewControllerClass alloc] init];
+    
+    /*
+    void (^storeControllerComplete)(BOOL result, NSError *error) = ^(BOOL result, NSError *error) {
+      AILOG_DEBUG(@"Result: %i", result);
+      if (result) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+          self.storeController = nil;
+        });
+      }
+      else {
+        AILOG_DEBUG(@"Loading product information failed: %@", error);
+      }
+    };*/
+    
+    SEL loadProduct = @selector(loadProductWithParameters:completionBlock:);
+    if ([self.storeController respondsToSelector:loadProduct]) {
+      [self performSelectorInBackground:@selector(backgroundLoadProduct:) withObject:productParams];
+    }
+  }
+}
+
+- (void)backgroundLoadProduct:(id)productParams {
+  SEL loadProduct = @selector(loadProductWithParameters:completionBlock:);
+  
+  void (^storeControllerComplete)(BOOL result, NSError *error) = ^(BOOL result, NSError *error) {
+    AILOG_DEBUG(@"Result: %i", result);
+    if (result) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        self.storeController = nil;
+      });
+    }
+    else {
+      AILOG_DEBUG(@"Loading product information failed: %@", error);
+    }
+  };
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+  [self.storeController performSelector:loadProduct withObject:productParams withObject:storeControllerComplete];
+#pragma clang diagnostic pop
+}
 
 - (BOOL)_canOpenStoreProductViewController {
   Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
@@ -178,6 +237,8 @@
   if (self.targetController != nil) {
     [self.targetController dismissViewControllerAnimated:YES completion:nil];
   }
+  
+  self.storeController = nil;
 }
 
 - (void)dealloc {

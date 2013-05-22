@@ -25,7 +25,6 @@
   @property (nonatomic, strong) void (^closeHandler)(void);
   @property (nonatomic, strong) void (^openHandler)(void);
   @property (nonatomic, strong) ApplifierImpactViewState *currentViewState;
-  @property (nonatomic, assign) BOOL isOpen;
   @property (nonatomic, strong) NSMutableArray *viewStateHandlers;
   @property (nonatomic, assign) BOOL simulatorOpeningSupportCallSent;
 @end
@@ -40,6 +39,7 @@
       NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
       [notificationCenter addObserver:self selector:@selector(notificationHandler:) name:UIApplicationDidEnterBackgroundNotification object:nil];
       self.simulatorOpeningSupportCallSent = false;
+      self.isClosing = false;
     }
   
     return self;
@@ -54,6 +54,10 @@
     [self.currentViewState wasShown];
     [self.delegate mainControllerDidOpen];
   }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+  self.isClosing = false;
 }
 
 
@@ -137,8 +141,13 @@
   return NO;
 }
 
+- (ApplifierImpactViewState *)getCurrentViewState {
+  return self.currentViewState;
+}
+
 - (BOOL)closeImpact:(BOOL)forceMainThread withAnimations:(BOOL)animated withOptions:(NSDictionary *)options {
   AILOG_DEBUG(@"");
+  self.isClosing = true;
   
   if ([[ApplifierImpactProperties sharedInstance] currentViewController] == nil) return NO;
   
