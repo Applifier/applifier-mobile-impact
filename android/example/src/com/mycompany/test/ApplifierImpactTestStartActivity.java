@@ -5,14 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.applifier.impact.android.ApplifierImpact;
-import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.IApplifierImpactListener;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 import com.mycompany.test.R;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;

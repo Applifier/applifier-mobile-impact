@@ -1,10 +1,12 @@
 package com.applifier.impact.android.view;
 
+import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.applifier.impact.android.data.ApplifierImpactGraphicsBundle;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -41,12 +43,22 @@ public class ApplifierImpactMuteVideoButton extends ImageButton {
 	}
 	
 	private Bitmap selectBitmap () {
+		String bitmapString = "";
 		if (_size != null && _size.equals(ApplifierImpactMuteVideoButtonSize.Medium)) {
 			switch (_state) {
 				case UnMuted:
-					return ApplifierImpactGraphicsBundle.getBitmapFromString(ApplifierImpactGraphicsBundle.ICON_AUDIO_UNMUTED_50x50);
+					bitmapString = ApplifierImpactGraphicsBundle.ICON_AUDIO_UNMUTED_50x50;
+					if (ApplifierImpactDevice.getScreenDensity() == DisplayMetrics.DENSITY_LOW) {
+						bitmapString = ApplifierImpactGraphicsBundle.ICON_AUDIO_UNMUTED_32x32;
+					}
+					return ApplifierImpactGraphicsBundle.getBitmapFromString(bitmapString);
 				case Muted:
-					return ApplifierImpactGraphicsBundle.getBitmapFromString(ApplifierImpactGraphicsBundle.ICON_AUDIO_MUTED_50x50);
+					bitmapString = ApplifierImpactGraphicsBundle.ICON_AUDIO_MUTED_50x50;
+					if (ApplifierImpactDevice.getScreenDensity() == DisplayMetrics.DENSITY_LOW) {
+						bitmapString = ApplifierImpactGraphicsBundle.ICON_AUDIO_MUTED_32x32;
+					}
+
+					return ApplifierImpactGraphicsBundle.getBitmapFromString(bitmapString);
 			}
 		}
 		

@@ -759,8 +759,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 					}, 250);
 				}
 			}
-			
-			// Reset developer options when impact closes
 		}
 	}
 	
