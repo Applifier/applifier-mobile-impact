@@ -14,6 +14,22 @@ In any issues, please file in issue with us in this Github repository, or log a 
 Applifier Impact SDK Release Notes
 ==================================
 
+v1.0.4 May 22nd, 2013
+--------------------------
+*All platforms:*
+
+- Support for muting video sounds & controlling the default setting from code
+- Support setting Impact orientation to locked or unlocked to device orientation
+- Ability to skip videos after n seconds as a server side configuration
+- Better handling of opening iTunes / Google Play
+- Improved instrumentation of network status
+- Preview capability for loading campaigns of specific advertiser for previewing campaigns on the device
+
+*iOS:*
+
+- Option to use a Native iOS UI instead of UIWebView in order to save memory
+
+
 v1.0.3.2 "Red Apple" - March 13, 2013
 --------------------------
 
