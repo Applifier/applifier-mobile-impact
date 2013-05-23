@@ -14,6 +14,17 @@ In any issues, please file in issue with us in this Github repository, or log a 
 Applifier Impact SDK Release Notes
 ==================================
 
+v1.0.5 May 23rd, 2013
+--------------------------
+*iOS:*
+
+- Fixed a bug that crashed Impact when user attempted to close the Impact windoe immediately after starting video playback (Thank you First Touch Games for reporting this issue!).
+
+*Android:*
+
+- Fixed a bug in instrumentation where WebApp would get erroneous data from native side and log javascript errors.
+
+
 v1.0.4 May 22nd, 2013
 --------------------------
 *All platforms:*
