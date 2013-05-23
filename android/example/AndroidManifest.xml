@@ -33,5 +33,6 @@
           	android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
           	android:hardwareAccelerated="true" />
     </application>
-
+    <!--  screenSize -->
+    <!--  smallestScreenSize -->
 </manifest>

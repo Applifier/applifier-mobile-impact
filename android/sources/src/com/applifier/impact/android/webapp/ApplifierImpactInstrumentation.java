@@ -61,6 +61,11 @@ public class ApplifierImpactInstrumentation {
 			return json1;
 		}
 		
+		if (json1 != null)
+			return json1;		
+		else if (json2 != null)
+			return json2;
+		
 		return null;
 	}
 	

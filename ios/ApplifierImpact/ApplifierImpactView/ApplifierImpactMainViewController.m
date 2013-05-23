@@ -25,11 +25,17 @@
   @property (nonatomic, strong) void (^closeHandler)(void);
   @property (nonatomic, strong) void (^openHandler)(void);
   @property (nonatomic, strong) ApplifierImpactViewState *currentViewState;
+  @property (nonatomic, strong) ApplifierImpactViewState *previousViewState;
   @property (nonatomic, strong) NSMutableArray *viewStateHandlers;
   @property (nonatomic, assign) BOOL simulatorOpeningSupportCallSent;
 @end
 
 @implementation ApplifierImpactMainViewController
+
+@synthesize currentViewState = _currentViewState;
+@synthesize previousViewState = _previousViewState;
+@synthesize viewStateHandlers = _viewStateHandlers;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -125,6 +131,7 @@
   dispatch_async(dispatch_get_main_queue(), ^{
     if (self.currentViewState != nil && [[self currentViewState] getStateType] != requestedState) {
       [self.currentViewState exitState:options];
+      self.previousViewState = self.currentViewState;
     }
     
     [self selectState:requestedState];
@@ -143,6 +150,10 @@
 
 - (ApplifierImpactViewState *)getCurrentViewState {
   return self.currentViewState;
+}
+
+- (ApplifierImpactViewState *)getPreviousViewState {
+  return self.previousViewState;
 }
 
 - (BOOL)closeImpact:(BOOL)forceMainThread withAnimations:(BOOL)animated withOptions:(NSDictionary *)options {

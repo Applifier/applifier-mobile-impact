@@ -40,4 +40,5 @@
 - (void)applyOptionsToCurrentState:(NSDictionary *)options;
 - (void)applyViewStateHandler:(ApplifierImpactViewState *)viewState;
 - (ApplifierImpactViewState *)getCurrentViewState;
+- (ApplifierImpactViewState *)getPreviousViewState;
 @end
