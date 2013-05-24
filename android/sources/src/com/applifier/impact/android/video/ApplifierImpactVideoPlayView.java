@@ -221,6 +221,12 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	}
 
 	private void createView () {
+		if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null && 
+			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS) && 
+			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS).equals(true)) {
+			_muted = true;
+		}
+		
 		ApplifierImpactUtils.Log("Creating custom view", this);
 				
 		setBackgroundColor(0xFF000000);
@@ -238,10 +244,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				ApplifierImpactUtils.Log("onPrepared", this);
 				_mediaPlayer = mp;
 				
-				if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null && 
-					ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS) && 
-					ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS).equals(true)) {
-					_muted = true;
+				if (_muted) {
 					storeVolume();
 					_mediaPlayer.setVolume(0f, 0f);
 				}
@@ -318,9 +321,14 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		RelativeLayout.LayoutParams muteButtonParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		muteButtonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		muteButtonParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		
+				
 		_muteButton = new ApplifierImpactMuteVideoButton(getContext());
 		_muteButton.setLayoutParams(muteButtonParams);
+		
+		if (_muted) {
+			_muteButton.setState(ApplifierImpactMuteVideoButtonState.Muted);
+		}
+		
 		_muteButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

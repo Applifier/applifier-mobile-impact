@@ -164,7 +164,7 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
 				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, false);
 				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, false);
 				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, "gom");
-				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, false);
+				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, true);
 				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION, false);
 				
 				ApplifierImpact.instance.showImpact(optionsMap);
@@ -174,96 +174,9 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
 			}
 		});
     	_openButton.setVisibility(View.VISIBLE);
-    	
-    	/*
-    	((ImageView)findViewById(R.id.playbtn)).setAlpha(255);
-    	((ImageView)findViewById(R.id.playbtn)).setOnClickListener(new View.OnClickListener() {			
-			@Override
-			public void onClick(View v) {
-				Intent newIntent = new Intent(getBaseContext(), ApplifierImpactGameActivity.class);
-				newIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(newIntent);
-			}
-		});*/  
 	}
     
     @Override
     public void onCampaignsFetchFailed () {
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    /*
-       ((ImageView)findViewById(R.id.plissken)).setAlpha(60);
-        ((ImageView)findViewById(R.id.unlock)).setOnClickListener(new View.OnClickListener() {			
-			@Override
-			public void onClick(View v) {
-				ApplifierImpactUtils.Log("Opening with key: " + ApplifierImpact.instance.getCurrentRewardItemKey(), this);
-				
-				// Open with options test
-				Map<String, Object> optionsMap = new HashMap<String, Object>();
-				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, false);
-				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, false);
-				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, "gom");
-				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, false);
-				optionsMap.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION, false);
-				
-				ApplifierImpact.instance.showImpact(optionsMap);
-				
-				// Open without options (defaults)
-				//ApplifierImpact.instance.showImpact();
-			}
-		});
-        
-        ApplifierImpact.instance.setImpactListener(this);
-        
-        */
-    
-    
-    /*
-         @Override
-    public void onResume () {
-    	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactGameActivity->onResume()");
-    	super.onResume();
-    	
-    	ApplifierImpact.instance.changeActivity(this);
-		ApplifierImpact.instance.setImpactListener(this);
-		
-		if (!ApplifierImpact.instance.canShowCampaigns()) {
-			((ImageView)findViewById(R.id.unlock)).setVisibility(View.INVISIBLE);
-		}
-    }
-    
-    public void onImpactClose () {
-    	Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Impact close");
-    }
-    
-    public void onImpactOpen () {   	
-    	Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Impact open");
-    }
-    
-	public void onVideoStarted () {
-		Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Video started!");
-	}
-	
-	public void onVideoCompleted (String rewardItemKey) {
-    	Log.d(ApplifierImpactConstants.LOG_NAME, "ApplifierImpactGameActivity->onVideoCompleted()");
-    	((ImageView)findViewById(R.id.plissken)).setAlpha(255);
-    	((ImageView)findViewById(R.id.unlock)).setVisibility(View.INVISIBLE);
-    	Log.d(ApplifierImpactConstants.LOG_NAME, "HOST: Video completed!");
-	}
-	
-    @Override
-	public void onCampaignsAvailable () {
-	}
-    
-    @Override
-    public void onCampaignsFetchFailed () {
-    }
-    */
 }

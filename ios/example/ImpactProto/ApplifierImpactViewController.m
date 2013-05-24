@@ -99,7 +99,7 @@
 
         //[[ApplifierImpact sharedInstance] setViewController:self showImmediatelyInNewController:YES];
         
-        NSLog(@"showImpact: %i", [[ApplifierImpact sharedInstance] showImpact:@{kApplifierImpactOptionNoOfferscreenKey:@false, kApplifierImpactOptionOpenAnimatedKey:@true, kApplifierImpactOptionGamerSIDKey:@"gom", kApplifierImpactOptionMuteVideoSounds:@false, kApplifierImpactOptionVideoUsesDeviceOrientation:@false}]);
+        NSLog(@"showImpact: %i", [[ApplifierImpact sharedInstance] showImpact:@{kApplifierImpactOptionNoOfferscreenKey:@false, kApplifierImpactOptionOpenAnimatedKey:@true, kApplifierImpactOptionGamerSIDKey:@"gom", kApplifierImpactOptionMuteVideoSounds:@true, kApplifierImpactOptionVideoUsesDeviceOrientation:@false}]);
         
         //[[ApplifierImpact sharedInstance] showImpact];
         

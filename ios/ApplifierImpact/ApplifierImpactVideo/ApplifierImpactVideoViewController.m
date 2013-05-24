@@ -100,26 +100,6 @@
   [self.view bringSubviewToFront:self.videoOverlayView];
 }
 
--(void)muteVideoButtonPressed:(id)sender {
-    AVPlayerItem *item = [self.videoPlayer currentItem];
-    AVMutableAudioMix *audioZeroMix = nil;
-    NSArray *audioTracks = [item.asset tracksWithMediaType:AVMediaTypeAudio];
-    NSMutableArray *allAudioParams = [NSMutableArray array];
-
-    for (AVAssetTrack *track in audioTracks) {
-      AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParameters];
-      [audioInputParams setVolume:!self.isMuted ? 0.0f : 1.0f atTime:kCMTimeZero];
-      [audioInputParams setTrackID:[track trackID]];
-      [allAudioParams addObject:audioInputParams];
-    }
-
-    audioZeroMix = [AVMutableAudioMix audioMix];
-    [audioZeroMix setInputParameters:allAudioParams];
-    [item setAudioMix:audioZeroMix];
-    self.isMuted = !self.isMuted;
-    self.muteButton.selected = self.isMuted;
-}
-
 - (void)_makeOrientation {
   if (![[ApplifierImpactShowOptionsParser sharedInstance] useDeviceOrientationForVideo]) {
     if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
@@ -361,12 +341,37 @@
   [self.muteButton setImage:[ApplifierImpactBundle imageWithName:@"audio_mute" ofType:@"png"] forState:UIControlStateSelected];
   [self.muteButton addTarget:self action:@selector(muteVideoButtonPressed:) forControlEvents:UIControlEventTouchDown];
   [self.muteButton setFrame:CGRectMake(0.0f, self.view.bounds.size.height - self.muteButton.bounds.size.height + 16, self.muteButton.frame.size.width, self.muteButton.frame.size.height)];
+  
+  if ([[ApplifierImpactShowOptionsParser sharedInstance] muteVideoSounds]) {
+    self.isMuted = true;
+    self.muteButton.selected = self.isMuted;
+  }
 }
 
 - (void)showMuteButton {
   [self.muteButton setFrame:CGRectMake(0.0f, self.view.bounds.size.height - self.muteButton.bounds.size.height + 16, self.muteButton.frame.size.width, self.muteButton.frame.size.height)];
   [self.videoOverlayView addSubview:self.muteButton];
   [self.videoOverlayView bringSubviewToFront:self.muteButton];
+}
+
+- (void)muteVideoButtonPressed:(id)sender {
+  AVPlayerItem *item = [self.videoPlayer currentItem];
+  AVMutableAudioMix *audioZeroMix = nil;
+  NSArray *audioTracks = [item.asset tracksWithMediaType:AVMediaTypeAudio];
+  NSMutableArray *allAudioParams = [NSMutableArray array];
+  
+  for (AVAssetTrack *track in audioTracks) {
+    AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParameters];
+    [audioInputParams setVolume:!self.isMuted ? 0.0f : 1.0f atTime:kCMTimeZero];
+    [audioInputParams setTrackID:[track trackID]];
+    [allAudioParams addObject:audioInputParams];
+  }
+  
+  audioZeroMix = [AVMutableAudioMix audioMix];
+  [audioZeroMix setInputParameters:allAudioParams];
+  [item setAudioMix:audioZeroMix];
+  self.isMuted = !self.isMuted;
+  self.muteButton.selected = self.isMuted;
 }
 
 - (void)destroyVideoSkipLabel {
