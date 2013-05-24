@@ -18,7 +18,7 @@ v1.0.5 May 23rd, 2013
 --------------------------
 *iOS:*
 
-- Fixed a bug that crashed Impact when user attempted to close the Impact windoe immediately after starting video playback (Thank you First Touch Games for reporting this issue!).
+- Fixed a bug that crashed Impact when user attempted to close the Impact window immediately after starting video playback (Thank you First Touch Games for reporting this issue!).
 
 *Android:*
 
