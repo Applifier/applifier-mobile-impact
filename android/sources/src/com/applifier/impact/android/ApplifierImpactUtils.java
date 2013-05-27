@@ -225,6 +225,11 @@ public class ApplifierImpactUtils {
 	public static File createCacheDir () {
 		File tdir = new File (getCacheDirectory());
 		tdir.mkdirs();
+		
+		if (tdir != null) {
+			ApplifierImpactUtils.writeFile(new File(getCacheDirectory() + "/.nomedia"), "");
+		}
+		
 		return tdir;
 	}
 	
@@ -232,6 +237,9 @@ public class ApplifierImpactUtils {
 		if (fileName == null || campaigns == null) return false;
 		
 		File seekFile = new File(fileName);
+		
+		if (seekFile.getName().equals(".nomedia"))
+			return true;
 		
 		for (ApplifierImpactCampaign campaign : campaigns) {
 			File matchFile = new File(campaign.getVideoFilename());
