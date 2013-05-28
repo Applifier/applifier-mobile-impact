@@ -107,9 +107,14 @@ public class ApplifierImpactWebBridge {
 					}
 					
 					if (clickUrl != null) {
-						Intent i = new Intent(Intent.ACTION_VIEW);
-						i.setData(Uri.parse(clickUrl));
-						ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(i);
+						try {
+							Intent i = new Intent(Intent.ACTION_VIEW);
+							i.setData(Uri.parse(clickUrl));
+							ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(i);
+						}
+						catch (Exception e) {
+							ApplifierImpactUtils.Log("Could not start activity for opening URL: " + clickUrl + ", maybe malformed URL?", this);
+						}
 					}
 				}
 				
