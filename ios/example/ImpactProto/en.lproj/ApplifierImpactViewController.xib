@@ -42,7 +42,7 @@
 					<object class="IBUIImageView" id="58541407">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">274</int>
-						<string key="NSFrameSize">{320, 568}</string>
+						<string key="NSFrameSize">{320, 548}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="638484420"/>
@@ -58,7 +58,7 @@
 					<object class="IBUILabel" id="1063219358">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">301</int>
-						<string key="NSFrame">{{62, 211}, {197, 141}}</string>
+						<string key="NSFrame">{{62, 201}, {197, 141}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="42613890"/>
@@ -94,7 +94,7 @@
 					<object class="IBUIImageView" id="645519663">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">-2147483379</int>
-						<string key="NSFrame">{{56, 416}, {208, 101}}</string>
+						<string key="NSFrame">{{56, 396}, {208, 101}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="595756103"/>
@@ -110,10 +110,9 @@
 					<object class="IBUIButton" id="565665552">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">-2147483379</int>
-						<string key="NSFrame">{{114, 505}, {93, 36}}</string>
+						<string key="NSFrame">{{114, 485}, {93, 36}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -149,7 +148,7 @@
 					<object class="IBUIButton" id="638484420">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">301</int>
-						<string key="NSFrame">{{227, 123}, {32, 34}}</string>
+						<string key="NSFrame">{{227, 118}, {32, 34}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1063219358"/>
@@ -181,7 +180,7 @@
 					<object class="IBUIButton" id="595756103">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">269</int>
-						<string key="NSFrame">{{131, 485}, {59, 34}}</string>
+						<string key="NSFrame">{{131, 465}, {59, 34}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="565665552"/>
@@ -367,7 +366,7 @@
 								<bool key="IBUIOn">YES</bool>
 							</object>
 						</array>
-						<string key="NSFrame">{{80, 177}, {160, 226}}</string>
+						<string key="NSFrame">{{80, 166}, {160, 226}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="56721710"/>
@@ -379,16 +378,18 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
 				</array>
-				<string key="NSFrameSize">{320, 568}</string>
+				<string key="NSFrame">{{0, 20}, {320, 548}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="58541407"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
-					<int key="NSColorSpace">3</int>
-					<bytes key="NSWhite">MC43NQA</bytes>
-					<reference key="NSCustomColorSpace" ref="749906267"/>
+					<int key="NSColorSpace">1</int>
+					<bytes key="NSRGB">MC43NSAwLjcwNDU4ODIxMjkgMC4xODY1MzIzMDkxAA</bytes>
 				</object>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
+				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
+					<int key="IBUIStatusBarStyle">2</int>
+				</object>
 				<object class="IBUIScreenMetrics" key="IBUISimulatedDestinationMetrics">
 					<string key="IBUISimulatedSizeMetricsClass">IBUIScreenMetrics</string>
 					<object class="NSMutableDictionary" key="IBUINormalizedOrientationToSizeMap">

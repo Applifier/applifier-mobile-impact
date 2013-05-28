@@ -26,6 +26,7 @@
   @property (nonatomic, strong) NSString *developerId;
   @property (nonatomic, strong) NSString *optionsId;
   @property (nonatomic, assign) BOOL sdkIsCurrent;
+  @property (nonatomic, assign) BOOL statusBarWasVisible;
 
 + (ApplifierImpactProperties *)sharedInstance;
 - (void)refreshCampaignQueryString;

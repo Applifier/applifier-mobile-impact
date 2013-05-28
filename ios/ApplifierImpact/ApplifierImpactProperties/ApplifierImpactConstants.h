@@ -171,6 +171,7 @@ extern NSString * const kApplifierImpactDeviceIpodTouch1gen;
 extern NSString * const kApplifierImpactDeviceIpodTouch2gen;
 extern NSString * const kApplifierImpactDeviceIpodTouch3gen;
 extern NSString * const kApplifierImpactDeviceIpodTouch4gen;
+extern NSString * const kApplifierImpactDeviceIpodTouch5gen;
 extern NSString * const kApplifierImpactDeviceIpad;
 extern NSString * const kApplifierImpactDeviceIpad1;
 extern NSString * const kApplifierImpactDeviceIpad2;

@@ -188,7 +188,8 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
       [[ApplifierImpactProperties sharedInstance] setAnalyticsBaseUrl:(NSString *)[jsonDictionary objectForKey:kApplifierImpactAnalyticsUrlKey]];
       [[ApplifierImpactProperties sharedInstance] setImpactBaseUrl:(NSString *)[jsonDictionary objectForKey:kApplifierImpactUrlKey]];
       
-      if ([jsonDictionary objectForKey:kApplifierImpactSdkVersionKey] != nil) {
+      if ([jsonDictionary objectForKey:kApplifierImpactSdkVersionKey] != nil &&
+          [[jsonDictionary objectForKey:kApplifierImpactSdkVersionKey] isKindOfClass:[NSString class]]) {
         [[ApplifierImpactProperties sharedInstance] setExpectedSdkVersion:[jsonDictionary objectForKey:kApplifierImpactSdkVersionKey]];
         AILOG_DEBUG(@"Got SDK Version: %@", [[ApplifierImpactProperties sharedInstance] expectedSdkVersion]);
       }

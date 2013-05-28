@@ -63,9 +63,26 @@
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
+  [super viewDidDisappear:animated];
+  
+  if (self.isClosing && [[ApplifierImpactProperties sharedInstance] statusBarWasVisible]) {
+    AILOG_DEBUG(@"Statusbar was originally visible. Bringing it back.");
+    [[ApplifierImpactProperties sharedInstance] setStatusBarWasVisible:false];
+    [[UIApplication sharedApplication] setStatusBarHidden:false];
+  }
+  
   self.isClosing = false;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
+  
+  if (![UIApplication sharedApplication].statusBarHidden) {
+    AILOG_DEBUG(@"Hiding statusbar");
+    [[ApplifierImpactProperties sharedInstance] setStatusBarWasVisible:true];
+    [[UIApplication sharedApplication] setStatusBarHidden:true];
+  }
+}
 
 #pragma mark - Orientation handling
 

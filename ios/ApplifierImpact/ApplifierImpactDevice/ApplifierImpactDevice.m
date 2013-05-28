@@ -308,6 +308,8 @@ int main(int argc, char *argv[]);
 		return kApplifierImpactDeviceIpodTouch3gen;
 	else if ([machine isEqualToString:@"iPod4,1"])
 		return kApplifierImpactDeviceIpodTouch4gen;
+	else if ([machine isEqualToString:@"iPod5,1"])
+		return kApplifierImpactDeviceIpodTouch5gen;
 	else if ([machine length] > 4 && [[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad1"])
 		return kApplifierImpactDeviceIpad1;
 	else if ([machine length] > 4 && [[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad2"])
