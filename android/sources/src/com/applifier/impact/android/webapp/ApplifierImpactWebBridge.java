@@ -2,13 +2,16 @@ package com.applifier.impact.android.webapp;
 
 import org.json.JSONObject;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.webkit.JavascriptInterface;
 
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
 public class ApplifierImpactWebBridge {
-	private enum ApplifierImpactWebEvent { PlayVideo, PauseVideo, CloseView, InitComplete, PlayStore;
+	private enum ApplifierImpactWebEvent { PlayVideo, PauseVideo, CloseView, InitComplete, PlayStore, NavigateTo;
 		@Override
 		public String toString () {
 			String retVal = null;
@@ -27,6 +30,9 @@ public class ApplifierImpactWebBridge {
 					break;
 				case PlayStore:
 					retVal = ApplifierImpactConstants.IMPACT_WEBVIEW_API_PLAYSTORE;
+					break;
+				case NavigateTo:
+					retVal = ApplifierImpactConstants.IMPACT_WEBVIEW_API_NAVIGATETO;
 					break;
 			}
 			return retVal;
@@ -87,6 +93,26 @@ public class ApplifierImpactWebBridge {
 				break;
 			case PlayStore:
 				_listener.onOpenPlayStore(parameters);
+				break;
+			case NavigateTo:
+				if (parameters.has(ApplifierImpactConstants.IMPACT_WEBVIEW_EVENTDATA_CLICKURL_KEY)) {
+					String clickUrl = null;
+					
+					try {
+						clickUrl = parameters.getString(ApplifierImpactConstants.IMPACT_WEBVIEW_EVENTDATA_CLICKURL_KEY);
+					}
+					catch (Exception e) {
+						ApplifierImpactUtils.Log("Error fetching clickUrl", this);
+						return false;
+					}
+					
+					if (clickUrl != null) {
+						Intent i = new Intent(Intent.ACTION_VIEW);
+						i.setData(Uri.parse(clickUrl));
+						ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(i);
+					}
+				}
+				
 				break;
 		}
 		
