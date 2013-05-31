@@ -530,12 +530,28 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	private void openPlayStoreAsIntent (String playStoreId) {
 		ApplifierImpactUtils.Log("Opening playstore activity with storeId: " + playStoreId, this);
-		ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + playStoreId)));
+		
+		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+			try {
+				ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + playStoreId)));
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("Couldn't start PlayStore intent!", this);
+			}
+		}
 	}
 	
 	private void openPlayStoreInBrowser (String url) {
 	    ApplifierImpactUtils.Log("Could not open PlayStore activity, opening in browser with url: " + url, this);
-		ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+	    
+		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+			try {
+				ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("Couldn't start browser intent!", this);
+			}
+		}
 	}
 	
 	private void init (Activity activity, String gameId, IApplifierImpactListener listener) {
