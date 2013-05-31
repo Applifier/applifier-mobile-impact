@@ -14,6 +14,7 @@ In any issues, please file in issue with us in this Github repository, or log a 
 Applifier Impact SDK Release Notes
 ==================================
 
+
 v1.0.6 May 31st, 2013
 --------------------------
 *All platforms:*
