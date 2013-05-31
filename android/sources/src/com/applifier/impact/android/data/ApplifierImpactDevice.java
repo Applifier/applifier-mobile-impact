@@ -9,6 +9,7 @@ import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -43,6 +44,7 @@ public class ApplifierImpactDevice {
 		return odin1ID;
 	}
 
+	@SuppressLint("DefaultLocale")
 	public static String getAndroidId () {
 		String androidID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		
@@ -98,7 +100,8 @@ public class ApplifierImpactDevice {
 		return buildMacAddressFromInterface(intf);
     }
 	
-    public static String buildMacAddressFromInterface (NetworkInterface intf) {
+    @SuppressLint("DefaultLocale")
+	public static String buildMacAddressFromInterface (NetworkInterface intf) {
 		byte[] mac = null;
 		
 		if (intf == null) {
@@ -165,6 +168,7 @@ public class ApplifierImpactDevice {
 		return "cellular";
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static boolean isUsingWifi () {
 		ConnectivityManager mConnectivity = null;
 		mConnectivity = (ConnectivityManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -175,7 +179,7 @@ public class ApplifierImpactDevice {
 		TelephonyManager mTelephony = (TelephonyManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getSystemService(Context.TELEPHONY_SERVICE);
 		// Skip if no connection, or background data disabled
 		NetworkInfo info = mConnectivity.getActiveNetworkInfo();
-		if (info == null || !mConnectivity.getBackgroundDataSetting() || mTelephony == null) {
+		if (info == null || !mConnectivity.getBackgroundDataSetting() || !mConnectivity.getActiveNetworkInfo().isConnected() || mTelephony == null) {
 		    return false;
 		}
 

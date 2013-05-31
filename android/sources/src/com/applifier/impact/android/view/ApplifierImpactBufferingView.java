@@ -36,6 +36,7 @@ public class ApplifierImpactBufferingView extends LinearLayout {
 		createView();
 	}
 
+	@SuppressWarnings("deprecation")
 	private void createView () {
 		setOrientation(LinearLayout.HORIZONTAL);
 		setPadding(10, 8, 10, 10);

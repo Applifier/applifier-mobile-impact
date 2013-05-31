@@ -43,7 +43,7 @@ public class ApplifierImpactOpenUDID {
 
 			}
 
-			SharedPreferences mPreferences =  mContext.getSharedPreferences(PREFS_NAME, Context.MODE_WORLD_READABLE);
+			SharedPreferences mPreferences =  mContext.getSharedPreferences(PREFS_NAME, 1);
 			String _keyInPref = mPreferences.getString(PREF_KEY, null);
 			if(null == _keyInPref){
 				generateOpenUDIDInContext(mContext);

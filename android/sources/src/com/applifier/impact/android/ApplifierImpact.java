@@ -354,6 +354,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	// IApplifierImpactWebDataListener
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onWebDataCompleted () {
 		JSONObject jsonData = null;

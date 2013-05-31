@@ -46,6 +46,7 @@ public class ApplifierImpactInstrumentation {
 	
 	private static JSONObject mergeJSON (JSONObject json1, JSONObject json2) {
 		if (json1 != null && json2 != null) {
+			@SuppressWarnings("rawtypes")
 			Iterator keyIterator = json2.keys();
 			while (keyIterator.hasNext()) {
 				try {

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="DefaultLocale">
+        <ignore path="src/com/applifier/impact/android/data/ApplifierImpactDevice.java" />
+        <ignore path="src/com/applifier/impact/android/data/ApplifierImpactOpenUDID.java" />
+    </issue>
+</lint>

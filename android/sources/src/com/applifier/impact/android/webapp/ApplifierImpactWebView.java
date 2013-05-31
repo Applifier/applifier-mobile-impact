@@ -12,9 +12,11 @@ import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
+import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -31,6 +33,19 @@ public class ApplifierImpactWebView extends WebView {
 	private ApplifierImpactWebBridge _webBridge = null;
 	private String _currentWebView = ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START;
 	
+	public ApplifierImpactWebView(Context context, AttributeSet attrs,
+			int defStyle) {
+		super(context, attrs, defStyle);
+	}
+
+	public ApplifierImpactWebView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
+
+	public ApplifierImpactWebView(Context context) {
+		super(context);
+	}
+
 	public ApplifierImpactWebView(Activity activity, IApplifierImpactWebViewListener listener, ApplifierImpactWebBridge webBridge) {
 		super(activity);
 		ApplifierImpactUtils.Log("Loading WebView from URL: " + ApplifierImpactProperties.WEBVIEW_BASE_URL, this);
@@ -176,6 +191,7 @@ public class ApplifierImpactWebView extends WebView {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@SuppressLint("SetJavaScriptEnabled")
 	private void setupApplifierView ()  {
 		getSettings().setJavaScriptEnabled(true);
@@ -185,7 +201,12 @@ public class ApplifierImpactWebView extends WebView {
 			ApplifierImpactUtils.Log("startup() -> LOAD_NO_CACHE", this);
 		}
 		else {
-			getSettings().setCacheMode(WebSettings.LOAD_NORMAL);
+			if (Build.VERSION.SDK_INT < 17 ) {				
+				getSettings().setCacheMode(WebSettings.LOAD_NORMAL);
+			}
+			else {
+				getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+			}
 		}
 		
 		String appCachePath = null;
@@ -217,8 +238,8 @@ public class ApplifierImpactWebView extends WebView {
 
 		if (appCachePath != null) {
 			boolean appCache = true;
-  
-			if (Integer.parseInt(android.os.Build.VERSION.SDK) <= 7) {
+			
+			if (Build.VERSION.SDK_INT <= 7) {
 				appCache = false;
 			}
   

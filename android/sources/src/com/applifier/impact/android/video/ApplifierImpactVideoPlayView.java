@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 public class ApplifierImpactVideoPlayView extends RelativeLayout {
+	private static final int FILL_PARENT = -1;
 
 	private RelativeLayout _countDownText = null;
 	private TextView _timeLeftInSecondsText = null;
@@ -232,7 +233,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		setBackgroundColor(0xFF000000);
 		_videoView = new VideoView(getContext());
 		_videoView.setId(3001);
-		RelativeLayout.LayoutParams videoLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+		RelativeLayout.LayoutParams videoLayoutParams = new RelativeLayout.LayoutParams(FILL_PARENT, FILL_PARENT);
 		videoLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 		_videoView.setLayoutParams(videoLayoutParams);		
 		addView(_videoView, videoLayoutParams);
@@ -356,7 +357,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			_pausedView = new ApplifierImpactVideoPausedView(getContext());
 				
 		if (_pausedView != null && _pausedView.getParent() == null) {
-			RelativeLayout.LayoutParams pausedViewParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+			RelativeLayout.LayoutParams pausedViewParams = new RelativeLayout.LayoutParams(FILL_PARENT, FILL_PARENT);
 			pausedViewParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 			addView(_pausedView, pausedViewParams);		
 		}

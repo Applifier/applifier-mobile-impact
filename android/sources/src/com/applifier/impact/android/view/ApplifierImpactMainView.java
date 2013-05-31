@@ -34,6 +34,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 
 	public static enum ApplifierImpactMainViewState { WebView, VideoPlayer };
 	public static enum ApplifierImpactMainViewAction { VideoStart, VideoEnd, BackButtonPressed, RequestRetryVideoPlay };
+	private static final int FILL_PARENT = -1;
 	
 	// Views
 	public ApplifierImpactVideoPlayView videoplayerview = null;
@@ -43,6 +44,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	private IApplifierImpactMainViewListener _listener = null;
 	private ApplifierImpactMainViewState _currentState = ApplifierImpactMainViewState.WebView;
 
+	
 	public ApplifierImpactMainView(Context context, IApplifierImpactMainViewListener listener) {
 		super(context);
 		_listener = listener;
@@ -77,7 +79,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 				((ViewGroup)this.getParent()).removeView(this);
 			
 			if (this.getParent() == null)
-				ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(this, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+				ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(this, new FrameLayout.LayoutParams(FILL_PARENT, FILL_PARENT));
 			
 			setViewState(ApplifierImpactMainViewState.WebView);
 		}
@@ -93,7 +95,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 				vg.removeView(this);
 		}
 		
-		//webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START, data);
 		destroyVideoPlayerView();
 		ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
 	}
@@ -105,15 +106,13 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 			switch (state) {
 				case WebView:
 					removeFromMainView(webview);
-					addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+					addView(webview, new FrameLayout.LayoutParams(FILL_PARENT, FILL_PARENT));
 					focusToView(webview);
 					break;
 				case VideoPlayer:
 					if (videoplayerview == null) {
 						createVideoPlayerView();
 						bringChildToFront(webview);
-						//removeFromMainView(webview);
-						//addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
 						focusToView(webview);
 					}
 					break;
@@ -126,7 +125,10 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	}
 	
 	public void afterVideoPlaybackOperations () {
-		videoplayerview.setKeepScreenOn(false);
+		if (videoplayerview != null) {
+			videoplayerview.setKeepScreenOn(false);
+		}
+		
 		destroyVideoPlayerView();
 		setViewState(ApplifierImpactMainViewState.WebView);		
 		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
@@ -153,7 +155,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	private void init () {
 		ApplifierImpactUtils.Log("Init", this);
 		this.setId(1001);
-		//createVideoPlayerView();
 		createWebView();
 	}
 	
@@ -169,7 +170,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	
 	private void createVideoPlayerView () {
 		videoplayerview = new ApplifierImpactVideoPlayView(ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext(), this);
-		videoplayerview.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+		videoplayerview.setLayoutParams(new FrameLayout.LayoutParams(FILL_PARENT, FILL_PARENT));
 		videoplayerview.setId(1002);
 		addView(videoplayerview);
 	}
@@ -177,7 +178,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	private void createWebView () {
 		webview = new ApplifierImpactWebView(ApplifierImpactProperties.CURRENT_ACTIVITY, this, new ApplifierImpactWebBridge(ApplifierImpact.instance));
 		webview.setId(1003);
-		addView(webview, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.FILL_PARENT));
+		addView(webview, new FrameLayout.LayoutParams(FILL_PARENT, FILL_PARENT));
 	}
 	
 	private void removeFromMainView (View view) {
