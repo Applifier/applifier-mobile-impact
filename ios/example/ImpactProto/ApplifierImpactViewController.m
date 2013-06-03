@@ -54,7 +54,7 @@
     
     // TEST MODE: Do not use in production apps
     [[ApplifierImpact sharedInstance] setDebugMode:YES];
-    //[[ApplifierImpact sharedInstance] setTestMode:YES];
+    [[ApplifierImpact sharedInstance] setTestMode:YES];
     
     if (self.developerId.text != nil) {
         AILOG_DEBUG(@"Setting developerId");
