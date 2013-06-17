@@ -117,6 +117,8 @@
 
 - (void)videoPlayerEncounteredError {
   AILOG_DEBUG(@"");
+  [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed = YES;
+
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventVideoCompleted data:@{kApplifierImpactNativeEventCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
   

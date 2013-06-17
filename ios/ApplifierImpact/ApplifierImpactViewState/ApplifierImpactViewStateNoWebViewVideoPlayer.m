@@ -108,6 +108,7 @@
 
 - (void)videoPlayerEncounteredError {
   AILOG_DEBUG(@"");
+  [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed = YES;
   [self hideSpinner];
   [self dismissVideoController];
   [self showVideoPlaybackError];
