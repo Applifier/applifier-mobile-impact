@@ -132,9 +132,15 @@ public class ApplifierImpactDownloader {
 	    
 		if (cm != null && cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
 			ApplifierImpactUtils.Log("Starting download for: " + campaign.getVideoFilename(), ApplifierImpactDownloader.class);
-			CacheDownload cd = new CacheDownload(campaign);
-			addToCacheDownloads(cd);
-			cd.execute(campaign.getVideoUrl());
+			
+			if (campaign != null && campaign.getVideoUrl() != null && campaign.getVideoUrl().length() > 0) {
+				CacheDownload cd = new CacheDownload(campaign);
+				addToCacheDownloads(cd);
+				cd.execute(campaign.getVideoUrl());
+			}
+			else {
+				removeDownload(campaign);
+			}
 	    }
 		else {
 			ApplifierImpactUtils.Log("No WIFI detected, not downloading: " + campaign.getVideoUrl(), ApplifierImpactDownloader.class);
@@ -208,6 +214,8 @@ public class ApplifierImpactDownloader {
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Problems with url: " + e.getMessage(), this);
+				onCancelled();
+				return null;
 			}
 			
 			try {
@@ -273,9 +281,7 @@ public class ApplifierImpactDownloader {
 
 		@Override
 		protected void onPostExecute(String result) {
-			// If the server sent invalid campaign data, _downloadUrl can be null
-			// so we must check that as well
-        	if (!_cancelled && _downloadUrl != null) {
+        	if (!_cancelled) {
     			removeDownload(_campaign);
             	removeFromCacheDownloads(this);
             	cacheNextFile();
