@@ -273,7 +273,9 @@ public class ApplifierImpactDownloader {
 
 		@Override
 		protected void onPostExecute(String result) {
-        	if (!_cancelled) {
+			// If the server sent invalid campaign data, _downloadUrl can be null
+			// so we must check that as well
+        	if (!_cancelled && _downloadUrl != null) {
     			removeDownload(_campaign);
             	removeFromCacheDownloads(this);
             	cacheNextFile();
