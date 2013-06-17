@@ -285,7 +285,12 @@ public class ApplifierImpactDownloader {
     			removeDownload(_campaign);
             	removeFromCacheDownloads(this);
             	cacheNextFile();
-            	sendToListeners(ApplifierDownloadEventType.DownloadCompleted, _downloadUrl.toString());
+            	
+            	String url = "ERROR";
+            	if (_downloadUrl != null)
+            		url = _downloadUrl.toString();
+            	
+            	sendToListeners(ApplifierDownloadEventType.DownloadCompleted, url);
     			super.onPostExecute(result);
         	}
 		}
@@ -315,12 +320,16 @@ public class ApplifierImpactDownloader {
 	    }
 	    
 	    private void cancelDownload () {
-	    	ApplifierImpactUtils.Log("Download cancelled for: " + _downloadUrl.toString(), this);
+        	String url = "ERROR";
+        	if (_downloadUrl != null)
+        		url = _downloadUrl.toString();
+        	
+	    	ApplifierImpactUtils.Log("Download cancelled for: " + url, this);
 			closeAndFlushConnection();
 			ApplifierImpactUtils.removeFile(_campaign.getVideoFilename());
         	removeDownload(_campaign);
         	removeFromCacheDownloads(this);
-        	sendToListeners(ApplifierDownloadEventType.DownloadCancelled, _downloadUrl.toString());
+        	sendToListeners(ApplifierDownloadEventType.DownloadCancelled, url);
 	    }
 	}
 }
