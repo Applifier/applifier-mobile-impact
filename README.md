@@ -14,6 +14,12 @@ In any issues, please file in issue with us in this Github repository, or log a 
 Applifier Impact SDK Release Notes
 ==================================
 
+v1.0.7 June 18th, 2013
+--------------------------
+*All platforms:*
+
+- Fixed reward item showing up in the offer screen. Previously it always showed the default item set on the server side. Now the item selection works on the client side, too.
+
 
 v1.0.6 May 31st, 2013
 --------------------------
