@@ -280,8 +280,12 @@ public class ApplifierImpactWebData {
 	}
 	
 	public void setCurrentRewardItem (ApplifierImpactRewardItem rewardItem) {
-		if (_currentRewardItem != null && !_currentRewardItem.equals(_currentRewardItem))
+		if (_currentRewardItem != null && !_currentRewardItem.equals(rewardItem)) {
 			_currentRewardItem = rewardItem;
+		}
+		else {
+			ApplifierImpactUtils.Log("Problem setting current reward item: " + _currentRewardItem + ", " + rewardItem, this);
+		}
 	}
 	
 	
