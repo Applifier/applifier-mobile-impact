@@ -32,7 +32,7 @@
 - (void)willBeShown {
   [super willBeShown];
   
-  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen}];
+  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen, kApplifierImpactRewardItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
   
   [self placeToViewHiearchy];
 }
