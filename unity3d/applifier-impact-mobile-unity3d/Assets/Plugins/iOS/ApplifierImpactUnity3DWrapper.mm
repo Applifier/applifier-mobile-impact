@@ -123,7 +123,7 @@ extern "C" {
     }
     
 	bool canShowCampaigns () {
-        return [[ApplifierImpact sharedInstance] canShowAds];
+        return [[ApplifierImpact sharedInstance] canShowCampaigns];
     }
     
 	bool canShowImpact () {
