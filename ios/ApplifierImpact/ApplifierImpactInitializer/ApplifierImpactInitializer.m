@@ -16,6 +16,7 @@
     [self createQueue];
   if (self.backgroundThread == nil)
     [self createBackgroundThread];
+  [ApplifierImpactDevice launchReachabilityCheck];
 }
 
 - (void)reInitialize {
@@ -55,6 +56,7 @@
 }
 
 - (void)dealloc {
+  [ApplifierImpactDevice clearReachabilityCheck];
   dispatch_release(self.queue);
 }
 

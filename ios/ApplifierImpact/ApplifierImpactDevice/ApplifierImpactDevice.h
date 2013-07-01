@@ -14,7 +14,11 @@
 + (BOOL)canUseTracking;
 + (NSString *)machineName;
 + (NSString *)analyticsMachineName;
+
++ (void)launchReachabilityCheck;
++ (void)clearReachabilityCheck;
 + (NSString *)currentConnectionType;
+
 + (NSString *)softwareVersion;
 
 + (NSString *)md5DeviceId;
