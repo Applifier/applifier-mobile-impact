@@ -373,13 +373,12 @@ int main(int argc, char *argv[]);
 	return [self _md5StringFromString:adId];
 }
 
-+ (NSString *)currentConnectionType {
-	NSString *wifiString = @"wifi";
-	NSString *cellularString = @"cellular";
-	NSString *connectionString = nil;
-	
-	SCNetworkReachabilityRef reachabilityRef = SCNetworkReachabilityCreateWithName(NULL, "applifier.com");
-	if (reachabilityRef != NULL) {
+static NSString *wifiString = @"wifi";
+static NSString *cellularString = @"cellular";
+static NSString *connectionString = nil;
+
+static void reachabilityCallBack(SCNetworkReachabilityRef reachabilityRef, SCNetworkReachabilityFlags flags, void * info) {
+  if (reachabilityRef != NULL) {
 		SCNetworkReachabilityFlags flags;
 		if (SCNetworkReachabilityGetFlags(reachabilityRef, &flags)) {
 			if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0) {
@@ -413,11 +412,29 @@ int main(int argc, char *argv[]);
 				connectionString = nil;
 			}
 		}
-    
-		CFRelease(reachabilityRef);
-	}
-	
-	return connectionString;
+  }
+}
+
+static SCNetworkReachabilityRef reachabilityRef = nil;
+
++ (void)launchReachabilityCheck {
+  [self clearReachabilityCheck];
+  reachabilityRef = SCNetworkReachabilityCreateWithName(NULL, "applifier.com");
+  SCNetworkReachabilitySetCallback(reachabilityRef, reachabilityCallBack, NULL);
+  SCNetworkReachabilitySetDispatchQueue(reachabilityRef, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0));
+}
+
++ (void)clearReachabilityCheck {
+  if(reachabilityRef != NULL) {
+    CFRelease(reachabilityRef);
+    reachabilityRef = NULL;
+  }
+}
+  
++ (NSString *)currentConnectionType {
+	@synchronized(self) {
+    return connectionString;
+  }
 }
 
 + (NSString *)softwareVersion {
