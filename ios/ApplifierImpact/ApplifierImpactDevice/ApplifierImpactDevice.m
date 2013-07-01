@@ -375,7 +375,7 @@ int main(int argc, char *argv[]);
 
 static NSString *wifiString = @"wifi";
 static NSString *cellularString = @"cellular";
-static NSString *connectionString = nil;
+static NSString *connectionString = @"none";
 
 static void reachabilityCallBack(SCNetworkReachabilityRef reachabilityRef, SCNetworkReachabilityFlags flags, void * info) {
   if (reachabilityRef != NULL) {
@@ -409,7 +409,7 @@ static void reachabilityCallBack(SCNetworkReachabilityRef reachabilityRef, SCNet
 			if ((flags & kSCNetworkReachabilityFlagsReachable) == 0)
 			{
 				// if target host is not reachable
-				connectionString = nil;
+				connectionString = @"none";
 			}
 		}
   }
