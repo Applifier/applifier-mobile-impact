@@ -26,9 +26,7 @@
 - (void)willBeShown {
   [super willBeShown];
   
-  if ([[ApplifierImpactShowOptionsParser sharedInstance] noOfferScreen]) {
-    [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
-    
+  if ([[ApplifierImpactShowOptionsParser sharedInstance] noOfferScreen]) {    
     [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:nil];
     
     ApplifierImpactCampaign *campaign = [[[ApplifierImpactCampaignManager sharedInstance] getViewableCampaigns] objectAtIndex:0];
