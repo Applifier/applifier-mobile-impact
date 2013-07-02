@@ -120,17 +120,9 @@
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventVideoCompleted data:@{kApplifierImpactNativeEventCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
   
-  if ([[ApplifierImpactMainViewController sharedInstance] getPreviousViewState] != nil &&
-      ([[[ApplifierImpactMainViewController sharedInstance] getPreviousViewState] getStateType] == kApplifierImpactViewStateTypeEndScreen ||
-      [[[ApplifierImpactMainViewController sharedInstance] getPreviousViewState] getStateType] == kApplifierImpactViewStateTypeOfferScreen)) {
-      [[ApplifierImpactMainViewController sharedInstance] changeState:[[[ApplifierImpactMainViewController sharedInstance] getPreviousViewState] getStateType] withOptions:nil];
-  }
-  else if (![[ApplifierImpactShowOptionsParser sharedInstance] noOfferScreen]) {
-    [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeOfferScreen withOptions:nil];
-  }
-  else {
-    [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeEndScreen withOptions:nil];
-  }
+  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIActionVideoPlaybackError, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key, kApplifierImpactWebViewEventDataCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+
+  [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeEndScreen withOptions:nil];
   
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventShowError data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyVideoPlaybackError}];
   

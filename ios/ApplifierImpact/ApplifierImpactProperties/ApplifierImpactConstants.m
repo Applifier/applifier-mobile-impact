@@ -25,6 +25,7 @@ NSString * const kApplifierImpactWebViewAPIOpen = @"open";
 NSString * const kApplifierImpactWebViewAPIDeveloperOptions = @"developerOptions";
 NSString * const kApplifierImpactWebViewAPIAppStore = @"appStore";
 NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying = @"video_started_playing";
+NSString * const kApplifierImpactWebViewAPIActionVideoPlaybackError = @"video_playback_error";
 
 NSString * const kApplifierImpactWebViewViewTypeCompleted = @"completed";
 NSString * const kApplifierImpactWebViewViewTypeStart = @"start";

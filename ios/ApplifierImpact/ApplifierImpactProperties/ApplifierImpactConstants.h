@@ -39,6 +39,7 @@ extern NSString * const kApplifierImpactWebViewAPIOpen;
 extern NSString * const kApplifierImpactWebViewAPIDeveloperOptions;
 extern NSString * const kApplifierImpactWebViewAPIAppStore;
 extern NSString * const kApplifierImpactWebViewAPIActionVideoStartedPlaying;
+extern NSString * const kApplifierImpactWebViewAPIActionVideoPlaybackError;
 
 extern NSString * const kApplifierImpactWebViewViewTypeCompleted;
 extern NSString * const kApplifierImpactWebViewViewTypeStart;
