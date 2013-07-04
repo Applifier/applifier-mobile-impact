@@ -378,6 +378,7 @@ static NSString *cellularString = @"cellular";
 static NSString *connectionString = @"none";
 
 static void reachabilityCallBack(SCNetworkReachabilityRef reachabilityRef, SCNetworkReachabilityFlags flags, void * info) {
+  AIAssert(![NSThread isMainThread]);
   if (reachabilityRef != NULL) {
 		SCNetworkReachabilityFlags flags;
 		if (SCNetworkReachabilityGetFlags(reachabilityRef, &flags)) {
