@@ -298,8 +298,6 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		
 		ApplifierImpactUtils.Log("onVideoPlaybackError", this);		
 		ApplifierImpact.webdata.sendAnalyticsRequest(ApplifierImpactConstants.IMPACT_ANALYTICS_EVENTTYPE_VIDEOERROR, ApplifierImpactProperties.SELECTED_CAMPAIGN);
-
-		webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_START);
 		
 		JSONObject errorParams = new JSONObject();
 		JSONObject spinnerParams = new JSONObject();
@@ -313,6 +311,8 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		catch (Exception e) {
 			ApplifierImpactUtils.Log("Could not create JSON", this);
 		}
+		
+		webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_COMPLETED, params);
 		
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_SHOWERROR, errorParams);
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
