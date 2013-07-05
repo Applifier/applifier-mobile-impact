@@ -47,6 +47,10 @@ NSString * const kApplifierImpactWebViewEventDataRewatchKey = @"rewatch";
 NSString * const kApplifierImpactWebViewEventDataClickUrlKey = @"clickUrl";
 NSString * const kApplifierImpactWebViewEventDataBypassAppSheetKey = @"bypassAppSheet";
 
+/* Web Data */
+
+int const kApplifierImpactWebDataMaxRetryCount = 5;
+int const kApplifierImpactWebDataRetryInterval = 5;
 
 /* Native Events */
 

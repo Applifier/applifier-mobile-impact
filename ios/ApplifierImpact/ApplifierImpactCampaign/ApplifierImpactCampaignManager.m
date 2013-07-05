@@ -396,23 +396,17 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
   [[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
 
+static int retryCount = 0;
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	self.campaignDownloadData = nil;
 	self.urlConnection = nil;
 	
-	NSInteger errorCode = [error code];
-	if (errorCode != NSURLErrorNotConnectedToInternet &&
-      errorCode != NSURLErrorCannotFindHost &&
-      errorCode != NSURLErrorCannotConnectToHost &&
-      errorCode != NSURLErrorResourceUnavailable &&
-      errorCode != NSURLErrorFileDoesNotExist &&
-      errorCode != NSURLErrorNoPermissionsToReadFile)
-  {
-		AILOG_DEBUG(@"Retrying campaign download.");
-		[self updateCampaigns];
-	}
-	else {
-		AILOG_DEBUG(@"Not retrying campaign download.");
+	if(retryCount < kApplifierImpactWebDataMaxRetryCount) {
+    ++retryCount;
+    AILOG_DEBUG(@"Retrying campaign download in %d seconds.", kApplifierImpactWebDataRetryInterval);
+    [NSTimer scheduledTimerWithTimeInterval:kApplifierImpactWebDataRetryInterval target:self selector:@selector(updateCampaigns) userInfo:nil repeats:NO];
+  } else {
+    AILOG_DEBUG(@"Not retrying campaign download.");
     dispatch_async(dispatch_get_main_queue(), ^{
       [self.delegate campaignManagerCampaignDataFailed];
     });

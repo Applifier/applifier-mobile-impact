@@ -61,6 +61,10 @@ extern NSString * const kApplifierImpactWebViewEventDataRewatchKey;
 extern NSString * const kApplifierImpactWebViewEventDataClickUrlKey;
 extern NSString * const kApplifierImpactWebViewEventDataBypassAppSheetKey;
 
+/* Web Data */
+
+extern int const kApplifierImpactWebDataMaxRetryCount;
+extern int const kApplifierImpactWebDataRetryInterval;
 
 /* Native Events */
 
