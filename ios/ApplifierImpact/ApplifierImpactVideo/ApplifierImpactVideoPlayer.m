@@ -112,6 +112,7 @@
 
 - (void)_removeObservers {
   AILOG_DEBUG(@"");
+  AIAssert([NSThread isMainThread]);
   [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
   
   if (self.timeObserver != nil) {
@@ -132,14 +133,18 @@
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-  if ([keyPath isEqual:@"self.currentItem.error"] && self.currentItem.error != nil) {
-    dispatch_async(dispatch_get_main_queue(), ^{
-      self.isPlaying = false;
-      self.hasPlayed = false;
-      [self.delegate videoPlaybackError];
-      [ApplifierImpactInstrumentation gaInstrumentationVideoError:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] withValuesFrom:nil];
-    });
-    AILOG_DEBUG(@"VIDEOPLAYER_ERROR: %@", self.currentItem.error);
+  if ([keyPath isEqual:@"self.currentItem.error"]) {
+    if (self.currentItem.error != NULL) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        self.isPlaying = false;
+        self.hasPlayed = false;
+        [self.delegate videoPlaybackError];
+        [ApplifierImpactInstrumentation gaInstrumentationVideoError:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] withValuesFrom:nil];
+      });
+      AILOG_DEBUG(@"VIDEOPLAYER_ERROR: %@", self.currentItem.error);
+    } else {
+      AILOG_DEBUG(@"VIDEOPLAYER_ERROR");
+    }
   }
   else if ([keyPath isEqual:@"self.currentItem.asset.duration"]) {
     AILOG_DEBUG(@"VIDEOPLAYER_DURATION: %f", CMTimeGetSeconds(self.currentItem.asset.duration));
