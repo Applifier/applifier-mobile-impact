@@ -52,17 +52,23 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   // Mandatory params
   queryParams = [NSString stringWithFormat:@"%@%@=%@", queryParams, kApplifierImpactInitQueryParamPlatformKey, @"ios"];
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamGameIdKey, [self impactGameId]];
-  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamOpenUdidKey, [ApplifierImpactDevice md5OpenUDIDString]];
-  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamMacAddressKey, [ApplifierImpactDevice md5MACAddressString]];
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamSdkVersionKey, kApplifierImpactVersion];
+  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamOpenUdidKey, [ApplifierImpactDevice md5OpenUDIDString]];
   
-  if ([ApplifierImpactDevice ODIN1] != nil) {
-    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamOdin1IdKey, [ApplifierImpactDevice ODIN1]];
+  if ([ApplifierImpactDevice getIOSMajorVersion] < 7) {
+    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamMacAddressKey, [ApplifierImpactDevice md5MACAddressString]];
+    if ([ApplifierImpactDevice ODIN1] != nil) {
+      queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamOdin1IdKey, [ApplifierImpactDevice ODIN1]];
+    }
   }
   
+  id advertisingIdentifierString = [ApplifierImpactDevice advertisingIdentifier];
+  id md5AdvertisingIdentifierString = [ApplifierImpactDevice md5AdvertisingIdentifierString];
+  
   // Add advertisingTrackingId info if identifier is available
-  if ([ApplifierImpactDevice md5AdvertisingIdentifierString] != nil) {
-    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamAdvertisingTrackingIdKey, [ApplifierImpactDevice md5AdvertisingIdentifierString]];
+  if (advertisingIdentifierString != nil) {
+    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamRawAdvertisingTrackingIdKey, advertisingIdentifierString];
+    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamAdvertisingTrackingIdKey, md5AdvertisingIdentifierString];
     queryParams = [NSString stringWithFormat:@"%@&%@=%i", queryParams, kApplifierImpactInitQueryParamTrackingEnabledKey, [ApplifierImpactDevice canUseTracking]];
   }
   

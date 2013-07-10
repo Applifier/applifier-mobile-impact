@@ -193,6 +193,7 @@ extern NSString * const kApplifierImpactInitQueryParamPlatformKey;
 extern NSString * const kApplifierImpactInitQueryParamGameIdKey;
 extern NSString * const kApplifierImpactInitQueryParamOpenUdidKey;
 extern NSString * const kApplifierImpactInitQueryParamMacAddressKey;
+extern NSString * const kApplifierImpactInitQueryParamRawAdvertisingTrackingIdKey;
 extern NSString * const kApplifierImpactInitQueryParamAdvertisingTrackingIdKey;
 extern NSString * const kApplifierImpactInitQueryParamTrackingEnabledKey;
 extern NSString * const kApplifierImpactInitQueryParamSoftwareVersionKey;
