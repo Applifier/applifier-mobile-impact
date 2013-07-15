@@ -361,7 +361,17 @@ static ApplifierImpact *sharedImpact = nil;
 	
   if (![[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed) {
     [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed = YES;
-    [self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key];
+    [self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key videoWasSkipped:FALSE];
+  }
+}
+
+- (void)mainControllerVideoSkipped {
+  AIAssert([NSThread isMainThread]);
+	AILOG_DEBUG(@"");
+	
+  if (![[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed) {
+    [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed = YES;
+    [self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key videoWasSkipped:TRUE];
   }
 }
 

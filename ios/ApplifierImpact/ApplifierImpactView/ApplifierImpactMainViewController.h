@@ -20,6 +20,7 @@
 - (void)mainControllerDidClose;
 - (void)mainControllerStartedPlayingVideo;
 - (void)mainControllerVideoEnded;
+- (void)mainControllerVideoSkipped;
 - (void)mainControllerWillLeaveApplication;
 @end
 

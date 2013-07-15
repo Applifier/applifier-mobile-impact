@@ -22,7 +22,8 @@ typedef enum {
 typedef enum {
   kApplifierImpactStateActionWillLeaveApplication,
   kApplifierImpactStateActionVideoStartedPlaying,
-  kApplifierImpactStateActionVideoPlaybackEnded
+  kApplifierImpactStateActionVideoPlaybackEnded,
+  kApplifierImpactStateActionVideoPlaybackSkipped
 } ApplifierImpactViewStateAction;
 
 extern NSString * const kApplifierImpactWebViewJSPrefix;

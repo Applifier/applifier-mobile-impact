@@ -21,6 +21,7 @@
   @property (nonatomic, strong) ApplifierImpactVideoView *videoView;
   @property (nonatomic, strong) ApplifierImpactVideoPlayer *videoPlayer;
   @property (nonatomic, assign) ApplifierImpactCampaign *campaignToPlay;
+  @property (nonatomic, strong) UILabel *bufferingLabel;
   @property (nonatomic, strong) UILabel *progressLabel;
   @property (nonatomic, strong) UIButton *skipLabel;
   @property (nonatomic, strong) UIView *videoOverlayView;
@@ -82,6 +83,7 @@
   [self _destroyVideoView];
   
   [self destroyProgressLabel];
+  [self destroyBufferingLabel];
   [self destroyVideoSkipLabel];
   [self destroyVideoOverlayView];
   
@@ -94,6 +96,7 @@
   
   [self createVideoOverlayView];
   [self createProgressLabel];
+  [self createBufferingLabel];
   [self createVideoSkipLabel];
   [self createMuteButton];
   
@@ -268,20 +271,17 @@
   [self updateLabelsWithCMTime:time];
 }
 
-- (void)videoPlaybackStarted {
-  AILOG_DEBUG(@"");
-}
-
 - (void)videoStartedPlaying {
   AILOG_DEBUG(@"");
   self.isPlaying = YES;
+  self.bufferingLabel.hidden = YES;
   [self.delegate videoPlayerStartedPlaying];
   [self showMuteButton];
 }
 
-- (void)videoPlaybackEnded {
+- (void)videoPlaybackEnded:(BOOL)skipped {
   AILOG_DEBUG(@"");
-  [self.delegate videoPlayerPlaybackEnded];
+  [self.delegate videoPlayerPlaybackEnded:skipped];
   self.isPlaying = NO;
   self.campaignToPlay = nil;
 }
@@ -292,6 +292,18 @@
   self.isPlaying = NO;
 }
 
+- (void)videoPlaybackStarted {
+  AILOG_DEBUG(@"");
+  self.bufferingLabel.hidden = YES;
+  [self hideOverlayAfter:3.0f];
+}
+
+- (void)videoPlaybackStalled {
+  AILOG_DEBUG(@"");
+  self.bufferingLabel.hidden = NO;
+  [self showVideoSkipLabel];
+  [self showOverlay];
+}
 
 #pragma mark - Video Overlay View
 
@@ -330,10 +342,18 @@
     self.skipLabel.titleLabel.shadowOffset = CGSizeMake(0, 1.0);
     //self.skipLabel.transform = CGAffineTransformMakeTranslation(self.view.bounds.size.width - 303, self.view.bounds.size.height - 23);
     
+    [self.skipLabel addTarget:self action:@selector(skipButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    self.skipLabel.enabled = NO;
+    
     [self.videoOverlayView addSubview:self.skipLabel];
     [self.videoOverlayView bringSubviewToFront:self.skipLabel];
     self.videoOverlayView.hidden = NO;
   }
+}
+
+- (void)showVideoSkipLabel {
+  [self.skipLabel setTitle:@"Skip Video" forState:UIControlStateNormal];
+  self.skipLabel.enabled = YES;
 }
 
 - (void)createMuteButton {
@@ -385,10 +405,39 @@
 
 - (void)skipButtonPressed {
   AILOG_DEBUG(@"");
-  [self videoPlaybackEnded];
+  [self videoPlaybackEnded:TRUE];
   [[ApplifierImpactMainViewController sharedInstance] applyOptionsToCurrentState:@{@"sendAbortInstrumentation":@true, @"type":kApplifierImpactGoogleAnalyticsEventVideoAbortSkip}];
 }
 
+#pragma mark - Video Buffering Label
+
+- (void)createBufferingLabel {
+  AILOG_DEBUG(@"");
+  if(self.bufferingLabel == nil && self.videoOverlayView != nil) {
+    self.bufferingLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - 303, 0, 300, 20)];
+    self.bufferingLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
+    self.bufferingLabel.backgroundColor = [UIColor clearColor];
+    self.bufferingLabel.textColor = [UIColor whiteColor];
+    self.bufferingLabel.font = [UIFont systemFontOfSize:12.0];
+    self.bufferingLabel.textAlignment = UITextAlignmentRight;
+    self.bufferingLabel.shadowColor = [UIColor blackColor];
+    self.bufferingLabel.shadowOffset = CGSizeMake(0, 1.0);
+    self.bufferingLabel.text = @"Buffering...";
+    self.bufferingLabel.hidden = YES;
+    
+    [self.videoOverlayView addSubview:self.bufferingLabel];
+    [self.videoOverlayView bringSubviewToFront:self.bufferingLabel];
+    
+    self.videoOverlayView.hidden = NO;
+  }
+}
+
+- (void)destroyBufferingLabel {
+  if(self.bufferingLabel != nil) {
+    [self.bufferingLabel removeFromSuperview];
+    self.bufferingLabel = nil;
+  }
+}
 
 #pragma mark - Video Progress Label
 
@@ -436,24 +485,12 @@
       timeUntilSkip = 0;
     
     NSString *skipText = [NSString stringWithFormat:NSLocalizedString(@"You can skip this video in %.0f seconds.", nil), timeUntilSkip];
+    self.skipLabel.enabled = NO;
     
     if (timeUntilSkip == 0) {
       skipText = [NSString stringWithFormat:@"Skip Video"];
-      NSArray *actions = [self.skipLabel actionsForTarget:self forControlEvent:UIControlEventTouchUpInside];
-      
-      BOOL actionAdded = false;
-      
-      for (NSString *action in actions) {
-        if ([action isEqualToString:@"skipButtonPressed"]) {
-          actionAdded = true;
-          break;
-        }
-      }
-      
-      if (!actionAdded) {
-        [self hideOverlayAfter:3.0f];
-        [self.skipLabel addTarget:self action:@selector(skipButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-      }
+      [self hideOverlayAfter:3.0f];
+      self.skipLabel.enabled = YES;
     }
     
     if (self.skipLabel != nil) {

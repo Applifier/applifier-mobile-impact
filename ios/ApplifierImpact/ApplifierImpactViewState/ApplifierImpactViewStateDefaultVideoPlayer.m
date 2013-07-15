@@ -133,10 +133,14 @@
   }
 }
 
-- (void)videoPlayerPlaybackEnded {
+- (void)videoPlayerPlaybackEnded:(BOOL)skipped {
   AILOG_DEBUG(@"");
   if (self.delegate != nil) {
-    [self.delegate stateNotification:kApplifierImpactStateActionVideoPlaybackEnded];
+    if(skipped) {
+      [self.delegate stateNotification:kApplifierImpactStateActionVideoPlaybackSkipped];
+    } else {
+      [self.delegate stateNotification:kApplifierImpactStateActionVideoPlaybackEnded];
+    }
   }
   
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventVideoCompleted data:@{kApplifierImpactNativeEventCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];

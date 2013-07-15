@@ -21,10 +21,11 @@ typedef enum
 @protocol ApplifierImpactVideoPlayerDelegate <NSObject>
 
 @required
-- (void)videoPlaybackStarted;
 - (void)videoStartedPlaying;
-- (void)videoPlaybackEnded;
+- (void)videoPlaybackEnded:(BOOL)skipped;
 - (void)videoPlaybackError;
+- (void)videoPlaybackStarted;
+- (void)videoPlaybackStalled;
 - (void)videoPositionChanged:(CMTime)time;
 @end
 

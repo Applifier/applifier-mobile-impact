@@ -114,11 +114,15 @@
   [self showVideoPlaybackError];
 }
 
-- (void)videoPlayerPlaybackEnded {
+- (void)videoPlayerPlaybackEnded:(BOOL)skipped {
   AILOG_DEBUG(@"");
 
   if (self.delegate != nil) {
-    [self.delegate stateNotification:kApplifierImpactStateActionVideoPlaybackEnded];
+    if(skipped) {
+      [self.delegate stateNotification:kApplifierImpactStateActionVideoPlaybackSkipped];
+    } else {
+      [self.delegate stateNotification:kApplifierImpactStateActionVideoPlaybackEnded];
+    }
   }
   
   [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeEndScreen withOptions:nil];

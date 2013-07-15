@@ -314,6 +314,10 @@
     if (self.delegate != nil) {
       [self.delegate mainControllerVideoEnded];
     }
+  } else if (action == kApplifierImpactStateActionVideoPlaybackSkipped) {
+    if (self.delegate != nil) {
+      [self.delegate mainControllerVideoSkipped];
+    }
   }
 }
 

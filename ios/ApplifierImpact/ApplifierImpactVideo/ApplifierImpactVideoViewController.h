@@ -15,7 +15,7 @@
 
 @required
 - (void)videoPlayerStartedPlaying;
-- (void)videoPlayerPlaybackEnded;
+- (void)videoPlayerPlaybackEnded:(BOOL)skipped;
 - (void)videoPlayerEncounteredError;
 - (void)videoPlayerReady;
 @end

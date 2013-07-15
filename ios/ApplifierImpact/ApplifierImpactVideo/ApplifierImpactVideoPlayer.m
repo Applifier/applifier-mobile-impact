@@ -22,6 +22,9 @@
   @property (nonatomic) VideoAnalyticsPosition videoPosition;
   @property (nonatomic, assign) BOOL isPlaying;
   @property (nonatomic, assign) BOOL hasPlayed;
+  @property (nonatomic, assign) BOOL hasMoved;
+  @property (nonatomic, strong) NSTimer *videoProgressMonitor;
+  @property (nonatomic, assign) CMTime lastUpdate;
 @end
 
 @implementation ApplifierImpactVideoPlayer
@@ -31,12 +34,14 @@
 - (void)preparePlayer {
   self.isPlaying = false;
   self.hasPlayed = false;
+  self.hasMoved = false;
   [self _addObservers];
 }
 
 - (void)clearPlayer {
   self.isPlaying = false;
   self.hasPlayed = false;
+  self.hasMoved = false;
   [self _removeObservers];
 }
 
@@ -63,11 +68,12 @@
   }
   
   [self _logVideoAnalytics];
+  [self clearVideoProgressMonitor];
 
   dispatch_async(dispatch_get_main_queue(), ^{
     self.hasPlayed = true;
     self.isPlaying = false;
-    [self.delegate videoPlaybackEnded];
+    [self.delegate videoPlaybackEnded:FALSE];
   });
 }
 
@@ -80,6 +86,7 @@
   if (!self.hasPlayed && !self.isPlaying) {
     AILOG_DEBUG(@"Video hasn't played and video is not playing! Seems that video is timing out.");
     [self clearTimeOutTimer];
+    [self clearVideoProgressMonitor];
     [self.delegate videoPlaybackError];
     [ApplifierImpactInstrumentation gaInstrumentationVideoError:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] withValuesFrom:nil];
   }
@@ -88,15 +95,13 @@
 - (void)_addObservers {
   
   dispatch_async(dispatch_get_main_queue(), ^{
-    [self addObserver:self forKeyPath:@"self.currentItem.status" options:0 context:nil];
-    [self addObserver:self forKeyPath:@"self.currentItem.error" options:0 context:nil];
-    [self addObserver:self forKeyPath:@"self.currentItem.asset.duration" options:0 context:nil];
+    [self addObserver:self forKeyPath:@"currentItem.status" options:0 context:nil];
   });
  
   __block ApplifierImpactVideoPlayer *blockSelf = self;
     self.timeObserver = [self addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:nil usingBlock:^(CMTime time) {
       [blockSelf _videoPositionChanged:time];
-    }];
+    }];  
   
   self.timeOutTimer = [NSTimer scheduledTimerWithTimeInterval:25 target:self selector:@selector(checkIfPlayed) userInfo:nil repeats:false];
   
@@ -107,6 +112,13 @@
   if (self.timeOutTimer != nil) {
     [self.timeOutTimer invalidate];
     self.timeOutTimer = nil;
+  }
+}
+
+- (void)clearVideoProgressMonitor {
+  if(self.videoProgressMonitor != nil) {
+    [self.videoProgressMonitor invalidate];
+    self.videoProgressMonitor = nil;
   }
 }
 
@@ -126,38 +138,22 @@
   }
   
   [self clearTimeOutTimer];
+  [self clearVideoProgressMonitor];
 
-  [self removeObserver:self forKeyPath:@"self.currentItem.status"];
-  [self removeObserver:self forKeyPath:@"self.currentItem.error"];
-  [self removeObserver:self forKeyPath:@"self.currentItem.asset.duration"];
+  [self removeObserver:self forKeyPath:@"currentItem.status"];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-  if ([keyPath isEqual:@"self.currentItem.error"]) {
-    if (self.currentItem.error != NULL) {
-      dispatch_async(dispatch_get_main_queue(), ^{
-        self.isPlaying = false;
-        self.hasPlayed = false;
-        [self.delegate videoPlaybackError];
-        [ApplifierImpactInstrumentation gaInstrumentationVideoError:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] withValuesFrom:nil];
-      });
-      AILOG_DEBUG(@"VIDEOPLAYER_ERROR: %@", self.currentItem.error);
-    } else {
-      AILOG_DEBUG(@"VIDEOPLAYER_ERROR");
-    }
-  }
-  else if ([keyPath isEqual:@"self.currentItem.asset.duration"]) {
-    AILOG_DEBUG(@"VIDEOPLAYER_DURATION: %f", CMTimeGetSeconds(self.currentItem.asset.duration));
-  }
-  else if ([keyPath isEqual:@"self.currentItem.status"]) {
-    AILOG_DEBUG(@"VIDEOPLAYER_STATUS: %i", self.currentItem.status);
+  if ([keyPath isEqual:@"currentItem.status"]) {
+    AILOG_DEBUG(@"VIDEOPLAYERITEM_STATUS: %i", self.currentItem.status);
     
-    AVPlayerStatus playerStatus = self.currentItem.status;
-    if (playerStatus == AVPlayerStatusReadyToPlay) {
+    AVPlayerItemStatus playerItemStatus = self.currentItem.status;
+    if (playerItemStatus == AVPlayerItemStatusReadyToPlay) {
       AILOG_DEBUG(@"videostartedplaying");
       __block ApplifierImpactVideoPlayer *blockSelf = self;
       
-      [self clearTimeOutTimer];
+      self.lastUpdate = kCMTimeInvalid;
+      self.videoProgressMonitor = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(_videoProgressMonitor:) userInfo:nil repeats:YES];
       
       Float64 duration = [self _currentVideoDuration];
       NSMutableArray *analyticsTimeValues = [NSMutableArray array];
@@ -174,7 +170,7 @@
       
       dispatch_async(dispatch_get_main_queue(), ^{
         self.hasPlayed = false;
-        self.isPlaying = true;
+        self.isPlaying = false;
         [self.delegate videoStartedPlaying];
         [self _logVideoAnalytics];
       });
@@ -186,7 +182,7 @@
       
       [ApplifierImpactInstrumentation gaInstrumentationVideoPlay:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] withValuesFrom:@{kApplifierImpactGoogleAnalyticsEventBufferingDurationKey:@(bufferingCompleted)}];
     }
-    else if (playerStatus == AVPlayerStatusFailed) {
+    else if (playerItemStatus == AVPlayerItemStatusFailed) {
       AILOG_DEBUG(@"Player failed");
       dispatch_async(dispatch_get_main_queue(), ^{
         self.hasPlayed = false;
@@ -194,14 +190,39 @@
         [self.delegate videoPlaybackError];
         [ApplifierImpactInstrumentation gaInstrumentationVideoError:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] withValuesFrom:nil];
         [self clearTimeOutTimer];
+        [self clearVideoProgressMonitor];
       });
     }
-    else if (playerStatus == AVPlayerStatusUnknown) {
+    else if (playerItemStatus == AVPlayerItemStatusUnknown) {
       AILOG_DEBUG(@"Player in unknown state");
     }
+  } else {
+    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
   }
 }
 
+#pragma mark Video progress
+
+- (void)_videoProgressMonitor:(NSTimer *)timer {
+  if(CMTIME_IS_INVALID(self.lastUpdate)) {
+    self.lastUpdate = self.currentTime;
+  } else {
+    Float64 difference = CMTimeGetSeconds(CMTimeSubtract(self.currentTime, self.lastUpdate));
+    AILOG_DEBUG(@"VIDEO MOVED: %f", difference);
+    if(difference <= 0.001) {
+      AILOG_DEBUG(@"VIDEO STALLED!");
+      [self.delegate videoPlaybackStalled];
+    } else {
+      if(!self.hasMoved) {
+        [self clearTimeOutTimer];
+        self.hasMoved = true;
+        self.isPlaying = true;
+      }
+      [self.delegate videoPlaybackStarted];
+    }
+    self.lastUpdate = self.currentTime;
+  }
+}
 
 #pragma mark Video Duration
 

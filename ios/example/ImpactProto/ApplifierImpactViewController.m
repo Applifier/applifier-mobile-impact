@@ -99,9 +99,13 @@
 
         //[[ApplifierImpact sharedInstance] setViewController:self showImmediatelyInNewController:YES];
         
-        NSLog(@"showImpact: %i", [[ApplifierImpact sharedInstance] showImpact:@{kApplifierImpactOptionNoOfferscreenKey:@false, kApplifierImpactOptionOpenAnimatedKey:@true, kApplifierImpactOptionGamerSIDKey:@"gom", kApplifierImpactOptionMuteVideoSounds:@false, kApplifierImpactOptionVideoUsesDeviceOrientation:@true}]);
-        
-        //[[ApplifierImpact sharedInstance] showImpact];
+        NSLog(@"showImpact: %i", [[ApplifierImpact sharedInstance] showImpact:@{
+          kApplifierImpactOptionNoOfferscreenKey:@false,
+          kApplifierImpactOptionOpenAnimatedKey:@true,
+          kApplifierImpactOptionGamerSIDKey:@"gom",
+          kApplifierImpactOptionMuteVideoSounds:@true,
+          kApplifierImpactOptionVideoUsesDeviceOrientation:@true
+        }]);
         
         /*
         NSLog(@"SETTING_REWARD_ITEM (while open): %i", [[ApplifierImpact sharedInstance] setRewardItemKey:[[ApplifierImpact sharedInstance] getDefaultRewardItemKey]]);
@@ -163,8 +167,8 @@
 	NSLog(@"applifierImpactVideoStarted");
 }
 
-- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey {
-	NSLog(@"applifierImpact:completedVideoWithRewardItem: -- key: %@", rewardItemKey);
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey videoWasSkipped:(BOOL)skipped {
+	NSLog(@"applifierImpact:completedVideoWithRewardItem: -- key: %@ -- skipped: %@", rewardItemKey, skipped ? @"true" : @"false");
     [self.loadingImage setImage:[UIImage imageNamed:@"impact-reward"]];
 }
 
