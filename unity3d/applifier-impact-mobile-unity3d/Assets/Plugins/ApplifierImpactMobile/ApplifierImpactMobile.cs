@@ -47,7 +47,7 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		_impactCloseDelegate = action;
 	}
 
-	public delegate void ApplifierImpactVideoCompleted(string rewardItemKey);
+	public delegate void ApplifierImpactVideoCompleted(string rewardItemKey, bool skipped);
 	private static ApplifierImpactVideoCompleted _videoCompletedDelegate;
 	public static void setVideoCompletedDelegate (ApplifierImpactVideoCompleted action) {
 		_videoCompletedDelegate = action;
@@ -286,11 +286,17 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		ApplifierImpactMobileExternal.Log("onVideoStarted");
 	}
 	
-	public void onVideoCompleted (string rewardItemKey) {
-		if (_videoCompletedDelegate != null)
-			_videoCompletedDelegate(rewardItemKey);
+	public void onVideoCompleted (string parameters) {
+		if (parameters != null) {
+			List<string> splittedParameters = new List<string>(parameters.Split(';'));
+			string rewardItemKey = splittedParameters.ToArray().GetValue(0).ToString();
+			bool skipped = splittedParameters.ToArray().GetValue(1).ToString() == "true" ? true : false;
+			
+			if (_videoCompletedDelegate != null)
+				_videoCompletedDelegate(rewardItemKey, skipped);
 		
-		ApplifierImpactMobileExternal.Log("onVideoCompleted: " + rewardItemKey);
+			ApplifierImpactMobileExternal.Log("onVideoCompleted: " + rewardItemKey + " - " + skipped);
+		}
 	}
 	
 	public void onCampaignsAvailable () {

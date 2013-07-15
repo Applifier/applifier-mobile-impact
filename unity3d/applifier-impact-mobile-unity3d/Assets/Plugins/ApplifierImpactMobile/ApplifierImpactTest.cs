@@ -32,8 +32,8 @@ public class ApplifierImpactTest : MonoBehaviour {
 		Debug.Log ("IMPACT: CLOSE!");
 	}
 
-	public void ApplifierImpactVideoCompleted(string rewardItemKey) {
-		Debug.Log ("IMPACT: VIDEO COMPLETE : " + rewardItemKey);
+	public void ApplifierImpactVideoCompleted(string rewardItemKey, bool skipped) {
+		Debug.Log ("IMPACT: VIDEO COMPLETE : " + rewardItemKey + " - " + skipped);
 	}
 
 	public void ApplifierImpactVideoStarted() {
