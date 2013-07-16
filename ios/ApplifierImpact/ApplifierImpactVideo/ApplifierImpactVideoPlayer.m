@@ -250,7 +250,8 @@
 - (void)_logVideoAnalytics {
   AILOG_DEBUG(@"_logVideoAnalytics");
 	self.videoPosition++;
-  [[ApplifierImpactAnalyticsUploader sharedInstance] logVideoAnalyticsWithPosition:self.videoPosition campaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
+  ApplifierImpactCampaign *campaign = [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign];
+  [[ApplifierImpactAnalyticsUploader sharedInstance] logVideoAnalyticsWithPosition:self.videoPosition campaignId:campaign.id viewed:campaign.viewed];
 }
 
 @end
