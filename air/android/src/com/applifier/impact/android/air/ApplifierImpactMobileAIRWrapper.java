@@ -46,7 +46,7 @@ public class ApplifierImpactMobileAIRWrapper implements FREExtension, IApplifier
     
     @Override
 	public void onVideoCompleted (String rewardItemKey) {
-    	_extensionContext.dispatchStatusEventAsync("impactVideoCompletedWithReward", ApplifierImpact.instance.getCurrentRewardItemKey());
+    	_extensionContext.dispatchStatusEventAsync("impactVideoCompletedWithReward", ApplifierImpact.instance.getCurrentRewardItemKey() + ";false");
     }
 	
 	// Impact campaign events

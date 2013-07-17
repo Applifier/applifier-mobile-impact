@@ -208,7 +208,7 @@ public class ApplifierImpactUnity3DWrapper implements IApplifierImpactListener {
 
 	@Override
 	public void onVideoCompleted(String rewardItemKey) {
-		sendMessageToUnity3D("onVideoCompleted", rewardItemKey);
+		sendMessageToUnity3D("onVideoCompleted", rewardItemKey + ";false");
 	}
 
 	@Override
