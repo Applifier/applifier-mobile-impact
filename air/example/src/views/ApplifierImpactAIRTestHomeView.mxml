@@ -43,7 +43,7 @@
 			{
 				if (_impact.isSupported() && _impact.canShowImpact()) 
 				{
-					_impact.showImpact(false, false, "Seppo", true, true); 
+					_impact.showImpact(false, false, "Seppiina (Sepon sisko)", true, true); 
 				}
 			}
 			

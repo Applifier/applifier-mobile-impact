@@ -2,7 +2,6 @@ package com.applifier.impact.android.air;
 
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREExtension;
-import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.IApplifierImpactListener;
 
 public class ApplifierImpactMobileAIRWrapper implements FREExtension, IApplifierImpactListener {
@@ -46,7 +45,8 @@ public class ApplifierImpactMobileAIRWrapper implements FREExtension, IApplifier
     
     @Override
 	public void onVideoCompleted (String rewardItemKey) {
-    	_extensionContext.dispatchStatusEventAsync("impactVideoCompletedWithReward", ApplifierImpact.instance.getCurrentRewardItemKey() + ";false");
+    	String retValue = rewardItemKey + ";false";
+    	_extensionContext.dispatchStatusEventAsync("impactVideoCompletedWithReward", retValue);
     }
 	
 	// Impact campaign events
