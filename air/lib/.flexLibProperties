@@ -3,6 +3,7 @@
   <includeClasses>
     <classEntry path="com.applifier.impact.ApplifierImpactMobileAIRWrapper"/>
     <classEntry path="com.applifier.impact.ApplifierImpactMobileEvent"/>
+    <classEntry path="com.applifier.impact.ApplifierImpactMobileCompletedEvent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

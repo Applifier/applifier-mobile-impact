@@ -94,10 +94,11 @@ ApplifierImpactMobileAIRWrapper *applifierImpactWrapperSharedInstance = nil;
     FREDispatchStatusEventAsync(applifierImpactFREContext, eventType, value);
 }
 
-- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey {
-	NSLog(@"applifierImpact:completedVideoWithRewardItem: -- key: %@", rewardItemKey);
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey videoWasSkipped:(BOOL)skipped {
+	NSLog(@"applifierImpact:completedVideoWithRewardItem: -- key: %@ -- skipped: %@", rewardItemKey, skipped ? @"true" : @"false");
+    NSString *parameters = [NSString stringWithFormat:@"%@;%@", rewardItemKey, skipped ? @"true" : @"false"];
     const uint8_t* eventType = (const uint8_t*) [@"impactVideoCompletedWithReward" UTF8String];
-    const uint8_t* value = (const uint8_t*) [rewardItemKey UTF8String];
+    const uint8_t* value = (const uint8_t*) [parameters UTF8String];
     FREDispatchStatusEventAsync(applifierImpactFREContext, eventType, value);
 }
 

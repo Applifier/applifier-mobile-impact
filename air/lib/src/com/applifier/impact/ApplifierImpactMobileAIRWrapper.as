@@ -175,7 +175,10 @@ package com.applifier.impact
 						dispatchEvent(new ApplifierImpactMobileEvent(ApplifierImpactMobileEvent.IMPACT_VIDEO_STARTED));
 						break;
 					case ApplifierImpactMobileEvent.IMPACT_VIDEO_COMPLETED_WITH_REWARD:
-						newEvent = new ApplifierImpactMobileEvent(ApplifierImpactMobileEvent.IMPACT_VIDEO_COMPLETED_WITH_REWARD);
+						var parameters:Array = event.level.split(";");
+						var rewardItemKey:String = parameters[0];
+						var skipped:Boolean = parameters[1] == "true" ? true : false;				
+						newEvent = new ApplifierImpactMobileCompletedEvent(rewardItemKey, skipped);
 						newEvent.data = event.level;
 						dispatchEvent(newEvent);
 						break;					

@@ -12,6 +12,7 @@
 		<![CDATA[
 			import com.applifier.impact.ApplifierImpactMobileAIRWrapper;
 			import com.applifier.impact.ApplifierImpactMobileEvent;
+			import com.applifier.impact.ApplifierImpactMobileCompletedEvent;
 			
 			private var _impact:ApplifierImpactMobileAIRWrapper;
 			public function view1_activateHandler(event:Event):void
@@ -67,7 +68,7 @@
 			{				
 			}
 			
-			private function onVideoCompletedWithReward (event:ApplifierImpactMobileEvent) : void
+			private function onVideoCompletedWithReward (event:ApplifierImpactMobileCompletedEvent) : void
 			{
 				status.text = event.data as String;
 			}
