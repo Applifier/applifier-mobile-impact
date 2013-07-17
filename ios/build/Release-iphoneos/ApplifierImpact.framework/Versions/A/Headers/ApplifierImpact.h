@@ -34,7 +34,7 @@ typedef enum {
 @protocol ApplifierImpactDelegate <NSObject>
 
 @required
-- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey;
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey videoWasSkipped:(BOOL)skipped;
 
 @optional
 - (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact;
@@ -45,7 +45,6 @@ typedef enum {
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact;
 - (void)applifierImpactCampaignsFetchFailed:(ApplifierImpact *)applifierImpact;
-
 @end
 
 @interface ApplifierImpact : NSObject
