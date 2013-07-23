@@ -631,6 +631,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			
 			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && !_playHeadHasMoved && _bufferingStartedMillis > 0 && 
 				(System.currentTimeMillis() - _bufferingStartedMillis) > (ApplifierImpactProperties.MAX_BUFFERING_WAIT_SECONDS * 1000)) {
+				this.cancel();
 				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
