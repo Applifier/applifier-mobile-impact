@@ -1,4 +1,3 @@
-
 Applifier Impact is now known as Everyplay GameAds. The rebranding is currently on its way.
 
 Welcome to the repository for Everyplay GameAds. To get started, make sure you have an account registered with Applifier.
@@ -14,7 +13,7 @@ Everyplay GameAds SDK is licensed under the Apache License, Version 2.0 (http://
 
 In any issues, please file in issue with us in this Github repository, or log a ticket with us by emailing support@applifier.zendesk.com
 
-Everyplay Game Ads SDK Release Notes
+Everyplay GameAds SDK Release Notes
 ==================================
 
 current development version
