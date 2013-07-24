@@ -14,6 +14,44 @@ In any issues, please file in issue with us in this Github repository, or log a 
 Applifier Impact SDK Release Notes
 ==================================
 
+current development version
+--------------------------
+*Android:*
+
+- Fixed a bug which caused crash in video buffering errors
+
+
+v1.0.9 July 19th, 2013
+--------------------------
+*All platforms:*
+
+- Added a boolean for the video completion delegate for telling whether the video was skipped or not.
+
+
+*iOS:*
+
+- Removed MAC Address and ODIN1 from iOS7 and added plain text Advertising Identifier (IDFA) sending.
+- Enabled skipping stalled video.
+- Fixed a bug which caused the video end event not being sent always although the user reached the end.
+
+
+v1.0.8 July 5th, 2013
+--------------------------
+*All platforms:*
+
+- Improved video playback error handling
+
+*iOS:*
+
+- Moved network reachability test to background
+- Removed duplicate logging events
+
+*Unity:*
+
+- Fixed a build error on Android
+- Fixed Unity wrapper calling outdated canShowAds instead of canShowCampaigns
+
+
 v1.0.7 June 18th, 2013
 --------------------------
 *All platforms:*
