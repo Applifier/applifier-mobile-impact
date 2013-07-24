@@ -1,21 +1,29 @@
-Welcome to the repository for Applifier Impact. To get started, make sure you have an account registered with Applifier.
+
+Applifier Impact is now known as Everyplay GameAds. The rebranding is currently on its way.
+
+Welcome to the repository for Everyplay GameAds. To get started, make sure you have an account registered with Applifier.
 If you don't have one, you can create an account at https://my.applifier.com/.
 
 Integration instructions can be found here:
 
-For iOS: http://docs.applifier.com/facebook-and-web/applifier-impact/ios/integrating-applifier-impact-for-ios/
+For iOS: http://docs.applifier.com/impact/ios/
 
-For Android: http://docs.applifier.com/documentation/applifier-impact/impact-for-android/integration-documentation/
+For Android: http://docs.applifier.com/impact/android/
 
-Applifier Impact SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
+Everyplay GameAds SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
 
 In any issues, please file in issue with us in this Github repository, or log a ticket with us by emailing support@applifier.zendesk.com
 
-Applifier Impact SDK Release Notes
+Everyplay Game Ads SDK Release Notes
 ==================================
 
 current development version
 --------------------------
+*All platforms:*
+
+- Applifier Impact is now known as Everyplay GameAds.
+
+
 *Android:*
 
 - Fixed a bug which caused crash in video buffering errors
