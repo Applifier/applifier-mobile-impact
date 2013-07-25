@@ -18,6 +18,7 @@
 
 NSString * const kApplifierImpactRewardItemPictureKey = @"picture";
 NSString * const kApplifierImpactRewardItemNameKey = @"name";
+
 NSString * const kApplifierImpactOptionNoOfferscreenKey = @"noOfferScreen";
 NSString * const kApplifierImpactOptionOpenAnimatedKey = @"openAnimated";
 NSString * const kApplifierImpactOptionGamerSIDKey = @"sid";
@@ -232,9 +233,12 @@ static ApplifierImpact *sharedImpact = nil;
   BOOL openAnimated = false;
   if ([[ApplifierImpactProperties sharedInstance] currentViewController] == nil) {
     openAnimated = YES;
+  } else {
+    if([[ApplifierImpactMainViewController sharedInstance] isOpen]) {
+      [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:NO withOptions:nil];
+    }
   }
   
-  [[ApplifierImpactMainViewController sharedInstance] closeImpact:YES withAnimations:NO withOptions:nil];
   [[ApplifierImpactProperties sharedInstance] setCurrentViewController:viewController];
   
   if (applyImpact && [self canShowImpact]) {
