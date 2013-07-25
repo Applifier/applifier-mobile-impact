@@ -15,7 +15,7 @@
 - (id)initWithParams:(NSDictionary *)params {
     self = [super init];
     if(self != nil) {
-        _params = [NSMutableDictionary dictionary];
+        _params = [[NSMutableDictionary alloc] init];
                 
         NSString *noOfferScreenValue = [params objectForKey:kApplifierImpactOptionNoOfferscreenKey];
         NSString *openAnimatedValue = [params objectForKey:kApplifierImpactOptionOpenAnimatedKey];
@@ -24,22 +24,27 @@
         NSString *videoUsesDeviceOrientationValue = [params objectForKey:kApplifierImpactOptionVideoUsesDeviceOrientation];
         
         if(noOfferScreenValue != nil) {
-            [_params setObject:@true forKey:kApplifierImpactOptionNoOfferscreenKey];
+            [_params setObject:noOfferScreenValue forKey:kApplifierImpactOptionNoOfferscreenKey];
         }
         if(openAnimatedValue != nil) {
-            [_params setObject:@true forKey:kApplifierImpactOptionOpenAnimatedKey];
+            [_params setObject:openAnimatedValue forKey:kApplifierImpactOptionOpenAnimatedKey];
         }
         if(gamerSidValue != nil) {
             [_params setObject:gamerSidValue forKey:kApplifierImpactOptionGamerSIDKey];
         }
         if(muteVideoSoundsValue != nil) {
-            [_params setObject:@true forKey:kApplifierImpactOptionMuteVideoSounds];
+            [_params setObject:muteVideoSoundsValue forKey:kApplifierImpactOptionMuteVideoSounds];
         }
         if(videoUsesDeviceOrientationValue != nil) {
-            [_params setObject:@true forKey:kApplifierImpactOptionVideoUsesDeviceOrientation];
+            [_params setObject:videoUsesDeviceOrientationValue forKey:kApplifierImpactOptionVideoUsesDeviceOrientation];
         }
     }
     return self;
+}
+
+- (void)dealloc {
+    [_params dealloc];
+    [super dealloc];
 }
 
 /**
@@ -69,7 +74,7 @@
 - (void)presentInterstitial {
     AILOG_DEBUG(@"");
     [[ApplifierImpact sharedInstance] setViewController:[[self delegate] viewControllerForModalPresentation] showImmediatelyInNewController:NO];
-    [[ApplifierImpact sharedInstance] showImpact:[_params copy]];
+    [[ApplifierImpact sharedInstance] showImpact:_params];
 }
 
 /*=
