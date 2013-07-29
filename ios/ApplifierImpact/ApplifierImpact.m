@@ -95,7 +95,7 @@ static ApplifierImpact *sharedImpact = nil;
 - (void)initFailed {
 	AIAssert([NSThread isMainThread]);
   AILOG_DEBUG(@"");
-  if ([self.delegate respondsToSelector:@selector(applifierImpactCampaignsFetchFailed:)])
+  if (self.delegate != nil && [self.delegate respondsToSelector:@selector(applifierImpactCampaignsFetchFailed:)])
     [self.delegate applifierImpactCampaignsFetchFailed:self];
 }
 
@@ -323,7 +323,7 @@ static ApplifierImpact *sharedImpact = nil;
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
-	if ([self.delegate respondsToSelector:@selector(applifierImpactWillClose:)])
+	if (self.delegate != nil && [self.delegate respondsToSelector:@selector(applifierImpactWillClose:)])
 		[self.delegate applifierImpactWillClose:self];
 }
 
@@ -331,7 +331,7 @@ static ApplifierImpact *sharedImpact = nil;
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
   
-  if ([self.delegate respondsToSelector:@selector(applifierImpactDidClose:)])
+  if (self.delegate != nil && [self.delegate respondsToSelector:@selector(applifierImpactDidClose:)])
 		[self.delegate applifierImpactDidClose:self];
 }
 
@@ -339,7 +339,7 @@ static ApplifierImpact *sharedImpact = nil;
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
   
-  if ([self.delegate respondsToSelector:@selector(applifierImpactWillOpen:)])
+  if (self.delegate != nil && [self.delegate respondsToSelector:@selector(applifierImpactWillOpen:)])
 		[self.delegate applifierImpactWillOpen:self];
 }
 
@@ -347,7 +347,7 @@ static ApplifierImpact *sharedImpact = nil;
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
   
-  if ([self.delegate respondsToSelector:@selector(applifierImpactDidOpen:)])
+  if (self.delegate != nil && [self.delegate respondsToSelector:@selector(applifierImpactDidOpen:)])
 		[self.delegate applifierImpactDidOpen:self];
 }
 
@@ -355,7 +355,7 @@ static ApplifierImpact *sharedImpact = nil;
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 	
-	if ([self.delegate respondsToSelector:@selector(applifierImpactVideoStarted:)])
+	if (self.delegate != nil && [self.delegate respondsToSelector:@selector(applifierImpactVideoStarted:)])
 		[self.delegate applifierImpactVideoStarted:self];
 }
 
@@ -365,7 +365,10 @@ static ApplifierImpact *sharedImpact = nil;
 	
   if (![[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed) {
     [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed = YES;
-    [self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key videoWasSkipped:FALSE];
+    
+    if (self.delegate != nil) {
+      [self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key videoWasSkipped:FALSE];
+    }
   }
 }
 
@@ -375,7 +378,10 @@ static ApplifierImpact *sharedImpact = nil;
 	
   if (![[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed) {
     [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed = YES;
-    [self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key videoWasSkipped:TRUE];
+    
+    if (self.delegate != nil) {
+      [self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key videoWasSkipped:TRUE];
+    }
   }
 }
 
@@ -383,7 +389,7 @@ static ApplifierImpact *sharedImpact = nil;
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
   
-  if ([self.delegate respondsToSelector:@selector(applifierImpactWillLeaveApplication:)])
+  if (self.delegate != nil && [self.delegate respondsToSelector:@selector(applifierImpactWillLeaveApplication:)])
 		[self.delegate applifierImpactWillLeaveApplication:self];
 }
 
@@ -392,7 +398,7 @@ static ApplifierImpact *sharedImpact = nil;
 
 - (void)notifyDelegateOfCampaignAvailability {
 	if ([self impactCanBeShown]) {
-		if ([self.delegate respondsToSelector:@selector(applifierImpactCampaignsAreAvailable:)])
+		if (self.delegate != nil && [self.delegate respondsToSelector:@selector(applifierImpactCampaignsAreAvailable:)])
 			[self.delegate applifierImpactCampaignsAreAvailable:self];
 	}
 }
