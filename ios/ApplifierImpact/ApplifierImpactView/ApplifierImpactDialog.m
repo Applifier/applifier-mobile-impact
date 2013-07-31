@@ -44,9 +44,8 @@
     [self addSubview:self.spinner];
     [self bringSubviewToFront:self.spinner];
     
-    if (![ApplifierImpactDevice isSimulator]) {
-      [self startSpin];
-    }
+
+    [self startSpin];
   }
   if (self.useLabel) {
     CGRect rect = CGRectMake(9, 9, self.frame.size.width - 18, self.frame.size.height - 18);
