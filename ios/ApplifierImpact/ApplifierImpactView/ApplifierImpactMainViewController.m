@@ -22,8 +22,6 @@
 #import "../ApplifierImpact.h"
 
 @interface ApplifierImpactMainViewController ()
-  @property (nonatomic, strong) void (^closeHandler)(void);
-  @property (nonatomic, strong) void (^openHandler)(void);
   @property (nonatomic, strong) ApplifierImpactViewState *currentViewState;
   @property (nonatomic, strong) ApplifierImpactViewState *previousViewState;
   @property (nonatomic, strong) NSMutableArray *viewStateHandlers;
@@ -209,25 +207,14 @@
       [self.currentViewState willBeShown];
       [self.delegate mainControllerWillOpen];
       [self changeState:requestedState withOptions:options];
-      
-      if (![ApplifierImpactDevice isSimulator]) {
-        if (self.openHandler == nil) {
-          __unsafe_unretained typeof(self) weakSelf = self;
-          
-          self.openHandler = ^(void) {
-            AILOG_DEBUG(@"Running openhandler after opening view");
-            if (weakSelf != NULL) {
-              if (weakSelf.currentViewState != nil) {
-                [weakSelf.currentViewState wasShown];
-              }
-              [weakSelf.delegate mainControllerDidOpen];
-            }
-          };
+      [[[ApplifierImpactProperties sharedInstance] currentViewController] presentViewController:self animated:animated completion:^{
+        AILOG_DEBUG(@"Running openhandler after opening view");
+        if (self.currentViewState != nil) {
+          [self.currentViewState wasShown];
         }
-      }
-      
-      [[[ApplifierImpactProperties sharedInstance] currentViewController] presentViewController:self animated:animated completion:self.openHandler];
-    }
+        [self.delegate mainControllerDidOpen];
+      }];
+    };    
   });
   
   if (self.currentViewState != nil) {
@@ -255,29 +242,16 @@
       [self.currentViewState exitState:nil];
     }
   }
-  
+
   [self.delegate mainControllerWillClose];
-  
-  if (![ApplifierImpactDevice isSimulator]) {
-    if (self.closeHandler == nil) {
-      __unsafe_unretained typeof(self) weakSelf = self;
-      self.closeHandler = ^(void) {
-        if (weakSelf != NULL) {
-          if (weakSelf.currentViewState != nil) {
-            [weakSelf.currentViewState exitState:nil];
-          }
-          weakSelf.isOpen = NO;
-          [weakSelf.delegate mainControllerDidClose];
-        }
-      };
+
+  [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:animated completion:^{
+    if (self.currentViewState != nil) {
+      [self.currentViewState exitState:nil];
     }
-  }
-  else {
     self.isOpen = NO;
     [self.delegate mainControllerDidClose];
-  }
-  
-  [[[ApplifierImpactProperties sharedInstance] currentViewController] dismissViewControllerAnimated:animated completion:self.closeHandler];
+  }];
 }
 
 
