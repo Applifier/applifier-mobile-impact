@@ -24,7 +24,7 @@
 @end
 
 @interface ApplifierImpactInitializer : NSObject
-  @property (nonatomic, assign) id<ApplifierImpactInitializerDelegate> delegate;
+  @property (nonatomic, weak) id<ApplifierImpactInitializerDelegate> delegate;
   @property (nonatomic, strong) NSThread *backgroundThread;
   @property (nonatomic, assign) dispatch_queue_t queue;
 

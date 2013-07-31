@@ -21,7 +21,7 @@
 
 @interface ApplifierImpactViewState : NSObject
 
-@property (nonatomic, assign) id<ApplifierImpactViewStateDelegate> delegate;
+@property (nonatomic, weak) id<ApplifierImpactViewStateDelegate> delegate;
 @property (nonatomic, assign) BOOL waitingToBeShown;
 @property (nonatomic, strong) UIViewController *storeController;
 

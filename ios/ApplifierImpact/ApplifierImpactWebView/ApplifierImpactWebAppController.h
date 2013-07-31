@@ -20,7 +20,7 @@
 @property (nonatomic, strong) UIWebView* webView;
 @property (nonatomic, assign) BOOL webViewLoaded;
 @property (nonatomic, assign) BOOL webViewInitialized;
-@property (nonatomic, assign) id<ApplifierImpactWebAppControllerDelegate> delegate;
+@property (nonatomic, weak) id<ApplifierImpactWebAppControllerDelegate> delegate;
 
 - (void)setWebViewCurrentView:(NSString *)view data:(NSDictionary *)data;
 - (void)loadWebApp:(NSDictionary *)webAppParams;

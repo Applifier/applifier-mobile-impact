@@ -20,7 +20,7 @@
 
 @interface ApplifierImpactCampaignManager : NSObject
 
-@property (nonatomic, assign) id<ApplifierImpactCampaignManagerDelegate> delegate;
+@property (nonatomic, weak) id<ApplifierImpactCampaignManagerDelegate> delegate;
 @property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, strong) NSDictionary *campaignData;
 @property (nonatomic, strong) ApplifierImpactCampaign *selectedCampaign;

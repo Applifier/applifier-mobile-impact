@@ -11,7 +11,7 @@
 
 
 @interface ApplifierImpactViewState ()
-  @property (nonatomic, assign) UIViewController *targetController;
+  @property (nonatomic, weak) UIViewController *targetController;
 @end
 
 @implementation ApplifierImpactViewState

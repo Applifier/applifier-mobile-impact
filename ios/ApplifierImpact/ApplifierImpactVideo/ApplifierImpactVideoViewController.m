@@ -20,7 +20,7 @@
 @interface ApplifierImpactVideoViewController ()
   @property (nonatomic, strong) ApplifierImpactVideoView *videoView;
   @property (nonatomic, strong) ApplifierImpactVideoPlayer *videoPlayer;
-  @property (nonatomic, assign) ApplifierImpactCampaign *campaignToPlay;
+  @property (nonatomic, weak) ApplifierImpactCampaign *campaignToPlay;
   @property (nonatomic, strong) UILabel *bufferingLabel;
   @property (nonatomic, strong) UILabel *progressLabel;
   @property (nonatomic, strong) UIButton *skipLabel;

@@ -26,7 +26,7 @@
 
 @interface ApplifierImpactMainViewController : UIViewController <ApplifierImpactViewStateDelegate>
 
-@property (nonatomic, assign) id<ApplifierImpactMainViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<ApplifierImpactMainViewControllerDelegate> delegate;
 @property (nonatomic, assign) BOOL isClosing;
 @property (nonatomic, assign) BOOL isOpen;
 

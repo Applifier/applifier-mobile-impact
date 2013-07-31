@@ -30,7 +30,7 @@ typedef enum
 @end
 
 @interface ApplifierImpactVideoPlayer : AVPlayer
-@property (nonatomic, assign) id<ApplifierImpactVideoPlayerDelegate> delegate;
+@property (nonatomic, weak) id<ApplifierImpactVideoPlayerDelegate> delegate;
 @property (nonatomic, strong) AVPlayerLayer *playerLayer;
 - (void)playSelectedVideo;
 - (void)preparePlayer;

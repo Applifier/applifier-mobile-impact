@@ -18,7 +18,7 @@
 
 @interface ApplifierImpactCache : NSObject
 
-@property (nonatomic, assign) id<ApplifierImpactCacheDelegate> delegate;
+@property (nonatomic, weak) id<ApplifierImpactCacheDelegate> delegate;
 
 - (void)cacheCampaigns:(NSArray *)campaigns;
 - (NSURL *)localVideoURLForCampaign:(ApplifierImpactCampaign *)campaign;
