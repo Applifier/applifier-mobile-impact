@@ -49,7 +49,7 @@ typedef enum {
 
 @interface ApplifierImpact : NSObject
 
-@property (nonatomic, assign) id<ApplifierImpactDelegate> delegate;
+@property (nonatomic, weak) id<ApplifierImpactDelegate> delegate;
 
 + (ApplifierImpact *)sharedInstance;
 + (BOOL)isSupported;
