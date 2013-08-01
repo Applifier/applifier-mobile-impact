@@ -19,7 +19,7 @@
   @property (nonatomic, strong) NSString *impactGameId;
   @property (nonatomic, strong) NSString *gamerId;
   @property (nonatomic) BOOL testModeEnabled;
-  @property (nonatomic, assign) UIViewController *currentViewController;
+  @property (nonatomic, weak) UIViewController *currentViewController;
   @property (nonatomic, assign) int maxNumberOfAnalyticsRetries;
   @property (nonatomic, strong) NSString *expectedSdkVersion;
   @property (nonatomic, assign) int allowVideoSkipInSeconds;
