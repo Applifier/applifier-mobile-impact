@@ -21,11 +21,15 @@ import com.burstly.lib.component.IBurstlyAdaptorListener;
  */
 public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener {
 	
+	public static final String IMPACT_ADAPTOR_VERSION = "1.0.4";
+	
 	public static String FEATURE_PRECACHE = "precacheInterstitial";
 	
 	public final static String KEY_IMPACT_GAME_ID ="impact_game_id";
 	public final static String KEY_TEST_MODE = "impact_test_mode";
 	public final static String KEY_CLIENT_TARGETING_PARAMS = "clientTargetingParams";
+	public final static String KEY_SKIP_OFFER_SCREEN = "skipOfferScreen";
+	public final static String KEY_DISABLE_REWARDS = "disableRewards";
 	
 	private String gameId = null;
 	
@@ -62,6 +66,12 @@ public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener 
 	 * Custom SID, if any
 	 */
 	private String customSid = null;
+	
+	/**
+	 * Some options for showing Impact
+	 */
+	private boolean skipOfferScreen = false;
+	private boolean disableRewards = false;
 
 	/**
 	 * Construct a new ImpactAdaptor
@@ -103,7 +113,7 @@ public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener 
 		}
 	}
 	
-
+ 
 	@Override
 	public void precacheInterstitialAd() {
 		
@@ -137,17 +147,12 @@ public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener 
 		}
 		
 		if(this.impact.canShowImpact() && this.impact.canShowCampaigns()) {
+			HashMap<String, Object> props = new HashMap<String, Object>();
 			if(this.customSid != null) {
-				HashMap<String, Object> props = new HashMap<String, Object>();
 				props.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, this.customSid);
-				props.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, false);
-				this.impact.showImpact(props);
-				
-				
-				
-			} else {
-				this.impact.showImpact();
 			}
+			props.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, this.skipOfferScreen);
+			this.impact.showImpact(props);
 		}
 	}
 
@@ -160,12 +165,16 @@ public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener 
 		
 		this.isLCRunning = true;
 		
+		Log.d("burstly_applifier", "---------------------------------------------------------");
+		Log.d("burstly_applifier", "Starting transaction with Impact adaptor version " + ImpactAdaptor.IMPACT_ADAPTOR_VERSION);
+		Log.d("burstly_applifier", "---------------------------------------------------------");		
+		
 		for(Object k : impactParams.keySet()) {
 			Log.d("burstly_applifier", "startTransaction: " + k.toString() + " -> " + impactParams.get(k));
 		}
-		
+		 
 		this.gameId = (String)impactParams.get(ImpactAdaptor.KEY_IMPACT_GAME_ID);
-		
+
 		Log.d("burstly_applifier", "ImpactAdaptor.startTransaction(" + this.gameId + ")"); 
 		
 		if(gameId == null) {
@@ -173,17 +182,24 @@ public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener 
 		}
 		
 	    boolean testModeEnabled = "true".equals(impactParams.get(ImpactAdaptor.KEY_TEST_MODE));
-	    ApplifierImpact.setDebugMode(testModeEnabled); 
+	    ApplifierImpact.setDebugMode(testModeEnabled);
 	    ApplifierImpact.setTestMode(testModeEnabled);
 		
 		this.impact = new ApplifierImpact((Activity)this.mContext, this.gameId, this);
 		this.impact.setImpactListener(this);
 		
+		// See if we have some options
+		this.skipOfferScreen = ("true".equals(impactParams.get(ImpactAdaptor.KEY_SKIP_OFFER_SCREEN)));
+		this.disableRewards = ("true".equals(impactParams.get(ImpactAdaptor.KEY_DISABLE_REWARDS)));
+		
 		// See if we have a custom user ID
 		if(impactParams.get(ImpactAdaptor.KEY_CLIENT_TARGETING_PARAMS) != null) {
 			Map targetingParams = (Map)impactParams.get(ImpactAdaptor.KEY_CLIENT_TARGETING_PARAMS);
 			if(targetingParams.get("sid") != null) {
-				this.customSid = targetingParams.get("sid").toString(); 
+				if(!this.disableRewards)
+					this.customSid = targetingParams.get("sid").toString();
+				else 
+					this.customSid = "NO_REWARD";
 			}
 		}
 		
