@@ -90,7 +90,7 @@
 
 -(void)applifierImpactDidOpen:(ApplifierImpact *)applifierImpact {
     [[self delegate] interstitialWillPresentFullScreen:self];
-    [[self delegate] interstitialDidPresentFillScreen:self];
+    [[self delegate] interstitialDidPresentFullScreen:self];
 }
 
 -(void)applifierImpactDidClose:(ApplifierImpact *)applifierImpact {
