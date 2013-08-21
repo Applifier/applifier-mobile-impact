@@ -184,17 +184,19 @@ public class ApplifierImpactUtils {
 	}
 	
 	public static void removeFile (String fileName) {
-		File removeFile = new File (fileName);
-		File cachedVideoFile = new File (ApplifierImpactUtils.getCacheDirectory() + "/" + removeFile.getName());
-		
-		if (cachedVideoFile.exists()) {
-			if (!cachedVideoFile.delete())
-				Log("Could not delete: " + cachedVideoFile.getAbsolutePath(), ApplifierImpactUtils.class);
-			else
-				Log("Deleted: " + cachedVideoFile.getAbsolutePath(), ApplifierImpactUtils.class);
-		}
-		else {
-			Log("File: " + cachedVideoFile.getAbsolutePath() + " doesn't exist.", ApplifierImpactUtils.class);
+		if(fileName != null) {
+			File removeFile = new File (fileName);
+			File cachedVideoFile = new File (ApplifierImpactUtils.getCacheDirectory() + "/" + removeFile.getName());
+			
+			if (cachedVideoFile.exists()) {
+				if (!cachedVideoFile.delete())
+					Log("Could not delete: " + cachedVideoFile.getAbsolutePath(), ApplifierImpactUtils.class);
+				else
+					Log("Deleted: " + cachedVideoFile.getAbsolutePath(), ApplifierImpactUtils.class);
+			}
+			else {
+				Log("File: " + cachedVideoFile.getAbsolutePath() + " doesn't exist.", ApplifierImpactUtils.class);
+			}
 		}
 	}
 	
