@@ -76,6 +76,10 @@
   }
 }
 
+- (BOOL)prefersStatusBarHidden {
+  return YES;
+}
+
 #pragma mark - Orientation handling
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
