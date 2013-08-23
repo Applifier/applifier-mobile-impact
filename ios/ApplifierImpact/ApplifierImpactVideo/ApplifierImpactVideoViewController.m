@@ -147,6 +147,9 @@
   return NO;
 }
 
+- (BOOL)prefersStatusBarHidden {
+  return YES;
+}
 
 #pragma mark - Public
 
