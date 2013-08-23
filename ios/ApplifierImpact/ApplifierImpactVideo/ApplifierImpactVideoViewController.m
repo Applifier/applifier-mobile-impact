@@ -334,7 +334,7 @@
 - (void)createVideoSkipLabel {
   if (self.skipLabel == nil && self.videoOverlayView != nil && [[ApplifierImpactProperties sharedInstance] allowVideoSkipInSeconds] > 0) {
     AILOG_DEBUG(@"Create video skip label");
-    self.skipLabel = [[UIButton alloc] initWithFrame:CGRectMake(3, 0, 205, 20)];
+    self.skipLabel = [[UIButton alloc] initWithFrame:CGRectMake(3, 0, 300, 20)];
     self.skipLabel.backgroundColor = [UIColor clearColor];
     self.skipLabel.titleLabel.textColor = [UIColor whiteColor];
     self.skipLabel.titleLabel.font = [UIFont systemFontOfSize:12.0];
