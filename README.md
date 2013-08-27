@@ -27,6 +27,12 @@ current development version
 
 - Fixed a bug which caused crash in video buffering errors
 
+v1.0.10 August 27th, 2013
+--------------------------
+
+*iOS:*
+
+- Support for iOS 7 Beta
 
 v1.0.9 July 19th, 2013
 --------------------------
