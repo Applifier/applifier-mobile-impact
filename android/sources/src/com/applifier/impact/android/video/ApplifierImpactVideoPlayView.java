@@ -34,8 +34,10 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	private TextView _timeLeftInSecondsText = null;
 	
 	private RelativeLayout _skipText = null;
-	private TextView _timeLeftUntilSkip = null;
+	private TextView _skipTextView = null;
 	private int _skipTimeInSeconds = 0;
+	
+	private RelativeLayout _bufferingText = null;
 	
 	private long _bufferingStartedMillis = 0;
 	private long _bufferingCompledtedMillis = 0;
@@ -140,9 +142,11 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		removeAllViews();
 		
 		_skipText = null;
-		_bufferingView = null;
-		_timeLeftUntilSkip = null;
+		_skipTextView = null;
 		
+		_bufferingText = null;
+		_bufferingView = null;
+				
 		_countDownText = null;
 		_timeLeftInSecondsText = null;
 	}
@@ -209,7 +213,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		
 		if (_videoPausedTimer == null) {
 			_videoPausedTimer = new Timer();
-			_videoPausedTimer.scheduleAtFixedRate(new VideoStateChecker(), 10, 60);
+			_videoPausedTimer.scheduleAtFixedRate(new VideoStateChecker(), 500, 500);
 		}
 	}
 	
@@ -253,6 +257,23 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				_videoPlayheadPrepared = true;
 			}
 		});
+		
+		_bufferingText = new RelativeLayout(getContext());
+		_bufferingText.setId(3100);
+		RelativeLayout.LayoutParams bufferingTextParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		bufferingTextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+		bufferingTextParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		bufferingTextParams.topMargin = 3;
+		bufferingTextParams.rightMargin = 3;
+		_bufferingText.setLayoutParams(bufferingTextParams);
+		
+		TextView bufferingTextView = new TextView(getContext());
+		bufferingTextView.setTextColor(Color.WHITE);
+		bufferingTextView.setText("Buffering...");
+		bufferingTextView.setId(3103);
+		
+		_bufferingText.addView(bufferingTextView);
+		addView(_bufferingText);
 		
 		_countDownText = new RelativeLayout(getContext());
 		_countDownText.setId(3002);
@@ -386,7 +407,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		return 0;
 	}
 	
-	private void createAndAddSkipText () {
+	private void createAndAddSkipText () {	
 		_skipText = new RelativeLayout(getContext());
 		_skipText.setId(3010);
 		RelativeLayout.LayoutParams skipTextParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -396,61 +417,38 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		skipTextParams.leftMargin = 5;
 		_skipText.setLayoutParams(skipTextParams);
 		
-		TextView skipText1 = new TextView(getContext());
-		skipText1.setTextColor(Color.WHITE);
-		skipText1.setText("You can skip this video in ");
-		skipText1.setId(10010);
+		_skipText.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ApplifierImpactUtils.Log("Touching the skiptext", this);
+				_listener.onVideoSkip();
+			}
+		});
 		
-		_timeLeftUntilSkip = new TextView(getContext());
-		_timeLeftUntilSkip.setTextColor(Color.WHITE);
-		_timeLeftUntilSkip.setText("" + _skipTimeInSeconds);
-		_timeLeftUntilSkip.setId(10011);
-		RelativeLayout.LayoutParams timeLeftUntilSkipParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		timeLeftUntilSkipParams.addRule(RelativeLayout.RIGHT_OF, 10010);
-		timeLeftUntilSkipParams.leftMargin = 1;
-		_timeLeftUntilSkip.setLayoutParams(timeLeftUntilSkipParams);
+		_skipTextView = new TextView(getContext());
+		_skipTextView.setTextColor(Color.WHITE);
+		_skipTextView.setText("You can skip this video in " + _skipTimeInSeconds + " seconds");
+		_skipTextView.setId(10010);
 		
-		TextView skipText2 = new TextView(getContext());
-		skipText2.setTextColor(Color.WHITE);
-		skipText2.setText("seconds.");
-		RelativeLayout.LayoutParams skipText2Params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		skipText2Params.addRule(RelativeLayout.RIGHT_OF, 10011);
-		skipText2Params.leftMargin = 4;
-		skipText2.setLayoutParams(skipText2Params);
+		_skipText.addView(_skipTextView);
 		
-		_skipText.addView(skipText1);
-		_skipText.addView(_timeLeftUntilSkip);
-		_skipText.addView(skipText2);
-		
-		addView(_skipText);		
+		addView(_skipText);	
 	}
 	
 	private void enableSkippingFromSkipText () {
 		if (_skipText != null) {
-			_skipText.removeAllViews();
+			_skipText.setVisibility(VISIBLE);
 			_skipText.setClickable(true);
 			_skipText.setBackgroundColor(0x01FFFFFF);
 			_skipText.setFocusable(true);
-			
-			_skipText.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					ApplifierImpactUtils.Log("Touching the skiptext", this);
-					_listener.onVideoSkip();
-				}
-			});
-
-			TextView touchableSkipText = new TextView(getContext());
-			touchableSkipText.setTextColor(Color.WHITE);
-			touchableSkipText.setText("Skip video");
-			RelativeLayout.LayoutParams touchableSkipTextParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-			touchableSkipTextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-			touchableSkipTextParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			touchableSkipTextParams.topMargin = 5;
-			touchableSkipTextParams.leftMargin = 5;
-			
-			_skipText.addView(touchableSkipText);
+			_skipTextView.setText("Skip video");
 			_skipText.requestFocus();
+		}
+	}
+	
+	private void disableSkippingFromSkipText() {
+		if(_skipText != null) {
+			_skipText.setClickable(false);
 		}
 	}
 	
@@ -473,9 +471,34 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	
 	private void hideSkipText () {
 		if (_skipText != null && _skipText.getParent() != null) {
-			_skipText.removeAllViews();
-			removeView(_skipText);
+			disableSkippingFromSkipText();
+			_skipText.setVisibility(INVISIBLE);
 		}
+	}
+	
+	private void setBufferingTextVisibility(final int visibility, final boolean hasSkip, final boolean canSkip) {
+		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
+			@Override
+			public void run() {
+				_bufferingText.setVisibility(visibility);
+				if(visibility == VISIBLE) {
+					if(_skipText == null) {
+						createAndAddSkipText();
+					}
+					enableSkippingFromSkipText();
+				} else {
+					if(hasSkip) {
+						if(canSkip) {
+							enableSkippingFromSkipText();
+						} else {
+							disableSkippingFromSkipText();
+						}
+					} else {
+						hideSkipText();
+					}
+				}
+			}
+		});
 	}
 	
     @Override
@@ -519,8 +542,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		private Float _oldPos = 0f;
 		private Float _skipTimeLeft = 0.01f; 
 		private int _duration = 1;
-		private boolean _playHeadHasMoved = false;
-		
+		private boolean _playHeadHasMoved = false;	
+		private boolean _videoHasStalled = false;
 		
 		@Override
 		public void run () {
@@ -562,8 +585,14 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			
 			position = _curPos / _duration;
 			
-			if (_curPos > _oldPos) 
+			if (_curPos > _oldPos) {
 				_playHeadHasMoved = true;
+				_videoHasStalled = false;
+				setBufferingTextVisibility(INVISIBLE, hasSkipDuration(), _skipTimeLeft <= 0f);
+			} else { 
+				_videoHasStalled = true;
+				setBufferingTextVisibility(VISIBLE, true, true);
+			}
 			
 			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
 				@Override
@@ -592,8 +621,9 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
 						@Override
 						public void run() {
-							if (_timeLeftUntilSkip != null) {
-								_timeLeftUntilSkip.setText("" + Math.round(Math.ceil(((_skipTimeInSeconds * 1000) - _curPos) / 1000)));
+							if (_skipTextView != null && !_videoHasStalled) {
+								_skipText.setVisibility(VISIBLE);
+								_skipTextView.setText("You can skip this video in " + Math.round(Math.ceil(((_skipTimeInSeconds * 1000) - _curPos) / 1000)) + " seconds");
 							}
 						}
 					});
