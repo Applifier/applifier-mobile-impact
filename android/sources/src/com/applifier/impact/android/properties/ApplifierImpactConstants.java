@@ -8,7 +8,7 @@ public class ApplifierImpactConstants {
 	public static final String PENDING_REQUESTS_FILENAME = "pendingrequests.dat";
 
 	/* Impact */
-	public static final String IMPACT_VERSION = "108";
+	public static final String IMPACT_VERSION = "109";
 	public static final String IMPACT_REQUEST_METHOD_POST = "POST";
 	public static final String IMPACT_REQUEST_METHOD_GET = "GET";
 	
