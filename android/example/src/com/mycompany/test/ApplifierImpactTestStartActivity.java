@@ -135,7 +135,10 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
     }
     
     @Override
-	public void onVideoCompleted (String rewardItemKey) {
+	public void onVideoCompleted (String rewardItemKey, boolean skipped) {
+    	if(skipped) {
+    		Log.d(ApplifierImpactConstants.LOG_NAME, "Video was skipped!");
+    	}
     	_statusImage.setImageResource(R.drawable.impact_reward);
     }
 	

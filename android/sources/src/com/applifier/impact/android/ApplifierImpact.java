@@ -321,7 +321,13 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			case VideoEnd:
 				if (_impactListener != null && ApplifierImpactProperties.SELECTED_CAMPAIGN != null && !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed()) {
 					ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
-					_impactListener.onVideoCompleted(getCurrentRewardItemKey());
+					_impactListener.onVideoCompleted(getCurrentRewardItemKey(), false);
+				}
+				break;
+			case VideoSkipped:
+				if (_impactListener != null && ApplifierImpactProperties.SELECTED_CAMPAIGN != null && !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed()) {
+					ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
+					_impactListener.onVideoCompleted(getCurrentRewardItemKey(), true);
 				}
 				break;
 			case RequestRetryVideoPlay:

@@ -298,7 +298,7 @@ public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener 
 	public void onVideoStarted() {}
 
 	@Override
-	public void onVideoCompleted(String key) {
+	public void onVideoCompleted(String key, boolean skipped) {
 		// TODO Auto-generated method stub
 		
 	}
