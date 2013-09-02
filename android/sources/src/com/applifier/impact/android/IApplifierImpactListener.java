@@ -7,7 +7,7 @@ public interface IApplifierImpactListener {
 	
 	// Impact video events
 	public void onVideoStarted ();
-	public void onVideoCompleted (String rewardItemKey);
+	public void onVideoCompleted (String rewardItemKey, boolean skipped);
 	
 	// Impact campaign events
 	public void onCampaignsAvailable ();

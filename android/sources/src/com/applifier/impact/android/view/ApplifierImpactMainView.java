@@ -33,7 +33,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 																		IApplifierImpactVideoPlayerListener {
 
 	public static enum ApplifierImpactMainViewState { WebView, VideoPlayer };
-	public static enum ApplifierImpactMainViewAction { VideoStart, VideoEnd, BackButtonPressed, RequestRetryVideoPlay };
+	public static enum ApplifierImpactMainViewAction { VideoStart, VideoEnd, VideoSkipped, BackButtonPressed, RequestRetryVideoPlay };
 	private static final int FILL_PARENT = -1;
 	
 	// Views
@@ -340,7 +340,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		}
 		
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
-		sendActionToListener(ApplifierImpactMainViewAction.VideoEnd);
+		sendActionToListener(ApplifierImpactMainViewAction.VideoSkipped);
 	}
 	
 	// IApplifierImpactWebViewListener

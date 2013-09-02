@@ -30,6 +30,7 @@ public class AndroidNativeBridge implements IApplifierImpactListener {
     private static int EVENT_IMPACT_VIDEO_COMPLETE = 4;
     private static int EVENT_IMPACT_CAMPAIGNS_AVAILABLE = 5;
     private static int EVENT_IMPACT_CAMPAIGNS_FAILED = 6;	
+    private static int EVENT_IMPACT_VIDEO_SKIPPED = 7;
 
     public static AndroidNativeBridge getInstance() {
         return self;
@@ -70,8 +71,12 @@ public class AndroidNativeBridge implements IApplifierImpactListener {
         dispatchEvent(EVENT_IMPACT_VIDEO_START, null);
     }
 
-    public void onVideoCompleted(String key) {
-        dispatchEvent(EVENT_IMPACT_VIDEO_COMPLETE, key);
+    public void onVideoCompleted(String key, boolean skipped) {
+    	if(skipped) {
+    		dispatchEvent(EVENT_IMPACT_VIDEO_SKIPPED, key);
+    	} else {
+    		dispatchEvent(EVENT_IMPACT_VIDEO_COMPLETE, key);
+    	}
     }
 
     public void onCampaignsAvailable() {
