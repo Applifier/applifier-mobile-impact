@@ -140,7 +140,9 @@
   [self clearTimeOutTimer];
   [self clearVideoProgressMonitor];
 
-  [self removeObserver:self forKeyPath:@"currentItem.status"];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self removeObserver:self forKeyPath:@"currentItem.status"];
+  });
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
