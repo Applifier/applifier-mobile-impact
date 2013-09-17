@@ -1069,6 +1069,124 @@
 			};
 			name = Release;
 		};
+		99FE3C3A17E896F100845E0B /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				BUILD_DIR = "$(SRCROOT)/build";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Test;
+		};
+		99FE3C3B17E896F100845E0B /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(VALID_ARCHS)";
+				CONTENTS_FOLDER_PATH = "$(WRAPPER_NAME)/Versions/$(FRAMEWORK_VERSION)";
+				DEAD_CODE_STRIPPING = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ApplifierImpact/ApplifierImpact-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"TEST=1",
+				);
+				GCC_THUMB_SUPPORT = NO;
+				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpact-Info.plist";
+				INFOPLIST_PATH = "$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Info.plist";
+				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				MACH_O_TYPE = mh_object;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				UNLOCALIZED_RESOURCES_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Resources";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Test;
+		};
+		99FE3C3C17E896F100845E0B /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ApplifierImpact/ApplifierImpactBundle/ApplifierImpactBundle-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpactBundle/ApplifierImpactBundle-Info.plist";
+				INSTALL_PATH = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = ApplifierImpact;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Test;
+		};
+		99FE3C3D17E896F100845E0B /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"\"$(SRCROOT)/build/Release-iphoneos\"",
+					"\"$(SRCROOT)/build/Release-iphonesimulator\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ApplifierImpactTests/ApplifierImpactTests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"TEST=1",
+				);
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = (
+					"DEBUG=1",
+					"TEST=1",
+				);
+				INFOPLIST_FILE = "ApplifierImpactTests/ApplifierImpactTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Test;
+		};
 		CC158913150789ED00B3D188 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1229,6 +1347,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				99FE3C2217E87E1500845E0B /* Debug */,
+				99FE3C3D17E896F100845E0B /* Test */,
 				99FE3C2317E87E1500845E0B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1238,6 +1357,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CC158913150789ED00B3D188 /* Debug */,
+				99FE3C3A17E896F100845E0B /* Test */,
 				CC158914150789ED00B3D188 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1247,6 +1367,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CC158916150789ED00B3D188 /* Debug */,
+				99FE3C3B17E896F100845E0B /* Test */,
 				CC158917150789ED00B3D188 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1256,6 +1377,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CCF83B911733A13200DA12C1 /* Debug */,
+				99FE3C3C17E896F100845E0B /* Test */,
 				CCF83B921733A13200DA12C1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
