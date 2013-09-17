@@ -216,6 +216,11 @@ NSString * const kApplifierImpactGoogleAnalyticsEventCachingDurationKey = @"cach
 NSString * const kApplifierImpactGoogleAnalyticsEventValueKey = @"eventValue";
 NSString * const kApplifierImpactGoogleAnalyticsEventTypeKey = @"eventType";
 
+/* Zones */
+
+NSString * const kApplifierImpactZoneIdKey = @"id";
+NSString * const kApplifierImpactZoneNameKey = @"name";
+
 @implementation ApplifierImpactConstants
 
 @end

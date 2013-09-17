@@ -91,6 +91,9 @@ int main(int argc, char *argv[]);
 }
 
 + (BOOL)isEncrypted {
+#ifdef TEST
+  return NO;
+#else   
   static BOOL seen = NO;
   static BOOL cached = NO;
   
@@ -132,6 +135,7 @@ int main(int argc, char *argv[]);
   
   /* Encryption info not found */
   return NO;
+#endif
 }
 
 + (NSString *)advertisingIdentifier {

@@ -109,6 +109,22 @@
 		78BC12F817392D0D0015A35E /* ApplifierImpactInstrumentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BC12F617392D0D0015A35E /* ApplifierImpactInstrumentation.m */; };
 		78CB843A16255FAA00E94915 /* ApplifierImpactURLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CB843816255FAA00E94915 /* ApplifierImpactURLProtocol.h */; };
 		78CB843B16255FAA00E94915 /* ApplifierImpactURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */; };
+		99FE3C0117E85B2200845E0B /* ApplifierImpactZone.h in Headers */ = {isa = PBXBuildFile; fileRef = 99FE3BFF17E85B2200845E0B /* ApplifierImpactZone.h */; };
+		99FE3C0217E85B2200845E0B /* ApplifierImpactZone.m in Sources */ = {isa = PBXBuildFile; fileRef = 99FE3C0017E85B2200845E0B /* ApplifierImpactZone.m */; };
+		99FE3C0517E85CA500845E0B /* ApplifierImpactZoneManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 99FE3C0317E85CA500845E0B /* ApplifierImpactZoneManager.h */; };
+		99FE3C0617E85CA500845E0B /* ApplifierImpactZoneManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 99FE3C0417E85CA500845E0B /* ApplifierImpactZoneManager.m */; };
+		99FE3C0917E86D2800845E0B /* ApplifierImpactZoneParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 99FE3C0717E86D2700845E0B /* ApplifierImpactZoneParser.h */; };
+		99FE3C0A17E86D2800845E0B /* ApplifierImpactZoneParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 99FE3C0817E86D2800845E0B /* ApplifierImpactZoneParser.m */; };
+		99FE3C1217E87E1400845E0B /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C1117E87E1400845E0B /* SenTestingKit.framework */; };
+		99FE3C1417E87E1400845E0B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C1317E87E1400845E0B /* UIKit.framework */; };
+		99FE3C1617E87E1400845E0B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C1517E87E1400845E0B /* Foundation.framework */; };
+		99FE3C1C17E87E1500845E0B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 99FE3C1A17E87E1500845E0B /* InfoPlist.strings */; };
+		99FE3C2617E87E9200845E0B /* ApplifierImpactZoneTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 99FE3C2517E87E9200845E0B /* ApplifierImpactZoneTests.m */; };
+		99FE3C2E17E8884900845E0B /* ApplifierImpact.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C2D17E8884800845E0B /* ApplifierImpact.framework */; };
+		99FE3C2F17E8887600845E0B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C2917E8880000845E0B /* AVFoundation.framework */; };
+		99FE3C3217E888A900845E0B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C3117E888A600845E0B /* CoreGraphics.framework */; };
+		99FE3C3717E889A000845E0B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C3617E8899D00845E0B /* CoreMedia.framework */; };
+		99FE3C3917E889DC00845E0B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C3817E889D900845E0B /* SystemConfiguration.framework */; };
 		CC095C991733A30E00A0BD3C /* ApplifierImpactBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */; settings = {ATTRIBUTES = (); }; };
 		CC095C9A1733A30E00A0BD3C /* ApplifierImpactBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */; };
 		CC095CAE17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095CAC17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h */; };
@@ -235,6 +251,29 @@
 		78BC12F617392D0D0015A35E /* ApplifierImpactInstrumentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactInstrumentation.m; sourceTree = "<group>"; };
 		78CB843816255FAA00E94915 /* ApplifierImpactURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactURLProtocol.h; sourceTree = "<group>"; };
 		78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactURLProtocol.m; sourceTree = "<group>"; };
+		99FE3BFF17E85B2200845E0B /* ApplifierImpactZone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApplifierImpactZone.h; path = ApplifierImpactZone/ApplifierImpactZone.h; sourceTree = "<group>"; };
+		99FE3C0017E85B2200845E0B /* ApplifierImpactZone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ApplifierImpactZone.m; path = ApplifierImpactZone/ApplifierImpactZone.m; sourceTree = "<group>"; };
+		99FE3C0317E85CA500845E0B /* ApplifierImpactZoneManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactZoneManager.h; sourceTree = "<group>"; };
+		99FE3C0417E85CA500845E0B /* ApplifierImpactZoneManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactZoneManager.m; sourceTree = "<group>"; };
+		99FE3C0717E86D2700845E0B /* ApplifierImpactZoneParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactZoneParser.h; sourceTree = "<group>"; };
+		99FE3C0817E86D2800845E0B /* ApplifierImpactZoneParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactZoneParser.m; sourceTree = "<group>"; };
+		99FE3C1017E87E1300845E0B /* ApplifierImpactTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ApplifierImpactTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		99FE3C1117E87E1400845E0B /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		99FE3C1317E87E1400845E0B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		99FE3C1517E87E1400845E0B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		99FE3C1917E87E1500845E0B /* ApplifierImpactTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ApplifierImpactTests-Info.plist"; sourceTree = "<group>"; };
+		99FE3C1B17E87E1500845E0B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		99FE3C2017E87E1500845E0B /* ApplifierImpactTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ApplifierImpactTests-Prefix.pch"; sourceTree = "<group>"; };
+		99FE3C2417E87E9200845E0B /* ApplifierImpactZoneTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactZoneTests.h; sourceTree = "<group>"; };
+		99FE3C2517E87E9200845E0B /* ApplifierImpactZoneTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactZoneTests.m; sourceTree = "<group>"; };
+		99FE3C2717E8873D00845E0B /* ApplifierImpact.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplifierImpact.framework; path = "build/Release-iphoneos/ApplifierImpact.framework"; sourceTree = "<group>"; };
+		99FE3C2917E8880000845E0B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		99FE3C2B17E8881300845E0B /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		99FE3C2D17E8884800845E0B /* ApplifierImpact.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplifierImpact.framework; path = "build/Release-iphonesimulator/ApplifierImpact.framework"; sourceTree = "<group>"; };
+		99FE3C3117E888A600845E0B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		99FE3C3417E8894700845E0B /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		99FE3C3617E8899D00845E0B /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		99FE3C3817E889D900845E0B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactBundle.h; sourceTree = "<group>"; };
 		CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactBundle.m; sourceTree = "<group>"; };
 		CC095CAC17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactVideoMuteButton.h; sourceTree = "<group>"; };
@@ -255,6 +294,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		99FE3C0C17E87E1300845E0B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				99FE3C3917E889DC00845E0B /* SystemConfiguration.framework in Frameworks */,
+				99FE3C3717E889A000845E0B /* CoreMedia.framework in Frameworks */,
+				99FE3C2E17E8884900845E0B /* ApplifierImpact.framework in Frameworks */,
+				99FE3C3217E888A900845E0B /* CoreGraphics.framework in Frameworks */,
+				99FE3C2F17E8887600845E0B /* AVFoundation.framework in Frameworks */,
+				99FE3C1217E87E1400845E0B /* SenTestingKit.framework in Frameworks */,
+				99FE3C1417E87E1400845E0B /* UIKit.framework in Frameworks */,
+				99FE3C1617E87E1400845E0B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CC158904150789ED00B3D188 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -419,6 +473,39 @@
 			path = ApplifierImpactURLProtocol;
 			sourceTree = "<group>";
 		};
+		99FE3BFE17E85AD600845E0B /* ApplifierImpactZone */ = {
+			isa = PBXGroup;
+			children = (
+				99FE3BFF17E85B2200845E0B /* ApplifierImpactZone.h */,
+				99FE3C0017E85B2200845E0B /* ApplifierImpactZone.m */,
+				99FE3C0317E85CA500845E0B /* ApplifierImpactZoneManager.h */,
+				99FE3C0417E85CA500845E0B /* ApplifierImpactZoneManager.m */,
+				99FE3C0717E86D2700845E0B /* ApplifierImpactZoneParser.h */,
+				99FE3C0817E86D2800845E0B /* ApplifierImpactZoneParser.m */,
+			);
+			name = ApplifierImpactZone;
+			sourceTree = "<group>";
+		};
+		99FE3C1717E87E1400845E0B /* ApplifierImpactTests */ = {
+			isa = PBXGroup;
+			children = (
+				99FE3C2417E87E9200845E0B /* ApplifierImpactZoneTests.h */,
+				99FE3C2517E87E9200845E0B /* ApplifierImpactZoneTests.m */,
+				99FE3C1817E87E1500845E0B /* Supporting Files */,
+			);
+			path = ApplifierImpactTests;
+			sourceTree = "<group>";
+		};
+		99FE3C1817E87E1500845E0B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				99FE3C1917E87E1500845E0B /* ApplifierImpactTests-Info.plist */,
+				99FE3C1A17E87E1500845E0B /* InfoPlist.strings */,
+				99FE3C2017E87E1500845E0B /* ApplifierImpactTests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		CC095C941733A2A800A0BD3C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -434,6 +521,7 @@
 			isa = PBXGroup;
 			children = (
 				CC15890C150789ED00B3D188 /* ApplifierImpact */,
+				99FE3C1717E87E1400845E0B /* ApplifierImpactTests */,
 				CCF83B871733A13200DA12C1 /* Frameworks */,
 				CC15890B150789ED00B3D188 /* Products */,
 			);
@@ -446,6 +534,7 @@
 			children = (
 				CC15890A150789ED00B3D188 /* ApplifierImpact.framework */,
 				CCF83B861733A13200DA12C1 /* ApplifierImpact.bundle */,
+				99FE3C1017E87E1300845E0B /* ApplifierImpactTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -453,21 +542,22 @@
 		CC15890C150789ED00B3D188 /* ApplifierImpact */ = {
 			isa = PBXGroup;
 			children = (
-				CCF83B8A1733A13200DA12C1 /* ApplifierImpactBundle */,
 				78AC203B1622F01F007DE419 /* ApplifierImpact.h */,
 				78AC203C1622F01F007DE419 /* ApplifierImpact.m */,
-				7894D8D9170EF56B000CFC99 /* ApplifierImpactInitializer */,
-				7894D8B3170D6DE1000CFC99 /* ApplifierImpactView */,
-				7894D8B4170D6DE1000CFC99 /* ApplifierImpactViewState */,
+				CCF83B8A1733A13200DA12C1 /* ApplifierImpactBundle */,
 				78AC200E1622EE4D007DE419 /* ApplifierImpactCampaign */,
 				78AC20131622EF56007DE419 /* ApplifierImpactData */,
 				786F5D61163142BB00FD34C4 /* ApplifierImpactDevice */,
+				7894D8D9170EF56B000CFC99 /* ApplifierImpactInitializer */,
 				CC6C7D8C1523390A00B1B783 /* ApplifierImpactOpenUDID */,
 				78057A0D1643CADB005EF487 /* ApplifierImpactProperties */,
 				CC496CAF15078AB000AF335E /* ApplifierImpactSBJSON */,
-				786F5D6A1635359400FD34C4 /* ApplifierImpactVideo */,
 				78CB842C16255EB200E94915 /* ApplifierImpactURLProtocol */,
+				786F5D6A1635359400FD34C4 /* ApplifierImpactVideo */,
+				7894D8B3170D6DE1000CFC99 /* ApplifierImpactView */,
+				7894D8B4170D6DE1000CFC99 /* ApplifierImpactViewState */,
 				786F5D801636860100FD34C4 /* ApplifierImpactWebView */,
+				99FE3BFE17E85AD600845E0B /* ApplifierImpactZone */,
 				CC15890D150789ED00B3D188 /* Supporting Files */,
 			);
 			path = ApplifierImpact;
@@ -526,7 +616,18 @@
 		CCF83B871733A13200DA12C1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				99FE3C3817E889D900845E0B /* SystemConfiguration.framework */,
+				99FE3C3617E8899D00845E0B /* CoreMedia.framework */,
+				99FE3C3417E8894700845E0B /* CoreVideo.framework */,
+				99FE3C3117E888A600845E0B /* CoreGraphics.framework */,
+				99FE3C2D17E8884800845E0B /* ApplifierImpact.framework */,
+				99FE3C2B17E8881300845E0B /* StoreKit.framework */,
+				99FE3C2917E8880000845E0B /* AVFoundation.framework */,
+				99FE3C2717E8873D00845E0B /* ApplifierImpact.framework */,
 				CCF83B881733A13200DA12C1 /* CoreFoundation.framework */,
+				99FE3C1117E87E1400845E0B /* SenTestingKit.framework */,
+				99FE3C1317E87E1400845E0B /* UIKit.framework */,
+				99FE3C1517E87E1400845E0B /* Foundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -612,12 +713,33 @@
 				CC095C991733A30E00A0BD3C /* ApplifierImpactBundle.h in Headers */,
 				CC095CAE17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h in Headers */,
 				78BC12F717392D0D0015A35E /* ApplifierImpactInstrumentation.h in Headers */,
+				99FE3C0117E85B2200845E0B /* ApplifierImpactZone.h in Headers */,
+				99FE3C0517E85CA500845E0B /* ApplifierImpactZoneManager.h in Headers */,
+				99FE3C0917E86D2800845E0B /* ApplifierImpactZoneParser.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		99FE3C0F17E87E1300845E0B /* ApplifierImpactTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 99FE3C2117E87E1500845E0B /* Build configuration list for PBXNativeTarget "ApplifierImpactTests" */;
+			buildPhases = (
+				99FE3C0B17E87E1300845E0B /* Sources */,
+				99FE3C0C17E87E1300845E0B /* Frameworks */,
+				99FE3C0D17E87E1300845E0B /* Resources */,
+				99FE3C0E17E87E1300845E0B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ApplifierImpactTests;
+			productName = ApplifierImpactTests;
+			productReference = 99FE3C1017E87E1300845E0B /* ApplifierImpactTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 		CC158909150789ED00B3D188 /* ApplifierImpact */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CC158915150789ED00B3D188 /* Build configuration list for PBXNativeTarget "ApplifierImpact" */;
@@ -680,11 +802,20 @@
 			targets = (
 				CC158909150789ED00B3D188 /* ApplifierImpact */,
 				CCF83B851733A13200DA12C1 /* ApplifierImpactBundle */,
+				99FE3C0F17E87E1300845E0B /* ApplifierImpactTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		99FE3C0D17E87E1300845E0B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				99FE3C1C17E87E1500845E0B /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CC158906150789ED00B3D188 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -708,6 +839,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		99FE3C0E17E87E1300845E0B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
 		CC158902150789ED00B3D188 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -750,6 +894,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		99FE3C0B17E87E1300845E0B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				99FE3C2617E87E9200845E0B /* ApplifierImpactZoneTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CC158903150789ED00B3D188 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -807,6 +959,9 @@
 				CC095C9A1733A30E00A0BD3C /* ApplifierImpactBundle.m in Sources */,
 				CC095CAF17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.m in Sources */,
 				78BC12F817392D0D0015A35E /* ApplifierImpactInstrumentation.m in Sources */,
+				99FE3C0217E85B2200845E0B /* ApplifierImpactZone.m in Sources */,
+				99FE3C0617E85CA500845E0B /* ApplifierImpactZoneManager.m in Sources */,
+				99FE3C0A17E86D2800845E0B /* ApplifierImpactZoneParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -828,6 +983,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		99FE3C1A17E87E1500845E0B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				99FE3C1B17E87E1500845E0B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		CC15890F150789ED00B3D188 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -847,6 +1010,65 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		99FE3C2217E87E1500845E0B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"\"$(SRCROOT)/build/Release-iphoneos\"",
+					"\"$(SRCROOT)/build/Release-iphonesimulator\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ApplifierImpactTests/ApplifierImpactTests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"TEST=1",
+				);
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = (
+					"DEBUG=1",
+					"TEST=1",
+				);
+				INFOPLIST_FILE = "ApplifierImpactTests/ApplifierImpactTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		99FE3C2317E87E1500845E0B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"\"$(SRCROOT)/build/Release-iphoneos\"",
+					"\"$(SRCROOT)/build/Release-iphonesimulator\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ApplifierImpactTests/ApplifierImpactTests-Prefix.pch";
+				INFOPLIST_FILE = "ApplifierImpactTests/ApplifierImpactTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
 		CC158913150789ED00B3D188 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1003,6 +1225,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		99FE3C2117E87E1500845E0B /* Build configuration list for PBXNativeTarget "ApplifierImpactTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				99FE3C2217E87E1500845E0B /* Debug */,
+				99FE3C2317E87E1500845E0B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CC158900150789ED00B3D188 /* Build configuration list for PBXProject "ApplifierImpact" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
