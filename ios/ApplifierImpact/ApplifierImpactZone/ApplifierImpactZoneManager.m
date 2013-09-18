@@ -28,6 +28,15 @@ static ApplifierImpactZoneManager *sharedZoneManager = nil;
 	return sharedZoneManager;
 }
 
+- (id)init {
+  self = [super init];
+  if(self) {
+    self._zones = [[NSMutableDictionary alloc] init];
+    self._currentZone = nil;
+  }
+  return self;
+}
+
 - (int)addZones:(NSDictionary *)zones {
   __block int addedZones = 0;
   [zones enumerateKeysAndObjectsUsingBlock:^(id zoneId, id zone, BOOL *stop) {
