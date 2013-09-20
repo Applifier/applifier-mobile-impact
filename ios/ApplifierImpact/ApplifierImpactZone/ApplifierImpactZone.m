@@ -29,6 +29,26 @@
   return [self._options valueForKey:kApplifierImpactZoneIdKey];
 }
 
+- (BOOL)noWebView {
+  return [self._options valueForKey:kApplifierImpactZoneNoWebViewKey];
+}
+
+- (BOOL)noOfferScreen {
+  return [self._options valueForKey:kApplifierImpactZoneNoOfferScreenKey];
+}
+
+- (BOOL)openAnimated {
+  return [self._options valueForKey:kApplifierImpactZoneOpenAnimatedKey];
+}
+
+- (BOOL)muteVideoSounds {
+  return [self._options valueForKey:kApplifierImpactZoneMuteVideoSoundsKey];
+}
+
+- (BOOL)useDeviceOrientationForVideo {
+  return [self._options valueForKey:kApplifierImpactZoneUseDeviceOrientationForVideoKey];
+}
+
 - (BOOL)allowsOverride:(NSString *)option {
   id allowOverrides = [self._options objectForKey:kApplifierImpactZoneAllowOverrides];
   return [allowOverrides indexOfObject:option] != NSNotFound;

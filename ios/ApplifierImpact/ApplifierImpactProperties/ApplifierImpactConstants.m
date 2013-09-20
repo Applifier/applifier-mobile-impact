@@ -222,6 +222,11 @@ NSString * const kApplifierImpactZonesRootKey = @"zones";
 NSString * const kApplifierImpactZoneIdKey = @"id";
 NSString * const kApplifierImpactZoneNameKey = @"name";
 NSString * const kApplifierImpactZoneAllowOverrides = @"allowClientOverrides";
+NSString * const kApplifierImpactZoneNoWebViewKey = @"noWebView";
+NSString * const kApplifierImpactZoneNoOfferScreenKey = @"noOfferScreen";
+NSString * const kApplifierImpactZoneOpenAnimatedKey = @"openAnimated";
+NSString * const kApplifierImpactZoneMuteVideoSoundsKey = @"muteVideoSounds";
+NSString * const kApplifierImpactZoneUseDeviceOrientationForVideoKey = @"useDeviceOrientationForVideo";
 
 @implementation ApplifierImpactConstants
 

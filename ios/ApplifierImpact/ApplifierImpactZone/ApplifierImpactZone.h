@@ -14,6 +14,12 @@
 
 - (NSString *)getZoneId;
 
+- (BOOL)noWebView;
+- (BOOL)noOfferScreen;
+- (BOOL)openAnimated;
+- (BOOL)muteVideoSounds;
+- (BOOL)useDeviceOrientationForVideo;
+
 - (BOOL)allowsOverride:(NSString *)option;
 - (void)mergeOptions:(NSDictionary *)options;
 

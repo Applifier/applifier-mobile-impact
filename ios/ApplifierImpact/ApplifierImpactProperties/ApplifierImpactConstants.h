@@ -235,6 +235,11 @@ extern NSString * const kApplifierImpactZonesRootKey;
 extern NSString * const kApplifierImpactZoneIdKey;
 extern NSString * const kApplifierImpactZoneNameKey;
 extern NSString * const kApplifierImpactZoneAllowOverrides;
+extern NSString * const kApplifierImpactZoneNoWebViewKey;
+extern NSString * const kApplifierImpactZoneNoOfferScreenKey;
+extern NSString * const kApplifierImpactZoneOpenAnimatedKey;
+extern NSString * const kApplifierImpactZoneMuteVideoSoundsKey;
+extern NSString * const kApplifierImpactZoneUseDeviceOrientationForVideoKey;
 
 @interface ApplifierImpactConstants : NSObject
 
