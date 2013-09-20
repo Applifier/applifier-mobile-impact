@@ -12,6 +12,7 @@
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "ApplifierImpactView/ApplifierImpactMainViewController.h"
 #import "ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
+#import "ApplifierImpactZoneManager.h"
 
 #import "ApplifierImpactInitializer/ApplifierImpactDefaultInitializer.h"
 #import "ApplifierImpactInitializer/ApplifierImpactNoWebViewInitializer.h"
@@ -178,6 +179,37 @@ static ApplifierImpact *sharedImpact = nil;
 
 - (BOOL)showImpact {
   return [self showImpact:nil];
+}
+
+- (BOOL)showImpactZone:(NSString *)zoneId {
+  return [self showImpactZone:zoneId withOptions:[[NSDictionary alloc] init]];
+}
+
+- (BOOL)showImpactZone:(NSString *)zoneId withOptions:(NSDictionary *)options {
+  AIAssertV([NSThread mainThread], false);
+  if (![self canShowImpact] || ![self canShowCampaigns]) return false;
+  
+  if([[ApplifierImpactZoneManager sharedInstance] setCurrentZone:zoneId]) {
+    ApplifierImpactViewStateType state = kApplifierImpactViewStateTypeOfferScreen;
+    
+    id zone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+    [zone mergeOptions:options];
+    
+    // If Impact is in "No WebView" -mode, always skip offerscreen
+    if (self.mode == kApplifierImpactModeNoWebView)
+      [[ApplifierImpactShowOptionsParser sharedInstance] setNoOfferScreen:true];
+    
+    if ([[ApplifierImpactShowOptionsParser sharedInstance] noOfferScreen]) {
+      state = kApplifierImpactViewStateTypeVideoPlayer;
+    }
+    
+    [[ApplifierImpactMainViewController sharedInstance] openImpact:[[ApplifierImpactShowOptionsParser sharedInstance] openAnimated] inState:state withOptions:options];
+    
+    return true;
+  } else {
+    AILOG_DEBUG(@"zoneId '%@' not found", zoneId);
+    return false;
+  }
 }
 
 - (BOOL)hasMultipleRewardItems {

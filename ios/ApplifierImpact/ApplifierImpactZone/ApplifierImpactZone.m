@@ -11,7 +11,7 @@
 
 @interface ApplifierImpactZone ()
 
-@property (nonatomic, strong) NSDictionary *options;
+@property (nonatomic, strong) NSMutableDictionary *_options;
 
 @end
 
@@ -20,13 +20,26 @@
 - (id)initWithData:(NSDictionary *)options {
   self = [super init];
   if(self) {
-    self.options = options;
+    self._options = [NSMutableDictionary dictionaryWithDictionary:options];
   }
   return self;
 }
 
 - (NSString *)getZoneId {
-  return [self.options valueForKey:kApplifierImpactZoneIdKey];
+  return [self._options valueForKey:kApplifierImpactZoneIdKey];
+}
+
+- (BOOL)allowsOverride:(NSString *)option {
+  id allowOverrides = [self._options objectForKey:kApplifierImpactZoneAllowOverrides];
+  return [allowOverrides indexOfObject:option] != NSNotFound;
+}
+
+- (void)mergeOptions:(NSDictionary *)options {
+  [options enumerateKeysAndObjectsUsingBlock:^(id optionKey, id optionValue, BOOL *stop) {
+    if([self allowsOverride:optionKey]) {
+      [self._options setObject:optionValue forKey:optionKey];
+    }
+  }];
 }
 
 @end

@@ -12,6 +12,8 @@
 #import "../ApplifierImpactSBJSON/NSObject+ApplifierImpactSBJson.h"
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
+#import "ApplifierImpactZoneParser.h"
+#import "ApplifierImpactZoneManager.h"
 
 @interface ApplifierImpactCampaignManager () <NSURLConnectionDelegate, ApplifierImpactCacheDelegate>
 @property (nonatomic, strong) NSURLConnection *urlConnection;
@@ -159,6 +161,9 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
       [[ApplifierImpactProperties sharedInstance] setAllowVideoSkipInSeconds:[[jsonDictionary objectForKey:kApplifierImpactCampaignAllowVideoSkipKey] intValue]];
       AILOG_DEBUG(@"ALLOW_VIDEO_SKIP: %i", [ApplifierImpactProperties sharedInstance].allowVideoSkipInSeconds);
     }
+    
+    id zoneManager = [ApplifierImpactZoneManager sharedInstance];
+    int addedZones = [zoneManager addZones:[ApplifierImpactZoneParser parseZones:[jsonDictionary objectForKey:kApplifierImpactZonesRootKey]]];
     
     self.campaigns = [self deserializeCampaigns:[jsonDictionary objectForKey:kApplifierImpactCampaignsKey]];
     if (self.campaigns == nil || [self.campaigns count] == 0) validData = NO;

@@ -218,8 +218,10 @@ NSString * const kApplifierImpactGoogleAnalyticsEventTypeKey = @"eventType";
 
 /* Zones */
 
+NSString * const kApplifierImpactZonesRootKey = @"zones";
 NSString * const kApplifierImpactZoneIdKey = @"id";
 NSString * const kApplifierImpactZoneNameKey = @"name";
+NSString * const kApplifierImpactZoneAllowOverrides = @"allowClientOverrides";
 
 @implementation ApplifierImpactConstants
 

@@ -54,7 +54,7 @@
     
     // TEST MODE: Do not use in production apps
     [[ApplifierImpact sharedInstance] setDebugMode:YES];
-    [[ApplifierImpact sharedInstance] setTestMode:YES];
+    //[[ApplifierImpact sharedInstance] setTestMode:YES];
     
     if (self.developerId.text != nil) {
         AILOG_DEBUG(@"Setting developerId");
@@ -99,11 +99,11 @@
 
         //[[ApplifierImpact sharedInstance] setViewController:self showImmediatelyInNewController:YES];
         
-        NSLog(@"showImpact: %i", [[ApplifierImpact sharedInstance] showImpact:@{
+        NSLog(@"showImpact: %i", [[ApplifierImpact sharedInstance] showImpactZone:@"testZone1" withOptions:@{
           kApplifierImpactOptionNoOfferscreenKey:@false,
           kApplifierImpactOptionOpenAnimatedKey:@true,
           kApplifierImpactOptionGamerSIDKey:@"gom",
-          kApplifierImpactOptionMuteVideoSounds:@true,
+          kApplifierImpactOptionMuteVideoSounds:@false,
           kApplifierImpactOptionVideoUsesDeviceOrientation:@true
         }]);
         

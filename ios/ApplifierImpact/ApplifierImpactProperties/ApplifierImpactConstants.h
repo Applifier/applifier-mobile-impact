@@ -231,8 +231,10 @@ extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeKey;
 
 /* Zones */
 
+extern NSString * const kApplifierImpactZonesRootKey;
 extern NSString * const kApplifierImpactZoneIdKey;
 extern NSString * const kApplifierImpactZoneNameKey;
+extern NSString * const kApplifierImpactZoneAllowOverrides;
 
 @interface ApplifierImpactConstants : NSObject
 

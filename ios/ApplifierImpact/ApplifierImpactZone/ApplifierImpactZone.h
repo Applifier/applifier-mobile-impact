@@ -14,4 +14,7 @@
 
 - (NSString *)getZoneId;
 
+- (BOOL)allowsOverride:(NSString *)option;
+- (void)mergeOptions:(NSDictionary *)options;
+
 @end

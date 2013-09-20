@@ -69,6 +69,8 @@ typedef enum {
 - (BOOL)canShowImpact;
 - (BOOL)showImpact:(NSDictionary *)options;
 - (BOOL)showImpact;
+- (BOOL)showImpactZone:(NSString *)zoneId;
+- (BOOL)showImpactZone:(NSString *)zoneId withOptions:(NSDictionary *)options;
 - (BOOL)hideImpact;
 - (void)stopAll;
 - (BOOL)hasMultipleRewardItems;
