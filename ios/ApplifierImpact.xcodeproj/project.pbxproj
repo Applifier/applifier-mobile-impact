@@ -882,7 +882,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TARGET_arm64 = 6.0;
+				TARGET_arm64 = 7.0;
 				TARGET_armv7 = 5.0;
 				TARGET_armv7s = 5.0;
 				TARGET_i386 = 5.0;
@@ -918,7 +918,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TARGET_arm64 = 6.0;
+				TARGET_arm64 = 7.0;
 				TARGET_armv7 = 5.0;
 				TARGET_armv7s = 5.0;
 				TARGET_i386 = 5.0;
