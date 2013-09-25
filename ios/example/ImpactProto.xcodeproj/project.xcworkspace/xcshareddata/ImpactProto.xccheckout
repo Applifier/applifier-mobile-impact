@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>99E7080D-E463-4B31-B92D-A584E7015F86</string>
+	<key>IDESourceControlProjectName</key>
+	<string>ImpactProto</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>E59963C5-6F69-4F94-9E0B-E58400223F25</key>
+		<string>git://github.com/Applifier/applifier-mobile-impact.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ios/example/ImpactProto.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>E59963C5-6F69-4F94-9E0B-E58400223F25</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>git://github.com/Applifier/applifier-mobile-impact.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>E59963C5-6F69-4F94-9E0B-E58400223F25</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E59963C5-6F69-4F94-9E0B-E58400223F25</string>
+			<key>IDESourceControlWCCName</key>
+			<string>applifier-mobile-impact</string>
+		</dict>
+	</array>
+</dict>
+</plist>
