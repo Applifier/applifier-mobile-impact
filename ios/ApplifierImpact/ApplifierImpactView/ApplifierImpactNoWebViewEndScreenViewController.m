@@ -73,6 +73,10 @@
   return true;
 }
 
+- (BOOL)prefersStatusBarHidden {
+  return YES;
+}
+
 - (void)checkRotation {
   if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) && self.portraitImage != nil) {
     [UIView beginAnimations:@"fade in" context:nil];
