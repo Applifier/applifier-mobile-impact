@@ -1,16 +1,18 @@
 //
-//  ApplifierImpactRewardItem.h
-//  Copyright (c) 2012 Applifier. All rights reserved.
+//  ApplifierImpactItem.h
+//  ApplifierImpact
+//
+//  Created by Ville Orkas on 10/1/13.
+//  Copyright (c) 2013 Applifier. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface ApplifierImpactRewardItem : NSObject
+@interface ApplifierImpactItem : NSObject
 
 @property (nonatomic, strong) NSString *key;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSURL *pictureURL;
-@property (nonatomic, assign) BOOL isValidRewardItem;
 
 - (id)initWithData:(NSDictionary *)data;
 
