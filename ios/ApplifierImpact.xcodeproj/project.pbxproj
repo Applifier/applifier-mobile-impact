@@ -1056,10 +1056,6 @@
 					"DEBUG=1",
 					"TEST=1",
 				);
-				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = (
-					"DEBUG=1",
-					"TEST=1",
-				);
 				INFOPLIST_FILE = "ApplifierImpactTests/ApplifierImpactTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1097,7 +1093,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
+                                ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
+                                ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUILD_DIR = "$(SRCROOT)/build";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
@@ -1106,23 +1104,31 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
-					"$(inherited)",
+					"TEST=1",
+					"OS_OBJECT_USE_OBJC=0"
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
+                                TARGET_arm64 = 7.0;
+                                TARGET_armv7 = 5.0;
+                                TARGET_armv7s = 5.0;
+                                TARGET_i386 = 5.0;
+                                TARGET_x86_64 = 5.0;
 			};
 			name = Test;
 		};
 		99FE3C3B17E896F100845E0B /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(VALID_ARCHS)";
+				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
+                                ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
+                                ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CONTENTS_FOLDER_PATH = "$(WRAPPER_NAME)/Versions/$(FRAMEWORK_VERSION)";
 				DEAD_CODE_STRIPPING = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1133,6 +1139,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"TEST=1",
+					"OS_OBJECT_USE_OBJC=0"
 				);
 				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpact-Info.plist";
@@ -1180,6 +1187,9 @@
 		99FE3C3D17E896F100845E0B /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
+				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1199,14 +1209,15 @@
 					"DEBUG=1",
 					"TEST=1",
 				);
-				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = (
-					"DEBUG=1",
-					"TEST=1",
-				);
 				INFOPLIST_FILE = "ApplifierImpactTests/ApplifierImpactTests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGET_arm64 = 7.0;
+				TARGET_armv7 = 5.0;
+				TARGET_armv7s = 5.0;
+				TARGET_i386 = 5.0;
+				TARGET_x86_64 = 5.0;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Test;
@@ -1328,6 +1339,7 @@
 				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpact-Info.plist";
 				INFOPLIST_PATH = "$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Info.plist";
 				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_object;
 				PRODUCT_NAME = "$(TARGET_NAME)";
