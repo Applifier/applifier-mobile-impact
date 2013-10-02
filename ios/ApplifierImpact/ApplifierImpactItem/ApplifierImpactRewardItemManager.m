@@ -22,6 +22,18 @@
   self = [super init];
   if(self) {
     self._items = [NSDictionary dictionaryWithDictionary:items];
+    
+    if(defaultItem == nil) return nil;
+    
+    __block BOOL itemsIncludesDefault = NO;
+    [self._items enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+      if([key isEqualToString:defaultItem.key]) {
+        itemsIncludesDefault = YES;
+        *stop = YES;
+      }
+    }];
+    if(!itemsIncludesDefault) return nil;
+    
     self._defaultItem = defaultItem;
     self._currentItem = defaultItem;
   }

@@ -6,9 +6,17 @@
 //  Copyright (c) 2013 Applifier. All rights reserved.
 //
 
-#import "ApplifierImpactZoneTests.h"
+#import <SenTestingKit/SenTestingKit.h>
 
 #import "ApplifierImpactSBJsonParser.h"
+
+#import "ApplifierImpactZone.h"
+#import "ApplifierImpactZoneManager.h"
+#import "ApplifierImpactZoneParser.h"
+
+@interface ApplifierImpactZoneTests : SenTestCase
+
+@end
 
 @implementation ApplifierImpactZoneTests
 
