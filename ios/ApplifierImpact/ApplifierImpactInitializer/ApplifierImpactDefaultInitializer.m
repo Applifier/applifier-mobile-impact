@@ -14,6 +14,9 @@
 #import "../ApplifierImpactViewState/ApplifierImpactViewStateDefaultEndScreen.h"
 #import "../ApplifierImpactViewState/ApplifierImpactViewStateDefaultSpinner.h"
 
+#import "../ApplifierImpactZone/ApplifierImpactZoneManager.h"
+#import "../ApplifierImpactZone/ApplifierImpactIncentivizedZone.h"
+
 @implementation ApplifierImpactDefaultInitializer
 
 - (void)initImpact:(NSDictionary *)options {
@@ -61,7 +64,7 @@
 
 #pragma mark - ApplifierImpactCampaignManagerDelegate
 
-- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID {
+- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns gamerID:(NSString *)gamerID {
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 }
@@ -97,7 +100,13 @@
   dispatch_async(dispatch_get_main_queue(), ^{
     [self checkForVersionAndShowAlertDialog];
     
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIInitComplete, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key}];
+    id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+    if([currentZone isIncentivized]) {
+      id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
+      [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIInitComplete, kApplifierImpactItemKeyKey:[itemManager getCurrentItem].key}];
+    } else {
+      [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIInitComplete}];
+    }    
     
     if (self.delegate != nil) {
       [self.delegate initComplete];

@@ -7,6 +7,7 @@
 //
 
 #import "ApplifierImpactZoneManager.h"
+#import "ApplifierImpactIncentivizedZone.h"
 
 @interface ApplifierImpactZoneManager ()
 

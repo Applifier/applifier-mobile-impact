@@ -98,7 +98,7 @@ NSString * const kApplifierImpactCampaignAllowVideoSkipKey = @"allowSkipVideoInS
 
 /* Reward Item JSON Properties */
 
-NSString * const kApplifierImpactRewardItemKeyKey = @"itemKey";
+NSString * const kApplifierImpactRewardItemKeyKey = @"key";
 NSString * const kApplifierImpactRewardNameKey = @"name";
 NSString * const kApplifierImpactRewardPictureKey = @"picture";
 NSString * const kApplifierImpactRewardItemKey = @"item";
@@ -221,6 +221,9 @@ NSString * const kApplifierImpactGoogleAnalyticsEventTypeKey = @"eventType";
 NSString * const kApplifierImpactZonesRootKey = @"zones";
 NSString * const kApplifierImpactZoneIdKey = @"id";
 NSString * const kApplifierImpactZoneNameKey = @"name";
+NSString * const kApplifierImpactZoneIsIncentivizedKey = @"incentivised";
+NSString * const kApplifierImpactZoneRewardItemsKey = @"rewardItems";
+NSString * const kApplifierImpactZoneDefaultRewardItemKey = @"defaultRewardItem";
 NSString * const kApplifierImpactZoneAllowOverrides = @"allowClientOverrides";
 NSString * const kApplifierImpactZoneNoWebViewKey = @"noWebView";
 NSString * const kApplifierImpactZoneNoOfferScreenKey = @"noOfferScreen";

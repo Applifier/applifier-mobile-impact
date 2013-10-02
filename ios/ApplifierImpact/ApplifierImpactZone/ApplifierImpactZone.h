@@ -14,6 +14,8 @@
 
 - (NSString *)getZoneId;
 
+- (BOOL)isIncentivized;
+
 - (BOOL)noWebView;
 - (BOOL)noOfferScreen;
 - (BOOL)openAnimated;

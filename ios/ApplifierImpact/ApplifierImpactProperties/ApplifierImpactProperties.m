@@ -11,7 +11,7 @@
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 
-NSString * const kApplifierImpactVersion = @"1010";
+NSString * const kApplifierImpactVersion = @"1100";
 
 @implementation ApplifierImpactProperties
 
@@ -92,6 +92,8 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   else {
     queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamEncryptionKey, [ApplifierImpactDevice isEncrypted] ? @"true" : @"false"];
   }
+  
+  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, @"forceWebViewUrl", @"http://192.168.1.246:8080/dev-build/impact/index.html"];
   
   return queryParams;
 }

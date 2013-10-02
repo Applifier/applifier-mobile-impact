@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "../ApplifierImpactCampaign/ApplifierImpactRewardItem.h"
+#import "../ApplifierImpactItem/ApplifierImpactRewardItem.h"
 
 @interface ApplifierImpactProperties : NSObject
   @property (nonatomic, strong) NSString *webViewBaseUrl;

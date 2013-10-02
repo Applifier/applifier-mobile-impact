@@ -6,13 +6,14 @@
 #import "ApplifierImpact.h"
 #import "ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "ApplifierImpactCampaign/ApplifierImpactCampaign.h"
-#import "ApplifierImpactCampaign/ApplifierImpactRewardItem.h"
+#import "ApplifierImpactItem/ApplifierImpactRewardItem.h"
 #import "ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "ApplifierImpactView/ApplifierImpactMainViewController.h"
 #import "ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
-#import "ApplifierImpactZoneManager.h"
+#import "ApplifierImpactZone/ApplifierImpactZoneManager.h"
+#import "ApplifierImpactZone/ApplifierImpactIncentivizedZone.h"
 
 #import "ApplifierImpactInitializer/ApplifierImpactDefaultInitializer.h"
 #import "ApplifierImpactInitializer/ApplifierImpactNoWebViewInitializer.h"
@@ -155,6 +156,20 @@ static ApplifierImpact *sharedImpact = nil;
 	return [self impactCanBeShown];
 }
 
+- (BOOL)setZone:(NSString *)zoneId {
+  if (![[ApplifierImpactMainViewController sharedInstance] mainControllerVisible]) {
+    return [[ApplifierImpactZoneManager sharedInstance] setCurrentZone:zoneId];
+  }
+  return FALSE;
+}
+
+- (BOOL)setZone:(NSString *)zoneId withRewardItem:(NSString *)rewardItemKey {
+  if([self setZone:zoneId]) {
+    return [self setRewardItemKey:rewardItemKey];
+  }
+  return FALSE;
+}
+
 - (BOOL)showImpact:(NSDictionary *)options {
   AIAssertV([NSThread mainThread], false);
   if (![ApplifierImpact isSupported]) return false;
@@ -181,74 +196,71 @@ static ApplifierImpact *sharedImpact = nil;
   return [self showImpact:nil];
 }
 
-- (BOOL)showImpactZone:(NSString *)zoneId {
-  return [self showImpactZone:zoneId withOptions:[[NSDictionary alloc] init]];
-}
-
-- (BOOL)showImpactZone:(NSString *)zoneId withOptions:(NSDictionary *)options {
-  AIAssertV([NSThread mainThread], false);
-  if (![self canShowImpact] || ![self canShowCampaigns]) return false;
-  
-  if([[ApplifierImpactZoneManager sharedInstance] setCurrentZone:zoneId]) {
-    ApplifierImpactViewStateType state = kApplifierImpactViewStateTypeOfferScreen;
-    
-    id zone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
-    [zone mergeOptions:options];
-    
-    // If Impact is in "No WebView" -mode, always skip offerscreen
-    if (self.mode == kApplifierImpactModeNoWebView)
-      [[ApplifierImpactShowOptionsParser sharedInstance] setNoOfferScreen:true];
-    
-    if ([[ApplifierImpactShowOptionsParser sharedInstance] noOfferScreen]) {
-      state = kApplifierImpactViewStateTypeVideoPlayer;
-    }
-    
-    [[ApplifierImpactMainViewController sharedInstance] openImpact:[[ApplifierImpactShowOptionsParser sharedInstance] openAnimated] inState:state withOptions:options];
-    
-    return true;
-  } else {
-    AILOG_DEBUG(@"zoneId '%@' not found", zoneId);
-    return false;
-  }
-}
-
 - (BOOL)hasMultipleRewardItems {
-  if ([[ApplifierImpactCampaignManager sharedInstance] rewardItems] != nil && [[[ApplifierImpactCampaignManager sharedInstance] rewardItems] count] > 0) {
-    return true;
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if(currentZone && [currentZone isIncentivized]) {
+    id rewardManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
+    if(rewardManager != nil && [rewardManager itemCount] > 1) {
+      return TRUE;
+    }
   }
-  
-  return false;
+  return FALSE;
 }
 
 - (NSArray *)getRewardItemKeys {
-  return [[ApplifierImpactCampaignManager sharedInstance] rewardItemKeys];
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if(currentZone && [currentZone isIncentivized]) {
+    return [[((ApplifierImpactIncentivizedZone *)currentZone) itemManager] allItems];
+  }
+  return nil;
 }
 
 - (NSString *)getDefaultRewardItemKey {
-  return [[ApplifierImpactCampaignManager sharedInstance] defaultRewardItem].key;
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if(currentZone && [currentZone isIncentivized]) {
+    return [[((ApplifierImpactIncentivizedZone *)currentZone) itemManager] getDefaultItem].key;
+  }
+  return nil;
 }
 
 - (NSString *)getCurrentRewardItemKey {
-  return [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey];
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if(currentZone && [currentZone isIncentivized]) {
+    return [[((ApplifierImpactIncentivizedZone *)currentZone) itemManager] getCurrentItem].key;
+  }
+  return nil;
+
 }
 
 - (BOOL)setRewardItemKey:(NSString *)rewardItemKey {
   if (![[ApplifierImpactMainViewController sharedInstance] mainControllerVisible]) {
-    return [[ApplifierImpactCampaignManager sharedInstance] setSelectedRewardItemKey:rewardItemKey];
+    id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+    if(currentZone && [currentZone isIncentivized]) {
+      return [[((ApplifierImpactIncentivizedZone *)currentZone) itemManager] setCurrentItem:rewardItemKey];
+    }
   }
-  
   return false;
 }
 
 - (void)setDefaultRewardItemAsRewardItem {
-  [[ApplifierImpactCampaignManager sharedInstance] setSelectedRewardItemKey:[self getDefaultRewardItemKey]];
+  if (![[ApplifierImpactMainViewController sharedInstance] mainControllerVisible]) {
+    id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+    if(currentZone && [currentZone isIncentivized]) {
+      id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
+      [itemManager setCurrentItem:[itemManager getDefaultItem].key];
+    }
+  }
 }
 
 - (NSDictionary *)getRewardItemDetailsWithKey:(NSString *)rewardItemKey {
-  if ([self hasMultipleRewardItems] && rewardItemKey != nil) {
-    return [[ApplifierImpactCampaignManager sharedInstance] getPublicRewardItemDetails:rewardItemKey];
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if(currentZone && [currentZone isIncentivized]) {
+    id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
+    id item = [itemManager getItem:rewardItemKey];
+    if(item != nil) {
+      return [item getDetails];
+    }
   }
-  
   return nil;
 }
 
@@ -317,10 +329,9 @@ static ApplifierImpact *sharedImpact = nil;
 }
 
 - (BOOL)impactCanBeShown {
-  if ([[ApplifierImpactCampaignManager sharedInstance] campaigns] != nil && [[[ApplifierImpactCampaignManager sharedInstance] campaigns] count] > 0 && [[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem] != nil && self.initializer != nil && [self.initializer initWasSuccessfull]) {
+  if ([[ApplifierImpactCampaignManager sharedInstance] campaigns] != nil && [[[ApplifierImpactCampaignManager sharedInstance] campaigns] count] > 0 && self.initializer != nil && [self.initializer initWasSuccessfull]) {
 		return true;
   }
-  
   return false;
 }
 
@@ -399,7 +410,13 @@ static ApplifierImpact *sharedImpact = nil;
     [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed = YES;
     
     if (self.delegate != nil) {
-      [self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key videoWasSkipped:FALSE];
+      NSString *key = nil;
+      id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+      if([currentZone isIncentivized]) {
+        id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
+        key = [itemManager getCurrentItem].key;
+      }
+      [self.delegate applifierImpact:self completedVideoWithRewardItemKey:key videoWasSkipped:FALSE];
     }
   }
 }
@@ -412,7 +429,13 @@ static ApplifierImpact *sharedImpact = nil;
     [[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed = YES;
     
     if (self.delegate != nil) {
-      [self.delegate applifierImpact:self completedVideoWithRewardItemKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key videoWasSkipped:TRUE];
+      NSString *key = nil;
+      id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+      if([currentZone isIncentivized]) {
+        id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
+        key = [itemManager getCurrentItem].key;
+      }
+      [self.delegate applifierImpact:self completedVideoWithRewardItemKey:key videoWasSkipped:TRUE];
     }
   }
 }

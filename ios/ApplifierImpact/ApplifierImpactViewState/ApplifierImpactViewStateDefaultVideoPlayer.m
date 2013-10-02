@@ -10,9 +10,13 @@
 
 #import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
-#import "../ApplifierImpactCampaign/ApplifierImpactRewardItem.h"
+#import "../ApplifierImpactItem/ApplifierImpactRewardItem.h"
 #import "../ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
 #import "../ApplifierImpactData/ApplifierImpactInstrumentation.h"
+
+#import "../ApplifierImpactZone/ApplifierImpactZoneManager.h"
+#import "../ApplifierImpactZone/ApplifierImpactIncentivizedZone.h"
+#import "../ApplifierImpactItem/ApplifierImpactRewardItemManager.h"
 
 @interface ApplifierImpactViewStateDefaultVideoPlayer ()
 @end
@@ -105,7 +109,13 @@
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
 
   // Set completed view for the webview right away, so we don't get flickering after videoplay from start->end
-  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIActionVideoStartedPlaying, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key, kApplifierImpactWebViewEventDataCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if([currentZone isIncentivized]) {
+    id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIActionVideoStartedPlaying, kApplifierImpactItemKeyKey:[itemManager getCurrentItem].key, kApplifierImpactWebViewEventDataCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+  } else {
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIActionVideoStartedPlaying, kApplifierImpactWebViewEventDataCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+  }
   
   if (!self.waitingToBeShown && [[ApplifierImpactMainViewController sharedInstance] presentedViewController] != self.videoController) {
     AILOG_DEBUG(@"Placing videoview to hierarchy");
@@ -120,7 +130,13 @@
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventHideSpinner data:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyBuffering}];
   [[ApplifierImpactWebAppController sharedInstance] sendNativeEventToWebApp:kApplifierImpactNativeEventVideoCompleted data:@{kApplifierImpactNativeEventCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
   
-  [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIActionVideoPlaybackError, kApplifierImpactItemKeyKey:[[ApplifierImpactCampaignManager sharedInstance] getCurrentRewardItem].key, kApplifierImpactWebViewEventDataCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if([currentZone isIncentivized]) {
+    id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIActionVideoPlaybackError, kApplifierImpactItemKeyKey:[itemManager getCurrentItem].key, kApplifierImpactWebViewEventDataCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+  } else {
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeCompleted data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIActionVideoPlaybackError, kApplifierImpactWebViewEventDataCampaignIdKey:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].id}];
+  }
 
   [[ApplifierImpactMainViewController sharedInstance] changeState:kApplifierImpactViewStateTypeEndScreen withOptions:nil];
   

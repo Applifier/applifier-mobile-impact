@@ -25,6 +25,10 @@
   return self;
 }
 
+- (BOOL)isIncentivized {
+  return FALSE;
+}
+
 - (NSString *)getZoneId {
   return [self._options valueForKey:kApplifierImpactZoneIdKey];
 }

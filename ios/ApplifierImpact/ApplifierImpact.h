@@ -67,10 +67,10 @@ typedef enum {
 - (void)setViewController:(UIViewController *)viewController showImmediatelyInNewController:(BOOL)applyImpact;
 - (BOOL)canShowCampaigns;
 - (BOOL)canShowImpact;
+- (BOOL)setZone:(NSString *)zoneId;
+- (BOOL)setZone:(NSString *)zoneId withRewardItem:(NSString *)rewardItemKey;
 - (BOOL)showImpact:(NSDictionary *)options;
 - (BOOL)showImpact;
-- (BOOL)showImpactZone:(NSString *)zoneId;
-- (BOOL)showImpactZone:(NSString *)zoneId withOptions:(NSDictionary *)options;
 - (BOOL)hideImpact;
 - (void)stopAll;
 - (BOOL)hasMultipleRewardItems;

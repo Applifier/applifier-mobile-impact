@@ -7,6 +7,7 @@
 //
 
 #import "ApplifierImpactZoneParser.h"
+#import "ApplifierImpactIncentivizedZone.h"
 #import "ApplifierImpactConstants.h"
 
 @implementation ApplifierImpactZoneParser
@@ -33,7 +34,12 @@
     return nil;
   }
   
-  return [[ApplifierImpactZone alloc] initWithData:rawZone];
+  BOOL isIncentivized = [[rawZone objectForKey:kApplifierImpactZoneIsIncentivizedKey] boolValue];
+  if(isIncentivized) {
+    return [[ApplifierImpactIncentivizedZone alloc] initWithData:rawZone];
+  } else {
+    return [[ApplifierImpactZone alloc] initWithData:rawZone];
+  }
 }
 
 @end

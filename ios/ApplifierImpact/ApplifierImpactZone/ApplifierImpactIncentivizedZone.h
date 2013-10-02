@@ -9,12 +9,14 @@
 #import <Foundation/Foundation.h>
 
 #import "ApplifierImpactZone.h"
-#import "ApplifierImpactItemManager.h"
+#import "ApplifierImpactRewardItemManager.h"
 
 @interface ApplifierImpactIncentivizedZone : ApplifierImpactZone
 
 - (id)initWithData:(NSDictionary *)options;
 
-- (ApplifierImpactItemManager *)itemManager;
+- (BOOL)isIncentivized;
+
+- (ApplifierImpactRewardItemManager *)itemManager;
 
 @end

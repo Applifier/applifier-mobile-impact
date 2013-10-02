@@ -8,12 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ApplifierImpactItem : NSObject
+@interface ApplifierImpactRewardItem : NSObject
 
 @property (nonatomic, strong) NSString *key;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSURL *pictureURL;
 
 - (id)initWithData:(NSDictionary *)data;
+
+- (NSDictionary *)getDetails;
 
 @end

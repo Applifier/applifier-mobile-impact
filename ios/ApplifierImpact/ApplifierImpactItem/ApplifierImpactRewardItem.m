@@ -6,12 +6,12 @@
 //  Copyright (c) 2013 Applifier. All rights reserved.
 //
 
-#import "ApplifierImpactItem.h"
+#import "ApplifierImpactRewardItem.h"
 
 #import "ApplifierImpact.h"
 #import "ApplifierImpactConstants.h"
 
-@implementation ApplifierImpactItem
+@implementation ApplifierImpactRewardItem
 
 - (id)initWithData:(NSDictionary *)data {
   self = [super init];
@@ -46,6 +46,10 @@
     [NSException raise:@"itemPictureException" format:@"Item picture is invalid"];
   }
 	self.pictureURL = pictureURL;
+}
+
+- (NSDictionary *)getDetails {
+  return @{kApplifierImpactRewardItemNameKey:self.name, kApplifierImpactRewardItemPictureKey:self.pictureURL};
 }
 
 @end
