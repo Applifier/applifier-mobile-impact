@@ -22,6 +22,8 @@
 - (BOOL)muteVideoSounds;
 - (BOOL)useDeviceOrientationForVideo;
 
+- (int)allowVideoSkipInSeconds;
+
 - (BOOL)allowsOverride:(NSString *)option;
 - (void)mergeOptions:(NSDictionary *)options;
 

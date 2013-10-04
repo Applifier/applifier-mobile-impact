@@ -24,15 +24,17 @@
 }
 
 + (ApplifierImpactZone *)parseZone:(NSDictionary *)rawZone {
-  id zoneId = [rawZone objectForKey:kApplifierImpactZoneIdKey];
+  NSString * zoneId = [rawZone objectForKey:kApplifierImpactZoneIdKey];
   if([zoneId length] == 0) {
     return nil;
   }
   
-  id zoneName = [rawZone objectForKey:kApplifierImpactZoneNameKey];
+  NSString * zoneName = [rawZone objectForKey:kApplifierImpactZoneNameKey];
   if([zoneName length] == 0) {
     return nil;
   }
+  
+  
   
   BOOL isIncentivized = [[rawZone objectForKey:kApplifierImpactZoneIsIncentivizedKey] boolValue];
   if(isIncentivized) {

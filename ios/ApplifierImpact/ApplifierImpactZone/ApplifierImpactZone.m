@@ -34,23 +34,23 @@
 }
 
 - (BOOL)noWebView {
-  return [self._options valueForKey:kApplifierImpactZoneNoWebViewKey];
+  return [[self._options valueForKey:kApplifierImpactZoneNoWebViewKey] boolValue];
 }
 
 - (BOOL)noOfferScreen {
-  return [self._options valueForKey:kApplifierImpactZoneNoOfferScreenKey];
+  return [[self._options valueForKey:kApplifierImpactZoneNoOfferScreenKey] boolValue];
 }
 
 - (BOOL)openAnimated {
-  return [self._options valueForKey:kApplifierImpactZoneOpenAnimatedKey];
+  return [[self._options valueForKey:kApplifierImpactZoneOpenAnimatedKey] boolValue];
 }
 
 - (BOOL)muteVideoSounds {
-  return [self._options valueForKey:kApplifierImpactZoneMuteVideoSoundsKey];
+  return [[self._options valueForKey:kApplifierImpactZoneMuteVideoSoundsKey] boolValue];
 }
 
 - (BOOL)useDeviceOrientationForVideo {
-  return [self._options valueForKey:kApplifierImpactZoneUseDeviceOrientationForVideoKey];
+  return [[self._options valueForKey:kApplifierImpactZoneUseDeviceOrientationForVideoKey] boolValue];
 }
 
 - (BOOL)allowsOverride:(NSString *)option {
