@@ -176,16 +176,22 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 			positionString = kApplifierImpactAnalyticsEventTypeVideoEnd;
 
     if (positionString != nil) {
-      NSString *trackingQuery = [NSString stringWithFormat:@"%@/video/%@/%@/%@?t=1", [[ApplifierImpactProperties sharedInstance] gamerId], positionString, campaignId, [[ApplifierImpactProperties sharedInstance] impactGameId]];
+      NSString *trackingQuery = [NSString stringWithFormat:@"%@/video/%@/%@/%@", [[ApplifierImpactProperties sharedInstance] gamerId], positionString, campaignId, [[ApplifierImpactProperties sharedInstance] impactGameId]];
 
       id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
       if([currentZone isIncentivized]) {
         id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
-        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamRewardItemKey, [itemManager getCurrentItem].key];
+        trackingQuery = [NSString stringWithFormat:@"%@?%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamRewardItemKey, [itemManager getCurrentItem].key];
       }
       
       if ([currentZone getGamerSid] != nil) {
-        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [currentZone getGamerSid]];
+        NSString * formatString = nil;
+        if([currentZone isIncentivized]) {
+          formatString = @"%@&%@=%@";
+        } else {
+          formatString = @"%@?%@=%@";
+        }
+        trackingQuery = [NSString stringWithFormat:formatString, trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [currentZone getGamerSid]];
       }
       
       if (!viewed) {
