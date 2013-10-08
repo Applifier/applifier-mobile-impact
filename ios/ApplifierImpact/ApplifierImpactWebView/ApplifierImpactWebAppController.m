@@ -17,6 +17,7 @@
 #import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
+#import "../ApplifierImpactZone/ApplifierImpactZoneManager.h"
 
 @interface ApplifierImpactWebAppController ()
   @property (nonatomic, strong) NSDictionary* webAppInitalizationParams;

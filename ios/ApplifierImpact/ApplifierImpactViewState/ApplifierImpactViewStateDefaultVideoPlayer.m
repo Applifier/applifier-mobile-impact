@@ -11,7 +11,6 @@
 #import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 #import "../ApplifierImpactItem/ApplifierImpactRewardItem.h"
-#import "../ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
 #import "../ApplifierImpactData/ApplifierImpactInstrumentation.h"
 
 #import "../ApplifierImpactZone/ApplifierImpactZoneManager.h"
@@ -30,7 +29,8 @@
 - (void)willBeShown {
   [super willBeShown];
   
-  if ([[ApplifierImpactShowOptionsParser sharedInstance] noOfferScreen]) {    
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if ([currentZone noOfferScreen]) {
     [[ApplifierImpactCampaignManager sharedInstance] setSelectedCampaign:nil];
     
     ApplifierImpactCampaign *campaign = [[[ApplifierImpactCampaignManager sharedInstance] getViewableCampaigns] objectAtIndex:0];

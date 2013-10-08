@@ -13,6 +13,7 @@
 - (id)initWithData:(NSDictionary *)options;
 
 - (NSString *)getZoneId;
+- (NSDictionary *)getZoneOptions;
 
 - (BOOL)isIncentivized;
 
@@ -21,6 +22,11 @@
 - (BOOL)openAnimated;
 - (BOOL)muteVideoSounds;
 - (BOOL)useDeviceOrientationForVideo;
+
+- (NSString *)getGamerSid;
+- (void)setGamerSid:(NSString *)gamerSid;
+
+- (void)setNoOfferScreen:(BOOL)noOfferScreen;
 
 - (int)allowVideoSkipInSeconds;
 

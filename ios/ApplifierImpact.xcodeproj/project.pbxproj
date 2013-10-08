@@ -51,8 +51,6 @@
 		7894D8BC170D6F32000CFC99 /* ApplifierImpactViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8BA170D6F32000CFC99 /* ApplifierImpactViewState.m */; };
 		7894D8BF170D7126000CFC99 /* ApplifierImpactViewStateDefaultOffers.h in Headers */ = {isa = PBXBuildFile; fileRef = 7894D8BD170D7126000CFC99 /* ApplifierImpactViewStateDefaultOffers.h */; };
 		7894D8C0170D7126000CFC99 /* ApplifierImpactViewStateDefaultOffers.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8BE170D7126000CFC99 /* ApplifierImpactViewStateDefaultOffers.m */; };
-		7894D8C3170D72F7000CFC99 /* ApplifierImpactShowOptionsParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 7894D8C1170D72F7000CFC99 /* ApplifierImpactShowOptionsParser.h */; };
-		7894D8C4170D72F7000CFC99 /* ApplifierImpactShowOptionsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8C2170D72F7000CFC99 /* ApplifierImpactShowOptionsParser.m */; };
 		7894D8C7170D9644000CFC99 /* ApplifierImpactViewStateDefaultVideoPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7894D8C5170D9644000CFC99 /* ApplifierImpactViewStateDefaultVideoPlayer.h */; };
 		7894D8C8170D9644000CFC99 /* ApplifierImpactViewStateDefaultVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8C6170D9644000CFC99 /* ApplifierImpactViewStateDefaultVideoPlayer.m */; };
 		7894D8CB170DAD1D000CFC99 /* ApplifierImpactViewStateDefaultEndScreen.h in Headers */ = {isa = PBXBuildFile; fileRef = 7894D8C9170DAD1D000CFC99 /* ApplifierImpactViewStateDefaultEndScreen.h */; };
@@ -199,8 +197,6 @@
 		7894D8BA170D6F32000CFC99 /* ApplifierImpactViewState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactViewState.m; sourceTree = "<group>"; };
 		7894D8BD170D7126000CFC99 /* ApplifierImpactViewStateDefaultOffers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactViewStateDefaultOffers.h; sourceTree = "<group>"; };
 		7894D8BE170D7126000CFC99 /* ApplifierImpactViewStateDefaultOffers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactViewStateDefaultOffers.m; sourceTree = "<group>"; };
-		7894D8C1170D72F7000CFC99 /* ApplifierImpactShowOptionsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactShowOptionsParser.h; sourceTree = "<group>"; };
-		7894D8C2170D72F7000CFC99 /* ApplifierImpactShowOptionsParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactShowOptionsParser.m; sourceTree = "<group>"; };
 		7894D8C5170D9644000CFC99 /* ApplifierImpactViewStateDefaultVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactViewStateDefaultVideoPlayer.h; sourceTree = "<group>"; };
 		7894D8C6170D9644000CFC99 /* ApplifierImpactViewStateDefaultVideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactViewStateDefaultVideoPlayer.m; sourceTree = "<group>"; };
 		7894D8C9170DAD1D000CFC99 /* ApplifierImpactViewStateDefaultEndScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactViewStateDefaultEndScreen.h; sourceTree = "<group>"; };
@@ -345,8 +341,6 @@
 				78057A0F1643CADB005EF487 /* ApplifierImpactProperties.m */,
 				7887E41A169EB62F00D67A2A /* ApplifierImpactConstants.h */,
 				7887E41B169EB62F00D67A2A /* ApplifierImpactConstants.m */,
-				7894D8C1170D72F7000CFC99 /* ApplifierImpactShowOptionsParser.h */,
-				7894D8C2170D72F7000CFC99 /* ApplifierImpactShowOptionsParser.m */,
 			);
 			path = ApplifierImpactProperties;
 			sourceTree = "<group>";
@@ -714,7 +708,6 @@
 				7894D8B7170D6E66000CFC99 /* ApplifierImpactMainViewController.h in Headers */,
 				7894D8BB170D6F32000CFC99 /* ApplifierImpactViewState.h in Headers */,
 				7894D8BF170D7126000CFC99 /* ApplifierImpactViewStateDefaultOffers.h in Headers */,
-				7894D8C3170D72F7000CFC99 /* ApplifierImpactShowOptionsParser.h in Headers */,
 				7894D8C7170D9644000CFC99 /* ApplifierImpactViewStateDefaultVideoPlayer.h in Headers */,
 				7894D8CB170DAD1D000CFC99 /* ApplifierImpactViewStateDefaultEndScreen.h in Headers */,
 				7894D8D3170DB671000CFC99 /* ApplifierImpactViewStateDefaultSpinner.h in Headers */,
@@ -964,7 +957,6 @@
 				7894D8B8170D6E66000CFC99 /* ApplifierImpactMainViewController.m in Sources */,
 				7894D8BC170D6F32000CFC99 /* ApplifierImpactViewState.m in Sources */,
 				7894D8C0170D7126000CFC99 /* ApplifierImpactViewStateDefaultOffers.m in Sources */,
-				7894D8C4170D72F7000CFC99 /* ApplifierImpactShowOptionsParser.m in Sources */,
 				7894D8C8170D9644000CFC99 /* ApplifierImpactViewStateDefaultVideoPlayer.m in Sources */,
 				7894D8CC170DAD1D000CFC99 /* ApplifierImpactViewStateDefaultEndScreen.m in Sources */,
 				7894D8D4170DB671000CFC99 /* ApplifierImpactViewStateDefaultSpinner.m in Sources */,

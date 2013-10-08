@@ -10,7 +10,6 @@
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
-#import "../ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
 
 #import "../ApplifierImpactZone/ApplifierImpactZoneManager.h"
 #import "../ApplifierImpactZone/ApplifierImpactIncentivizedZone.h"
@@ -185,8 +184,8 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
         trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamRewardItemKey, [itemManager getCurrentItem].key];
       }
       
-      if ([[ApplifierImpactShowOptionsParser sharedInstance] gamerSID] != nil) {
-        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [[ApplifierImpactShowOptionsParser sharedInstance] gamerSID]];
+      if ([currentZone getGamerSid] != nil) {
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [currentZone getGamerSid]];
       }
       
       if (!viewed) {

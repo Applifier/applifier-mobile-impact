@@ -22,7 +22,6 @@
   @property (nonatomic, weak) UIViewController *currentViewController;
   @property (nonatomic, assign) int maxNumberOfAnalyticsRetries;
   @property (nonatomic, strong) NSString *expectedSdkVersion;
-  @property (nonatomic, assign) int allowVideoSkipInSeconds;
   @property (nonatomic, strong) NSString *developerId;
   @property (nonatomic, strong) NSString *optionsId;
   @property (nonatomic, assign) BOOL sdkIsCurrent;

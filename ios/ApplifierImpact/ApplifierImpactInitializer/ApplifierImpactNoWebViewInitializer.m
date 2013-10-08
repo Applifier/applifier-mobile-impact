@@ -62,7 +62,7 @@
 
 #pragma mark - ApplifierImpactCampaignManagerDelegate
 
-- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns rewardItem:(ApplifierImpactRewardItem *)rewardItem gamerID:(NSString *)gamerID {
+- (void)campaignManager:(ApplifierImpactCampaignManager *)campaignManager updatedWithCampaigns:(NSArray *)campaigns gamerID:(NSString *)gamerID {
 	AIAssert([NSThread isMainThread]);
 	AILOG_DEBUG(@"");
 }

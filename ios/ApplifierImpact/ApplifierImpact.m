@@ -11,7 +11,6 @@
 #import "ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "ApplifierImpactView/ApplifierImpactMainViewController.h"
-#import "ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
 #import "ApplifierImpactZone/ApplifierImpactZoneManager.h"
 #import "ApplifierImpactZone/ApplifierImpactIncentivizedZone.h"
 
@@ -176,18 +175,20 @@ static ApplifierImpact *sharedImpact = nil;
   if (![self canShowImpact]) return false;
   
   ApplifierImpactViewStateType state = kApplifierImpactViewStateTypeOfferScreen;
-  [[ApplifierImpactShowOptionsParser sharedInstance] parseOptions:options];
+  
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  [currentZone mergeOptions:options];
   
   // If Impact is in "No WebView" -mode, always skip offerscreen
   if (self.mode == kApplifierImpactModeNoWebView)
-    [[ApplifierImpactShowOptionsParser sharedInstance] setNoOfferScreen:true];
+    [currentZone setNoOfferScreen:true];
   
-  if ([[ApplifierImpactShowOptionsParser sharedInstance] noOfferScreen]) {
+  if ([currentZone noOfferScreen]) {
     if (![self canShowCampaigns]) return false;
     state = kApplifierImpactViewStateTypeVideoPlayer;
   }
   
-  [[ApplifierImpactMainViewController sharedInstance] openImpact:[[ApplifierImpactShowOptionsParser sharedInstance] openAnimated] inState:state withOptions:options];
+  [[ApplifierImpactMainViewController sharedInstance] openImpact:[currentZone openAnimated] inState:state withOptions:options];
   
   return true;
 }

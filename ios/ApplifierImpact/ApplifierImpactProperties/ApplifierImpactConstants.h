@@ -56,6 +56,8 @@ extern NSString * const kApplifierImpactWebViewDataParamMacAddressKey;
 extern NSString * const kApplifierImpactWebViewDataParamSdkVersionKey;
 extern NSString * const kApplifierImpactWebViewDataParamSdkIsCurrentKey;
 extern NSString * const kApplifierImpactWebViewDataParamIosVersionKey;
+extern NSString * const kApplifierImpactWebViewDataParamZoneKey;
+extern NSString * const kApplifierImpactWebViewDataParamZonesKey;
 
 extern NSString * const kApplifierImpactWebViewEventDataCampaignIdKey;
 extern NSString * const kApplifierImpactWebViewEventDataRewatchKey;
@@ -243,6 +245,7 @@ extern NSString * const kApplifierImpactZoneNoOfferScreenKey;
 extern NSString * const kApplifierImpactZoneOpenAnimatedKey;
 extern NSString * const kApplifierImpactZoneMuteVideoSoundsKey;
 extern NSString * const kApplifierImpactZoneUseDeviceOrientationForVideoKey;
+extern NSString * const kApplifierImpactZoneAllowVideoSkipInSecondsKey;
 
 @interface ApplifierImpactConstants : NSObject
 

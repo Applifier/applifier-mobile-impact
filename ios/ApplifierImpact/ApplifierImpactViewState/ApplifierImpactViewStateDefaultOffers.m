@@ -14,7 +14,6 @@
 #import "../ApplifierImpactItem/ApplifierImpactRewardItem.h"
 #import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
 #import "../ApplifierImpact.h"
-#import "../ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
 
 #import "../ApplifierImpactZone/ApplifierImpactZoneManager.h"
 #import "../ApplifierImpactZone/ApplifierImpactIncentivizedZone.h"
@@ -37,9 +36,9 @@
   id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
   if([currentZone isIncentivized]) {
     id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen, kApplifierImpactRewardItemKeyKey:[itemManager getCurrentItem].key, @"developerOptions":[[ApplifierImpactShowOptionsParser sharedInstance] getOptionsAsJson]}];
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen, kApplifierImpactWebViewDataParamZoneKey: [currentZone getZoneId], kApplifierImpactRewardItemKeyKey:[itemManager getCurrentItem].key}];
   } else {
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen, @"developerOptions":[[ApplifierImpactShowOptionsParser sharedInstance] getOptionsAsJson]}];
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen, kApplifierImpactWebViewDataParamZoneKey: [currentZone getZoneId]}];
   }
   
   [self placeToViewHiearchy];

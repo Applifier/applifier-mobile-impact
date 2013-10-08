@@ -11,11 +11,11 @@
 #import "ApplifierImpactVideoViewController.h"
 #import "ApplifierImpactVideoPlayer.h"
 #import "ApplifierImpactVideoView.h"
-#import "../ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "ApplifierImpactVideoMuteButton.h"
 #import "../ApplifierImpactBundle/ApplifierImpactBundle.h"
 #import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
+#import "../ApplifierImpactZone/ApplifierImpactZoneManager.h"
 
 @interface ApplifierImpactVideoViewController ()
   @property (nonatomic, strong) ApplifierImpactVideoView *videoView;
@@ -104,7 +104,8 @@
 }
 
 - (void)_makeOrientation {
-  if (![[ApplifierImpactShowOptionsParser sharedInstance] useDeviceOrientationForVideo]) {
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if (![currentZone useDeviceOrientationForVideo]) {
     if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
       double maxValue = fmax(self.view.superview.bounds.size.width, self.view.superview.bounds.size.height);
       double minValue = fmin(self.view.superview.bounds.size.width, self.view.superview.bounds.size.height);
@@ -130,7 +131,8 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-  if ([[ApplifierImpactShowOptionsParser sharedInstance] useDeviceOrientationForVideo]) {
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if ([currentZone useDeviceOrientationForVideo]) {
     return YES;
   }
   return UIInterfaceOrientationIsLandscape(interfaceOrientation);
@@ -141,7 +143,8 @@
 }
 
 - (BOOL)shouldAutorotate {
-  if ([[ApplifierImpactShowOptionsParser sharedInstance] useDeviceOrientationForVideo]) {
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if ([currentZone useDeviceOrientationForVideo]) {
     return YES;
   }
   return NO;
@@ -168,7 +171,8 @@
   AVURLAsset *asset = [AVURLAsset URLAssetWithURL:self.currentPlayingVideoUrl options:nil];
   AVMutableAudioMix *audioZeroMix = nil;
   
-  if ([[ApplifierImpactShowOptionsParser sharedInstance] muteVideoSounds]) {
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if ([currentZone muteVideoSounds]) {
     NSArray *audioTracks = [asset tracksWithMediaType:AVMediaTypeAudio];
     NSMutableArray *allAudioParams = [NSMutableArray array];
     
@@ -185,7 +189,7 @@
   
   AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:asset];
   
-  if ([[ApplifierImpactShowOptionsParser sharedInstance] muteVideoSounds]) {
+  if ([currentZone muteVideoSounds]) {
     [item setAudioMix:audioZeroMix];
   }
   
@@ -332,7 +336,8 @@
 #pragma mark - Video Skip Label
 
 - (void)createVideoSkipLabel {
-  if (self.skipLabel == nil && self.videoOverlayView != nil && [[ApplifierImpactProperties sharedInstance] allowVideoSkipInSeconds] > 0) {
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if (self.skipLabel == nil && self.videoOverlayView != nil && [currentZone allowVideoSkipInSeconds] > 0) {
     AILOG_DEBUG(@"Create video skip label");
     self.skipLabel = [[UIButton alloc] initWithFrame:CGRectMake(3, 0, 300, 20)];
     self.skipLabel.backgroundColor = [UIColor clearColor];
@@ -365,7 +370,8 @@
   [self.muteButton addTarget:self action:@selector(muteVideoButtonPressed:) forControlEvents:UIControlEventTouchDown];
   [self.muteButton setFrame:CGRectMake(0.0f, self.view.bounds.size.height - self.muteButton.bounds.size.height + 16, self.muteButton.frame.size.width, self.muteButton.frame.size.height)];
   
-  if ([[ApplifierImpactShowOptionsParser sharedInstance] muteVideoSounds]) {
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if ([currentZone muteVideoSounds]) {
     self.isMuted = true;
     self.muteButton.selected = self.isMuted;
   }
@@ -476,8 +482,10 @@
 	Float64 current = CMTimeGetSeconds(currentTime);
   Float64 timeLeft = duration - current;
   Float64 timeUntilSkip = -1;
-  if ([[ApplifierImpactProperties sharedInstance] allowVideoSkipInSeconds] > 0) {
-    timeUntilSkip = [[ApplifierImpactProperties sharedInstance] allowVideoSkipInSeconds] - current;
+  
+  id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if ([currentZone allowVideoSkipInSeconds] > 0) {
+    timeUntilSkip = [currentZone allowVideoSkipInSeconds] - current;
   }
   
   if (timeLeft < 0)
