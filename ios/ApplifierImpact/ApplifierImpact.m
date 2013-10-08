@@ -177,20 +177,24 @@ static ApplifierImpact *sharedImpact = nil;
   ApplifierImpactViewStateType state = kApplifierImpactViewStateTypeOfferScreen;
   
   id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
-  [currentZone mergeOptions:options];
-  
-  // If Impact is in "No WebView" -mode, always skip offerscreen
-  if (self.mode == kApplifierImpactModeNoWebView)
-    [currentZone setNoOfferScreen:true];
-  
-  if ([currentZone noOfferScreen]) {
-    if (![self canShowCampaigns]) return false;
-    state = kApplifierImpactViewStateTypeVideoPlayer;
+  if(currentZone) {
+    [currentZone mergeOptions:options];
+    
+    // If Impact is in "No WebView" -mode, always skip offerscreen
+    if (self.mode == kApplifierImpactModeNoWebView)
+      [currentZone setNoOfferScreen:true];
+    
+    if ([currentZone noOfferScreen]) {
+      if (![self canShowCampaigns]) return false;
+      state = kApplifierImpactViewStateTypeVideoPlayer;
+    }
+    
+    [[ApplifierImpactMainViewController sharedInstance] openImpact:[currentZone openAnimated] inState:state withOptions:options];
+    
+    return true;
+  } else {
+    return false;
   }
-  
-  [[ApplifierImpactMainViewController sharedInstance] openImpact:[currentZone openAnimated] inState:state withOptions:options];
-  
-  return true;
 }
 
 - (BOOL)showImpact {
