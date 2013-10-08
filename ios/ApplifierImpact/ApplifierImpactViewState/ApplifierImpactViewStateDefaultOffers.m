@@ -36,7 +36,7 @@
   id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
   if([currentZone isIncentivized]) {
     id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
-    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen, kApplifierImpactWebViewDataParamZoneKey: [currentZone getZoneId], kApplifierImpactRewardItemKeyKey:[itemManager getCurrentItem].key}];
+    [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen, kApplifierImpactWebViewDataParamZoneKey: [currentZone getZoneId], kApplifierImpactItemKeyKey:[itemManager getCurrentItem].key}];
   } else {
     [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeStart data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIOpen, kApplifierImpactWebViewDataParamZoneKey: [currentZone getZoneId]}];
   }
