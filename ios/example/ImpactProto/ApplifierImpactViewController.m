@@ -99,7 +99,7 @@
 
         //[[ApplifierImpact sharedInstance] setViewController:self showImmediatelyInNewController:YES];
         
-        NSLog(@"showImpact: %i", [[ApplifierImpact sharedInstance] showImpactZone:@"testZone1" withOptions:@{
+        NSLog(@"showImpact: %i", [[ApplifierImpact sharedInstance] showImpact:@{
           kApplifierImpactOptionNoOfferscreenKey:@false,
           kApplifierImpactOptionOpenAnimatedKey:@true,
           kApplifierImpactOptionGamerSIDKey:@"gom",
