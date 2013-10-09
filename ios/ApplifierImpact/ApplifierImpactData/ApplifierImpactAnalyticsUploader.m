@@ -205,12 +205,11 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
   AILOG_DEBUG(@"");
   NSArray *queryStringComponents = [queryString componentsSeparatedByString:@"?"];
   NSString *trackingPath = [queryStringComponents objectAtIndex:0];
-  queryString = [queryStringComponents objectAtIndex:1];
-  
-	if (queryString == nil || [queryString length] == 0) {
-		AILOG_DEBUG(@"Invalid input.");
-		return;
-	}
+  if([queryStringComponents count] > 1) {
+    queryString = [queryStringComponents objectAtIndex:1];
+  } else {
+    queryString = nil;
+  }
   
   AILOG_DEBUG(@"Tracking report: %@%@%@ : %@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactAnalyticsTrackingPath, trackingPath, queryString);
   
