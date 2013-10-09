@@ -236,6 +236,7 @@ extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeKey;
 extern NSString * const kApplifierImpactZonesRootKey;
 extern NSString * const kApplifierImpactZoneIdKey;
 extern NSString * const kApplifierImpactZoneNameKey;
+extern NSString * const kApplifierImpactZoneDefaultKey;
 extern NSString * const kApplifierImpactZoneIsIncentivizedKey;
 extern NSString * const kApplifierImpactZoneRewardItemsKey;
 extern NSString * const kApplifierImpactZoneDefaultRewardItemKey;

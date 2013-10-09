@@ -14,6 +14,7 @@
 
 @property (nonatomic, strong) NSMutableDictionary *_options;
 @property (nonatomic, strong) NSString * _gamerSid;
+@property (nonatomic) BOOL _isDefault;
 
 @end
 
@@ -24,12 +25,17 @@
   if(self) {
     self._options = [NSMutableDictionary dictionaryWithDictionary:options];
     self._gamerSid = nil;
+    self._isDefault = [[options valueForKey:kApplifierImpactZoneDefaultKey] boolValue];
   }
   return self;
 }
 
 - (BOOL)isIncentivized {
   return FALSE;
+}
+
+- (BOOL)isDefault {
+  return self._isDefault;
 }
 
 - (NSString *)getZoneId {

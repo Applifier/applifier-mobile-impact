@@ -44,12 +44,16 @@ static ApplifierImpactZoneManager *sharedZoneManager = nil;
     if([self._zones objectForKey:zoneId] == nil) {
       [self._zones setObject:zone forKey:zoneId];
       ++addedZones;
+      if([zone isDefault] && self._currentZone == nil) {
+        self._currentZone = zone;
+      }
     }
   }];
   return addedZones;
 }
 
 - (void)clearZones {
+  self._currentZone = nil;
   [self._zones removeAllObjects];
 }
 
@@ -63,6 +67,9 @@ static ApplifierImpactZoneManager *sharedZoneManager = nil;
 
 - (BOOL)removeZone:(NSString *)zoneId {
   if([self._zones objectForKey:zoneId] != nil) {
+    if([[self._currentZone getZoneId] isEqualToString:zoneId]) {
+      self._currentZone = nil;
+    }
     [self._zones removeObjectForKey:zoneId];
     return true;
   }

@@ -34,8 +34,6 @@
     return nil;
   }
   
-  
-  
   BOOL isIncentivized = [[rawZone objectForKey:kApplifierImpactZoneIsIncentivizedKey] boolValue];
   if(isIncentivized) {
     return [[ApplifierImpactIncentivizedZone alloc] initWithData:rawZone];

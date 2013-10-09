@@ -223,6 +223,7 @@ NSString * const kApplifierImpactGoogleAnalyticsEventTypeKey = @"eventType";
 NSString * const kApplifierImpactZonesRootKey = @"zones";
 NSString * const kApplifierImpactZoneIdKey = @"id";
 NSString * const kApplifierImpactZoneNameKey = @"name";
+NSString * const kApplifierImpactZoneDefaultKey = @"default";
 NSString * const kApplifierImpactZoneIsIncentivizedKey = @"incentivised";
 NSString * const kApplifierImpactZoneRewardItemsKey = @"rewardItems";
 NSString * const kApplifierImpactZoneDefaultRewardItemKey = @"defaultRewardItem";

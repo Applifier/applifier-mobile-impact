@@ -16,6 +16,7 @@
 - (NSDictionary *)getZoneOptions;
 
 - (BOOL)isIncentivized;
+- (BOOL)isDefault;
 
 - (BOOL)noWebView;
 - (BOOL)noOfferScreen;
