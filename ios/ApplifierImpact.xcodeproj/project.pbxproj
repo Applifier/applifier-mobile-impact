@@ -105,6 +105,8 @@
 		78BC12F817392D0D0015A35E /* ApplifierImpactInstrumentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BC12F617392D0D0015A35E /* ApplifierImpactInstrumentation.m */; };
 		78CB843A16255FAA00E94915 /* ApplifierImpactURLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CB843816255FAA00E94915 /* ApplifierImpactURLProtocol.h */; };
 		78CB843B16255FAA00E94915 /* ApplifierImpactURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */; };
+		9945F95B180572A200A97B70 /* ApplifierImpactZoneParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9945F95A180572A200A97B70 /* ApplifierImpactZoneParserTests.m */; };
+		9945F95D180575A000A97B70 /* ApplifierImpactZoneManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9945F95C180575A000A97B70 /* ApplifierImpactZoneManagerTests.m */; };
 		99A78DBB17E9B81B00731814 /* ApplifierImpactZoneManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 99A78DB717E9B81B00731814 /* ApplifierImpactZoneManager.h */; };
 		99A78DBC17E9B81B00731814 /* ApplifierImpactZoneManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A78DB817E9B81B00731814 /* ApplifierImpactZoneManager.m */; };
 		99A78DBD17E9B81B00731814 /* ApplifierImpactZoneParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 99A78DB917E9B81B00731814 /* ApplifierImpactZoneParser.h */; };
@@ -251,6 +253,8 @@
 		78BC12F617392D0D0015A35E /* ApplifierImpactInstrumentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactInstrumentation.m; sourceTree = "<group>"; };
 		78CB843816255FAA00E94915 /* ApplifierImpactURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactURLProtocol.h; sourceTree = "<group>"; };
 		78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactURLProtocol.m; sourceTree = "<group>"; };
+		9945F95A180572A200A97B70 /* ApplifierImpactZoneParserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactZoneParserTests.m; sourceTree = "<group>"; };
+		9945F95C180575A000A97B70 /* ApplifierImpactZoneManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactZoneManagerTests.m; sourceTree = "<group>"; };
 		99A78DB717E9B81B00731814 /* ApplifierImpactZoneManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApplifierImpactZoneManager.h; path = ApplifierImpactZone/ApplifierImpactZoneManager.h; sourceTree = "<group>"; };
 		99A78DB817E9B81B00731814 /* ApplifierImpactZoneManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ApplifierImpactZoneManager.m; path = ApplifierImpactZone/ApplifierImpactZoneManager.m; sourceTree = "<group>"; };
 		99A78DB917E9B81B00731814 /* ApplifierImpactZoneParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApplifierImpactZoneParser.h; path = ApplifierImpactZone/ApplifierImpactZoneParser.h; sourceTree = "<group>"; };
@@ -505,6 +509,8 @@
 		99FE3C1717E87E1400845E0B /* ApplifierImpactTests */ = {
 			isa = PBXGroup;
 			children = (
+				9945F95C180575A000A97B70 /* ApplifierImpactZoneManagerTests.m */,
+				9945F95A180572A200A97B70 /* ApplifierImpactZoneParserTests.m */,
 				99A8516917FC45160090F8FF /* ApplifierImpactRewardItemManagerTests.m */,
 				99A8516717FC41C00090F8FF /* ApplifierImpactRewardItemTests.m */,
 				99FE3C2517E87E9200845E0B /* ApplifierImpactZoneTests.m */,
@@ -919,6 +925,8 @@
 			files = (
 				99FE3C2617E87E9200845E0B /* ApplifierImpactZoneTests.m in Sources */,
 				99A8516A17FC45160090F8FF /* ApplifierImpactRewardItemManagerTests.m in Sources */,
+				9945F95D180575A000A97B70 /* ApplifierImpactZoneManagerTests.m in Sources */,
+				9945F95B180572A200A97B70 /* ApplifierImpactZoneParserTests.m in Sources */,
 				99A8516817FC41C00090F8FF /* ApplifierImpactRewardItemTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
