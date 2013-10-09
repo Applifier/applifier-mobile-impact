@@ -119,22 +119,6 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
   dispatch_release(self.analyticsQueue);
 }
 
-
-#pragma mark - Public
-
-- (void)queueUrl:(NSString *)url {
-  if (url != nil) {
-    AIAssert(![NSThread isMainThread]);
-    
-    NSArray *queryStringComponents = [url componentsSeparatedByString:@"?"];
-    NSString *urlPath = [queryStringComponents objectAtIndex:0];
-    NSString *queryString = [queryStringComponents objectAtIndex:1];
-    
-    [self _queueWithURLString:urlPath queryString:queryString httpMethod:@"GET" retries:[NSNumber numberWithInt:0]];
-  }
-}
-
-
 #pragma mark - Click track
 
 - (void)sendOpenAppStoreRequest:(ApplifierImpactCampaign *)campaign {
