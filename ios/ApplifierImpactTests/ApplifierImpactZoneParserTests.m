@@ -32,4 +32,9 @@
   STAssertTrue([zones count] == 2, @"Failed to parse multiple zones");
 }
 
+- (void)testZoneParserMultipleZonesWithAnInvalidZone {
+  NSDictionary * zones = [ApplifierImpactZoneParser parseZones:@[@{@"id": @"testZone1", @"name": @"testZoneName1"}, @{@"name": @"testZoneName2"}]];
+  STAssertTrue([zones count] == 1, @"Parsed invalid zone");
+}
+
 @end
