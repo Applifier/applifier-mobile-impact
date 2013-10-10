@@ -11,7 +11,7 @@
 #import "ApplifierImpactZoneManager.h"
 
 @interface ApplifierImpactZoneManagerTests : SenTestCase {
-  ApplifierImpactZone * validZone;
+  ApplifierImpactZone * validZone1, * validZone2;
   ApplifierImpactZoneManager * zoneManager;
 }
 @end
@@ -20,7 +20,8 @@
 
 - (void)setUp {
   [super setUp];
-  validZone = [[ApplifierImpactZone alloc] initWithData:@{@"id": @"testZoneId", @"name": @"testZoneName", @"default": @"true"}];
+  validZone1 = [[ApplifierImpactZone alloc] initWithData:@{@"id": @"testZoneId1", @"name": @"testZoneName1", @"default": @"true"}];
+  validZone2 = [[ApplifierImpactZone alloc] initWithData:@{@"id": @"testZoneId2", @"name": @"testZoneName2", @"default": @"false"}];
   zoneManager = [[ApplifierImpactZoneManager alloc] init];
 }
 
@@ -30,15 +31,21 @@
 }
 
 - (void)testZoneManagerAddSingleZone {
-  int addedZones = [zoneManager addZones:@{@"testZoneId": validZone}];
+  int addedZones = [zoneManager addZones:@{@"testZoneId": validZone1}];
   STAssertTrue(addedZones == 1, @"Failed to add single zone");
-  STAssertTrue([[zoneManager getCurrentZone] isEqual:validZone], @"Failed to set current zone to single added zone");
+  STAssertTrue([[zoneManager getCurrentZone] isEqual:validZone1], @"Failed to set current zone to single added zone");
 }
 
 - (void)testZoneManagerClearZones {
   [zoneManager clearZones];
   STAssertTrue([zoneManager zoneCount] == 0, @"Failed to clear zones");
   STAssertTrue([zoneManager getCurrentZone] == nil, @"Failed to clear current zone");
+}
+
+- (void)testZoneManagerAddMultipleZones {
+  [zoneManager addZones:@{@"testZoneId1": validZone1, @"testZoneId2": validZone2}];
+  STAssertTrue([zoneManager zoneCount] == 2, @"Failed to add multiple zones");
+  STAssertTrue([[zoneManager getCurrentZone] isEqual:validZone1], @"Failed to set current zone from multiple zones");
 }
 
 @end
