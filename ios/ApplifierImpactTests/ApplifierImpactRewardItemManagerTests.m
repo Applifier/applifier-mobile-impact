@@ -8,6 +8,9 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import <objc/objc-runtime.h>
+extern void __gcov_flush();
+
 #import "ApplifierImpactRewardItemManager.h"
 
 @interface ApplifierImpactRewardItemManagerTests : SenTestCase {
@@ -22,6 +25,11 @@
   [super setUp];
   validItem1 = [[ApplifierImpactRewardItem alloc] initWithData:@{@"key": @"testItemKey1", @"name": @"testItemName1", @"picture": @"http://www.google.fi"}];
   validItem2 = [[ApplifierImpactRewardItem alloc] initWithData:@{@"key": @"testItemKey2", @"name": @"testItemName2", @"picture": @"http://www.google.fi"}];
+}
+
+- (void)tearDown {
+  __gcov_flush();
+  [super tearDown];
 }
 
 - (void)testEmptyItems {

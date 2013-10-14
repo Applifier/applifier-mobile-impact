@@ -8,6 +8,9 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import <objc/objc-runtime.h>
+extern void __gcov_flush();
+
 #import "ApplifierImpactSBJsonParser.h"
 
 #import "ApplifierImpactZone.h"
@@ -31,6 +34,11 @@
                                                          @"muteVideoSounds": @NO,
                                                          @"useDeviceOrientationForVideo": @YES,
                                                          @"allowClientOverrides": @[@"noOfferScreen", @"openAnimated"]}];
+}
+
+- (void)tearDown {
+  __gcov_flush();
+  [super tearDown];
 }
 
 - (void)testZoneValidOverrides {
