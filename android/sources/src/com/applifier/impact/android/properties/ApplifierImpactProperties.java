@@ -3,9 +3,6 @@ package com.applifier.impact.android.properties;
 import java.net.URLEncoder;
 import java.util.Map;
 
-import org.json.JSONObject;
-
-import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
@@ -14,23 +11,19 @@ import android.app.Activity;
 
 public class ApplifierImpactProperties {
 	//public static String CAMPAIGN_DATA_URL = "http://192.168.1.246:3500/mobile/campaigns";
-	public static String CAMPAIGN_DATA_URL = "https://impact.applifier.com/mobile/campaigns";
-//	public static String CAMPAIGN_DATA_URL = "https://staging-impact.applifier.com/mobile/campaigns";
+//	public static String CAMPAIGN_DATA_URL = "https://impact.applifier.com/mobile/campaigns";
+	public static String CAMPAIGN_DATA_URL = "https://staging-impact.applifier.com/mobile/campaigns";
 	public static String WEBVIEW_BASE_URL = null;
 	public static String ANALYTICS_BASE_URL = null;
 	public static String IMPACT_BASE_URL = null;
 	public static String CAMPAIGN_QUERY_STRING = null;
 	public static String IMPACT_GAME_ID = null;
 	public static String IMPACT_GAMER_ID = null;
-	public static String GAMER_SID = null;
 	public static Boolean TESTMODE_ENABLED = false;
 	public static Activity BASE_ACTIVITY = null;
 	public static Activity CURRENT_ACTIVITY = null;
 	public static ApplifierImpactCampaign SELECTED_CAMPAIGN = null;
 	public static Boolean IMPACT_DEBUG_MODE = false;
-	public static Map<String, Object> IMPACT_DEVELOPER_OPTIONS = null;
-	public static int ALLOW_VIDEO_SKIP = 0;
-	public static int ALLOW_BACK_BUTTON_SKIP = 0;
 	
 	public static String TEST_DATA = null;
 	public static String TEST_URL = null;
@@ -104,51 +97,9 @@ public class ApplifierImpactProperties {
 			}
 		}
 		
-		_campaignQueryString = queryString;
-	}
-	
-	public static JSONObject getDeveloperOptionsAsJson () {
-		if (IMPACT_DEVELOPER_OPTIONS != null) {
-			JSONObject options = new JSONObject();
-			
-			boolean noOfferscreen = false;
-			boolean openAnimated = false;
-			boolean muteVideoSounds = false;
-			boolean videoUsesDeviceOrientation = false;
-			
-			try {
-				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY))
-					noOfferscreen = (Boolean)IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY);
-				
-				options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, noOfferscreen);
-				
-				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY))
-					openAnimated = (Boolean)IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY);
-				
-				options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, openAnimated);
-				
-				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS))
-					muteVideoSounds = (Boolean)IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS);
-				
-				options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, muteVideoSounds);
-				
-				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY))
-					options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY));
-				
-				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION))
-					videoUsesDeviceOrientation = (Boolean)IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION);
-				
-				options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION, videoUsesDeviceOrientation);
-
-			}
-			catch (Exception e) {
-				ApplifierImpactUtils.Log("Could not create JSON", ApplifierImpactProperties.class);
-			}
-
-			return options;
-		}
+		queryString = String.format("%s&%s=%s", queryString, "forceWebViewUrl", "http://192.168.1.246:8080/dev-build/impact/index.html");
 		
-		return null;
+		_campaignQueryString = queryString;
 	}
 	
 	public static String getCampaignQueryUrl () {

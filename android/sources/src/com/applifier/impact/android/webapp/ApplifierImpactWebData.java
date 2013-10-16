@@ -21,9 +21,12 @@ import android.os.AsyncTask;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
-import com.applifier.impact.android.campaign.ApplifierImpactRewardItem;
+import com.applifier.impact.android.item.ApplifierImpactRewardItemManager;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
+import com.applifier.impact.android.zone.ApplifierImpactZone;
+import com.applifier.impact.android.zone.ApplifierImpactIncentivizedZone;
+import com.applifier.impact.android.zone.ApplifierImpactZoneManager;
 
 public class ApplifierImpactWebData {
 	
@@ -33,9 +36,7 @@ public class ApplifierImpactWebData {
 	private ArrayList<ApplifierImpactUrlLoader> _urlLoaders = null;
 	private ArrayList<ApplifierImpactUrlLoader> _failedUrlLoaders = null;
 	private ApplifierImpactUrlLoader _currentLoader = null;
-	private ApplifierImpactRewardItem _defaultRewardItem = null;
-	private ArrayList<ApplifierImpactRewardItem> _rewardItems = null;
-	private ApplifierImpactRewardItem _currentRewardItem = null;
+	private static ApplifierImpactZoneManager _zoneManager = null;
 	private int _totalUrlsSent = 0;
 	private int _totalLoadersCreated = 0;
 	private int _totalLoadersHaveRun = 0;
@@ -80,6 +81,7 @@ public class ApplifierImpactWebData {
 			return output;
 		}
 		
+		@SuppressLint("DefaultLocale")
 		public static ApplifierImpactRequestType getValueOf (String value) {
 			if (VideoPlan.toString().equals(value.toLowerCase()))
 				return VideoPlan;
@@ -159,10 +161,23 @@ public class ApplifierImpactWebData {
 			viewUrl = String.format("%s%s/video/%s/%s", viewUrl, ApplifierImpactProperties.IMPACT_GAMER_ID, position.toString(), campaign.getCampaignId());
 			viewUrl = String.format("%s/%s", viewUrl, ApplifierImpactProperties.IMPACT_GAME_ID);
 			
-			String queryParams = String.format("%s=%s", ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, getCurrentRewardItemKey());
+			String queryParams = "";
 			
-			if (ApplifierImpactProperties.GAMER_SID != null)
-				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY, ApplifierImpactProperties.GAMER_SID);
+			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			if(currentZone.isIncentivized()) {
+				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)currentZone).itemManager();
+			    queryParams = String.format("?%s=%s", ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, itemManager.getCurrentItem().getKey());
+			}
+			
+			if (currentZone.getGamerSid() != null) {
+				String formatString = "";
+				if(currentZone.isIncentivized()) {
+					formatString = "%s&%s=%s";
+				} else {
+					formatString = "?%s=%s";
+				}
+				queryParams = String.format(formatString, queryParams, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY, currentZone.getGamerSid());
+			}
 			
 			ApplifierImpactUrlLoaderCreator ulc = new ApplifierImpactUrlLoaderCreator(viewUrl, queryParams, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_POST, ApplifierImpactRequestType.VideoViewed, 0);
 			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
@@ -181,10 +196,15 @@ public class ApplifierImpactWebData {
 			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_EVENTTYPE_KEY, eventType);
 			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_TRACKINGID_KEY, ApplifierImpactProperties.IMPACT_GAMER_ID);
 			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_PROVIDERID_KEY, campaign.getCampaignId());
-			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, getCurrentRewardItemKey());
 			
-			if (ApplifierImpactProperties.GAMER_SID != null)
-				analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY, ApplifierImpactProperties.GAMER_SID);
+			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			if(currentZone.isIncentivized()) {
+				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)currentZone).itemManager();
+				analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, itemManager.getCurrentItem().getKey());
+			}		
+			
+			if (currentZone.getGamerSid() != null)
+				analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY, currentZone.getGamerSid());
 			
 			ApplifierImpactUrlLoaderCreator ulc = new ApplifierImpactUrlLoaderCreator(viewUrl, analyticsUrl, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET, ApplifierImpactRequestType.Analytics, 0);
 			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
@@ -198,22 +218,9 @@ public class ApplifierImpactWebData {
 			_campaigns = null;
 		}
 		
-		if (_defaultRewardItem != null) {
-			_defaultRewardItem.clearData();
-			_defaultRewardItem = null;
-		}
-		
-		if (_rewardItems != null) {
-			for (ApplifierImpactRewardItem rewardItem : _rewardItems)
-				rewardItem.clearData();
-			
-			_rewardItems.clear();
-			_rewardItems = null;
-		}
-		
-		if (_currentRewardItem != null) {
-			_currentRewardItem.clearData();
-			_currentRewardItem = null;
+		if (_zoneManager != null) {
+			_zoneManager.clear();
+			_zoneManager = null;
 		}
 		
 		_campaignJson = null;
@@ -245,49 +252,11 @@ public class ApplifierImpactWebData {
 			return _campaignJson.toString();
 		
 		return null;
+	}	
+	
+	public static ApplifierImpactZoneManager getZoneManager() {
+		return _zoneManager;
 	}
-	
-	
-	// Multiple reward items
-	
-	public ArrayList<ApplifierImpactRewardItem> getRewardItems () {
-		return _rewardItems;
-	}
-	
-	public ApplifierImpactRewardItem getDefaultRewardItem () {
-		return _defaultRewardItem;
-	}
-	
-	public String getCurrentRewardItemKey () {
-		if (_currentRewardItem != null)
-			return _currentRewardItem.getKey();
-		
-		return null;
-	}
-	
-	public ApplifierImpactRewardItem getRewardItemByKey (String rewardItemKey) {
-		if (_rewardItems != null) {
-			for (ApplifierImpactRewardItem rewardItem : _rewardItems) {
-				if (rewardItem.getKey().equals(rewardItemKey))
-					return rewardItem;
-			}
-		}
-		
-		if (_defaultRewardItem != null && _defaultRewardItem.getKey().equals(rewardItemKey))
-			return _defaultRewardItem;
-		
-		return null;
-	}
-	
-	public void setCurrentRewardItem (ApplifierImpactRewardItem rewardItem) {
-		if (_currentRewardItem != null && !_currentRewardItem.equals(rewardItem)) {
-			_currentRewardItem = rewardItem;
-		}
-		else {
-			ApplifierImpactUtils.Log("Problem setting current reward item: " + _currentRewardItem + ", " + rewardItem, this);
-		}
-	}
-	
 	
 	/* INTERNAL METHODS */
 	
@@ -453,18 +422,13 @@ public class ApplifierImpactWebData {
 				if (!data.has(ApplifierImpactConstants.IMPACT_URL_KEY)) validData = false;
 				if (!data.has(ApplifierImpactConstants.IMPACT_GAMER_ID_KEY)) validData = false;
 				if (!data.has(ApplifierImpactConstants.IMPACT_CAMPAIGNS_KEY)) validData = false;
-				if (!data.has(ApplifierImpactConstants.IMPACT_REWARD_ITEM_KEY)) validData = false;
+				if (!data.has(ApplifierImpactConstants.IMPACT_ZONES_KEY)) validData = false;
 				
 				// Parse basic properties
 				ApplifierImpactProperties.WEBVIEW_BASE_URL = data.getString(ApplifierImpactConstants.IMPACT_WEBVIEW_URL_KEY);
 				ApplifierImpactProperties.ANALYTICS_BASE_URL = data.getString(ApplifierImpactConstants.IMPACT_ANALYTICS_URL_KEY);
 				ApplifierImpactProperties.IMPACT_BASE_URL = data.getString(ApplifierImpactConstants.IMPACT_URL_KEY);
 				ApplifierImpactProperties.IMPACT_GAMER_ID = data.getString(ApplifierImpactConstants.IMPACT_GAMER_ID_KEY);
-				
-				// Parse allow video skipping in "n" seconds
-				if (data.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_ALLOWVIDEOSKIP_KEY)) {
-					ApplifierImpactProperties.ALLOW_VIDEO_SKIP = data.getInt(ApplifierImpactConstants.IMPACT_CAMPAIGN_ALLOWVIDEOSKIP_KEY);
-				}
 				
 				// Parse campaigns
 				if (validData) {
@@ -479,38 +443,13 @@ public class ApplifierImpactWebData {
 				
 				ApplifierImpactUtils.Log("Parsed total of " + _campaigns.size() + " campaigns", this);
 				
-				// Parse default reward item
+				// Zone parsing
 				if (validData) {
-					_defaultRewardItem = new ApplifierImpactRewardItem(data.getJSONObject(ApplifierImpactConstants.IMPACT_REWARD_ITEM_KEY));
-					if (!_defaultRewardItem.hasValidData()) {
-						campaignDataFailed();
-						return;
+					if(_zoneManager != null) {
+						_zoneManager.clear();
+						_zoneManager = null;
 					}
-					
-					ApplifierImpactUtils.Log("Parsed default rewardItem: " + _defaultRewardItem.getName() + ", " + _defaultRewardItem.getKey(), this);
-					_currentRewardItem = _defaultRewardItem;
-				}
-				
-				if (data.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_DISABLEBACKBUTTON_KEY)) {
-					ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP = data.getInt(ApplifierImpactConstants.IMPACT_CAMPAIGN_DISABLEBACKBUTTON_KEY);
-				}
-				
-				// Parse possible multiple reward items
-				if (validData && data.has(ApplifierImpactConstants.IMPACT_REWARD_ITEMS_KEY)) {
-					JSONArray rewardItems = data.getJSONArray(ApplifierImpactConstants.IMPACT_REWARD_ITEMS_KEY);
-					ApplifierImpactRewardItem currentRewardItem = null;
-					
-					for (int i = 0; i < rewardItems.length(); i++) {
-						currentRewardItem = new ApplifierImpactRewardItem(rewardItems.getJSONObject(i));
-						if (currentRewardItem.hasValidData()) {
-							if (_rewardItems == null)
-								_rewardItems = new ArrayList<ApplifierImpactRewardItem>();
-							
-							_rewardItems.add(currentRewardItem);
-						}
-					}
-					
-					ApplifierImpactUtils.Log("Parsed total of " + _rewardItems.size() + " reward items", this);
+					_zoneManager = new ApplifierImpactZoneManager(data.getJSONArray(ApplifierImpactConstants.IMPACT_ZONES_KEY));
 				}
 			}
 			else {

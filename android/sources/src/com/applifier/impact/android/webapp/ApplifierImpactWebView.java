@@ -218,7 +218,6 @@ public class ApplifierImpactWebView extends WebView {
 		getSettings().setLightTouchEnabled(false);
 		getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 		getSettings().setSupportMultipleWindows(false);
-		getSettings().setPluginsEnabled(false);
 		getSettings().setAllowFileAccess(false);
 		
 		setHorizontalScrollBarEnabled(false);

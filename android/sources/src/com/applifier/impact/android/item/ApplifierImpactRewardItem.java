@@ -1,4 +1,4 @@
-package com.applifier.impact.android.campaign;
+package com.applifier.impact.android.item;
 
 import java.util.HashMap;
 import java.util.Map;

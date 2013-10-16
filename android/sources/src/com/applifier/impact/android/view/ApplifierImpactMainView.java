@@ -14,9 +14,11 @@ import com.applifier.impact.android.video.ApplifierImpactVideoPlayView;
 import com.applifier.impact.android.video.IApplifierImpactVideoPlayerListener;
 import com.applifier.impact.android.webapp.ApplifierImpactInstrumentation;
 import com.applifier.impact.android.webapp.ApplifierImpactWebBridge;
+import com.applifier.impact.android.webapp.ApplifierImpactWebData;
 import com.applifier.impact.android.webapp.ApplifierImpactWebView;
 import com.applifier.impact.android.webapp.IApplifierImpactWebViewListener;
 import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
+import com.applifier.impact.android.zone.ApplifierImpactZone;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -252,9 +254,8 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		if (Build.VERSION.SDK_INT < 9)
 			targetOrientation = 0;
 		
-		if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null && 
-			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION) && 
-			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION).equals(true)) {
+		ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if (currentZone.useDeviceOrientationForVideo()) {
 			ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			
 			// UNSPECIFIED

@@ -8,7 +8,7 @@ public class ApplifierImpactConstants {
 	public static final String PENDING_REQUESTS_FILENAME = "pendingrequests.dat";
 
 	/* Impact */
-	public static final String IMPACT_VERSION = "109";
+	public static final String IMPACT_VERSION = "1100";
 	public static final String IMPACT_REQUEST_METHOD_POST = "POST";
 	public static final String IMPACT_REQUEST_METHOD_GET = "GET";
 	
@@ -79,6 +79,22 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_CAMPAIGN_BYPASSAPPSHEET_KEY = "bypassAppSheet";
 	public static final String IMPACT_CAMPAIGN_ALLOWVIDEOSKIP_KEY = "allowSkipVideoInSeconds";
 	public static final String IMPACT_CAMPAIGN_DISABLEBACKBUTTON_KEY = "disableBackButtonForSeconds";
+	
+	/* Zone JSON Properties */
+	public static final String IMPACT_ZONES_KEY = "zones";
+	public static final String IMPACT_ZONE_ID_KEY = "id";
+	public static final String IMPACT_ZONE_NAME_KEY = "name";
+	public static final String IMPACT_ZONE_INCENTIVIZED_KEY = "incentivised";
+	public static final String IMPACT_ZONE_DEFAULT_KEY = "default";
+	public static final String IMPACT_ZONE_DEFAULT_REWARD_ITEM_KEY = "defaultRewardItem";
+	public static final String IMPACT_ZONE_REWARD_ITEMS_KEY = "rewardItems";
+	public static final String IMPACT_ZONE_MUTE_VIDEO_SOUNDS_KEY = "muteVideoSounds";
+	public static final String IMPACT_ZONE_OPEN_ANIMATED_KEY = "openAnimated";
+	public static final String IMPACT_ZONE_NO_OFFER_SCREEN_KEY = "noOfferScreen";
+	public static final String IMPACT_ZONE_USE_DEVICE_ORIENTATION_FOR_VIDEO_KEY = "useDeviceOrientationForVideo";
+	public static final String IMPACT_ZONE_ALLOW_VIDEO_SKIP_IN_SECONDS_KEY = "allowVideoSkipInSeconds";
+	public static final String IMPACT_ZONE_DISABLE_BACK_BUTTON_FOR_SECONDS = "disableBackButtonForSeconds";
+	public static final String IMPACT_ZONE_ALLOW_CLIENT_OVERRIDES_KEY = "allowClientOverrides";
 	
 	/* Reward Item JSON Properties */
 	public static final String IMPACT_REWARD_ITEMKEY_KEY = "itemKey";

@@ -12,8 +12,9 @@ import com.applifier.impact.android.cache.ApplifierImpactDownloader;
 import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
-import com.applifier.impact.android.campaign.ApplifierImpactRewardItem;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
+import com.applifier.impact.android.item.ApplifierImpactRewardItem;
+import com.applifier.impact.android.item.ApplifierImpactRewardItemManager;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.view.ApplifierImpactMainView;
@@ -21,6 +22,8 @@ import com.applifier.impact.android.view.IApplifierImpactMainViewListener;
 import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewAction;
 import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewState;
 import com.applifier.impact.android.webapp.*;
+import com.applifier.impact.android.zone.ApplifierImpactZone;
+import com.applifier.impact.android.zone.ApplifierImpactIncentivizedZone;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -161,17 +164,21 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	public boolean showImpact (Map<String, Object> options) {
 		if (canShowImpact()) {
-			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS = options;
+			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
 			
-			if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null) {
-				if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY) && ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true)) {
+			if (currentZone != null) {
+				if (currentZone.noOfferScreen()) {
 					if (webdata.getViewableVideoPlanCampaigns().size() > 0) {
 						ApplifierImpactCampaign selectedCampaign = webdata.getViewableVideoPlanCampaigns().get(0);
 						ApplifierImpactProperties.SELECTED_CAMPAIGN = selectedCampaign;
 					}
 				}
-				if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY) && ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY) != null) {
-					ApplifierImpactProperties.GAMER_SID = "" + ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY);
+				Object gamerSid = options.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY);
+				if (gamerSid != null) {
+					String gamerSidString = gamerSid.toString();
+					if(gamerSidString.length() > 0) {
+						currentZone.setGamerSid(gamerSidString);
+					}
 				}
 			}
 			
@@ -236,70 +243,80 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	/* PUBLIC MULTIPLE REWARD ITEM SUPPORT */
 	
 	public boolean hasMultipleRewardItems () {
-		if (webdata.getRewardItems() != null && webdata.getRewardItems().size() > 0)
-			return true;
-		
+		ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if(zone.isIncentivized()) {
+			ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+			return itemManager.itemCount() > 1;
+		}		
 		return false;
 	}
 	
 	public ArrayList<String> getRewardItemKeys () {
-		if (webdata.getRewardItems() != null && webdata.getRewardItems().size() > 0) {
-			ArrayList<ApplifierImpactRewardItem> rewardItems = webdata.getRewardItems();
+		ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if(zone.isIncentivized()) {
+			ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+			ArrayList<ApplifierImpactRewardItem> rewardItems = itemManager.allItems();
 			ArrayList<String> rewardItemKeys = new ArrayList<String>();
 			for (ApplifierImpactRewardItem rewardItem : rewardItems) {
 				rewardItemKeys.add(rewardItem.getKey());
 			}
 			
 			return rewardItemKeys;
-		}
-		
+		}		
 		return null;
 	}
 	
 	public String getDefaultRewardItemKey () {
-		if (webdata != null && webdata.getDefaultRewardItem() != null)
-			return webdata.getDefaultRewardItem().getKey();
-		
+		ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if(zone.isIncentivized()) {
+			ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+			return itemManager.getDefaultItem().getKey();
+		}		
 		return null;
 	}
 	
 	public String getCurrentRewardItemKey () {
-		if (webdata != null && webdata.getCurrentRewardItemKey() != null)
-			return webdata.getCurrentRewardItemKey();
-			
+		ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if(zone.isIncentivized()) {
+			ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+			return itemManager.getCurrentItem().getKey();
+		}			
 		return null;
 	}
 	
 	public boolean setRewardItemKey (String rewardItemKey) {
 		if (canShowImpact()) {
-			ApplifierImpactRewardItem rewardItem = webdata.getRewardItemByKey(rewardItemKey);
-			
-			if (rewardItem != null) {
-				webdata.setCurrentRewardItem(rewardItem);
-				return true;
+			ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			if(zone.isIncentivized()) {
+				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+				return itemManager.setCurrentItem(rewardItemKey);
 			}
 		}
-		
 		return false;
 	}
 	
 	public void setDefaultRewardItemAsRewardItem () {
 		if (canShowImpact()) {
-			if (webdata != null && webdata.getDefaultRewardItem() != null) {
-				webdata.setCurrentRewardItem(webdata.getDefaultRewardItem());
+			ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			if(zone.isIncentivized()) {
+				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+				itemManager.setCurrentItem(itemManager.getDefaultItem().getKey());
 			}
 		}
 	}
 	
 	public Map<String, String> getRewardItemDetailsWithKey (String rewardItemKey) {
-		ApplifierImpactRewardItem rewardItem = webdata.getRewardItemByKey(rewardItemKey);
-		if (rewardItem != null) {
-			return rewardItem.getDetails();
+		ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if(zone.isIncentivized()) {
+			ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+			ApplifierImpactRewardItem rewardItem = itemManager.getItem(rewardItemKey);
+			if (rewardItem != null) {
+				return rewardItem.getDetails();
+			}
+			else {
+				ApplifierImpactUtils.Log("Could not fetch reward item: " + rewardItemKey, this);
+			}
 		}
-		else {
-			ApplifierImpactUtils.Log("Could not fetch reward item: " + rewardItemKey, this);
-		}
-		
 		return null;
 	}
 	
@@ -471,7 +488,12 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			
 			try {
 				setViewData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_INITCOMPLETE);
-				setViewData.put(ApplifierImpactConstants.IMPACT_REWARD_ITEMKEY_KEY, webdata.getCurrentRewardItemKey());
+				
+				ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+				if(zone.isIncentivized()) {
+					ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+					setViewData.put(ApplifierImpactConstants.IMPACT_REWARD_ITEMKEY_KEY, itemManager.getCurrentItem().getKey());
+				}
 			}
 			catch (Exception e) {
 				dataOk = false;
@@ -608,8 +630,12 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		
 		try  {
 			data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN);
-			data.put(ApplifierImpactConstants.IMPACT_REWARD_ITEMKEY_KEY, webdata.getCurrentRewardItemKey());
-			data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_DEVELOPER_OPTIONS, ApplifierImpactProperties.getDeveloperOptionsAsJson());
+			
+			ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			if(zone.isIncentivized()) {
+				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+				data.put(ApplifierImpactConstants.IMPACT_REWARD_ITEMKEY_KEY, itemManager.getCurrentItem().getKey());
+			}
 		}
 		catch (Exception e) {
 			dataOk = false;
@@ -623,10 +649,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			if (mainview != null) {
 				mainview.openImpact(view, data);
 				
-				if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null && 
-					ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY)  && 
-					ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true))
-						playVideo();
+				ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+				if (currentZone.noOfferScreen()) {
+					playVideo();
+				}		
 				
 				if (_impactListener != null)
 					_impactListener.onImpactOpen();
@@ -694,10 +720,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		Intent newIntent = new Intent(ApplifierImpactProperties.CURRENT_ACTIVITY, com.applifier.impact.android.view.ApplifierImpactFullscreenActivity.class);
 		int flags = Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK;
 		
-		if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null && 
-			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) && 
-			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(true))
-				flags = Intent.FLAG_ACTIVITY_NEW_TASK;
+		ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if (currentZone.openAnimated()) {
+			flags = Intent.FLAG_ACTIVITY_NEW_TASK;
+		}
 		
 		newIntent.addFlags(flags);
 		
@@ -779,12 +805,11 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 									mainview.closeImpact(_data);
 									ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
 									
-									if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS == null || 
-										!ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) || 
-										ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(false))
-											ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
-									
-									ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS = null;
+									ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+									if (!currentZone.openAnimated()) {
+										ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
+									}
+
 									_showingImpact = false;
 									
 									if (_impactListener != null)
