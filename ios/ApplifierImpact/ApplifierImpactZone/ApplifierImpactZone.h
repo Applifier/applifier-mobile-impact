@@ -18,7 +18,6 @@
 - (BOOL)isIncentivized;
 - (BOOL)isDefault;
 
-- (BOOL)noWebView;
 - (BOOL)noOfferScreen;
 - (BOOL)openAnimated;
 - (BOOL)muteVideoSounds;

@@ -46,10 +46,6 @@
   return self._options;
 }
 
-- (BOOL)noWebView {
-  return [[self._options valueForKey:kApplifierImpactZoneNoWebViewKey] boolValue];
-}
-
 - (BOOL)noOfferScreen {
   return [[self._options valueForKey:kApplifierImpactZoneNoOfferScreenKey] boolValue];
 }

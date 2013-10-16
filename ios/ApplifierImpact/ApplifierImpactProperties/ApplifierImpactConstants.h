@@ -241,7 +241,6 @@ extern NSString * const kApplifierImpactZoneIsIncentivizedKey;
 extern NSString * const kApplifierImpactZoneRewardItemsKey;
 extern NSString * const kApplifierImpactZoneDefaultRewardItemKey;
 extern NSString * const kApplifierImpactZoneAllowOverrides;
-extern NSString * const kApplifierImpactZoneNoWebViewKey;
 extern NSString * const kApplifierImpactZoneNoOfferScreenKey;
 extern NSString * const kApplifierImpactZoneOpenAnimatedKey;
 extern NSString * const kApplifierImpactZoneMuteVideoSoundsKey;

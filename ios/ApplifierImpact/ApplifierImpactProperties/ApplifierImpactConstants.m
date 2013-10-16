@@ -228,7 +228,6 @@ NSString * const kApplifierImpactZoneIsIncentivizedKey = @"incentivised";
 NSString * const kApplifierImpactZoneRewardItemsKey = @"rewardItems";
 NSString * const kApplifierImpactZoneDefaultRewardItemKey = @"defaultRewardItem";
 NSString * const kApplifierImpactZoneAllowOverrides = @"allowClientOverrides";
-NSString * const kApplifierImpactZoneNoWebViewKey = @"noWebView";
 NSString * const kApplifierImpactZoneNoOfferScreenKey = @"noOfferScreen";
 NSString * const kApplifierImpactZoneOpenAnimatedKey = @"openAnimated";
 NSString * const kApplifierImpactZoneMuteVideoSoundsKey = @"muteVideoSounds";
