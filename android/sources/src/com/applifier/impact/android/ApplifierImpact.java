@@ -162,11 +162,31 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		return false;
 	}
 	
+	public boolean setZone(String zoneId) {
+		if(!_showingImpact) {
+			return ApplifierImpactWebData.getZoneManager().setCurrentZone(zoneId);
+		}		
+		return false;
+	}
+	
+	public boolean setZone(String zoneId, String rewardItemKey) {
+		if(!_showingImpact && setZone(zoneId)) {
+			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			if(currentZone.isIncentivized()) {
+				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)currentZone).itemManager();
+				return itemManager.setCurrentItem(rewardItemKey);
+			}
+		}
+		return false;
+	}
+	
 	public boolean showImpact (Map<String, Object> options) {
 		if (canShowImpact()) {
 			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
 			
 			if (currentZone != null) {
+				currentZone.mergeOptions(options);
+				
 				if (currentZone.noOfferScreen()) {
 					if (webdata.getViewableVideoPlanCampaigns().size() > 0) {
 						ApplifierImpactCampaign selectedCampaign = webdata.getViewableVideoPlanCampaigns().get(0);
@@ -180,9 +200,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 						currentZone.setGamerSid(gamerSidString);
 					}
 				}
+				
+				return showImpact();
 			}
-			
-			return showImpact();
+					
 		}
 		
 		return false;

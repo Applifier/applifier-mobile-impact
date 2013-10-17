@@ -27,10 +27,12 @@ public class ApplifierImpactZone {
 		_zoneName = zoneObject.getString(ApplifierImpactConstants.IMPACT_ZONE_NAME_KEY);
 		_default = zoneObject.optBoolean(ApplifierImpactConstants.IMPACT_ZONE_DEFAULT_KEY, true);
 		
-		JSONArray allowClientOverrides = zoneObject.getJSONArray(ApplifierImpactConstants.IMPACT_ZONE_ALLOW_CLIENT_OVERRIDES_KEY);
-		for(int i = 0; i < allowClientOverrides.length(); ++i) {
-			_allowClientOverrides.add(allowClientOverrides.getString(i));
-		}
+		JSONArray allowClientOverrides = zoneObject.optJSONArray(ApplifierImpactConstants.IMPACT_ZONE_ALLOW_CLIENT_OVERRIDES_KEY);
+		if(allowClientOverrides != null) {
+			for(int i = 0; i < allowClientOverrides.length(); ++i) {
+				_allowClientOverrides.add(allowClientOverrides.getString(i));
+			}
+		}			
 	}
 	
 	public String getZoneId() {
