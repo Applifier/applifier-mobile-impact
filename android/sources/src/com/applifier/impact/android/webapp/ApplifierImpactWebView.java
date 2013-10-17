@@ -154,6 +154,7 @@ public class ApplifierImpactWebView extends WebView {
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SCREENDENSITY_KEY, ApplifierImpactDevice.getScreenDensity());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SCREENSIZE_KEY, ApplifierImpactDevice.getScreenSize());
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_ZONES_KEY, ApplifierImpactWebData.getZoneManager().getZonesJson());
 				
 				// Tracking data
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SOFTWAREVERSION_KEY, ApplifierImpactDevice.getSoftwareVersion());

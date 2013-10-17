@@ -487,12 +487,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			JSONObject setViewData = new JSONObject();
 			
 			try {
-				setViewData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_INITCOMPLETE);
-				
 				ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+				
+				setViewData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_INITCOMPLETE);
+				setViewData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ZONE_KEY, zone.getZoneId());
+				
 				if(zone.isIncentivized()) {
 					ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
-					setViewData.put(ApplifierImpactConstants.IMPACT_REWARD_ITEMKEY_KEY, itemManager.getCurrentItem().getKey());
+					setViewData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_REWARD_ITEM_KEY, itemManager.getCurrentItem().getKey());
 				}
 			}
 			catch (Exception e) {
@@ -629,12 +631,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		JSONObject data = new JSONObject();
 		
 		try  {
-			data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN);
-			
 			ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			
+			data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN);
+			data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ZONE_KEY, zone.getZoneId());
+			
 			if(zone.isIncentivized()) {
 				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
-				data.put(ApplifierImpactConstants.IMPACT_REWARD_ITEMKEY_KEY, itemManager.getCurrentItem().getKey());
+				data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_REWARD_ITEM_KEY, itemManager.getCurrentItem().getKey());
 			}
 		}
 		catch (Exception e) {

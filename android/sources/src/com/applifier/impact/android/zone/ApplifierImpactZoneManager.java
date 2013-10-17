@@ -55,6 +55,14 @@ public class ApplifierImpactZoneManager {
 		return _zones.size();
 	}
 	
+	public JSONArray getZonesJson() {
+		JSONArray zonesArray = new JSONArray();
+		for(ApplifierImpactZone zone : _zones.values()) {
+			zonesArray.put(zone.getZoneOptions());
+		}
+		return zonesArray;
+	}
+	
 	public void clear() {
 		_currentZone = null;
 		_zones.clear();

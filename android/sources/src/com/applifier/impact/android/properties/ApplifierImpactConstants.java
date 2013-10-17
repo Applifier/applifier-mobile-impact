@@ -36,6 +36,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SOFTWAREVERSION_KEY = "softwareVersion";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SCREENDENSITY_KEY = "screenDensity";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SCREENSIZE_KEY = "screenSize";
+	public static final String IMPACT_WEBVIEW_DATAPARAM_ZONES_KEY = "zones";
 
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_COMPLETED = "completed";
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_START = "start";
@@ -49,7 +50,8 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_API_OPEN = "open";
 	public static final String IMPACT_WEBVIEW_API_PLAYSTORE = "appStore";
 	public static final String IMPACT_WEBVIEW_API_ACTION_VIDEOSTARTEDPLAYING = "video_started_playing";	
-	public static final String IMPACT_WEBVIEW_API_DEVELOPER_OPTIONS = "developerOptions";
+	public static final String IMPACT_WEBVIEW_API_ZONE_KEY = "zone";
+	public static final String IMPACT_WEBVIEW_API_REWARD_ITEM_KEY = "itemKey";
 		
 	public static final String IMPACT_WEBVIEW_EVENTDATA_CAMPAIGNID_KEY = "campaignId";	
 	public static final String IMPACT_WEBVIEW_EVENTDATA_REWATCH_KEY = "rewatch";	
@@ -97,7 +99,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_ZONE_ALLOW_CLIENT_OVERRIDES_KEY = "allowClientOverrides";
 	
 	/* Reward Item JSON Properties */
-	public static final String IMPACT_REWARD_ITEMKEY_KEY = "itemKey";
+	public static final String IMPACT_REWARD_ITEMKEY_KEY = "key";
 	public static final String IMPACT_REWARD_NAME_KEY = "name";
 	public static final String IMPACT_REWARD_PICTURE_KEY = "picture";
 	public static final String IMPACT_REWARD_ITEM_KEY = "item";

@@ -1,6 +1,7 @@
 package com.applifier.impact.android.item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -16,6 +17,8 @@ public class ApplifierImpactRewardItemManager {
 	private ApplifierImpactRewardItem _defaultItem = null;
 	
 	public ApplifierImpactRewardItemManager(JSONArray rewardItemArray, String defaultItem) {
+		_rewardItems = new HashMap<String, ApplifierImpactRewardItem>();
+		
 		for(int i = 0; i < rewardItemArray.length(); ++i) {
 			try {
 				JSONObject rewardItemObject = rewardItemArray.getJSONObject(i);

@@ -25,7 +25,7 @@ public class ApplifierImpactZone {
 		_options = zoneObject;
 		_zoneId = zoneObject.getString(ApplifierImpactConstants.IMPACT_ZONE_ID_KEY);
 		_zoneName = zoneObject.getString(ApplifierImpactConstants.IMPACT_ZONE_NAME_KEY);
-		_default = zoneObject.getBoolean(ApplifierImpactConstants.IMPACT_ZONE_DEFAULT_KEY);
+		_default = zoneObject.optBoolean(ApplifierImpactConstants.IMPACT_ZONE_DEFAULT_KEY, true);
 		
 		JSONArray allowClientOverrides = zoneObject.getJSONArray(ApplifierImpactConstants.IMPACT_ZONE_ALLOW_CLIENT_OVERRIDES_KEY);
 		for(int i = 0; i < allowClientOverrides.length(); ++i) {
