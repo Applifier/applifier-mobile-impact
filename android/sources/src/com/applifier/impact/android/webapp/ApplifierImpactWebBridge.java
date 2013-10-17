@@ -39,7 +39,7 @@ public class ApplifierImpactWebBridge {
 		}
 	}
 	
-	private IApplifierImpactWebBrigeListener _listener = null;
+	private IApplifierImpactWebBridgeListener _listener = null;
 	
 	private ApplifierImpactWebEvent getEventType (String event) {
 		for (ApplifierImpactWebEvent evt : ApplifierImpactWebEvent.values()) {
@@ -50,7 +50,7 @@ public class ApplifierImpactWebBridge {
 		return null;
 	}
 	
-	public ApplifierImpactWebBridge (IApplifierImpactWebBrigeListener listener) {
+	public ApplifierImpactWebBridge (IApplifierImpactWebBridgeListener listener) {
 		_listener = listener;
 	}
 	

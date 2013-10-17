@@ -38,7 +38,7 @@ import android.os.PowerManager;
 
 public class ApplifierImpact implements IApplifierImpactCacheListener, 
 										IApplifierImpactWebDataListener, 
-										IApplifierImpactWebBrigeListener,
+										IApplifierImpactWebBridgeListener,
 										IApplifierImpactMainViewListener {
 	
 	// Reward item HashMap keys
