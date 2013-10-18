@@ -150,6 +150,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_EVENTTYPE_KEY = "type";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_TRACKINGID_KEY = "trackingId";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_PROVIDERID_KEY = "providerId";
+	public static final String IMPACT_ANALYTICS_QUERYPARAM_ZONE_KEY = "zone";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY = "rewardItem";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY = "sid";
 	

@@ -161,22 +161,16 @@ public class ApplifierImpactWebData {
 			viewUrl = String.format("%s%s/video/%s/%s", viewUrl, ApplifierImpactProperties.IMPACT_GAMER_ID, position.toString(), campaign.getCampaignId());
 			viewUrl = String.format("%s/%s", viewUrl, ApplifierImpactProperties.IMPACT_GAME_ID);
 			
-			String queryParams = "";
-			
 			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			String queryParams = String.format("%s=%s", ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_ZONE_KEY, currentZone.getZoneId());
+			
 			if(currentZone.isIncentivized()) {
 				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)currentZone).itemManager();
-			    queryParams = String.format("?%s=%s", ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, itemManager.getCurrentItem().getKey());
+			    queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, itemManager.getCurrentItem().getKey());
 			}
 			
 			if (currentZone.getGamerSid() != null) {
-				String formatString = "";
-				if(currentZone.isIncentivized()) {
-					formatString = "%s&%s=%s";
-				} else {
-					formatString = "?%s=%s";
-				}
-				queryParams = String.format(formatString, queryParams, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY, currentZone.getGamerSid());
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY, currentZone.getGamerSid());
 			}
 			
 			ApplifierImpactUrlLoaderCreator ulc = new ApplifierImpactUrlLoaderCreator(viewUrl, queryParams, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_POST, ApplifierImpactRequestType.VideoViewed, 0);
@@ -198,6 +192,8 @@ public class ApplifierImpactWebData {
 			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_PROVIDERID_KEY, campaign.getCampaignId());
 			
 			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_ZONE_KEY, currentZone.getZoneId());
+			
 			if(currentZone.isIncentivized()) {
 				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)currentZone).itemManager();
 				analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY, itemManager.getCurrentItem().getKey());

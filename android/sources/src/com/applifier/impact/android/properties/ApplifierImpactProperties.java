@@ -11,8 +11,8 @@ import android.app.Activity;
 
 public class ApplifierImpactProperties {
 	//public static String CAMPAIGN_DATA_URL = "http://192.168.1.246:3500/mobile/campaigns";
-//	public static String CAMPAIGN_DATA_URL = "https://impact.applifier.com/mobile/campaigns";
-	public static String CAMPAIGN_DATA_URL = "https://staging-impact.applifier.com/mobile/campaigns";
+	public static String CAMPAIGN_DATA_URL = "https://impact.applifier.com/mobile/campaigns";
+//	public static String CAMPAIGN_DATA_URL = "https://staging-impact.applifier.com/mobile/campaigns";
 	public static String WEBVIEW_BASE_URL = null;
 	public static String ANALYTICS_BASE_URL = null;
 	public static String IMPACT_BASE_URL = null;
