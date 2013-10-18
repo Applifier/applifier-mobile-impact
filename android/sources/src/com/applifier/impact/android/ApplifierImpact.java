@@ -507,16 +507,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		if (canShowCampaigns()) {
 			JSONObject setViewData = new JSONObject();
 			
-			try {
-				ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
-				
+			try {				
 				setViewData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_INITCOMPLETE);
-				setViewData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ZONE_KEY, zone.getZoneId());
-				
-				if(zone.isIncentivized()) {
-					ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
-					setViewData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_REWARD_ITEM_KEY, itemManager.getCurrentItem().getKey());
-				}
 			}
 			catch (Exception e) {
 				dataOk = false;
