@@ -126,6 +126,8 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
     NSString *query = [NSString stringWithFormat:@"%@=%@&%@=%@&%@=%@&%@=%@", kApplifierImpactAnalyticsQueryParamGameIdKey, [[ApplifierImpactProperties sharedInstance] impactGameId], kApplifierImpactAnalyticsQueryParamEventTypeKey, kApplifierImpactAnalyticsEventTypeOpenAppStore, kApplifierImpactAnalyticsQueryParamTrackingIdKey, [[ApplifierImpactProperties sharedInstance] gamerId], kApplifierImpactAnalyticsQueryParamProviderIdKey, campaign.id];
     
     id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+    query = [NSString stringWithFormat:@"%@&%@=%@", query, kApplifierImpactAnalyticsQueryParamZoneIdKey, [currentZone getZoneId]];
+    
     if([currentZone isIncentivized]) {
       id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
       query = [NSString stringWithFormat:@"%@&%@=%@", query, kApplifierImpactAnalyticsQueryParamRewardItemKey, [itemManager getCurrentItem].key];
@@ -163,19 +165,15 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
       NSString *trackingQuery = [NSString stringWithFormat:@"%@/video/%@/%@/%@", [[ApplifierImpactProperties sharedInstance] gamerId], positionString, campaignId, [[ApplifierImpactProperties sharedInstance] impactGameId]];
 
       id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+      trackingQuery = [NSString stringWithFormat:@"%@?%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamZoneIdKey, [currentZone getZoneId]];
+      
       if([currentZone isIncentivized]) {
         id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
-        trackingQuery = [NSString stringWithFormat:@"%@?%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamRewardItemKey, [itemManager getCurrentItem].key];
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamRewardItemKey, [itemManager getCurrentItem].key];
       }
       
       if ([currentZone getGamerSid] != nil) {
-        NSString * formatString = nil;
-        if([currentZone isIncentivized]) {
-          formatString = @"%@&%@=%@";
-        } else {
-          formatString = @"%@?%@=%@";
-        }
-        trackingQuery = [NSString stringWithFormat:formatString, trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [currentZone getGamerSid]];
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [currentZone getGamerSid]];
       }
       
       if (!viewed) {

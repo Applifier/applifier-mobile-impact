@@ -138,6 +138,7 @@ NSString * const kApplifierImpactAnalyticsQueryParamGameIdKey = @"gameId";
 NSString * const kApplifierImpactAnalyticsQueryParamEventTypeKey = @"type";
 NSString * const kApplifierImpactAnalyticsQueryParamTrackingIdKey = @"trackingId";
 NSString * const kApplifierImpactAnalyticsQueryParamProviderIdKey = @"providerId";
+NSString * const kApplifierImpactAnalyticsQueryParamZoneIdKey = @"zone";
 NSString * const kApplifierImpactAnalyticsQueryParamRewardItemKey = @"rewardItem";
 NSString * const kApplifierImpactAnalyticsQueryParamGamerSIDKey = @"sid";
 

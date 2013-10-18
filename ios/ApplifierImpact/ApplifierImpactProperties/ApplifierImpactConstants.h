@@ -152,6 +152,7 @@ extern NSString * const kApplifierImpactInitQueryParamOdin1IdKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamEventTypeKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamTrackingIdKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamProviderIdKey;
+extern NSString * const kApplifierImpactAnalyticsQueryParamZoneIdKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamRewardItemKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamGamerSIDKey;
 
