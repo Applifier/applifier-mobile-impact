@@ -59,7 +59,7 @@ public class ApplifierImpactZoneManager {
 	}
 	
 	public int zoneCount() {
-		return _zones.size();
+		return _zones != null ? _zones.size() : 0;
 	}
 	
 	public JSONArray getZonesJson() {

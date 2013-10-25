@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import android.test.ActivityInstrumentationTestCase2;
 import com.mycompany.test.ApplifierImpactTestStartActivity;
-import com.applifier.impact.android.properties.ApplifierImpactProperties;
 import com.applifier.impact.android.zone.ApplifierImpactZone;
 
 public class ApplifierImpactZoneTest extends ActivityInstrumentationTestCase2<ApplifierImpactTestStartActivity> {
