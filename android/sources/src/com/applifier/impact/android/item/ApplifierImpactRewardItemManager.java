@@ -24,12 +24,14 @@ public class ApplifierImpactRewardItemManager {
 				JSONObject rewardItemObject = rewardItemArray.getJSONObject(i);
 				ApplifierImpactRewardItem rewardItem = new ApplifierImpactRewardItem(rewardItemObject);
 				
-				if(rewardItem.getKey().equals(defaultItem)) {
-					_currentItem = rewardItem;
-					_defaultItem = rewardItem;
+				if(rewardItem.hasValidData()) {
+					if(rewardItem.getKey().equals(defaultItem)) {
+						_currentItem = rewardItem;
+						_defaultItem = rewardItem;
+					}
+					
+					_rewardItems.put(rewardItem.getKey(), rewardItem);
 				}
-				
-				_rewardItems.put(rewardItem.getKey(), rewardItem);
 			} catch(JSONException e) {
 				ApplifierImpactUtils.Log("Failed to parse reward item", this);
 			}
