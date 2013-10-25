@@ -22,6 +22,7 @@ public class ApplifierImpactZoneManagerTest extends ActivityInstrumentationTestC
 	}
 	
 	@Override
+	@SuppressWarnings("serial")
 	public void setUp() throws Exception {
 		super.setUp();
 		

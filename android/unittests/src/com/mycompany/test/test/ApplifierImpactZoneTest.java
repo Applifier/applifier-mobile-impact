@@ -19,6 +19,7 @@ public class ApplifierImpactZoneTest extends ActivityInstrumentationTestCase2<Ap
 	}
 	
 	@Override
+	@SuppressWarnings("serial")
 	public void setUp() throws Exception {
 		super.setUp();
 		JSONObject validZoneObject = new JSONObject(new HashMap<String, Object>(){{
@@ -33,6 +34,7 @@ public class ApplifierImpactZoneTest extends ActivityInstrumentationTestCase2<Ap
 		validZone = new ApplifierImpactZone(validZoneObject);
 	}
 	
+	@SuppressWarnings("serial")
 	public void testZoneValidOverrides() {
 		validZone.mergeOptions(new HashMap<String, Object>(){{
 			put("openAnimated", false);
@@ -40,6 +42,7 @@ public class ApplifierImpactZoneTest extends ActivityInstrumentationTestCase2<Ap
 		assertTrue(!validZone.openAnimated());
 	}
 	
+	@SuppressWarnings("serial")
 	public void testZoneInvalidOverrides() {
 		validZone.mergeOptions(new HashMap<String, Object>(){{
 			put("muteVideoSounds", true);
