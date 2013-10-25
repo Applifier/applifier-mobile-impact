@@ -39,6 +39,13 @@ public class ApplifierImpactZoneManager {
 		} 
 	}
 	
+	public ApplifierImpactZone getZone(String zoneId) {
+		if(_zones.containsKey(zoneId)) {
+			return _zones.get(zoneId);
+		}
+		return null;
+	}
+	
 	public ApplifierImpactZone getCurrentZone() {
 		return _currentZone;
 	}
