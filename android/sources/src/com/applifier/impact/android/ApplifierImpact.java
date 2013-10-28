@@ -598,8 +598,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	private void close () {
 		cancelPauseScreenTimer();
-		ApplifierImpactCloseRunner closeRunner = new ApplifierImpactCloseRunner();
-		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(closeRunner);
+		if(ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+			ApplifierImpactCloseRunner closeRunner = new ApplifierImpactCloseRunner();
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(closeRunner);
+		}
 	}
 	
 	private void open (String view) {
@@ -730,11 +732,13 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		_pauseScreenTimer = new TimerTask() {
 			@Override
 			public void run() {
-				PowerManager pm = (PowerManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext().getSystemService(Context.POWER_SERVICE);			
-				if (!pm.isScreenOn()) {
-					mainview.webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, new JSONObject());
-					close();
-					cancelPauseScreenTimer();
+				if(ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+					PowerManager pm = (PowerManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext().getSystemService(Context.POWER_SERVICE);			
+					if (!pm.isScreenOn()) {
+						mainview.webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, new JSONObject());
+						close();
+						cancelPauseScreenTimer();
+					}
 				}
 			}
 		};
