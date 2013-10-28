@@ -12,7 +12,7 @@
 @interface ApplifierImpactNativeButton ()
   @property (nonatomic, strong) UIColor *strokeColor;
   @property (nonatomic, strong) NSArray *baseColors;
-  @property (nonatomic, assign) UIRectCorner *cornerToRound;
+  @property (nonatomic, assign) UIRectCorner cornerToRound;
   @property (nonatomic, strong) UIView *iconView;
   @property (nonatomic, strong) UIView *separator;
   @property (nonatomic, assign) int cornerRadius;
@@ -21,7 +21,7 @@
 @implementation ApplifierImpactNativeButton
 
 - (id)initWithFrame:(CGRect)frame andBaseColors:(NSArray *)baseColors strokeColor:(UIColor *)strokeColor {
-  return [self initWithFrame:frame andBaseColors:baseColors strokeColor:strokeColor withCorner:nil];
+  return [self initWithFrame:frame andBaseColors:baseColors strokeColor:strokeColor withCorner:0];
 }
 
 - (id)initWithFrame:(CGRect)frame andBaseColors:(NSArray *)baseColors strokeColor:(UIColor *)strokeColor withCorner:(UIRectCorner)roundedCorner {
@@ -56,10 +56,12 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-  UIRectCorner *cornerToRound = UIRectCornerAllCorners;
+  UIRectCorner cornerToRound = UIRectCornerAllCorners;
   
-  if (self.cornerToRound != nil)
-    cornerToRound = self.cornerToRound;
+  if (self.cornerToRound)
+  {
+      cornerToRound = self.cornerToRound;
+  }
   
   UIBezierPath *outerPath = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:cornerToRound cornerRadii:CGSizeMake(self.cornerRadius, self.cornerRadius)];
   [self.strokeColor setFill];
@@ -100,7 +102,6 @@
 - (void)destroyView {
   self.strokeColor = nil;
   self.baseColors = nil;
-  self.cornerToRound = nil;
   self.cornerRadius = 0;
   
   if (self.iconView != nil) {
