@@ -74,14 +74,14 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	/* PUBLIC METHODS */
 	
 	public void openImpact (String view, JSONObject data) {
-		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && ApplifierImpactProperties.CURRENT_ACTIVITY.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
+		if (ApplifierImpactProperties.getCurrentActivity() != null && ApplifierImpactProperties.getCurrentActivity().getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
 			webview.setWebViewCurrentView(view, data);
 			
 			if (this.getParent() != null && (ViewGroup)this.getParent() != null)
 				((ViewGroup)this.getParent()).removeView(this);
 			
 			if (this.getParent() == null)
-				ApplifierImpactProperties.CURRENT_ACTIVITY.addContentView(this, new FrameLayout.LayoutParams(FILL_PARENT, FILL_PARENT));
+				ApplifierImpactProperties.getCurrentActivity().addContentView(this, new FrameLayout.LayoutParams(FILL_PARENT, FILL_PARENT));
 			
 			setViewState(ApplifierImpactMainViewState.WebView);
 		}
@@ -133,7 +133,7 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		
 		destroyVideoPlayerView();
 		setViewState(ApplifierImpactMainViewState.WebView);		
-		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		ApplifierImpactProperties.getCurrentActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 	}
 	
 	@Override
@@ -171,14 +171,14 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	}
 	
 	private void createVideoPlayerView () {
-		videoplayerview = new ApplifierImpactVideoPlayView(ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext(), this);
+		videoplayerview = new ApplifierImpactVideoPlayView(ApplifierImpactProperties.getCurrentActivity().getBaseContext(), this);
 		videoplayerview.setLayoutParams(new FrameLayout.LayoutParams(FILL_PARENT, FILL_PARENT));
 		videoplayerview.setId(1002);
 		addView(videoplayerview);
 	}
 	
 	private void createWebView () {
-		webview = new ApplifierImpactWebView(ApplifierImpactProperties.CURRENT_ACTIVITY, this, new ApplifierImpactWebBridge(ApplifierImpact.instance));
+		webview = new ApplifierImpactWebView(ApplifierImpactProperties.getCurrentActivity(), this, new ApplifierImpactWebBridge(ApplifierImpact.instance));
 		webview.setId(1003);
 		addView(webview, new FrameLayout.LayoutParams(FILL_PARENT, FILL_PARENT));
 	}
@@ -256,13 +256,13 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		
 		ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
 		if (currentZone.useDeviceOrientationForVideo()) {
-			ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			ApplifierImpactProperties.getCurrentActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			
 			// UNSPECIFIED
 			targetOrientation = -1;
 		}
 		
-		ApplifierImpactProperties.CURRENT_ACTIVITY.setRequestedOrientation(targetOrientation);
+		ApplifierImpactProperties.getCurrentActivity().setRequestedOrientation(targetOrientation);
 		
 		focusToView(videoplayerview);
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, spinnerParams);

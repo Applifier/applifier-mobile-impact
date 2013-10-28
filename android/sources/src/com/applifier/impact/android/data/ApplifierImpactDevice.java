@@ -28,14 +28,14 @@ public class ApplifierImpactDevice {
 	}
 	
 	public static int getDeviceType () {
-		return ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getConfiguration().screenLayout;
+		return ApplifierImpactProperties.getCurrentActivity().getResources().getConfiguration().screenLayout;
 	}
 	
 	public static String getOdin1Id () {
 		String odin1ID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		
 		try {
-			odin1ID = ApplifierImpactUtils.SHA1(Secure.getString(ApplifierImpactProperties.CURRENT_ACTIVITY.getContentResolver(), Secure.ANDROID_ID));
+			odin1ID = ApplifierImpactUtils.SHA1(Secure.getString(ApplifierImpactProperties.getCurrentActivity().getContentResolver(), Secure.ANDROID_ID));
 		}
 		catch (Exception e) {
 			ApplifierImpactUtils.Log("Could not resolve ODIN1 Id: " + e.getMessage(), ApplifierImpactDevice.class);
@@ -49,7 +49,7 @@ public class ApplifierImpactDevice {
 		String androidID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		
 		try {
-			androidID = ApplifierImpactUtils.Md5(Secure.getString(ApplifierImpactProperties.CURRENT_ACTIVITY.getContentResolver(), Secure.ANDROID_ID));
+			androidID = ApplifierImpactUtils.Md5(Secure.getString(ApplifierImpactProperties.getCurrentActivity().getContentResolver(), Secure.ANDROID_ID));
 			androidID = androidID.toLowerCase();
 		}
 		catch (Exception e) {
@@ -63,7 +63,7 @@ public class ApplifierImpactDevice {
 		String telephonyID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		
 		try {
-			TelephonyManager tmanager = (TelephonyManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getSystemService(Context.TELEPHONY_SERVICE);
+			TelephonyManager tmanager = (TelephonyManager)ApplifierImpactProperties.getCurrentActivity().getSystemService(Context.TELEPHONY_SERVICE);
 			telephonyID = ApplifierImpactUtils.Md5(tmanager.getDeviceId());
 			telephonyID = telephonyID.toLowerCase();
 		}
@@ -155,7 +155,7 @@ public class ApplifierImpactDevice {
     
 	public static String getOpenUdid () {
 		String deviceId = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
-		ApplifierImpactOpenUDID.syncContext(ApplifierImpactProperties.CURRENT_ACTIVITY);
+		ApplifierImpactOpenUDID.syncContext(ApplifierImpactProperties.getCurrentActivity());
 		deviceId = ApplifierImpactUtils.Md5(ApplifierImpactOpenUDID.getOpenUDIDInContext());
 		return deviceId.toLowerCase();
 	}
@@ -171,12 +171,12 @@ public class ApplifierImpactDevice {
 	@SuppressWarnings("deprecation")
 	public static boolean isUsingWifi () {
 		ConnectivityManager mConnectivity = null;
-		mConnectivity = (ConnectivityManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getSystemService(Context.CONNECTIVITY_SERVICE);
+		mConnectivity = (ConnectivityManager)ApplifierImpactProperties.getCurrentActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		if (mConnectivity == null)
 			return false;
 
-		TelephonyManager mTelephony = (TelephonyManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getSystemService(Context.TELEPHONY_SERVICE);
+		TelephonyManager mTelephony = (TelephonyManager)ApplifierImpactProperties.getCurrentActivity().getSystemService(Context.TELEPHONY_SERVICE);
 		// Skip if no connection, or background data disabled
 		NetworkInfo info = mConnectivity.getActiveNetworkInfo();
 		if (info == null || !mConnectivity.getBackgroundDataSetting() || !mConnectivity.getActiveNetworkInfo().isConnected() || mTelephony == null) {
@@ -193,7 +193,7 @@ public class ApplifierImpactDevice {
 	}
 	
 	public static int getScreenDensity () {
-		return ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getDisplayMetrics().densityDpi;
+		return ApplifierImpactProperties.getCurrentActivity().getResources().getDisplayMetrics().densityDpi;
 	}
 	
 	public static int getScreenSize () {

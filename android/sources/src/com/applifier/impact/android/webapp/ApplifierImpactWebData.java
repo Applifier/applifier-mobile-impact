@@ -133,7 +133,7 @@ public class ApplifierImpactWebData {
 	}
 
 	public boolean initCampaigns () {
-		if (ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.BASE_ACTIVITY) && ApplifierImpactProperties.TEST_DATA != null) {
+		if (ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.getBaseActivity()) && ApplifierImpactProperties.TEST_DATA != null) {
 			campaignDataReceived(ApplifierImpactProperties.TEST_DATA);
 			return true;
 		}
@@ -142,8 +142,8 @@ public class ApplifierImpactWebData {
 		String[] parts = url.split("\\?");
 		
 		ApplifierImpactUrlLoaderCreator ulc = new ApplifierImpactUrlLoaderCreator(parts[0], parts[1], ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET, ApplifierImpactRequestType.VideoPlan, 0);
-		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(ulc);
+		if (ApplifierImpactProperties.getCurrentActivity() != null)
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(ulc);
 		
 		checkFailedUrls();			
 
@@ -174,8 +174,8 @@ public class ApplifierImpactWebData {
 			}
 			
 			ApplifierImpactUrlLoaderCreator ulc = new ApplifierImpactUrlLoaderCreator(viewUrl, queryParams, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_POST, ApplifierImpactRequestType.VideoViewed, 0);
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
-				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(ulc);
+			if (ApplifierImpactProperties.getCurrentActivity() != null)
+				ApplifierImpactProperties.getCurrentActivity().runOnUiThread(ulc);
 			
 			progressSent = true;
 		}
@@ -203,8 +203,8 @@ public class ApplifierImpactWebData {
 				analyticsUrl = String.format("%s&%s=%s", analyticsUrl, ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY, currentZone.getGamerSid());
 			
 			ApplifierImpactUrlLoaderCreator ulc = new ApplifierImpactUrlLoaderCreator(viewUrl, analyticsUrl, ApplifierImpactConstants.IMPACT_REQUEST_METHOD_GET, ApplifierImpactRequestType.Analytics, 0);
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
-				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(ulc);
+			if (ApplifierImpactProperties.getCurrentActivity() != null)
+				ApplifierImpactProperties.getCurrentActivity().runOnUiThread(ulc);
 		}
 	}
 	
@@ -346,8 +346,8 @@ public class ApplifierImpactWebData {
 								ApplifierImpactRequestType.getValueOf(failedUrl.getString(ApplifierImpactConstants.IMPACT_FAILED_URL_REQUESTTYPE_KEY)), 
 								failedUrl.getInt(ApplifierImpactConstants.IMPACT_FAILED_URL_RETRIES_KEY) + 1);
 						
-						if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
-							ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(ulc);
+						if (ApplifierImpactProperties.getCurrentActivity() != null)
+							ApplifierImpactProperties.getCurrentActivity().runOnUiThread(ulc);
 					}
 				}
 			}
@@ -632,8 +632,8 @@ public class ApplifierImpactWebData {
 		}
 		
 		private void cancelInMainThread () {
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
-				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactCancelUrlLoaderRunner(this));
+			if (ApplifierImpactProperties.getCurrentActivity() != null)
+				ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactCancelUrlLoaderRunner(this));
 		}
 		
 		@Override

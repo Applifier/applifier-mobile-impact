@@ -1,5 +1,6 @@
 package com.applifier.impact.android;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Timer;
@@ -122,8 +123,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public void changeActivity (Activity activity) {
 		if (activity == null) return;
 		
-		if (activity != null && !activity.equals(ApplifierImpactProperties.CURRENT_ACTIVITY)) {
-			ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
+		if (activity != null && !activity.equals(ApplifierImpactProperties.getCurrentActivity())) {
+			ApplifierImpactProperties.CURRENT_ACTIVITY = new WeakReference<Activity>(activity);
 			
 			// Not the most pretty way to detect when the fullscreen activity is ready
 			if (activity != null &&
@@ -148,7 +149,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				_openRequestFromDeveloper = false;
 			}
 			else {
-				ApplifierImpactProperties.BASE_ACTIVITY = activity;
+				ApplifierImpactProperties.BASE_ACTIVITY = new WeakReference<Activity>(activity);
 			}
 		}
 	}
@@ -425,8 +426,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			}
 		}
 		
-		if (!dataFetchFailed && !sdkIsCurrent && ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.CURRENT_ACTIVITY)) {
-			_alertDialog = new AlertDialog.Builder(ApplifierImpactProperties.CURRENT_ACTIVITY).create();
+		if (!dataFetchFailed && !sdkIsCurrent && ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.getCurrentActivity())) {
+			_alertDialog = new AlertDialog.Builder(ApplifierImpactProperties.getCurrentActivity()).create();
 			_alertDialog.setTitle("Applifier Impact");
 			_alertDialog.setMessage("You are not running the latest version of Applifier Impact android. Please update your version (this dialog won't appear in release builds).");
 			_alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
@@ -574,9 +575,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private void openPlayStoreAsIntent (String playStoreId) {
 		ApplifierImpactUtils.Log("Opening playstore activity with storeId: " + playStoreId, this);
 		
-		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+		if (ApplifierImpactProperties.getCurrentActivity() != null) {
 			try {
-				ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + playStoreId)));
+				ApplifierImpactProperties.getCurrentActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + playStoreId)));
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Couldn't start PlayStore intent!", this);
@@ -587,9 +588,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private void openPlayStoreInBrowser (String url) {
 	    ApplifierImpactUtils.Log("Could not open PlayStore activity, opening in browser with url: " + url, this);
 	    
-		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+		if (ApplifierImpactProperties.getCurrentActivity() != null) {
 			try {
-				ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+				ApplifierImpactProperties.getCurrentActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Couldn't start browser intent!", this);
@@ -617,8 +618,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		setImpactListener(listener);
 		
 		ApplifierImpactProperties.IMPACT_GAME_ID = gameId;
-		ApplifierImpactProperties.BASE_ACTIVITY = activity;
-		ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
+		ApplifierImpactProperties.BASE_ACTIVITY = new WeakReference<Activity>(activity);
+		ApplifierImpactProperties.CURRENT_ACTIVITY = new WeakReference<Activity>(activity);
 		
 		ApplifierImpactUtils.Log("Is debuggable=" + ApplifierImpactUtils.isDebuggable(activity), this);
 		
@@ -636,7 +637,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private void close () {
 		cancelPauseScreenTimer();
 		ApplifierImpactCloseRunner closeRunner = new ApplifierImpactCloseRunner();
-		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(closeRunner);
+		ApplifierImpactProperties.getCurrentActivity().runOnUiThread(closeRunner);
 	}
 	
 	private void open (String view) {
@@ -692,7 +693,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	private void sendImpactReadyEvent () {
 		if (!_impactReadySent && _impactListener != null) {
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {				
 				@Override
 				public void run() {
 					ApplifierImpactUtils.Log("Impact ready!", this);
@@ -704,7 +705,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 
 	private void setupViews () {
-		mainview = new ApplifierImpactMainView(ApplifierImpactProperties.CURRENT_ACTIVITY, this);
+		mainview = new ApplifierImpactMainView(ApplifierImpactProperties.getCurrentActivity(), this);
 	}
 
 	private void playVideo () {
@@ -721,20 +722,20 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				public void run() {
 					ApplifierImpactUtils.Log("Delayed video start", this);
 					ApplifierImpactPlayVideoRunner playVideoRunner = new ApplifierImpactPlayVideoRunner();
-					if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
-						ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
+					if (ApplifierImpactProperties.getCurrentActivity() != null)
+						ApplifierImpactProperties.getCurrentActivity().runOnUiThread(playVideoRunner);
 				}
 			}, delay);
 		}
 		else {
 			ApplifierImpactPlayVideoRunner playVideoRunner = new ApplifierImpactPlayVideoRunner();
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
-				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
+			if (ApplifierImpactProperties.getCurrentActivity() != null)
+				ApplifierImpactProperties.getCurrentActivity().runOnUiThread(playVideoRunner);
 		}
 	}
 	
 	private void startImpactFullscreenActivity () {
-		Intent newIntent = new Intent(ApplifierImpactProperties.CURRENT_ACTIVITY, com.applifier.impact.android.view.ApplifierImpactFullscreenActivity.class);
+		Intent newIntent = new Intent(ApplifierImpactProperties.getCurrentActivity(), com.applifier.impact.android.view.ApplifierImpactFullscreenActivity.class);
 		int flags = Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK;
 		
 		ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
@@ -745,7 +746,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		newIntent.addFlags(flags);
 		
 		try {
-			ApplifierImpactProperties.BASE_ACTIVITY.startActivity(newIntent);
+			ApplifierImpactProperties.getBaseActivity().startActivity(newIntent);
 		}
 		catch (ActivityNotFoundException e) {
 			ApplifierImpactUtils.Log("Could not find activity: " + e.getStackTrace(), this);
@@ -773,7 +774,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		_pauseScreenTimer = new TimerTask() {
 			@Override
 			public void run() {
-				PowerManager pm = (PowerManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext().getSystemService(Context.POWER_SERVICE);			
+				PowerManager pm = (PowerManager)ApplifierImpactProperties.getCurrentActivity().getBaseContext().getSystemService(Context.POWER_SERVICE);			
 				if (!pm.isScreenOn()) {
 					mainview.webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, new JSONObject());
 					close();
@@ -796,7 +797,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		@Override
 		public void run() {
 			
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
+			if (ApplifierImpactProperties.getCurrentActivity().getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
 				Boolean dataOk = true;			
 				JSONObject data = new JSONObject();
 				
@@ -816,15 +817,15 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 					testTimer.schedule(new TimerTask() {
 						@Override
 						public void run() {
-							ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {
+							ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
 									mainview.closeImpact(_data);
-									ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
+									ApplifierImpactProperties.getCurrentActivity().finish();
 									
 									ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
 									if (!currentZone.openAnimated()) {
-										ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
+										ApplifierImpactProperties.getCurrentActivity().overridePendingTransition(0, 0);
 									}
 
 									_showingImpact = false;

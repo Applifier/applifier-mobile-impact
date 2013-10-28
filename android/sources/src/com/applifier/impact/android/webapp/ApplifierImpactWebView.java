@@ -85,7 +85,7 @@ public class ApplifierImpactWebView extends WebView {
 			
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_CHANGE_VIEW, view, dataString);
 			_currentWebView = view;
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
 			ApplifierImpactUtils.Log("Send change view to WebApp: " + javascriptString, this);
 			
 			if (data != null) {
@@ -98,18 +98,18 @@ public class ApplifierImpactWebView extends WebView {
 				
 				ApplifierImpactUtils.Log("dataHasApiActionKey=" + data.has(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY) , this);
 				ApplifierImpactUtils.Log("actionEqualsWebViewApiOpen=" + action.equals(ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN) , this);
-				ApplifierImpactUtils.Log("isDebuggable=" + ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.BASE_ACTIVITY) , this);
+				ApplifierImpactUtils.Log("isDebuggable=" + ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.getBaseActivity()) , this);
 				ApplifierImpactUtils.Log("runWebViewTests=" + ApplifierImpactProperties.RUN_WEBVIEW_TESTS , this);
 				ApplifierImpactUtils.Log("testJavaScriptContents=" + ApplifierImpactProperties.TEST_JAVASCRIPT , this);
 				
 				if (data.has(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY) &&
 					action != null &&
 					action.equals(ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN) &&
-					ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.BASE_ACTIVITY) &&
+					ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.getBaseActivity()) &&
 					ApplifierImpactProperties.RUN_WEBVIEW_TESTS &&
 					ApplifierImpactProperties.TEST_JAVASCRIPT != null) {
 					ApplifierImpactUtils.Log("Running test-javascript: " + ApplifierImpactProperties.TEST_JAVASCRIPT , this);
-					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(ApplifierImpactProperties.TEST_JAVASCRIPT));
+					ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(ApplifierImpactProperties.TEST_JAVASCRIPT));
 					ApplifierImpactProperties.RUN_WEBVIEW_TESTS = false;
 				}
 			}
@@ -125,7 +125,7 @@ public class ApplifierImpactWebView extends WebView {
 
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_HANDLE_NATIVE_EVENT, eventType, dataString);
 			ApplifierImpactUtils.Log("Send native event to WebApp: " + javascriptString, this);
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
 		}
 	}
 	
@@ -167,7 +167,7 @@ public class ApplifierImpactWebView extends WebView {
 			
 			String initString = String.format("%s%s(%s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_INIT, initData.toString());
 			ApplifierImpactUtils.Log("Initializing WebView with JS call: " + initString, this);
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(initString));
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(initString));
 		}
 	}
 

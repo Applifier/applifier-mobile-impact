@@ -1,5 +1,6 @@
 package com.applifier.impact.android.properties;
 
+import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.util.Map;
 
@@ -20,8 +21,8 @@ public class ApplifierImpactProperties {
 	public static String IMPACT_GAME_ID = null;
 	public static String IMPACT_GAMER_ID = null;
 	public static Boolean TESTMODE_ENABLED = false;
-	public static Activity BASE_ACTIVITY = null;
-	public static Activity CURRENT_ACTIVITY = null;
+	public static WeakReference<Activity> BASE_ACTIVITY = null;
+	public static WeakReference<Activity> CURRENT_ACTIVITY = null;
 	public static ApplifierImpactCampaign SELECTED_CAMPAIGN = null;
 	public static Boolean IMPACT_DEBUG_MODE = false;
 	
@@ -92,12 +93,12 @@ public class ApplifierImpactProperties {
 			}
 		}
 		else {
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
-				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ENCRYPTED_KEY, ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.CURRENT_ACTIVITY) ? "false" : "true");
+			if (ApplifierImpactProperties.getCurrentActivity() != null) {
+				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ENCRYPTED_KEY, ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.getCurrentActivity()) ? "false" : "true");
 			}
 		}
 		
-		queryString = String.format("%s&%s=%s", queryString, "forceWebViewUrl", "http://192.168.1.246:8080/dev-build/impact/index.html");
+		queryString = String.format("%s&%s=%s", queryString, "forceWebViewUrl", "http://172.16.160.184:8080/dev-build/impact/index.html");
 		
 		_campaignQueryString = queryString;
 	}
@@ -106,10 +107,24 @@ public class ApplifierImpactProperties {
 		createCampaignQueryString();
 		String url = CAMPAIGN_DATA_URL;
 		
-		if (ApplifierImpactUtils.isDebuggable(BASE_ACTIVITY) && TEST_URL != null)
+		if (ApplifierImpactUtils.isDebuggable(getBaseActivity()) && TEST_URL != null)
 			url = TEST_URL;
 			
 		return String.format("%s%s", url, _campaignQueryString);
+	}
+	
+	public static Activity getBaseActivity() {
+		if(BASE_ACTIVITY != null) {
+			return BASE_ACTIVITY.get();
+		}
+		return null;
+	}
+	
+	public static Activity getCurrentActivity() {
+		if(CURRENT_ACTIVITY != null) {
+			return CURRENT_ACTIVITY.get();
+		}
+		return null;
 	}
 	
 	public static void setExtraParams (Map<String, String> params) {
