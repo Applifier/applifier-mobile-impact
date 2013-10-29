@@ -290,57 +290,29 @@ int main(int argc, char *argv[]);
 }
 
 + (NSString *)analyticsMachineName {
-	NSString *machine = [self machineName];
-  
-	if ([machine isEqualToString:@"iPhone1,1"])
-		return kApplifierImpactDeviceIphone;
-	else if ([machine isEqualToString:@"iPhone1,2"])
-		return kApplifierImpactDeviceIphone3g;
-	else if ([machine isEqualToString:@"iPhone2,1"])
-		return kApplifierImpactDeviceIphone3gs;
-	else if ([machine length] > 6 && [[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone3"])
-		return kApplifierImpactDeviceIphone4;
-	else if ([machine length] > 6 && [[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone4"])
-		return kApplifierImpactDeviceIphone4s;
-	else if ([machine length] > 6 && [[self _substringOfString:machine toIndex:7] isEqualToString:@"iPhone5"])
-		return kApplifierImpactDeviceIphone5;
-	else if ([machine isEqualToString:@"iPod1,1"])
-		return kApplifierImpactDeviceIpodTouch1gen;
-	else if ([machine isEqualToString:@"iPod2,1"])
-		return kApplifierImpactDeviceIpodTouch2gen;
-	else if ([machine isEqualToString:@"iPod3,1"])
-		return kApplifierImpactDeviceIpodTouch3gen;
-	else if ([machine isEqualToString:@"iPod4,1"])
-		return kApplifierImpactDeviceIpodTouch4gen;
-	else if ([machine isEqualToString:@"iPod5,1"])
-		return kApplifierImpactDeviceIpodTouch5gen;
-	else if ([machine length] > 4 && [[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad1"])
-		return kApplifierImpactDeviceIpad1;
-	else if ([machine length] > 4 && [[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad2"])
-		return kApplifierImpactDeviceIpad2;
-	else if ([machine length] > 4 && [[self _substringOfString:machine toIndex:5] isEqualToString:@"iPad3"])
-		return kApplifierImpactDeviceIpad3;
-  
-  // Okay, it's a simulator, detect whether it's iPhone or iPad
-  
-  NSArray *components = [ApplifierImpactDevice getDeviceModelAsStringComponents];
-  if (components != nil && [components count] > 0) {
-    for (NSString *component in components) {
-      if ([component isEqualToString:kApplifierImpactDeviceIpad]) {
-        return kApplifierImpactDeviceIpad;
-      }
-      if ([component isEqualToString:kApplifierImpactDeviceIphone]) {
-        return kApplifierImpactDeviceIphone;
-      }
-      if ([component isEqualToString:kApplifierImpactDeviceIpod]) {
-        return kApplifierImpactDeviceIpod;
+  if([ApplifierImpactDevice isSimulator]) {
+    NSArray *components = [ApplifierImpactDevice getDeviceModelAsStringComponents];
+    if (components != nil && [components count] > 0) {
+      for (NSString *component in components) {
+        if ([component isEqualToString:kApplifierImpactDeviceIpad]) {
+          return kApplifierImpactDeviceIpad;
+        }
+        if ([component isEqualToString:kApplifierImpactDeviceIphone]) {
+          return kApplifierImpactDeviceIphone;
+        }
+        if ([component isEqualToString:kApplifierImpactDeviceIpod]) {
+          return kApplifierImpactDeviceIpod;
+        }
       }
     }
   }
-
-  // If everything else fails..
   
-	return kApplifierImpactDeviceIosUnknown;
+	NSString *machine = [self machineName];
+  if(machine != nil) {
+    return machine;
+  } else {
+    return kApplifierImpactDeviceIosUnknown;
+  }
 }
 
 + (NSString *)_md5StringFromString:(NSString *)string {

@@ -156,21 +156,8 @@ NSString * const kApplifierImpactTrackingEventTypeVideoEnd = @"view";
 /* Devicetypes */
 
 NSString * const kApplifierImpactDeviceIphone = @"iphone";
-NSString * const kApplifierImpactDeviceIphone3g = @"iphone3g";
-NSString * const kApplifierImpactDeviceIphone3gs = @"iphone3gs";
-NSString * const kApplifierImpactDeviceIphone4 = @"iphone4";
-NSString * const kApplifierImpactDeviceIphone4s = @"iphone4s";
-NSString * const kApplifierImpactDeviceIphone5 = @"iphone5";
 NSString * const kApplifierImpactDeviceIpod = @"ipod";
-NSString * const kApplifierImpactDeviceIpodTouch1gen = @"ipodtouch1gen";
-NSString * const kApplifierImpactDeviceIpodTouch2gen = @"ipodtouch2gen";
-NSString * const kApplifierImpactDeviceIpodTouch3gen = @"ipodtouch3gen";
-NSString * const kApplifierImpactDeviceIpodTouch4gen = @"ipodtouch4gen";
-NSString * const kApplifierImpactDeviceIpodTouch5gen = @"ipodtouch5gen";
 NSString * const kApplifierImpactDeviceIpad = @"ipad";
-NSString * const kApplifierImpactDeviceIpad1 = @"ipad1";
-NSString * const kApplifierImpactDeviceIpad2 = @"ipad2";
-NSString * const kApplifierImpactDeviceIpad3 = @"ipad3";
 NSString * const kApplifierImpactDeviceIosUnknown = @"iosUnknown";
 NSString * const kApplifierImpactDeviceSimulator = @"simulator";
 
