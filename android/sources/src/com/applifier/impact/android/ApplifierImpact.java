@@ -186,7 +186,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
 			
 			if (currentZone != null) {
-				currentZone.mergeOptions(options);
+				if(options != null) {
+					currentZone.mergeOptions(options);
+				}
 				
 				if (currentZone.noOfferScreen()) {
 					if (webdata.getViewableVideoPlanCampaigns().size() > 0) {
@@ -194,15 +196,21 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 						ApplifierImpactProperties.SELECTED_CAMPAIGN = selectedCampaign;
 					}
 				}
-				Object gamerSid = options.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY);
-				if (gamerSid != null) {
-					String gamerSidString = gamerSid.toString();
-					if(gamerSidString.length() > 0) {
-						currentZone.setGamerSid(gamerSidString);
+				
+				if(options != null) {
+					Object gamerSid = options.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY);
+					if (gamerSid != null) {
+						String gamerSidString = gamerSid.toString();
+						if(gamerSidString.length() > 0) {
+							currentZone.setGamerSid(gamerSidString);
+						}
 					}
 				}
 				
-				return showImpact();
+				_openRequestFromDeveloper = true;
+				_showingImpact = true;
+				startImpactFullscreenActivity();
+				return _showingImpact;
 			}
 					
 		}
@@ -211,14 +219,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	public boolean showImpact () {
-		if (canShowImpact()) {
-			_openRequestFromDeveloper = true;
-			_showingImpact = true;
-			startImpactFullscreenActivity();
-			return _showingImpact;
-		}
-
-		return false;
+		return showImpact(null);
 	}
 	
 	public boolean canShowCampaigns () {

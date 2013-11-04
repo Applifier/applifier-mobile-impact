@@ -54,6 +54,8 @@ public class ApplifierImpactZoneManager {
 		if(_zones.containsKey(zoneId)) {
 			_currentZone = _zones.get(zoneId);
 			return true;
+		} else {
+			_currentZone = null;
 		}
 		return false;
 	}
