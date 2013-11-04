@@ -56,4 +56,15 @@ extern void __gcov_flush();
   STAssertTrue([[zoneManager getCurrentZone] isEqual:validZone1], @"Failed to set current zone from multiple zones");
 }
 
+- (void)testZoneManagerSetInvalidZone {
+  [zoneManager addZones:@{@"testZoneId1": validZone1, @"testZoneId2": validZone2}];
+  STAssertFalse([zoneManager setCurrentZone:@"invalidZoneKey"], @"Failed to return false for setting an invalid current zone");
+  STAssertTrue([zoneManager getCurrentZone] == nil, @"Current zone should be nil after setting an invalid current zone");
+}
+
+- (void)testZoneManagerSetValidZone {
+  [zoneManager addZones:@{@"testZoneId1": validZone1, @"testZoneId2": validZone2}];
+  STAssertTrue([zoneManager setCurrentZone:@"testZoneId2"], @"Failed to set valid current zone");
+}
+
 @end
