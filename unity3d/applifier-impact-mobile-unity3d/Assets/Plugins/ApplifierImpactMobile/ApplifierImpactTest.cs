@@ -41,11 +41,24 @@ public class ApplifierImpactTest : MonoBehaviour {
 	}
 
 	void OnGUI () {
-		if (GUI.Button (new Rect (10,10,170,50), _campaignsAvailable ? "Open Impact" : "Waiting...")) {
+		if (GUI.Button (new Rect (10, 10, 150, 50), _campaignsAvailable ? "Open Zone 1" : "Waiting...")) {
 			if (_campaignsAvailable) {
-				ApplifierImpactMobileExternal.Log("Open Impact -button clicked");
-				ApplifierImpactMobile.showImpact();
+				ApplifierImpactMobileExternal.Log("Open Zone 1 -button clicked");
+				ApplifierImpactMobile.showImpact("16-default");
 			}	
+		}
+		
+		if (GUI.Button (new Rect (10, 70, 150, 50), _campaignsAvailable ? "Open Zone 2" : "Waiting...")) {
+			if(_campaignsAvailable) {
+				ApplifierImpactMobileExternal.Log ("Open Zone 2 -button clicked");
+				ApplifierImpactMobile.showImpact("16-default", "ship", new Dictionary<string, string>{
+					{"openAnimated", "true"},
+					{"noOfferScreen", "true"},
+					{"sid", "testiSid"},
+					{"muteVideoSounds", "true"},
+					{"useDeviceOrientationForVideo", "true"}
+				});
+			}
 		}
 	}
 }

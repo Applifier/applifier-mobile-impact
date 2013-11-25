@@ -99,13 +99,29 @@ extern "C" {
         }
     }
     
-	bool showImpact (bool openAnimated, bool noOfferscreen, const char *gamerSID, bool muteVideoSounds, bool useDeviceOrientationForVideo) {
-        NSNumber *noOfferscreenObjectiveC = [NSNumber numberWithBool:noOfferscreen];
-        NSNumber *openAnimatedObjectiveC = [NSNumber numberWithBool:openAnimated];
+	bool showImpact (const char * rawZoneId, const char * rawRewardItemKey, const char * rawOptionsString) {
+        NSString * zoneId = ImpactCreateNSString(rawZoneId);
+        NSString * rewardItemKey = ImpactCreateNSString(rawRewardItemKey);
+        NSString * optionsString = ImpactCreateNSString(rawOptionsString);
+        
+        NSMutableDictionary *optionsDictionary = nil;
+        if([optionsString length] > 0) {
+            optionsDictionary = [[NSMutableDictionary alloc] init];
+            [[optionsString componentsSeparatedByString:@","] enumerateObjectsUsingBlock:^(id rawOptionPair, NSUInteger idx, BOOL *stop) {
+                NSArray *optionPair = [rawOptionPair componentsSeparatedByString:@":"];
+                [optionsDictionary setValue:optionPair[1] forKey:optionPair[0]];
+            }];
+        }
 
         if ([[ApplifierImpact sharedInstance] canShowCampaigns] && [[ApplifierImpact sharedInstance] canShowImpact]) {
-            NSDictionary *props = @{kApplifierImpactOptionGamerSIDKey: ImpactCreateNSString(gamerSID), kApplifierImpactOptionNoOfferscreenKey: noOfferscreenObjectiveC, kApplifierImpactOptionOpenAnimatedKey: openAnimatedObjectiveC, kApplifierImpactOptionVideoUsesDeviceOrientation:@(useDeviceOrientationForVideo), kApplifierImpactOptionMuteVideoSounds:@(muteVideoSounds)};
-            return [[ApplifierImpact sharedInstance] showImpact:props];
+            
+            if([rewardItemKey length] > 0) {
+                [[ApplifierImpact sharedInstance] setZone:zoneId withRewardItem:rewardItemKey];
+            } else {
+                [[ApplifierImpact sharedInstance] setZone:zoneId];
+            }
+            
+            return [[ApplifierImpact sharedInstance] showImpact:optionsDictionary];
         }
         
         return false;
