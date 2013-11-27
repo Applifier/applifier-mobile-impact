@@ -757,7 +757,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		@Override
 		public void run() {
 			
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
+			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && ApplifierImpactProperties.CURRENT_ACTIVITY.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
 				Boolean dataOk = true;			
 				JSONObject data = new JSONObject();
 				
@@ -772,29 +772,40 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				
 				if (dataOk) {
 					_data = data;
-					mainview.webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_NONE, data);
+					if(mainview != null && mainview.webview != null) {
+						mainview.webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_NONE, data);
+					}
 					Timer testTimer = new Timer();
 					testTimer.schedule(new TimerTask() {
 						@Override
 						public void run() {
-							ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									mainview.closeImpact(_data);
-									ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
-									
-									if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS == null || 
-										!ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) || 
-										ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(false))
-											ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
-									
-									ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS = null;
-									_showingImpact = false;
-									
-									if (_impactListener != null)
-										_impactListener.onImpactClose();
-								}
-							});
+							if(ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+								ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										if(mainview != null) {
+											mainview.closeImpact(_data);
+										}
+										if(ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+											ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
+										}
+										
+										if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS == null || 
+											!ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) || 
+											ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(false)) {
+											if(ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+												ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
+											}
+										}	
+										
+										ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS = null;
+										_showingImpact = false;
+										
+										if (_impactListener != null)
+											_impactListener.onImpactClose();
+									}
+								});
+							}
 						}
 					}, 250);
 				}
