@@ -5,6 +5,7 @@ import java.util.Map;
 import android.content.Context;
 import android.util.Log;
 
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.burstly.lib.component.IBurstlyAdaptor;
 import com.burstly.lib.feature.networks.IAdaptorFactory;
 
@@ -53,6 +54,16 @@ public class ImpactAdaptorFactory implements IAdaptorFactory {
 	@Override
 	public void initialize(Map<String, ?> arg0) throws IllegalArgumentException {
 		// Since we don't have the Game ID here, we can't init the adaptor yet
+	}
+
+	@Override
+	public String getAdaptorVersion() {
+		return ImpactAdaptor.IMPACT_ADAPTOR_VERSION;
+	}
+
+	@Override
+	public String getSdkVersion() {
+		return ApplifierImpactConstants.IMPACT_VERSION;
 	}
 
 }

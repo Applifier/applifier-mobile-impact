@@ -21,7 +21,7 @@ import com.burstly.lib.component.IBurstlyAdaptorListener;
  */
 public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener {
 	
-	public static final String IMPACT_ADAPTOR_VERSION = "1.0.4";
+	public static final String IMPACT_ADAPTOR_VERSION = "1.0.5";
 	
 	public static String FEATURE_PRECACHE = "precacheInterstitial";
 	
