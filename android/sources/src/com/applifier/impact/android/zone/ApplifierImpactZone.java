@@ -7,11 +7,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 public class ApplifierImpactZone {
 
+	private JSONObject _initialOptions = null;
 	private JSONObject _options = null;
 	
 	private String _zoneId = null;
@@ -22,6 +24,7 @@ public class ApplifierImpactZone {
 	private ArrayList<String> _allowClientOverrides = new ArrayList<String>();
 	
 	public ApplifierImpactZone(JSONObject zoneObject) throws JSONException {
+		_initialOptions = new JSONObject(zoneObject.toString());
 		_options = zoneObject;
 		_zoneId = zoneObject.getString(ApplifierImpactConstants.IMPACT_ZONE_ID_KEY);
 		_zoneName = zoneObject.getString(ApplifierImpactConstants.IMPACT_ZONE_NAME_KEY);
@@ -88,6 +91,10 @@ public class ApplifierImpactZone {
 	}
 	
 	public void mergeOptions(Map<String, Object> options) {
+		try {
+			_options = new JSONObject(_initialOptions.toString());	
+			_gamerSid = null;
+		} catch(JSONException e) {}				
 		for(Map.Entry<String, Object> option : options.entrySet()) {
 			if(allowsOverride(option.getKey())) {
 				try {
@@ -96,6 +103,9 @@ public class ApplifierImpactZone {
 					ApplifierImpactUtils.Log("Unable to set JSON value", this);
 				}
 			}
+		}
+		if(options.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY)) {
+			setGamerSid((String)options.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY));
 		}
 	}
 	

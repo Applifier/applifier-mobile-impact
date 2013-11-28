@@ -8,10 +8,11 @@
 
 #import "../ApplifierImpact.h"
 #import "ApplifierImpactZone.h"
-#import "ApplifierImpactConstants.h"
+#import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 
 @interface ApplifierImpactZone ()
 
+@property (nonatomic, strong) NSDictionary *_initialOptions;
 @property (nonatomic, strong) NSMutableDictionary *_options;
 @property (nonatomic, strong) NSString * _gamerSid;
 @property (nonatomic) BOOL _isDefault;
@@ -23,6 +24,7 @@
 - (id)initWithData:(NSDictionary *)options {
   self = [super init];
   if(self) {
+    self._initialOptions = [NSDictionary dictionaryWithDictionary:options];
     self._options = [NSMutableDictionary dictionaryWithDictionary:options];
     self._gamerSid = nil;
     self._isDefault = [[options valueForKey:kApplifierImpactZoneDefaultKey] boolValue];
@@ -85,14 +87,18 @@
 }
 
 - (void)mergeOptions:(NSDictionary *)options {
-  [options enumerateKeysAndObjectsUsingBlock:^(id optionKey, id optionValue, BOOL *stop) {
-    if([self allowsOverride:optionKey]) {
-      [self._options setObject:optionValue forKey:optionKey];
+  self._options = [NSMutableDictionary dictionaryWithDictionary:self._initialOptions];
+  [self setGamerSid:nil];
+  if(options != nil) {
+    [options enumerateKeysAndObjectsUsingBlock:^(id optionKey, id optionValue, BOOL *stop) {
+      if([self allowsOverride:optionKey]) {
+        [self._options setObject:optionValue forKey:optionKey];
+      }
+    }];
+    NSString * gamerSid = [options valueForKey:kApplifierImpactOptionGamerSIDKey];
+    if(gamerSid != nil) {
+      [self setGamerSid:gamerSid];
     }
-  }];
-  NSString * gamerSid = [options valueForKey:kApplifierImpactOptionGamerSIDKey];
-  if(gamerSid != nil) {
-    [self setGamerSid:gamerSid];
   }
 }
 

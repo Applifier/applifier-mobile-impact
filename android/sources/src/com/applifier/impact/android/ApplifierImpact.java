@@ -186,9 +186,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
 			
 			if (currentZone != null) {
-				if(options != null) {
-					currentZone.mergeOptions(options);
-				}
+				currentZone.mergeOptions(options);
 				
 				if (currentZone.noOfferScreen()) {
 					if (webdata.getViewableVideoPlanCampaigns().size() > 0) {
