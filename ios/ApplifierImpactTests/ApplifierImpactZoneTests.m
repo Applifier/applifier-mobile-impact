@@ -51,4 +51,27 @@ extern void __gcov_flush();
   STAssertTrue(![validZone muteVideoSounds], @"Merge options failed");
 }
 
+- (void)testZoneInitialOptionsMerge {
+  [self setUp];
+  [validZone mergeOptions:@{@"noOfferScreen": @YES}];
+  STAssertTrue([validZone noOfferScreen], @"Merge options failed");
+  [validZone mergeOptions:@{@"openAnimated": @NO}];
+  STAssertTrue(![validZone openAnimated], @"Merge options failed");
+  STAssertTrue(![validZone noOfferScreen], @"Failed to reset zone to initial options");
+}
+
+- (void)testZoneSetSid {
+  [self setUp];
+  [validZone mergeOptions:@{@"sid": @"testSid"}];
+  STAssertTrue([[validZone getGamerSid] isEqualToString:@"testSid"], @"Failed to set zone gamer sid from options");
+}
+
+- (void)testZoneRemoveSid {
+  [self setUp];
+  [validZone mergeOptions:@{@"sid": @"testSid"}];
+  STAssertTrue([[validZone getGamerSid] isEqualToString:@"testSid"], @"Failed to set zone gamer sid from options");
+  [validZone mergeOptions:nil];
+  STAssertTrue([validZone getGamerSid] == nil, @"Failed to reset gamer sid to nil after zone options reset");
+}
+
 @end
