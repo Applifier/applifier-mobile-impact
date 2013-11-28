@@ -195,16 +195,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 					}
 				}
 				
-				if(options != null) {
-					Object gamerSid = options.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY);
-					if (gamerSid != null) {
-						String gamerSidString = gamerSid.toString();
-						if(gamerSidString.length() > 0) {
-							currentZone.setGamerSid(gamerSidString);
-						}
-					}
-				}
-				
 				_openRequestFromDeveloper = true;
 				_showingImpact = true;
 				startImpactFullscreenActivity();
