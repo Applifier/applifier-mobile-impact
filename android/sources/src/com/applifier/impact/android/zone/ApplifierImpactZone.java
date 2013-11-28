@@ -93,19 +93,21 @@ public class ApplifierImpactZone {
 	public void mergeOptions(Map<String, Object> options) {
 		try {
 			_options = new JSONObject(_initialOptions.toString());	
-			_gamerSid = null;
-		} catch(JSONException e) {}				
-		for(Map.Entry<String, Object> option : options.entrySet()) {
-			if(allowsOverride(option.getKey())) {
-				try {
-					_options.put(option.getKey(), option.getValue());
-				} catch(JSONException e) {
-					ApplifierImpactUtils.Log("Unable to set JSON value", this);
+			setGamerSid(null);
+		} catch(JSONException e) {}
+		if(options != null) {
+			for(Map.Entry<String, Object> option : options.entrySet()) {
+				if(allowsOverride(option.getKey())) {
+					try {
+						_options.put(option.getKey(), option.getValue());
+					} catch(JSONException e) {
+						ApplifierImpactUtils.Log("Unable to set JSON value", this);
+					}
 				}
 			}
-		}
-		if(options.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY)) {
-			setGamerSid((String)options.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY));
+			if(options.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY)) {
+				setGamerSid((String)options.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY));
+			}
 		}
 	}
 	
