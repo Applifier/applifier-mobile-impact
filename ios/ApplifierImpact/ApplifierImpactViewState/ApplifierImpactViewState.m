@@ -9,6 +9,28 @@
 #import "ApplifierImpactViewState.h"
 #import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 
+@interface CustomStoreProductViewController : SKStoreProductViewController
+@end
+
+@implementation CustomStoreProductViewController
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+  return [UIApplication sharedApplication].statusBarOrientation;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+  return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL)shouldAutorotate {
+  return YES;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+  return YES;
+}
+
+@end
 
 @interface ApplifierImpactViewState ()
   @property (nonatomic, weak) UIViewController *targetController;
@@ -87,7 +109,6 @@
   }
 }
 
-
 #pragma mark - AppStore opening
 
 - (void)preloadAppSheetWithId:(NSString *)iTunesId {
@@ -95,7 +116,7 @@
   if ([self _canOpenStoreProductViewController]) {
     AILOG_DEBUG(@"Can open storeProductViewController");
     if (![iTunesId isKindOfClass:[NSString class]] || iTunesId == nil || [iTunesId length] < 1) return;
-    Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
+    
     /*
      FIX: This _could_ bug someday. The key @"id" is written literally (and
      not using SKStoreProductParameterITunesItemIdentifier), so that
@@ -108,7 +129,7 @@
      by using string value and not the constant itself.
      */
     NSDictionary *productParams = @{@"id":iTunesId};
-    self.storeController = [[storeProductViewControllerClass alloc] init];
+    self.storeController = [[CustomStoreProductViewController alloc] init];
     
     /*
     void (^storeControllerComplete)(BOOL result, NSError *error) = ^(BOOL result, NSError *error) {
@@ -173,7 +194,7 @@
      */
     NSDictionary *productParams = @{@"id":iTunesId};
     
-    self.storeController = [[storeProductViewControllerClass alloc] init];
+    self.storeController = [[CustomStoreProductViewController alloc] init];
     
     if ([self.storeController respondsToSelector:@selector(setDelegate:)]) {
       [self.storeController performSelector:@selector(setDelegate:) withObject:self];
