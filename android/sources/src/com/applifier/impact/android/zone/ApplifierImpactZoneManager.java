@@ -13,6 +13,7 @@ import com.applifier.impact.android.properties.ApplifierImpactConstants;
 public class ApplifierImpactZoneManager {
 
 	private Map<String, ApplifierImpactZone> _zones = null; 
+	private ApplifierImpactZone _defaultZone = null;
 	private ApplifierImpactZone _currentZone = null;
 	
 	public ApplifierImpactZoneManager(JSONArray zoneArray) {
@@ -26,6 +27,10 @@ public class ApplifierImpactZoneManager {
 					zone = new ApplifierImpactIncentivizedZone(jsonZone);
 				} else {
 					zone = new ApplifierImpactZone(jsonZone);
+				}
+				
+				if(zone.isDefault()) {
+					_defaultZone = zone;
 				}
 				
 				if(_currentZone == null && zone.isDefault()) {
@@ -55,7 +60,7 @@ public class ApplifierImpactZoneManager {
 			_currentZone = _zones.get(zoneId);
 			return true;
 		} else {
-			_currentZone = null;
+			_currentZone = _defaultZone;
 		}
 		return false;
 	}

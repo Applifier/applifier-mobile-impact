@@ -30,6 +30,7 @@ public class ApplifierImpactZoneManagerTest extends ActivityInstrumentationTestC
 			put("id", "testZoneId1");
 			put("name", "testZoneName1");
 			put("incentivised", false);
+			put("default", true);
 		}});
 		
 		rewardItem1 = new JSONObject(new HashMap<String, Object>(){{
@@ -42,6 +43,7 @@ public class ApplifierImpactZoneManagerTest extends ActivityInstrumentationTestC
 			put("id", "testZoneId2");
 			put("name", "testZoneName2");
 			put("incentivised", true);
+			put("default", false);
 			put("defaultRewardItem", rewardItem1);
 			put("rewardItems", new JSONArray(Arrays.asList(
 				rewardItem1
@@ -68,16 +70,18 @@ public class ApplifierImpactZoneManagerTest extends ActivityInstrumentationTestC
 	
 	public void testZoneManagerIncentivizedZone() {
 		zoneManager = new ApplifierImpactZoneManager(new JSONArray(Arrays.asList(
+			nonIncentivizedZone,
 			incentivizedZone
 		)));
 		
-		assertTrue(zoneManager.zoneCount() == 1);
+		assertTrue(zoneManager.zoneCount() == 2);
+		assertTrue(zoneManager.setCurrentZone("testZoneId2"));
 		
 		ApplifierImpactZone currentZone = zoneManager.getCurrentZone();
 		
 		assertTrue(currentZone != null);
 		assertTrue(currentZone.getZoneId().equals("testZoneId2"));
-		assertTrue(currentZone.isDefault());
+		assertFalse(currentZone.isDefault());
 		assertTrue(currentZone.isIncentivized());
 	}
 	
@@ -114,5 +118,16 @@ public class ApplifierImpactZoneManagerTest extends ActivityInstrumentationTestC
 		assertTrue(zoneManager.zoneCount() == 2);
 		zoneManager.clear();
 		assertTrue(zoneManager.zoneCount() == 0);
+	}
+	
+	public void testZoneManagerSetInvalidZone() {
+		zoneManager = new ApplifierImpactZoneManager(new JSONArray(Arrays.asList(
+			incentivizedZone,
+			nonIncentivizedZone
+		)));
+		
+		assertFalse(zoneManager.setCurrentZone("invalidZoneId"));
+		assertTrue(zoneManager.getCurrentZone().getZoneId().equals("testZoneId1"));
+		
 	}
 }
