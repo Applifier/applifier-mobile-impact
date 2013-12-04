@@ -153,7 +153,7 @@
     self.isValidCampaign = true;
   }
 
-  NSString *customClickURLString = [data objectForKey:kApplifierImpactCampaignCustomClickURLKey];
+  NSString *customClickURLString = [[data objectForKey:kApplifierImpactCampaignCustomClickURLKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
   //customClickURLString = @"http://www.google.com/";
   if (customClickURLString == nil) failedData = true;
   AIAssertV([customClickURLString isKindOfClass:[NSString class]], nil);
