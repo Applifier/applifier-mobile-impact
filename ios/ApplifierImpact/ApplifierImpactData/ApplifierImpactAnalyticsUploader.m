@@ -236,7 +236,7 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 			NSString *url = [upload objectForKey:kApplifierImpactAnalyticsSavedUploadURLKey];
 			NSString *body = [upload objectForKey:kApplifierImpactAnalyticsSavedUploadBodyKey];
 			NSString *httpMethod = [upload objectForKey:kApplifierImpactAnalyticsSavedUploadHTTPMethodKey];
-      NSNumber *retries = 0;
+      NSNumber *retries = @(0);
       
       if ([upload objectForKey:kApplifierImpactAnalyticsUploaderRetriesKey] != nil) {
         retries = [upload objectForKey:kApplifierImpactAnalyticsUploaderRetriesKey];
@@ -265,21 +265,23 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 	NSMutableArray *existingFailedUploads = [[[NSUserDefaults standardUserDefaults] arrayForKey:kApplifierImpactAnalyticsSavedUploadsKey] mutableCopy];
 	
 	if (existingFailedUploads == nil) {
-    existingFailedUploads = [NSMutableArray array];
-  }
-  
+        existingFailedUploads = [NSMutableArray array];
+    }
+    
 	NSURLRequest *request = [upload objectForKey:kApplifierImpactAnalyticsUploaderRequestKey];
 	NSMutableDictionary *failedUpload = [NSMutableDictionary dictionary];
 	
-  if ([request URL] != nil) {
+    if ([request URL] != nil) {
 		[failedUpload setObject:[[request URL] absoluteString] forKey:kApplifierImpactAnalyticsSavedUploadURLKey];
-    
-    NSNumber *retries = 0;
-    if ([upload objectForKey:kApplifierImpactAnalyticsUploaderRetriesKey] != nil)
-      retries = [upload objectForKey:kApplifierImpactAnalyticsUploaderRetriesKey];
-      
+        
+        NSNumber *retries = @(0);
+        if ([upload objectForKey:kApplifierImpactAnalyticsUploaderRetriesKey] != nil)
+        {
+            retries = [upload objectForKey:kApplifierImpactAnalyticsUploaderRetriesKey];
+        }
+        
 		[failedUpload setObject:retries forKey:kApplifierImpactAnalyticsUploaderRetriesKey];
-    
+        
 		if ([request HTTPBody] != nil) {
 			NSString *bodyString = [[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding];
 			[failedUpload setObject:bodyString forKey:kApplifierImpactAnalyticsSavedUploadBodyKey];
