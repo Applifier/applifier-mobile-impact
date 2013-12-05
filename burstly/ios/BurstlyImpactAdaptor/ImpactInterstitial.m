@@ -8,57 +8,61 @@
 
 #import "ImpactInterstitial.h"
 
+static NSString const * const kApplifierImpactOptionZoneIdKey = @"zoneId";
+
 @implementation ImpactInterstitial
 
 @synthesize delegate = _delegate;
 
 - (id)initWithParams:(NSDictionary *)params {
-    self = [super init];
-    if(self != nil) {
-        _params = [[NSMutableDictionary alloc] init];
-                
-        NSString *noOfferScreenValue = [params objectForKey:kApplifierImpactOptionNoOfferscreenKey];
-        NSString *openAnimatedValue = [params objectForKey:kApplifierImpactOptionOpenAnimatedKey];
-        NSString *gamerSidValue = [params objectForKey:kApplifierImpactOptionGamerSIDKey];
-        NSString *muteVideoSoundsValue = [params objectForKey:kApplifierImpactOptionMuteVideoSounds];
-        NSString *videoUsesDeviceOrientationValue = [params objectForKey:kApplifierImpactOptionVideoUsesDeviceOrientation];
-        
-        if(noOfferScreenValue != nil) {
-            [_params setObject:noOfferScreenValue forKey:kApplifierImpactOptionNoOfferscreenKey];
-        }
-        if(openAnimatedValue != nil) {
-            [_params setObject:openAnimatedValue forKey:kApplifierImpactOptionOpenAnimatedKey];
-        }
-        if(gamerSidValue != nil) {
-            [_params setObject:gamerSidValue forKey:kApplifierImpactOptionGamerSIDKey];
-        }
-        if(muteVideoSoundsValue != nil) {
-            [_params setObject:muteVideoSoundsValue forKey:kApplifierImpactOptionMuteVideoSounds];
-        }
-        if(videoUsesDeviceOrientationValue != nil) {
-            [_params setObject:videoUsesDeviceOrientationValue forKey:kApplifierImpactOptionVideoUsesDeviceOrientation];
-        }
+  self = [super init];
+  if(self != nil) {
+    _params = [[NSMutableDictionary alloc] init];
+    
+    _zoneId = [params objectForKey:kApplifierImpactOptionZoneIdKey];
+    
+    NSString *noOfferScreenValue = [params objectForKey:kApplifierImpactOptionNoOfferscreenKey];
+    NSString *openAnimatedValue = [params objectForKey:kApplifierImpactOptionOpenAnimatedKey];
+    NSString *gamerSidValue = [params objectForKey:kApplifierImpactOptionGamerSIDKey];
+    NSString *muteVideoSoundsValue = [params objectForKey:kApplifierImpactOptionMuteVideoSounds];
+    NSString *videoUsesDeviceOrientationValue = [params objectForKey:kApplifierImpactOptionVideoUsesDeviceOrientation];
+    
+    if(noOfferScreenValue != nil) {
+      [_params setObject:noOfferScreenValue forKey:kApplifierImpactOptionNoOfferscreenKey];
     }
-    return self;
+    if(openAnimatedValue != nil) {
+      [_params setObject:openAnimatedValue forKey:kApplifierImpactOptionOpenAnimatedKey];
+    }
+    if(gamerSidValue != nil) {
+      [_params setObject:gamerSidValue forKey:kApplifierImpactOptionGamerSIDKey];
+    }
+    if(muteVideoSoundsValue != nil) {
+      [_params setObject:muteVideoSoundsValue forKey:kApplifierImpactOptionMuteVideoSounds];
+    }
+    if(videoUsesDeviceOrientationValue != nil) {
+      [_params setObject:videoUsesDeviceOrientationValue forKey:kApplifierImpactOptionVideoUsesDeviceOrientation];
+    }
+  }
+  return self;
 }
 
 - (void)dealloc {
-    [_params dealloc];
-    [super dealloc];
+  [_params dealloc];
+  [super dealloc];
 }
 
 /**
  * Starts ad loading on a background thread and immediately returns control.
- * As long as Impact has campaigns available, call the ad loaded delegate. 
+ * As long as Impact has campaigns available, call the ad loaded delegate.
  */
 - (void)loadInterstitialInBackground {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        if([[ApplifierImpact sharedInstance] canShowCampaigns]) {
-            [[self delegate] interstitialDidLoadAd:self];
-        } else {
-            [[self delegate] interstitial:self didFailToLoadAdWithError:[NSError errorWithDomain:@"ApplifierImpact" code:0 userInfo:nil]];
-        }
-    });
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    if([[ApplifierImpact sharedInstance] canShowCampaigns]) {
+      [[self delegate] interstitialDidLoadAd:self];
+    } else {
+      [[self delegate] interstitial:self didFailToLoadAdWithError:[NSError errorWithDomain:@"ApplifierImpact" code:0 userInfo:nil]];
+    }
+  });
 }
 
 /**
@@ -72,9 +76,10 @@
  *
  */
 - (void)presentInterstitial {
-    AILOG_DEBUG(@"");
-    [[ApplifierImpact sharedInstance] setViewController:[[self delegate] viewControllerForModalPresentation] showImmediatelyInNewController:NO];
-    [[ApplifierImpact sharedInstance] showImpact:_params];
+  AILOG_DEBUG(@"");
+  [[ApplifierImpact sharedInstance] setViewController:[[self delegate] viewControllerForModalPresentation] showImmediatelyInNewController:NO];
+  [[ApplifierImpact sharedInstance] setZone:_zoneId];
+  [[ApplifierImpact sharedInstance] showImpact:_params];
 }
 
 /*=
@@ -85,20 +90,20 @@
 }
 
 -(void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact {
-    [[self delegate] interstitialDidLoadAd:self];
+  [[self delegate] interstitialDidLoadAd:self];
 }
 
 -(void)applifierImpactDidOpen:(ApplifierImpact *)applifierImpact {
-    [[self delegate] interstitialWillPresentFullScreen:self];
-    [[self delegate] interstitialDidPresentFullScreen:self];
+  [[self delegate] interstitialWillPresentFullScreen:self];
+  [[self delegate] interstitialDidPresentFullScreen:self];
 }
 
 -(void)applifierImpactDidClose:(ApplifierImpact *)applifierImpact {
-    [[self delegate] interstitialDidDismissFullScreen:self];
+  [[self delegate] interstitialDidDismissFullScreen:self];
 }
 
 -(void)applifierImpactWillLeaveApplication:(ApplifierImpact *)applifierImpact {
-    [[self delegate] interstitialWillLeaveApplication:self];
+  [[self delegate] interstitialWillLeaveApplication:self];
 }
 
 @end
