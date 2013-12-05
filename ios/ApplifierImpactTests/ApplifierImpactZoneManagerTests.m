@@ -59,7 +59,7 @@ extern void __gcov_flush();
 - (void)testZoneManagerSetInvalidZone {
   [zoneManager addZones:@{@"testZoneId1": validZone1, @"testZoneId2": validZone2}];
   STAssertFalse([zoneManager setCurrentZone:@"invalidZoneKey"], @"Failed to return false for setting an invalid current zone");
-  STAssertTrue([zoneManager getCurrentZone] == validZone1, @"Current zone should be the default zone after setting an invalid current zone");
+  STAssertTrue([[[zoneManager getCurrentZone] getZoneId] isEqualToString:@"testZoneId1"], @"Current zone should be the default zone after setting an invalid current zone");
 }
 
 - (void)testZoneManagerSetValidZone {
