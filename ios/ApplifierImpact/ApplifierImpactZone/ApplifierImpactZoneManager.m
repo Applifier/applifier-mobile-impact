@@ -34,6 +34,7 @@ static ApplifierImpactZoneManager *sharedZoneManager = nil;
   self = [super init];
   if(self) {
     self._zones = [[NSMutableDictionary alloc] init];
+    self._defaultZone = nil;
     self._currentZone = nil;
   }
   return self;
@@ -46,7 +47,7 @@ static ApplifierImpactZoneManager *sharedZoneManager = nil;
       [self._zones setObject:zone forKey:zoneId];
       ++addedZones;
       if([zone isDefault]) {
-        self._defaultZone = zone;
+        self._defaultZone = [[ApplifierImpactZone alloc] initWithData:[zone getZoneOptions]];
       }
       if([zone isDefault] && self._currentZone == nil) {
         self._currentZone = zone;

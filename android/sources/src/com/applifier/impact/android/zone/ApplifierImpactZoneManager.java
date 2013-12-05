@@ -30,7 +30,7 @@ public class ApplifierImpactZoneManager {
 				}
 				
 				if(zone.isDefault()) {
-					_defaultZone = zone;
+					_defaultZone = new ApplifierImpactZone(jsonZone);
 				}
 				
 				if(_currentZone == null && zone.isDefault()) {
