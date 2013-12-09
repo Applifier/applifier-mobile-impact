@@ -17,12 +17,8 @@ public class ImpactMopubEvents extends CustomEventInterstitial implements IAppli
 	private CustomEventInterstitialListener listener = null;
 	private ApplifierImpact impactInstance = null;
 	private String gameId = null;
-	
-	public static String IMPACT_MOPUB_MUTE_OPTION = "muteSounds";
-	public static String IMPACT_MOPUB_ORIENTATION_OPTION = "deviceOrientation";
-	
-	private boolean optionMute = false;
-	private boolean optionDeviceOrientation = false;
+	private String zoneId = null;
+	private Map<String, Object> options = null;
 
 	@Override
 	protected void loadInterstitial(Context context,
@@ -38,55 +34,28 @@ public class ImpactMopubEvents extends CustomEventInterstitial implements IAppli
 		}
 		
 		this.gameId = serverExtras.get("gameId");
+		this.zoneId = serverExtras.get("zoneId");
 		
-		// First go through the local extras, then the server extras so we can easily
-		// over-ride the settings on the server-side
-		Map[] maps = new Map[] {localExtras, serverExtras};
-		
-		for(Map<String, String> opMap : maps) {
-			for(String key : opMap.keySet()) {
-				if(IMPACT_MOPUB_MUTE_OPTION.equals(key)) {
-					if("true".equals(opMap.get(IMPACT_MOPUB_MUTE_OPTION))) {
-						this.optionMute = true;
-					}
-				}
-				if(IMPACT_MOPUB_ORIENTATION_OPTION.equals(key)) {
-					if("true".equals(opMap.get(IMPACT_MOPUB_ORIENTATION_OPTION))) {
-						this.optionDeviceOrientation = true;
-					}
-				}
-			}
-		}
+		this.options = new HashMap<String, Object>();
+		this.options.putAll(localExtras);
+		this.options.putAll(serverExtras);
 		
 		ApplifierImpact.setDebugMode(true);
 		this.impactInstance = new ApplifierImpact((Activity)context, gameId, this);
 		
-		Log.d("foo", "impact inited");
-		
-		
+		Log.d("foo", "impact inited");	
 	}
 
 	@Override
 	protected void showInterstitial() {
 		if(this.impactInstance.canShowCampaigns()) {
-			
-			HashMap<String, Object> options = new HashMap<String, Object>();
-			
-			// Always use no offer screen as MoPub is always non-incent
-			options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, true);
-			
-			// Configured options
-			options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION, this.optionDeviceOrientation);
-			options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, this.optionMute);
-			
+			this.impactInstance.setZone(this.zoneId);			
 			this.impactInstance.showImpact(options);
 		}
 	}
 
 	@Override 
-	protected void onInvalidate() {
-
-	}
+	protected void onInvalidate() {}
 
 	@Override
 	public void onImpactClose() {
@@ -101,7 +70,7 @@ public class ImpactMopubEvents extends CustomEventInterstitial implements IAppli
 	@Override
 	public void onVideoStarted() {}
 	@Override
-	public void onVideoCompleted(String rewardItemKey) {}
+	public void onVideoCompleted(String rewardItemKey, boolean skipped) {}
 
 	@Override
 	public void onCampaignsAvailable() {
@@ -111,10 +80,6 @@ public class ImpactMopubEvents extends CustomEventInterstitial implements IAppli
 
 	@Override
 	public void onCampaignsFetchFailed() {
-		this.listener.onInterstitialFailed(MoPubErrorCode.NO_FILL);
-		
+		this.listener.onInterstitialFailed(MoPubErrorCode.NO_FILL);	
 	}
-	
-	
-
 }
