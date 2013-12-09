@@ -18,87 +18,92 @@
 
 @implementation ImpactMopubEvent
 
-static NSString *DEVICE_ORIENTATION_KEY = @"deviceOrientation";
-static NSString *MUTE_SOUNDS_KEY = @"muteSounds";
+static NSString const * const kApplifierImpactOptionZoneIdKey = @"zoneId";
 
 @synthesize delegate;
-@synthesize muteSoundsOption;
-@synthesize deviceOrientationOption;
 
 - (void)requestInterstitialWithCustomEventInfo:(NSDictionary *)info {
-    [[ApplifierImpact sharedInstance] startWithGameId:[info objectForKey:@"gameId"]];
-    [[ApplifierImpact sharedInstance] setDelegate:self];
-    
-    // Default options
-    self.muteSoundsOption = @false;
-    self.deviceOrientationOption = @false;
-    
-    // Parse the options, if we have any
-    NSEnumerator *keySet = [info keyEnumerator];
-    for(NSObject *key in keySet) {
-        if([key isKindOfClass:[NSString class]]) {
-            if([MUTE_SOUNDS_KEY isEqualToString:(NSString*)key]) {
-                if([@"true" isEqualToString:(NSString *)[info objectForKey:MUTE_SOUNDS_KEY]]) {
-                    self.muteSoundsOption = @true;
-                }
-            }
-            if([DEVICE_ORIENTATION_KEY isEqualToString:(NSString*)key]) {
-                if([@"true" isEqualToString:(NSString *)[info objectForKey:DEVICE_ORIENTATION_KEY]]) {
-                    self.deviceOrientationOption = @true;
-                }                
-            }
-            
-        }
+  [[ApplifierImpact sharedInstance] setDebugMode:YES];
+  [[ApplifierImpact sharedInstance] startWithGameId:[info objectForKey:@"gameId"]];
+  [[ApplifierImpact sharedInstance] setDelegate:self];
+  
+  // Parse the options, if we have any
+  _params = [[NSMutableDictionary alloc] init];
+  _zoneId = [info objectForKey:kApplifierImpactOptionZoneIdKey];
+  
+  NSString *noOfferScreenValue = [info objectForKey:kApplifierImpactOptionNoOfferscreenKey];
+  NSString *openAnimatedValue = [info objectForKey:kApplifierImpactOptionOpenAnimatedKey];
+  NSString *gamerSidValue = [info objectForKey:kApplifierImpactOptionGamerSIDKey];
+  NSString *muteVideoSoundsValue = [info objectForKey:kApplifierImpactOptionMuteVideoSounds];
+  NSString *videoUsesDeviceOrientationValue = [info objectForKey:kApplifierImpactOptionVideoUsesDeviceOrientation];
+  
+  if(noOfferScreenValue != nil) {
+    [_params setObject:noOfferScreenValue forKey:kApplifierImpactOptionNoOfferscreenKey];
+  }
+  if(openAnimatedValue != nil) {
+    [_params setObject:openAnimatedValue forKey:kApplifierImpactOptionOpenAnimatedKey];
+  }
+  if(gamerSidValue != nil) {
+    [_params setObject:gamerSidValue forKey:kApplifierImpactOptionGamerSIDKey];
+  }
+  if(muteVideoSoundsValue != nil) {
+    [_params setObject:muteVideoSoundsValue forKey:kApplifierImpactOptionMuteVideoSounds];
+  }
+  if(videoUsesDeviceOrientationValue != nil) {
+    [_params setObject:videoUsesDeviceOrientationValue forKey:kApplifierImpactOptionVideoUsesDeviceOrientation];
+  }
+  
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    if([[ApplifierImpact sharedInstance] canShowCampaigns]) {
+      [self.delegate interstitialCustomEvent:self didLoadAd:nil];
     }
-    
+  });
 }
 
 - (void)showInterstitialFromRootViewController:(UIViewController *)rootViewController {
-    if([[ApplifierImpact sharedInstance] canShowCampaigns]) {
-        [[ApplifierImpact sharedInstance] setViewController:rootViewController showImmediatelyInNewController:NO];
-        [[ApplifierImpact sharedInstance] showImpact:
-         @{kApplifierImpactOptionNoOfferscreenKey:@true,
-             kApplifierImpactOptionMuteVideoSounds:self.muteSoundsOption,
-             kApplifierImpactOptionVideoUsesDeviceOrientation:self.deviceOrientationOption}];
-    }
+  if([[ApplifierImpact sharedInstance] canShowCampaigns]) {
+    [[ApplifierImpact sharedInstance] setViewController:rootViewController showImmediatelyInNewController:NO];
+    [[ApplifierImpact sharedInstance] setZone:_zoneId];
+    [[ApplifierImpact sharedInstance] showImpact:_params];
+  }
 }
 
-- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey {
-    // Ignored, as no support for incentivised ads via Mopub
+- (void)applifierImpact:(ApplifierImpact *)applifierImpact completedVideoWithRewardItemKey:(NSString *)rewardItemKey videoWasSkipped:(BOOL)skipped {
+  // Ignored, as no support for incentivised ads via Mopub
 }
 
 - (void)applifierImpactCampaignsAreAvailable:(ApplifierImpact *)applifierImpact {
-    [self.delegate interstitialCustomEvent:self didLoadAd:nil];
+  [self.delegate interstitialCustomEvent:self didLoadAd:nil];
 }
 
 - (void)applifierImpactCampaignsFetchFailed:(ApplifierImpact *)applifierImpact {
-    NSMutableDictionary* details = [NSMutableDictionary dictionary];
-    [details setValue:@"No ads available" forKey:NSLocalizedDescriptionKey];
-    [self.delegate interstitialCustomEvent:self didFailToLoadAdWithError:[NSError errorWithDomain:@"impact_sdk" code:404 userInfo:details]];
+  NSMutableDictionary* details = [NSMutableDictionary dictionary];
+  [details setValue:@"No ads available" forKey:NSLocalizedDescriptionKey];
+  [self.delegate interstitialCustomEvent:self didFailToLoadAdWithError:[NSError errorWithDomain:@"impact_sdk" code:404 userInfo:details]];
 }
 
 - (void)applifierImpactDidClose:(ApplifierImpact *)applifierImpact {
-    [self.delegate interstitialCustomEventDidDisappear:self];
+  [self.delegate interstitialCustomEventDidDisappear:self];
 }
 
 - (void)applifierImpactDidOpen:(ApplifierImpact *)applifierImpact {
-    [self.delegate interstitialCustomEventDidAppear:self];
+  [self.delegate interstitialCustomEventDidAppear:self];
 }
 
 - (void)applifierImpactVideoStarted:(ApplifierImpact *)applifierImpact {
-    // Ignored
+  // Ignored
 }
 
 - (void)applifierImpactWillClose:(ApplifierImpact *)applifierImpact {
-    [self.delegate interstitialCustomEventWillDisappear:self];
+  [self.delegate interstitialCustomEventWillDisappear:self];
 }
 
 - (void)applifierImpactWillOpen:(ApplifierImpact *)applifierImpact {
-    [self.delegate interstitialCustomEventWillAppear:self];
+  [self.delegate interstitialCustomEventWillAppear:self];
 }
 
 - (void)applifierImpactWillLeaveApplication:(ApplifierImpact *)applifierImpact {
-    [self.delegate interstitialCustomEventWillLeaveApplication:self];
+  [self.delegate interstitialCustomEventWillLeaveApplication:self];
 }
 
 @end
