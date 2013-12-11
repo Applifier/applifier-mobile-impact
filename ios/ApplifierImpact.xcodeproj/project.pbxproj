@@ -119,6 +119,7 @@
 		99A8516217FACAAA0090F8FF /* ApplifierImpactIncentivizedZone.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A8516017FACAAA0090F8FF /* ApplifierImpactIncentivizedZone.m */; };
 		99A8516817FC41C00090F8FF /* ApplifierImpactRewardItemTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A8516717FC41C00090F8FF /* ApplifierImpactRewardItemTests.m */; };
 		99A8516A17FC45160090F8FF /* ApplifierImpactRewardItemManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A8516917FC45160090F8FF /* ApplifierImpactRewardItemManagerTests.m */; };
+		99F2F6181858A52200A773C2 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C2B17E8881300845E0B /* StoreKit.framework */; };
 		99FE3C0117E85B2200845E0B /* ApplifierImpactZone.h in Headers */ = {isa = PBXBuildFile; fileRef = 99FE3BFF17E85B2200845E0B /* ApplifierImpactZone.h */; };
 		99FE3C0217E85B2200845E0B /* ApplifierImpactZone.m in Sources */ = {isa = PBXBuildFile; fileRef = 99FE3C0017E85B2200845E0B /* ApplifierImpactZone.m */; };
 		99FE3C1217E87E1400845E0B /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C1117E87E1400845E0B /* SenTestingKit.framework */; };
@@ -310,6 +311,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				99FE3C3917E889DC00845E0B /* SystemConfiguration.framework in Frameworks */,
+				99F2F6181858A52200A773C2 /* StoreKit.framework in Frameworks */,
 				99FE3C3717E889A000845E0B /* CoreMedia.framework in Frameworks */,
 				99FE3C2E17E8884900845E0B /* ApplifierImpact.framework in Frameworks */,
 				99FE3C3217E888A900845E0B /* CoreGraphics.framework in Frameworks */,
