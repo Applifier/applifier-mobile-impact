@@ -197,15 +197,20 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
 
 
 - (void)initWebApp {
-	AIAssert([NSThread isMainThread]);
-  
-  NSDictionary *persistingData = @{kApplifierImpactWebViewDataParamCampaignDataKey:[[ApplifierImpactCampaignManager sharedInstance] campaignData], kApplifierImpactWebViewDataParamPlatformKey:@"ios", kApplifierImpactWebViewDataParamDeviceIdKey:[ApplifierImpactDevice md5DeviceId], kApplifierImpactWebViewDataParamOpenUdidIdKey:[ApplifierImpactDevice md5OpenUDIDString], kApplifierImpactWebViewDataParamMacAddressKey:[ApplifierImpactDevice md5MACAddressString], kApplifierImpactWebViewDataParamSdkVersionKey:[[ApplifierImpactProperties sharedInstance] impactVersion], kApplifierImpactWebViewDataParamGameIdKey:[[ApplifierImpactProperties sharedInstance] impactGameId]};
-  
-  NSDictionary *trackingData = @{kApplifierImpactWebViewDataParamIosVersionKey:[ApplifierImpactDevice softwareVersion], kApplifierImpactWebViewDataParamDeviceTypeKey:[ApplifierImpactDevice analyticsMachineName]};
-  NSMutableDictionary *webAppValues = [NSMutableDictionary dictionaryWithDictionary:persistingData];
-  
-  [webAppValues addEntriesFromDictionary:trackingData];
-  
+  AIAssert([NSThread isMainThread]);
+    
+  NSMutableDictionary * webAppValues = [[NSMutableDictionary alloc] init];
+    
+  [webAppValues setValue: [[ApplifierImpactCampaignManager sharedInstance] campaignData] forKey:kApplifierImpactWebViewDataParamCampaignDataKey];
+  [webAppValues setValue: @"ios"                                                         forKey:kApplifierImpactWebViewDataParamPlatformKey];
+  [webAppValues setValue: [ApplifierImpactDevice md5DeviceId]                            forKey:kApplifierImpactWebViewDataParamDeviceIdKey];
+  [webAppValues setValue: [ApplifierImpactDevice md5OpenUDIDString]                      forKey:kApplifierImpactWebViewDataParamOpenUdidIdKey];
+  [webAppValues setValue: [ApplifierImpactDevice md5MACAddressString]                    forKey:kApplifierImpactWebViewDataParamMacAddressKey];
+  [webAppValues setValue: [[ApplifierImpactProperties sharedInstance] impactVersion]     forKey:kApplifierImpactWebViewDataParamSdkVersionKey];
+  [webAppValues setValue: [[ApplifierImpactProperties sharedInstance] impactGameId]      forKey:kApplifierImpactWebViewDataParamGameIdKey];
+  [webAppValues setValue: [ApplifierImpactDevice softwareVersion]                        forKey:kApplifierImpactWebViewDataParamIosVersionKey];
+  [webAppValues setValue: [ApplifierImpactDevice analyticsMachineName]                   forKey:kApplifierImpactWebViewDataParamDeviceTypeKey];
+    
   [self setupWebApp:[[UIScreen mainScreen] bounds]];
   [self loadWebApp:webAppValues];
 }

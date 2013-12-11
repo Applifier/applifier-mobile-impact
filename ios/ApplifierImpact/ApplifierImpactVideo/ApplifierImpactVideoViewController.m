@@ -302,6 +302,10 @@
 - (void)videoPlaybackStarted {
   AILOG_DEBUG(@"");
   self.bufferingLabel.hidden = YES;
+  ApplifierImpactZone * currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+  if ([currentZone allowVideoSkipInSeconds] == 0) {
+    self.skipLabel.hidden = YES;
+  }
   [self hideOverlayAfter:3.0f];
 }
 
@@ -352,6 +356,7 @@
     
     [self.skipLabel addTarget:self action:@selector(skipButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     self.skipLabel.enabled = NO;
+    self.skipLabel.hidden = YES;
     
     [self.videoOverlayView addSubview:self.skipLabel];
     [self.videoOverlayView bringSubviewToFront:self.skipLabel];
@@ -362,6 +367,7 @@
 - (void)showVideoSkipLabel {
   [self.skipLabel setTitle:@"Skip Video" forState:UIControlStateNormal];
   self.skipLabel.enabled = YES;
+  self.skipLabel.hidden = NO;
 }
 
 - (void)createMuteButton {
@@ -497,6 +503,7 @@
     
     NSString *skipText = [NSString stringWithFormat:NSLocalizedString(@"You can skip this video in %.0f seconds.", nil), timeUntilSkip];
     self.skipLabel.enabled = NO;
+    self.skipLabel.hidden = NO;
     
     if (timeUntilSkip == 0) {
       skipText = [NSString stringWithFormat:@"Skip Video"];

@@ -625,8 +625,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	private void close () {
 		cancelPauseScreenTimer();
-		ApplifierImpactCloseRunner closeRunner = new ApplifierImpactCloseRunner();
-		ApplifierImpactProperties.getCurrentActivity().runOnUiThread(closeRunner);
+		if(ApplifierImpactProperties.getCurrentActivity() != null) {
+			ApplifierImpactCloseRunner closeRunner = new ApplifierImpactCloseRunner();
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(closeRunner);
+		}
 	}
 	
 	private void open (String view) {
@@ -763,11 +765,13 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		_pauseScreenTimer = new TimerTask() {
 			@Override
 			public void run() {
-				PowerManager pm = (PowerManager)ApplifierImpactProperties.getCurrentActivity().getBaseContext().getSystemService(Context.POWER_SERVICE);			
-				if (!pm.isScreenOn()) {
-					mainview.webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, new JSONObject());
-					close();
-					cancelPauseScreenTimer();
+				if(ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+					PowerManager pm = (PowerManager)ApplifierImpactProperties.getCurrentActivity().getBaseContext().getSystemService(Context.POWER_SERVICE);			
+					if (!pm.isScreenOn()) {
+						mainview.webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, new JSONObject());
+						close();
+						cancelPauseScreenTimer();
+					}
 				}
 			}
 		};
@@ -784,9 +788,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private class ApplifierImpactCloseRunner implements Runnable {
 		JSONObject _data = null;
 		@Override
-		public void run() {
-			
-			if (ApplifierImpactProperties.getCurrentActivity().getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
+		public void run() {			
+			if (ApplifierImpactProperties.getCurrentActivity() != null && ApplifierImpactProperties.getCurrentActivity().getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
 				Boolean dataOk = true;			
 				JSONObject data = new JSONObject();
 				
@@ -801,28 +804,36 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				
 				if (dataOk) {
 					_data = data;
-					mainview.webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_NONE, data);
+					if(mainview != null && mainview.webview != null) {
+						mainview.webview.setWebViewCurrentView(ApplifierImpactConstants.IMPACT_WEBVIEW_VIEWTYPE_NONE, data);
+					}
 					Timer testTimer = new Timer();
 					testTimer.schedule(new TimerTask() {
 						@Override
 						public void run() {
-							ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									mainview.closeImpact(_data);
-									ApplifierImpactProperties.getCurrentActivity().finish();
-									
-									ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
-									if (!currentZone.openAnimated()) {
-										ApplifierImpactProperties.getCurrentActivity().overridePendingTransition(0, 0);
+							if(ApplifierImpactProperties.getCurrentActivity() != null) {
+								ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										if(mainview != null) {
+											mainview.closeImpact(_data);
+										}
+										if(ApplifierImpactProperties.getCurrentActivity() != null) {
+											ApplifierImpactProperties.getCurrentActivity().finish();
+										}
+										
+										ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+										if (!currentZone.openAnimated()) {
+											ApplifierImpactProperties.getCurrentActivity().overridePendingTransition(0, 0);
+										}	
+										
+										_showingImpact = false;
+										
+										if (_impactListener != null)
+											_impactListener.onImpactClose();
 									}
-
-									_showingImpact = false;
-									
-									if (_impactListener != null)
-										_impactListener.onImpactClose();
-								}
-							});
+								});
+							}
 						}
 					}, 250);
 				}
