@@ -19,6 +19,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebStorage;
@@ -85,7 +86,7 @@ public class ApplifierImpactWebView extends WebView {
 			
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_CHANGE_VIEW, view, dataString);
 			_currentWebView = view;
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString, this));
 			ApplifierImpactUtils.Log("Send change view to WebApp: " + javascriptString, this);
 			
 			if (data != null) {
@@ -109,7 +110,7 @@ public class ApplifierImpactWebView extends WebView {
 					ApplifierImpactProperties.RUN_WEBVIEW_TESTS &&
 					ApplifierImpactProperties.TEST_JAVASCRIPT != null) {
 					ApplifierImpactUtils.Log("Running test-javascript: " + ApplifierImpactProperties.TEST_JAVASCRIPT , this);
-					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(ApplifierImpactProperties.TEST_JAVASCRIPT));
+					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(ApplifierImpactProperties.TEST_JAVASCRIPT, this));
 					ApplifierImpactProperties.RUN_WEBVIEW_TESTS = false;
 				}
 			}
@@ -125,7 +126,7 @@ public class ApplifierImpactWebView extends WebView {
 
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_HANDLE_NATIVE_EVENT, eventType, dataString);
 			ApplifierImpactUtils.Log("Send native event to WebApp: " + javascriptString, this);
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString, this));
 		}
 	}
 	
@@ -166,7 +167,7 @@ public class ApplifierImpactWebView extends WebView {
 			
 			String initString = String.format("%s%s(%s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_INIT, initData.toString());
 			ApplifierImpactUtils.Log("Initializing WebView with JS call: " + initString, this);
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(initString));
+			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(initString, this));
 		}
 	}
 
@@ -342,16 +343,29 @@ public class ApplifierImpactWebView extends WebView {
 	private class ApplifierImpactJavascriptRunner implements Runnable {
 		
 		private String _jsString = null;
+		private WebView _webView = null;
 		
-		public ApplifierImpactJavascriptRunner (String jsString) {
+		public ApplifierImpactJavascriptRunner (String jsString, WebView webView) {
 			_jsString = jsString;
+			_webView = webView;
 		}
 		
 		@Override
 		public void run() {
 			if (_jsString != null) {
 				try {
-					loadUrl(_jsString);
+					if(Build.VERSION.SDK_INT >= 19) {
+						try
+						{
+							Method evaluateJavascript = WebView.class.getMethod("evaluateJavascript", String.class, ValueCallback.class);
+							evaluateJavascript.invoke(_webView, _jsString, null);
+						}
+						catch (Exception e) {
+							ApplifierImpactUtils.Log("Could not invoke evaluateJavascript", this);
+						}
+					} else {
+						loadUrl(_jsString);
+					}
 				}
 				catch (Exception e) {
 					ApplifierImpactUtils.Log("Error while processing JavaScriptString!", this);
