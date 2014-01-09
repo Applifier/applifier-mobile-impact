@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -21,6 +22,7 @@ import android.os.AsyncTask;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
+import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.applifier.impact.android.item.ApplifierImpactRewardItemManager;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
@@ -163,6 +165,35 @@ public class ApplifierImpactWebData {
 			
 			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
 			String queryParams = String.format("%s=%s", ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_ZONE_KEY, currentZone.getZoneId());
+			
+			try {
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_DEVICEID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidId(), "UTF-8"));
+				
+				if (!ApplifierImpactDevice.getAndroidId().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
+					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ANDROIDID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidId(), "UTF-8"));
+
+				if (!ApplifierImpactDevice.getMacAddress().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
+					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_MACADDRESS_KEY, URLEncoder.encode(ApplifierImpactDevice.getMacAddress(), "UTF-8"));
+				
+				if(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO != null) {
+					queryParams = String.format("%s&%s=%d", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_TRACKINGENABLED_KEY, ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.isLimitAdTrackingEnabled() ? 0 : 1);
+					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ADVERTISINGTRACKINGID_KEY, URLEncoder.encode(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.getId(), "UTF-8"));
+					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_RAWADVERTISINGTRACKINGID_KEY, URLEncoder.encode(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.getId(), "UTF-8"));
+				}
+				
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_PLATFORM_KEY, "android");
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_GAMEID_KEY, URLEncoder.encode(ApplifierImpactProperties.IMPACT_GAME_ID, "UTF-8"));
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_SDKVERSION_KEY, URLEncoder.encode(ApplifierImpactConstants.IMPACT_VERSION, "UTF-8"));
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_SOFTWAREVERSION_KEY, URLEncoder.encode(ApplifierImpactDevice.getSoftwareVersion(), "UTF-8"));
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_HARDWAREVERSION_KEY, URLEncoder.encode(ApplifierImpactDevice.getHardwareVersion(), "UTF-8"));
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_DEVICETYPE_KEY, ApplifierImpactDevice.getDeviceType());
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_CONNECTIONTYPE_KEY, URLEncoder.encode(ApplifierImpactDevice.getConnectionType(), "UTF-8"));
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_SCREENSIZE_KEY, ApplifierImpactDevice.getScreenSize());
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_SCREENDENSITY_KEY, ApplifierImpactDevice.getScreenDensity());
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("Problems creating campaigns query: " + e.getMessage() + e.getStackTrace().toString(), ApplifierImpactProperties.class);
+			}
 			
 			if(currentZone.isIncentivized()) {
 				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)currentZone).itemManager();

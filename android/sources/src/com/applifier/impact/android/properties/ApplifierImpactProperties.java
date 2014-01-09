@@ -7,6 +7,7 @@ import java.util.Map;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient.Info;
 
 import android.app.Activity;
 
@@ -25,6 +26,8 @@ public class ApplifierImpactProperties {
 	public static WeakReference<Activity> CURRENT_ACTIVITY = null;
 	public static ApplifierImpactCampaign SELECTED_CAMPAIGN = null;
 	public static Boolean IMPACT_DEBUG_MODE = false;
+	
+	public static Info ADVERTISING_TRACKING_INFO = null;
 	
 	public static String TEST_DATA = null;
 	public static String TEST_URL = null;
@@ -51,21 +54,15 @@ public class ApplifierImpactProperties {
 			
 			if (!ApplifierImpactDevice.getAndroidId().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
 				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ANDROIDID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidId(), "UTF-8"));
-			
-			if (!ApplifierImpactDevice.getTelephonyId().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
-				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_TELEPHONYID_KEY, URLEncoder.encode(ApplifierImpactDevice.getTelephonyId(), "UTF-8"));
-			
-			if (!ApplifierImpactDevice.getAndroidSerial().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
-				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_SERIALID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidSerial(), "UTF-8"));
 
-			if (!ApplifierImpactDevice.getOpenUdid().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
-				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_OPENUDID_KEY, URLEncoder.encode(ApplifierImpactDevice.getOpenUdid(), "UTF-8"));
-			
 			if (!ApplifierImpactDevice.getMacAddress().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
 				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_MACADDRESS_KEY, URLEncoder.encode(ApplifierImpactDevice.getMacAddress(), "UTF-8"));
-
-			if (!ApplifierImpactDevice.getOdin1Id().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
-				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ODIN1ID_KEY, URLEncoder.encode(ApplifierImpactDevice.getOdin1Id(), "UTF-8"));
+			
+			if(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO != null) {
+				queryString = String.format("%s&%s=%d", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_TRACKINGENABLED_KEY, ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.isLimitAdTrackingEnabled() ? 0 : 1);
+				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ADVERTISINGTRACKINGID_KEY, URLEncoder.encode(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.getId(), "UTF-8"));
+				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_RAWADVERTISINGTRACKINGID_KEY, URLEncoder.encode(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.getId(), "UTF-8"));
+			}
 			
 			queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_PLATFORM_KEY, "android");
 			queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_GAMEID_KEY, URLEncoder.encode(ApplifierImpactProperties.IMPACT_GAME_ID, "UTF-8"));

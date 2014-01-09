@@ -14,6 +14,7 @@ import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
+import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.applifier.impact.android.item.ApplifierImpactRewardItem;
 import com.applifier.impact.android.item.ApplifierImpactRewardItemManager;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
@@ -25,6 +26,7 @@ import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpact
 import com.applifier.impact.android.webapp.*;
 import com.applifier.impact.android.zone.ApplifierImpactZone;
 import com.applifier.impact.android.zone.ApplifierImpactIncentivizedZone;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -587,7 +589,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		}
 	}
 	
-	private void init (Activity activity, String gameId, IApplifierImpactListener listener) {
+	private void init (final Activity activity, String gameId, IApplifierImpactListener listener) {
 		if (_initialized) return; 
 		
 		if(gameId.length() == 0) {
@@ -618,9 +620,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		webdata = new ApplifierImpactWebData();
 		webdata.setWebDataListener(this);
 
-		if (webdata.initCampaigns()) {
-			_initialized = true;
-		}
+		new Thread(new Runnable() {
+			public void run() {
+				ApplifierImpactDevice.fetchAdvertisingTrackingInfo(activity);
+				if (webdata.initCampaigns()) {
+					_initialized = true;
+				}
+			}
+		}).start();	
 	}
 	
 	private void close () {

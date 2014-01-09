@@ -5,17 +5,21 @@ import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
 
-import com.applifier.impact.android.ApplifierImpactUtils;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
-import com.applifier.impact.android.properties.ApplifierImpactProperties;
-
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
+
+import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class ApplifierImpactDevice {
 	
@@ -98,6 +102,14 @@ public class ApplifierImpactDevice {
 		}
 		
 		return buildMacAddressFromInterface(intf);
+    }
+    
+    public static void fetchAdvertisingTrackingInfo(final Activity context) {
+    	if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS) {
+    		try {
+    			ApplifierImpactProperties.ADVERTISING_TRACKING_INFO = AdvertisingIdClient.getAdvertisingIdInfo(context);
+    		} catch(Exception e) {}
+    	}
     }
 	
     @SuppressLint("DefaultLocale")
