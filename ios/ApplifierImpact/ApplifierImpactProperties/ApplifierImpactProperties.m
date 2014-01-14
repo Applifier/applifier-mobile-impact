@@ -84,6 +84,8 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
     queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamEncryptionKey, [ApplifierImpactDevice isEncrypted] ? @"true" : @"false"];
   }
   
+  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, @"forceWebViewUrl", @"http://172.16.160.184:8080/dev-build/impact/index.html"];
+  
   return queryParams;
 }
 

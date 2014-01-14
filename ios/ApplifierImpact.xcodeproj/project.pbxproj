@@ -89,8 +89,6 @@
 		7894D915171FF7AD000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D913171FF7AC000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m */; };
 		7894D91817200A8D000CFC99 /* ApplifierImpactImageViewRoundedCorners.h in Headers */ = {isa = PBXBuildFile; fileRef = 7894D91617200A8B000CFC99 /* ApplifierImpactImageViewRoundedCorners.h */; };
 		7894D91917200A8D000CFC99 /* ApplifierImpactImageViewRoundedCorners.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D91717200A8B000CFC99 /* ApplifierImpactImageViewRoundedCorners.m */; };
-		78AC201A1622EFEA007DE419 /* ApplifierImpactOpenUDID.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */; };
-		78AC201B1622EFEA007DE419 /* ApplifierImpactOpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20191622EFEA007DE419 /* ApplifierImpactOpenUDID.m */; };
 		78AC20211622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */; };
 		78AC20221622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC201E1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.m */; };
 		78AC20231622EFF3007DE419 /* ApplifierImpactCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC201F1622EFF3007DE419 /* ApplifierImpactCache.h */; };
@@ -238,8 +236,6 @@
 		7894D913171FF7AC000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactNoWebViewEndScreenBottomBarContent.m; sourceTree = "<group>"; };
 		7894D91617200A8B000CFC99 /* ApplifierImpactImageViewRoundedCorners.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactImageViewRoundedCorners.h; sourceTree = "<group>"; };
 		7894D91717200A8B000CFC99 /* ApplifierImpactImageViewRoundedCorners.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactImageViewRoundedCorners.m; sourceTree = "<group>"; };
-		78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactOpenUDID.h; sourceTree = "<group>"; };
-		78AC20191622EFEA007DE419 /* ApplifierImpactOpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactOpenUDID.m; sourceTree = "<group>"; };
 		78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactAnalyticsUploader.h; sourceTree = "<group>"; };
 		78AC201E1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactAnalyticsUploader.m; sourceTree = "<group>"; };
 		78AC201F1622EFF3007DE419 /* ApplifierImpactCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCache.h; sourceTree = "<group>"; };
@@ -575,7 +571,6 @@
 				786F5D61163142BB00FD34C4 /* ApplifierImpactDevice */,
 				7894D8D9170EF56B000CFC99 /* ApplifierImpactInitializer */,
 				99A8515617FABF620090F8FF /* ApplifierImpactItem */,
-				CC6C7D8C1523390A00B1B783 /* ApplifierImpactOpenUDID */,
 				78057A0D1643CADB005EF487 /* ApplifierImpactProperties */,
 				CC496CAF15078AB000AF335E /* ApplifierImpactSBJSON */,
 				78CB842C16255EB200E94915 /* ApplifierImpactURLProtocol */,
@@ -630,15 +625,6 @@
 			path = ApplifierImpactSBJSON;
 			sourceTree = "<group>";
 		};
-		CC6C7D8C1523390A00B1B783 /* ApplifierImpactOpenUDID */ = {
-			isa = PBXGroup;
-			children = (
-				78AC20181622EFEA007DE419 /* ApplifierImpactOpenUDID.h */,
-				78AC20191622EFEA007DE419 /* ApplifierImpactOpenUDID.m */,
-			);
-			path = ApplifierImpactOpenUDID;
-			sourceTree = "<group>";
-		};
 		CCF83B871733A13200DA12C1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -686,7 +672,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78AC201A1622EFEA007DE419 /* ApplifierImpactOpenUDID.h in Headers */,
 				78AC20211622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h in Headers */,
 				78AC20231622EFF3007DE419 /* ApplifierImpactCache.h in Headers */,
 				78AC202B1622EFFD007DE419 /* ApplifierImpactCampaign.h in Headers */,
@@ -937,7 +922,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78AC201B1622EFEA007DE419 /* ApplifierImpactOpenUDID.m in Sources */,
 				78AC20221622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.m in Sources */,
 				78AC20241622EFF3007DE419 /* ApplifierImpactCache.m in Sources */,
 				78AC202C1622EFFD007DE419 /* ApplifierImpactCampaign.m in Sources */,

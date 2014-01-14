@@ -16,7 +16,6 @@
 
 #import "ApplifierImpactDevice.h"
 #import "../ApplifierImpact.h"
-#import "../ApplifierImpactOpenUDID/ApplifierImpactOpenUDID.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
 
 #import <dlfcn.h>
@@ -335,10 +334,6 @@ int main(int argc, char *argv[]);
 	return [self _md5StringFromString:[self macAddress]];
 }
 
-+ (NSString *)md5OpenUDIDString {
-	return [ApplifierImpactDevice _md5StringFromString:[ApplifierImpactOpenUDID value]];
-}
-
 + (NSString *)md5AdvertisingIdentifierString {
 	NSString *adId = [self advertisingIdentifier];
 	if (adId == nil) {
@@ -419,11 +414,10 @@ static SCNetworkReachabilityRef reachabilityRef = nil;
 }
 
 + (NSString *)md5DeviceId {
-  return [ApplifierImpactDevice md5AdvertisingIdentifierString] != nil ? [ApplifierImpactDevice md5AdvertisingIdentifierString] : [ApplifierImpactDevice md5OpenUDIDString];
+  return [ApplifierImpactDevice md5AdvertisingIdentifierString];
 }
 
 + (int)getIOSMajorVersion {
-  
   return [[[self softwareVersion] substringToIndex:1] intValue];
 }
 
@@ -433,74 +427,5 @@ static SCNetworkReachabilityRef reachabilityRef = nil;
   NSNumber *myNumber = [f numberFromString:[self softwareVersion]];
   return myNumber;
 }
-
-+ (NSString *)ODIN1 {
-  // Step 1: Get MAC address
-  int                 mib[6];
-  size_t              len;
-  char                *buf;
-  unsigned char       *ptr;
-  struct if_msghdr    *ifm;
-  struct sockaddr_dl  *sdl;
-  
-  mib[0] = CTL_NET;
-  mib[1] = AF_ROUTE;
-  mib[2] = 0;
-  mib[3] = AF_LINK;
-  mib[4] = NET_RT_IFLIST;
-  
-  if ((mib[5] = if_nametoindex("en0")) == 0) {
-    //NSLog(@"ODIN-1.1: if_nametoindex error");
-    return nil;
-  }
-  
-  if (sysctl(mib, 6, NULL, &len, NULL, 0) < 0) {
-    //NSLog(@"ODIN-1.1: sysctl 1 error");
-    return nil;
-  }
-  
-  if ((buf = malloc(len)) == NULL) {
-    //NSLog(@"ODIN-1.1: malloc error");
-    return nil;
-  }
-  
-  if (sysctl(mib, 6, buf, &len, NULL, 0) < 0) {
-    //NSLog(@"ODIN-1.1: sysctl 2 error");
-    free(buf);
-    return nil;
-  }
-  
-  ifm = (struct if_msghdr *)buf;
-  sdl = (struct sockaddr_dl *)(ifm + 1);
-  ptr = (unsigned char *)LLADDR(sdl);
-  
-  //NSLog(@"MAC Address: %02X:%02X:%02X:%02X:%02X:%02X", *ptr, *(ptr+1), *(ptr+2), *(ptr+3), *(ptr+4), *(ptr+5));
-  // Step 2: Take the SHA-1 of the MAC address
-  //NSData *data = [NSData dataWithBytes:ptr length:6];
-  
-  CFDataRef data = CFDataCreate(NULL, (uint8_t*)ptr, 6);
-  unsigned char messageDigest[CC_SHA1_DIGEST_LENGTH];
-  
-  CC_SHA1(CFDataGetBytePtr((CFDataRef)data),
-          CFDataGetLength((CFDataRef)data),
-          messageDigest);
-  
-  CFMutableStringRef string = CFStringCreateMutable(NULL, 40);
-  for(int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
-    CFStringAppendFormat(string,
-                         NULL,
-                         (CFStringRef)@"%02X",
-                         messageDigest[i]);
-  }
-  
-  CFStringLowercase(string, CFLocaleGetSystem());
-  //NSLog(@"ODIN-1: %@", string);
-  
-  CFRelease(data);
-  free(buf);
-  
-  return (__bridge NSString*)string;
-}
-
 
 @end
