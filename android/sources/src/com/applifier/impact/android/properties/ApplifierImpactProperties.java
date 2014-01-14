@@ -95,8 +95,6 @@ public class ApplifierImpactProperties {
 			}
 		}
 		
-		queryString = String.format("%s&%s=%s", queryString, "forceWebViewUrl", "http://172.16.160.184:8080/dev-build/impact/index.html");
-		
 		_campaignQueryString = queryString;
 	}
 	

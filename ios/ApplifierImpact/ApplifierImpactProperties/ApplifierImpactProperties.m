@@ -53,11 +53,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamSdkVersionKey, kApplifierImpactVersion];
   
   if ([ApplifierImpactDevice getIOSMajorVersion] < 7) {
-    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamOpenUdidKey, [ApplifierImpactDevice md5OpenUDIDString]];
     queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamMacAddressKey, [ApplifierImpactDevice md5MACAddressString]];
-    if ([ApplifierImpactDevice ODIN1] != nil) {
-      queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamOdin1IdKey, [ApplifierImpactDevice ODIN1]];
-    }
   }
   
   id advertisingIdentifierString = [ApplifierImpactDevice advertisingIdentifier];
@@ -87,8 +83,6 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   else {
     queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamEncryptionKey, [ApplifierImpactDevice isEncrypted] ? @"true" : @"false"];
   }
-  
-  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, @"forceWebViewUrl", @"http://192.168.1.246:8080/dev-build/impact/index.html"];
   
   return queryParams;
 }
