@@ -167,6 +167,24 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
       id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
       trackingQuery = [NSString stringWithFormat:@"%@?%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamZoneIdKey, [currentZone getZoneId]];
       
+      if ([ApplifierImpactDevice getIOSMajorVersion] < 7) {
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactInitQueryParamMacAddressKey, [ApplifierImpactDevice md5MACAddressString]];
+      }
+      
+      id advertisingIdentifierString = [ApplifierImpactDevice advertisingIdentifier];
+      id md5AdvertisingIdentifierString = [ApplifierImpactDevice md5AdvertisingIdentifierString];
+      
+      // Add advertisingTrackingId info if identifier is available
+      if (advertisingIdentifierString != nil) {
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactInitQueryParamRawAdvertisingTrackingIdKey, advertisingIdentifierString];
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactInitQueryParamAdvertisingTrackingIdKey, md5AdvertisingIdentifierString];
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%i", trackingQuery, kApplifierImpactInitQueryParamTrackingEnabledKey, [ApplifierImpactDevice canUseTracking]];
+      }
+      
+      trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactInitQueryParamSoftwareVersionKey, [ApplifierImpactDevice softwareVersion]];
+      trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactInitQueryParamDeviceTypeKey, [ApplifierImpactDevice analyticsMachineName]];
+      trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactInitQueryParamConnectionTypeKey, [ApplifierImpactDevice currentConnectionType]];
+      
       if([currentZone isIncentivized]) {
         id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
         trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamRewardItemKey, [itemManager getCurrentItem].key];
