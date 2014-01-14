@@ -5,17 +5,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.applifier.impact.android.ApplifierImpactUtils;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
-import com.applifier.impact.android.properties.ApplifierImpactProperties;
-import com.applifier.impact.android.view.ApplifierImpactBufferingView;
-import com.applifier.impact.android.view.ApplifierImpactMuteVideoButton;
-import com.applifier.impact.android.view.ApplifierImpactMuteVideoButton.ApplifierImpactMuteVideoButtonState;
-import com.applifier.impact.android.webapp.ApplifierImpactInstrumentation;
-import com.applifier.impact.android.webapp.ApplifierImpactWebData;
-import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
-import com.applifier.impact.android.zone.ApplifierImpactZone;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -27,6 +16,17 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
+
+import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
+import com.applifier.impact.android.view.ApplifierImpactBufferingView;
+import com.applifier.impact.android.view.ApplifierImpactMuteVideoButton;
+import com.applifier.impact.android.view.ApplifierImpactMuteVideoButton.ApplifierImpactMuteVideoButtonState;
+import com.applifier.impact.android.webapp.ApplifierImpactInstrumentation;
+import com.applifier.impact.android.webapp.ApplifierImpactWebData;
+import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
+import com.applifier.impact.android.zone.ApplifierImpactZone;
 
 public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	private static final int FILL_PARENT = -1;

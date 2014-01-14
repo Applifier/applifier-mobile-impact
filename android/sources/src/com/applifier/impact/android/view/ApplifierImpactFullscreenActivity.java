@@ -1,11 +1,11 @@
 package com.applifier.impact.android.view;
 
-import com.applifier.impact.android.ApplifierImpact;
-import com.applifier.impact.android.ApplifierImpactUtils;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+
+import com.applifier.impact.android.ApplifierImpact;
+import com.applifier.impact.android.ApplifierImpactUtils;
 
 public class ApplifierImpactFullscreenActivity extends Activity {
     @Override

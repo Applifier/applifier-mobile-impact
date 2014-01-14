@@ -1,7 +1,5 @@
 package com.applifier.impact.android.video;
 
-import com.applifier.impact.android.properties.ApplifierImpactProperties;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -18,6 +16,8 @@ import android.view.animation.AnimationSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
 public class ApplifierImpactVideoPausedView extends RelativeLayout {
 	private ImageView _playButtonBase = null;

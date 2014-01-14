@@ -34,19 +34,6 @@ public class ApplifierImpactDevice {
 	public static int getDeviceType () {
 		return ApplifierImpactProperties.getCurrentActivity().getResources().getConfiguration().screenLayout;
 	}
-	
-	public static String getOdin1Id () {
-		String odin1ID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
-		
-		try {
-			odin1ID = ApplifierImpactUtils.SHA1(Secure.getString(ApplifierImpactProperties.getCurrentActivity().getContentResolver(), Secure.ANDROID_ID));
-		}
-		catch (Exception e) {
-			ApplifierImpactUtils.Log("Could not resolve ODIN1 Id: " + e.getMessage(), ApplifierImpactDevice.class);
-		}
-		
-		return odin1ID;
-	}
 
 	@SuppressLint("DefaultLocale")
 	public static String getAndroidId () {
@@ -61,21 +48,6 @@ public class ApplifierImpactDevice {
 		}
 		
 		return androidID;
-	}
-	
-	public static String getTelephonyId () {
-		String telephonyID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
-		
-		try {
-			TelephonyManager tmanager = (TelephonyManager)ApplifierImpactProperties.getCurrentActivity().getSystemService(Context.TELEPHONY_SERVICE);
-			telephonyID = ApplifierImpactUtils.Md5(tmanager.getDeviceId());
-			telephonyID = telephonyID.toLowerCase();
-		}
-		catch (Exception e) {
-			ApplifierImpactUtils.Log("Problems fetching telephonyId: " + e.getMessage(), ApplifierImpactDevice.class);
-		}
-		
-		return telephonyID;
 	}
 	
 	public static String getAndroidSerial () {
@@ -164,13 +136,6 @@ public class ApplifierImpactDevice {
         
     	return null;
     }
-    
-	public static String getOpenUdid () {
-		String deviceId = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
-		ApplifierImpactOpenUDID.syncContext(ApplifierImpactProperties.getCurrentActivity());
-		deviceId = ApplifierImpactUtils.Md5(ApplifierImpactOpenUDID.getOpenUDIDInContext());
-		return deviceId.toLowerCase();
-	}
 	
 	public static String getConnectionType () {
 		if (isUsingWifi()) {

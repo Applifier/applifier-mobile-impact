@@ -5,11 +5,6 @@ import java.lang.reflect.Method;
 
 import org.json.JSONObject;
 
-import com.applifier.impact.android.ApplifierImpactUtils;
-import com.applifier.impact.android.data.ApplifierImpactDevice;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
-import com.applifier.impact.android.properties.ApplifierImpactProperties;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -24,6 +19,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.data.ApplifierImpactDevice;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
 public class ApplifierImpactWebView extends WebView {
 
@@ -144,11 +144,7 @@ public class ApplifierImpactWebView extends WebView {
 
 				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getAndroidSerial()))
 					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SERIALID_KEY, ApplifierImpactDevice.getAndroidSerial());
-
-				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getTelephonyId()))
-					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_TELEPHONYID_KEY, ApplifierImpactDevice.getTelephonyId());
 				
-				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_OPENUDID_KEY, ApplifierImpactDevice.getOpenUdid());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_MACADDRESS_KEY, ApplifierImpactDevice.getMacAddress());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDKVERSION_KEY, ApplifierImpactConstants.IMPACT_VERSION);
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);

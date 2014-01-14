@@ -1,7 +1,5 @@
 package com.applifier.impact.android.view;
 
-import com.applifier.impact.android.ApplifierImpactUtils;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -18,6 +16,8 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.applifier.impact.android.ApplifierImpactUtils;
 
 public class ApplifierImpactBufferingView extends LinearLayout {
 

@@ -8,26 +8,6 @@ import java.util.TimerTask;
 
 import org.json.JSONObject;
 
-import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
-import com.applifier.impact.android.cache.ApplifierImpactDownloader;
-import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
-import com.applifier.impact.android.data.ApplifierImpactDevice;
-import com.applifier.impact.android.item.ApplifierImpactRewardItem;
-import com.applifier.impact.android.item.ApplifierImpactRewardItemManager;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
-import com.applifier.impact.android.properties.ApplifierImpactProperties;
-import com.applifier.impact.android.view.ApplifierImpactMainView;
-import com.applifier.impact.android.view.IApplifierImpactMainViewListener;
-import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewAction;
-import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewState;
-import com.applifier.impact.android.webapp.*;
-import com.applifier.impact.android.zone.ApplifierImpactZone;
-import com.applifier.impact.android.zone.ApplifierImpactIncentivizedZone;
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -37,6 +17,27 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
+
+import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
+import com.applifier.impact.android.cache.ApplifierImpactDownloader;
+import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
+import com.applifier.impact.android.data.ApplifierImpactDevice;
+import com.applifier.impact.android.item.ApplifierImpactRewardItem;
+import com.applifier.impact.android.item.ApplifierImpactRewardItemManager;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
+import com.applifier.impact.android.view.ApplifierImpactMainView;
+import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewAction;
+import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewState;
+import com.applifier.impact.android.view.IApplifierImpactMainViewListener;
+import com.applifier.impact.android.webapp.ApplifierImpactWebData;
+import com.applifier.impact.android.webapp.IApplifierImpactWebBridgeListener;
+import com.applifier.impact.android.webapp.IApplifierImpactWebDataListener;
+import com.applifier.impact.android.zone.ApplifierImpactIncentivizedZone;
+import com.applifier.impact.android.zone.ApplifierImpactZone;
 
 
 public class ApplifierImpact implements IApplifierImpactCacheListener, 

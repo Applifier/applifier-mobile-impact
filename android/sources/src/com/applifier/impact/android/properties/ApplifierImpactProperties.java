@@ -4,12 +4,12 @@ import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import android.app.Activity;
+
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient.Info;
-
-import android.app.Activity;
 
 public class ApplifierImpactProperties {
 	//public static String CAMPAIGN_DATA_URL = "http://192.168.1.246:3500/mobile/campaigns";
@@ -94,7 +94,7 @@ public class ApplifierImpactProperties {
 				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ENCRYPTED_KEY, ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.getCurrentActivity()) ? "false" : "true");
 			}
 		}
-		
+				
 		_campaignQueryString = queryString;
 	}
 	

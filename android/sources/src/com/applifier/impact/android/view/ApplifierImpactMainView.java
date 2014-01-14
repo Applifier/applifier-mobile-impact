@@ -5,21 +5,6 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import com.applifier.impact.android.ApplifierImpact;
-import com.applifier.impact.android.ApplifierImpactUtils;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
-import com.applifier.impact.android.properties.ApplifierImpactProperties;
-import com.applifier.impact.android.video.ApplifierImpactVideoPlayView;
-import com.applifier.impact.android.video.IApplifierImpactVideoPlayerListener;
-import com.applifier.impact.android.webapp.ApplifierImpactInstrumentation;
-import com.applifier.impact.android.webapp.ApplifierImpactWebBridge;
-import com.applifier.impact.android.webapp.ApplifierImpactWebData;
-import com.applifier.impact.android.webapp.ApplifierImpactWebView;
-import com.applifier.impact.android.webapp.IApplifierImpactWebViewListener;
-import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
-import com.applifier.impact.android.zone.ApplifierImpactZone;
-
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
@@ -30,6 +15,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+
+import com.applifier.impact.android.ApplifierImpact;
+import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
+import com.applifier.impact.android.video.ApplifierImpactVideoPlayView;
+import com.applifier.impact.android.video.IApplifierImpactVideoPlayerListener;
+import com.applifier.impact.android.webapp.ApplifierImpactInstrumentation;
+import com.applifier.impact.android.webapp.ApplifierImpactWebBridge;
+import com.applifier.impact.android.webapp.ApplifierImpactWebData;
+import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
+import com.applifier.impact.android.webapp.ApplifierImpactWebView;
+import com.applifier.impact.android.webapp.IApplifierImpactWebViewListener;
+import com.applifier.impact.android.zone.ApplifierImpactZone;
 
 public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifierImpactWebViewListener, 
 																		IApplifierImpactVideoPlayerListener {

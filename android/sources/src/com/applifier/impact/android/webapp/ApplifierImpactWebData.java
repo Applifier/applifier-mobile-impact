@@ -26,8 +26,8 @@ import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.applifier.impact.android.item.ApplifierImpactRewardItemManager;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
-import com.applifier.impact.android.zone.ApplifierImpactZone;
 import com.applifier.impact.android.zone.ApplifierImpactIncentivizedZone;
+import com.applifier.impact.android.zone.ApplifierImpactZone;
 import com.applifier.impact.android.zone.ApplifierImpactZoneManager;
 
 public class ApplifierImpactWebData {
