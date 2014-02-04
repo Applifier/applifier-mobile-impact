@@ -12,7 +12,7 @@
 
 @property (nonatomic, assign) BOOL openAnimated;
 @property (nonatomic, assign) BOOL noOfferScreen;
-@property (nonatomic, assign) NSString *gamerSID;
+@property (nonatomic, strong) NSString *gamerSID;
 @property (nonatomic, assign) BOOL muteVideoSounds;
 @property (nonatomic, assign) BOOL useDeviceOrientationForVideo;
 
