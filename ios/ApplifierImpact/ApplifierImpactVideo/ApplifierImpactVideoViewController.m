@@ -25,7 +25,6 @@
   @property (nonatomic, strong) UILabel *progressLabel;
   @property (nonatomic, strong) UIButton *skipLabel;
   @property (nonatomic, strong) UIView *videoOverlayView;
-  @property (nonatomic, assign) dispatch_queue_t videoControllerQueue;
   @property (nonatomic, strong) NSURL *currentPlayingVideoUrl;
   @property (nonatomic, strong) ApplifierImpactVideoMuteButton *muteButton;
   @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
@@ -40,7 +39,6 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-      self.videoControllerQueue = dispatch_queue_create("com.applifier.impact.videocontroller", NULL);
       self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
       self.isPlaying = NO;
       self.isMuted = NO;
@@ -62,11 +60,6 @@
   
   
   [self _attachVideoView];
-}
-
-- (void)dealloc {
-  AILOG_DEBUG(@"dealloc");
-  dispatch_release(self.videoControllerQueue);
 }
 
 - (void) handleTapFrom: (UITapGestureRecognizer *)recognizer
@@ -193,12 +186,10 @@
   [self _createVideoPlayer];
   [self _attachVideoPlayer];
   [self.videoPlayer preparePlayer];
-  
-  dispatch_async(self.videoControllerQueue, ^{
+
+  dispatch_async(dispatch_get_main_queue(), ^{
     [self.videoPlayer replaceCurrentItemWithPlayerItem:item];
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [self.videoPlayer playSelectedVideo];
-    });
+    [self.videoPlayer playSelectedVideo];
   });
 }
 
