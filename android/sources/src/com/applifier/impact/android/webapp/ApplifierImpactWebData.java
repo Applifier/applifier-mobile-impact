@@ -466,6 +466,17 @@ public class ApplifierImpactWebData {
 					ApplifierImpactProperties.ALLOW_VIDEO_SKIP = data.getInt(ApplifierImpactConstants.IMPACT_CAMPAIGN_ALLOWVIDEOSKIP_KEY);
 				}
 				
+				// Refresh campaigns after "n" endscreens
+				if (data.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_REFRESH_VIEWS_KEY)) {
+					ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT = 0;
+					ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_MAX = data.getInt(ApplifierImpactConstants.IMPACT_CAMPAIGN_REFRESH_VIEWS_KEY);
+				}
+				
+				// Refresh campaigns after "n" seconds
+				if (data.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_REFRESH_SECONDS_KEY)) {
+					ApplifierImpactProperties.CAMPAIGN_REFRESH_SECONDS = data.getInt(ApplifierImpactConstants.IMPACT_CAMPAIGN_REFRESH_SECONDS_KEY);
+				}
+				
 				// Parse campaigns
 				if (validData) {
 					JSONArray campaigns = data.getJSONArray(ApplifierImpactConstants.IMPACT_CAMPAIGNS_KEY);
