@@ -61,6 +61,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private boolean _impactReadySent = false;
 	private boolean _webAppLoaded = false;
 	private boolean _openRequestFromDeveloper = false;
+	private boolean _refreshAfterVideoEnd = false;
 	private AlertDialog _alertDialog = null;
 		
 	private TimerTask _pauseScreenTimer = null;
@@ -753,6 +754,12 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	private void refreshCampaigns() {
+		if(_refreshAfterVideoEnd) {
+			_refreshAfterVideoEnd = false;
+			webdata.initCampaigns();
+			return;
+		}
+
 		if (ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_MAX > 0) {
 			ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT++;
 
@@ -783,8 +790,13 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			_campaignRefreshTimerTask = new TimerTask() {
 				@Override
 				public void run() {
-					ApplifierImpactUtils.Log("Refreshing ad plan to get new data", this);
-					webdata.initCampaigns();
+					if(!_showingImpact) {
+						ApplifierImpactUtils.Log("Refreshing ad plan to get new data", this);
+						webdata.initCampaigns();
+					} else {
+						ApplifierImpactUtils.Log("Refreshing ad plan after current ad", this);
+						_refreshAfterVideoEnd = true;
+					}
 				}
 			};
 
