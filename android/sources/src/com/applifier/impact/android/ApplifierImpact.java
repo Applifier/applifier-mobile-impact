@@ -61,7 +61,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private boolean _impactReadySent = false;
 	private boolean _webAppLoaded = false;
 	private boolean _openRequestFromDeveloper = false;
-	private boolean _refreshAfterVideoEnd = false;
+	private boolean _refreshAfterShowImpact = false;
 	private AlertDialog _alertDialog = null;
 		
 	private TimerTask _pauseScreenTimer = null;
@@ -313,8 +313,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public void onMainViewAction (ApplifierImpactMainViewAction action) {
 		switch (action) {
 			case BackButtonPressed:
-				if (_showingImpact)
+				if (_showingImpact) {
 					close();
+					checkRefreshAfterShowImpact();
+				}
 				break;
 			case VideoStart:
 				if (_impactListener != null)
@@ -754,9 +756,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	private void refreshCampaigns() {
-		if(_refreshAfterVideoEnd) {
-			_refreshAfterVideoEnd = false;
-			webdata.initCampaigns();
+		if (checkRefreshAfterShowImpact()) {
 			return;
 		}
 
@@ -781,6 +781,17 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		}
 	}
 
+	private boolean checkRefreshAfterShowImpact() {
+		if(_refreshAfterShowImpact) {
+			_refreshAfterShowImpact = false;
+			ApplifierImpactUtils.Log("Starting delayed ad plan refresh", this);
+			webdata.initCampaigns();
+			return true;
+		}
+
+		return false;
+	}
+
 	private void setupCampaignRefreshTimer() {
 		if(ApplifierImpactProperties.CAMPAIGN_REFRESH_SECONDS > 0) {
 			if(_campaignRefreshTimer != null) {
@@ -795,7 +806,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 						webdata.initCampaigns();
 					} else {
 						ApplifierImpactUtils.Log("Refreshing ad plan after current ad", this);
-						_refreshAfterVideoEnd = true;
+						_refreshAfterShowImpact = true;
 					}
 				}
 			};
