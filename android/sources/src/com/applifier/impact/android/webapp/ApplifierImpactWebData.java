@@ -41,6 +41,7 @@ public class ApplifierImpactWebData {
 	private int _totalLoadersHaveRun = 0;
 	
 	private boolean _isLoading = false;
+	private boolean _initInProgress = false;
 	
 	public static enum ApplifierVideoPosition { Start, FirstQuartile, MidPoint, ThirdQuartile, End;
 		@SuppressLint("DefaultLocale")
@@ -131,11 +132,17 @@ public class ApplifierImpactWebData {
 	}
 
 	public boolean initCampaigns () {
+		if(_initInProgress) {
+			return true;
+		}
+
 		if (ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.BASE_ACTIVITY) && ApplifierImpactProperties.TEST_DATA != null) {
 			campaignDataReceived(ApplifierImpactProperties.TEST_DATA);
 			return true;
 		}
-		
+
+		_initInProgress = true;
+
 		String url = ApplifierImpactProperties.getCampaignQueryUrl();
 		String[] parts = url.split("\\?");
 		
@@ -435,7 +442,9 @@ public class ApplifierImpactWebData {
 	
 	private void campaignDataReceived (String json) {
 		Boolean validData = true;
-		
+
+		_initInProgress = false;
+
 		try {
 			_campaignJson = new JSONObject(json);
 			JSONObject data = null;
