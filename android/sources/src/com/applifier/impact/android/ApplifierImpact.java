@@ -317,7 +317,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			case BackButtonPressed:
 				if (_showingImpact) {
 					close();
-					checkRefreshAfterShowImpact();
 				}
 				break;
 			case VideoStart:
@@ -326,17 +325,17 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				cancelPauseScreenTimer();
 				break;
 			case VideoEnd:
+				ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT++;
 				if (_impactListener != null && ApplifierImpactProperties.SELECTED_CAMPAIGN != null && !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed()) {
 					ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 					_impactListener.onVideoCompleted(getCurrentRewardItemKey(), false);
-					refreshCampaigns();
 				}
 				break;
 			case VideoSkipped:
+				ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT++;
 				if (_impactListener != null && ApplifierImpactProperties.SELECTED_CAMPAIGN != null && !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed()) {
 					ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 					_impactListener.onVideoCompleted(getCurrentRewardItemKey(), true);
-					refreshCampaigns();
 				}
 				break;
 			case RequestRetryVideoPlay:
@@ -758,19 +757,21 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	private void refreshCampaigns() {
-		if (checkRefreshAfterShowImpact()) {
+		if(_refreshAfterShowImpact) {
+			_refreshAfterShowImpact = false;
+			ApplifierImpactUtils.Log("Starting delayed ad plan refresh", this);
+			webdata.initCampaigns();
 			return;
 		}
 
 		if(_campaignRefreshTimerDeadline > 0 && SystemClock.elapsedRealtime() > _campaignRefreshTimerDeadline) {
 			removeCampaignRefreshTimer();
+			ApplifierImpactUtils.Log("Refreshing ad plan from server due to timer deadline", this);
 			webdata.initCampaigns();
 			return;
 		}
 
 		if (ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_MAX > 0) {
-			ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT++;
-
 			if(ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT >= ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_MAX) {
 				ApplifierImpactUtils.Log("Refreshing ad plan from server due to endscreen limit", this);
 				webdata.initCampaigns();
@@ -787,17 +788,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		} else {
 			ApplifierImpactUtils.Log("Unable to read video data to determine if ad plans should be refreshed", this);
 		}
-	}
-
-	private boolean checkRefreshAfterShowImpact() {
-		if(_refreshAfterShowImpact) {
-			_refreshAfterShowImpact = false;
-			ApplifierImpactUtils.Log("Starting delayed ad plan refresh", this);
-			webdata.initCampaigns();
-			return true;
-		}
-
-		return false;
 	}
 
 	private void setupCampaignRefreshTimer() {
@@ -884,9 +874,11 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 										
 										ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS = null;
 										_showingImpact = false;
-										
+
 										if (_impactListener != null)
 											_impactListener.onImpactClose();
+
+										refreshCampaigns();
 									}
 								});
 							}
