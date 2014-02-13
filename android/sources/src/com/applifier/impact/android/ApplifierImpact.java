@@ -31,6 +31,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
+import android.os.SystemClock;
 
 
 public class ApplifierImpact implements IApplifierImpactCacheListener, 
@@ -68,6 +69,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private Timer _pauseTimer = null;
 	private TimerTask _campaignRefreshTimerTask = null;
 	private Timer _campaignRefreshTimer = null;
+	private long _campaignRefreshTimerDeadline = 0;
 	
 	// Listeners
 	private IApplifierImpactListener _impactListener = null;
@@ -760,6 +762,12 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			return;
 		}
 
+		if(_campaignRefreshTimerDeadline > 0 && SystemClock.elapsedRealtime() > _campaignRefreshTimerDeadline) {
+			removeCampaignRefreshTimer();
+			webdata.initCampaigns();
+			return;
+		}
+
 		if (ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_MAX > 0) {
 			ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT++;
 
@@ -793,11 +801,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 
 	private void setupCampaignRefreshTimer() {
-		if(ApplifierImpactProperties.CAMPAIGN_REFRESH_SECONDS > 0) {
-			if(_campaignRefreshTimer != null) {
-				_campaignRefreshTimer.cancel();
-			}
+		removeCampaignRefreshTimer();
 
+		if(ApplifierImpactProperties.CAMPAIGN_REFRESH_SECONDS > 0) {
 			_campaignRefreshTimerTask = new TimerTask() {
 				@Override
 				public void run() {
@@ -811,11 +817,21 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				}
 			};
 
+			_campaignRefreshTimerDeadline = SystemClock.elapsedRealtime() + ApplifierImpactProperties.CAMPAIGN_REFRESH_SECONDS * 1000;
+
 			_campaignRefreshTimer = new Timer();
 			_campaignRefreshTimer.schedule(_campaignRefreshTimerTask, ApplifierImpactProperties.CAMPAIGN_REFRESH_SECONDS * 1000);
 		}
 	}
-	
+
+	private void removeCampaignRefreshTimer() {
+		_campaignRefreshTimerDeadline = 0;
+
+		if(_campaignRefreshTimer != null) {
+			_campaignRefreshTimer.cancel();
+		}
+	}
+
 	/* INTERNAL CLASSES */
 
 	// FIX: Could these 2 classes be moved to MainView
