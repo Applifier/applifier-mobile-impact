@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="lib" path="/Users/rikshot/Downloads/Burstly_SKYROCKET_FULL_1.36.0.51047_20140131154251/libs/android-support-v4.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/rikshot/Downloads/Burstly_SKYROCKET_FULL_1.36.0.51047_20140131154251/libs/BurstlySDK.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/rikshot/Downloads/Burstly_SKYROCKET_FULL_1.36.0.51047_20140131154251/libs/mm_speech_lib.zip"/>
+	<classpathentry exported="true" kind="lib" path="/Users/rikshot/applifier-mobile-impact/android/sources/jar/applifier-impact-android.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
