@@ -81,6 +81,8 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_CAMPAIGN_BYPASSAPPSHEET_KEY = "bypassAppSheet";
 	public static final String IMPACT_CAMPAIGN_ALLOWVIDEOSKIP_KEY = "allowSkipVideoInSeconds";
 	public static final String IMPACT_CAMPAIGN_DISABLEBACKBUTTON_KEY = "disableBackButtonForSeconds";
+	public static final String IMPACT_CAMPAIGN_REFRESH_VIEWS_KEY = "refreshCampaignsAfterViewed";
+	public static final String IMPACT_CAMPAIGN_REFRESH_SECONDS_KEY = "refreshCampaignsAfterSeconds";
 	
 	/* Zone JSON Properties */
 	public static final String IMPACT_ZONES_KEY = "zones";
@@ -97,7 +99,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_ZONE_ALLOW_VIDEO_SKIP_IN_SECONDS_KEY = "allowVideoSkipInSeconds";
 	public static final String IMPACT_ZONE_DISABLE_BACK_BUTTON_FOR_SECONDS = "disableBackButtonForSeconds";
 	public static final String IMPACT_ZONE_ALLOW_CLIENT_OVERRIDES_KEY = "allowClientOverrides";
-	
+
 	/* Reward Item JSON Properties */
 	public static final String IMPACT_REWARD_ITEMKEY_KEY = "key";
 	public static final String IMPACT_REWARD_NAME_KEY = "name";

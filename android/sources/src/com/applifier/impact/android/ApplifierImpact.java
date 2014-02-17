@@ -38,6 +38,18 @@ import com.applifier.impact.android.webapp.IApplifierImpactWebBridgeListener;
 import com.applifier.impact.android.webapp.IApplifierImpactWebDataListener;
 import com.applifier.impact.android.zone.ApplifierImpactIncentivizedZone;
 import com.applifier.impact.android.zone.ApplifierImpactZone;
+import com.applifier.impact.android.webapp.*;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.os.PowerManager;
+import android.os.SystemClock;
 
 
 public class ApplifierImpact implements IApplifierImpactCacheListener, 
@@ -68,10 +80,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private boolean _impactReadySent = false;
 	private boolean _webAppLoaded = false;
 	private boolean _openRequestFromDeveloper = false;
+	private boolean _refreshAfterShowImpact = false;
 	private AlertDialog _alertDialog = null;
 		
 	private TimerTask _pauseScreenTimer = null;
 	private Timer _pauseTimer = null;
+	private TimerTask _campaignRefreshTimerTask = null;
+	private Timer _campaignRefreshTimer = null;
+	private long _campaignRefreshTimerDeadline = 0;
 	
 	// Listeners
 	private IApplifierImpactListener _impactListener = null;
@@ -341,8 +357,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public void onMainViewAction (ApplifierImpactMainViewAction action) {
 		switch (action) {
 			case BackButtonPressed:
-				if (_showingImpact)
+				if (_showingImpact) {
 					close();
+				}
 				break;
 			case VideoStart:
 				if (_impactListener != null)
@@ -350,12 +367,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				cancelPauseScreenTimer();
 				break;
 			case VideoEnd:
+				ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT++;
 				if (_impactListener != null && ApplifierImpactProperties.SELECTED_CAMPAIGN != null && !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed()) {
 					ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 					_impactListener.onVideoCompleted(getCurrentRewardItemKey(), false);
 				}
 				break;
 			case VideoSkipped:
+				ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT++;
 				if (_impactListener != null && ApplifierImpactProperties.SELECTED_CAMPAIGN != null && !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed()) {
 					ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 					_impactListener.onVideoCompleted(getCurrentRewardItemKey(), true);
@@ -367,8 +386,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				break;
 		}
 	}
-	
-	
+
 	// IApplifierImpactCacheListener
 	@Override
 	public void onCampaignUpdateStarted () {	
@@ -407,6 +425,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			}
 			
 			if (!dataFetchFailed) {
+				setupCampaignRefreshTimer();
+				
 				if (jsonData.has(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDK_IS_CURRENT_KEY)) {
 					try {
 						sdkIsCurrent = jsonData.getBoolean(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDK_IS_CURRENT_KEY);
@@ -437,7 +457,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	@Override
 	public void onWebDataFailed () {
-		if (_impactListener != null)
+		if (_impactListener != null && !_impactReadySent)
 			_impactListener.onCampaignsFetchFailed();
 	}
 	
@@ -788,7 +808,72 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		_pauseTimer.scheduleAtFixedRate(_pauseScreenTimer, 0, 50);
 	}
 	
-	
+	private void refreshCampaigns() {
+		if(_refreshAfterShowImpact) {
+			_refreshAfterShowImpact = false;
+			ApplifierImpactUtils.Log("Starting delayed ad plan refresh", this);
+			webdata.initCampaigns();
+			return;
+		}
+
+		if(_campaignRefreshTimerDeadline > 0 && SystemClock.elapsedRealtime() > _campaignRefreshTimerDeadline) {
+			removeCampaignRefreshTimer();
+			ApplifierImpactUtils.Log("Refreshing ad plan from server due to timer deadline", this);
+			webdata.initCampaigns();
+			return;
+		}
+
+		if (ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_MAX > 0) {
+			if(ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT >= ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_MAX) {
+				ApplifierImpactUtils.Log("Refreshing ad plan from server due to endscreen limit", this);
+				webdata.initCampaigns();
+				return;
+			}
+		}
+
+		if (webdata != null && webdata.getVideoPlanCampaigns() != null) {
+			if(webdata.getViewableVideoPlanCampaigns().size() == 0) {
+				ApplifierImpactUtils.Log("All available videos watched, refreshing ad plan from server", this);
+				webdata.initCampaigns();
+				return;
+			}
+		} else {
+			ApplifierImpactUtils.Log("Unable to read video data to determine if ad plans should be refreshed", this);
+		}
+	}
+
+	private void setupCampaignRefreshTimer() {
+		removeCampaignRefreshTimer();
+
+		if(ApplifierImpactProperties.CAMPAIGN_REFRESH_SECONDS > 0) {
+			_campaignRefreshTimerTask = new TimerTask() {
+				@Override
+				public void run() {
+					if(!_showingImpact) {
+						ApplifierImpactUtils.Log("Refreshing ad plan to get new data", this);
+						webdata.initCampaigns();
+					} else {
+						ApplifierImpactUtils.Log("Refreshing ad plan after current ad", this);
+						_refreshAfterShowImpact = true;
+					}
+				}
+			};
+
+			_campaignRefreshTimerDeadline = SystemClock.elapsedRealtime() + ApplifierImpactProperties.CAMPAIGN_REFRESH_SECONDS * 1000;
+
+			_campaignRefreshTimer = new Timer();
+			_campaignRefreshTimer.schedule(_campaignRefreshTimerTask, ApplifierImpactProperties.CAMPAIGN_REFRESH_SECONDS * 1000);
+		}
+	}
+
+	private void removeCampaignRefreshTimer() {
+		_campaignRefreshTimerDeadline = 0;
+
+		if(_campaignRefreshTimer != null) {
+			_campaignRefreshTimer.cancel();
+		}
+	}
+
 	/* INTERNAL CLASSES */
 
 	// FIX: Could these 2 classes be moved to MainView
@@ -836,9 +921,11 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 										}	
 										
 										_showingImpact = false;
-										
+
 										if (_impactListener != null)
 											_impactListener.onImpactClose();
+
+										refreshCampaigns();
 									}
 								});
 							}

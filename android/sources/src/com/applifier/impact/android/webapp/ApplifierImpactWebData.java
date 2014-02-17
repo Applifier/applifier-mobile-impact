@@ -44,6 +44,7 @@ public class ApplifierImpactWebData {
 	private int _totalLoadersHaveRun = 0;
 	
 	private boolean _isLoading = false;
+	private boolean _initInProgress = false;
 	
 	public static enum ApplifierVideoPosition { Start, FirstQuartile, MidPoint, ThirdQuartile, End;
 		@SuppressLint("DefaultLocale")
@@ -135,11 +136,17 @@ public class ApplifierImpactWebData {
 	}
 
 	public boolean initCampaigns () {
+		if(_initInProgress) {
+			return true;
+		}
+
 		if (ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.getBaseActivity()) && ApplifierImpactProperties.TEST_DATA != null) {
 			campaignDataReceived(ApplifierImpactProperties.TEST_DATA);
 			return true;
 		}
-		
+
+		_initInProgress = true;
+
 		String url = ApplifierImpactProperties.getCampaignQueryUrl();
 		String[] parts = url.split("\\?");
 		
@@ -431,7 +438,9 @@ public class ApplifierImpactWebData {
 	
 	private void campaignDataReceived (String json) {
 		Boolean validData = true;
-		
+
+		_initInProgress = false;
+
 		try {
 			_campaignJson = new JSONObject(json);
 			JSONObject data = null;
@@ -456,6 +465,22 @@ public class ApplifierImpactWebData {
 				ApplifierImpactProperties.ANALYTICS_BASE_URL = data.getString(ApplifierImpactConstants.IMPACT_ANALYTICS_URL_KEY);
 				ApplifierImpactProperties.IMPACT_BASE_URL = data.getString(ApplifierImpactConstants.IMPACT_URL_KEY);
 				ApplifierImpactProperties.IMPACT_GAMER_ID = data.getString(ApplifierImpactConstants.IMPACT_GAMER_ID_KEY);
+				
+				// Parse allow video skipping in "n" seconds
+				if (data.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_ALLOWVIDEOSKIP_KEY)) {
+					ApplifierImpactProperties.ALLOW_VIDEO_SKIP = data.getInt(ApplifierImpactConstants.IMPACT_CAMPAIGN_ALLOWVIDEOSKIP_KEY);
+				}
+				
+				// Refresh campaigns after "n" endscreens
+				if (data.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_REFRESH_VIEWS_KEY)) {
+					ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT = 0;
+					ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_MAX = data.getInt(ApplifierImpactConstants.IMPACT_CAMPAIGN_REFRESH_VIEWS_KEY);
+				}
+				
+				// Refresh campaigns after "n" seconds
+				if (data.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_REFRESH_SECONDS_KEY)) {
+					ApplifierImpactProperties.CAMPAIGN_REFRESH_SECONDS = data.getInt(ApplifierImpactConstants.IMPACT_CAMPAIGN_REFRESH_SECONDS_KEY);
+				}
 				
 				// Parse campaigns
 				if (validData) {
