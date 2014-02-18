@@ -466,11 +466,6 @@ public class ApplifierImpactWebData {
 				ApplifierImpactProperties.IMPACT_BASE_URL = data.getString(ApplifierImpactConstants.IMPACT_URL_KEY);
 				ApplifierImpactProperties.IMPACT_GAMER_ID = data.getString(ApplifierImpactConstants.IMPACT_GAMER_ID_KEY);
 				
-				// Parse allow video skipping in "n" seconds
-				if (data.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_ALLOWVIDEOSKIP_KEY)) {
-					ApplifierImpactProperties.ALLOW_VIDEO_SKIP = data.getInt(ApplifierImpactConstants.IMPACT_CAMPAIGN_ALLOWVIDEOSKIP_KEY);
-				}
-				
 				// Refresh campaigns after "n" endscreens
 				if (data.has(ApplifierImpactConstants.IMPACT_CAMPAIGN_REFRESH_VIEWS_KEY)) {
 					ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT = 0;

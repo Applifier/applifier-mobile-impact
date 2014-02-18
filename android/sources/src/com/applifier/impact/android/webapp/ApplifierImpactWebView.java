@@ -86,7 +86,7 @@ public class ApplifierImpactWebView extends WebView {
 			
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_CHANGE_VIEW, view, dataString);
 			_currentWebView = view;
-			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString, this));
 			ApplifierImpactUtils.Log("Send change view to WebApp: " + javascriptString, this);
 			
 			if (data != null) {
@@ -110,7 +110,7 @@ public class ApplifierImpactWebView extends WebView {
 					ApplifierImpactProperties.RUN_WEBVIEW_TESTS &&
 					ApplifierImpactProperties.TEST_JAVASCRIPT != null) {
 					ApplifierImpactUtils.Log("Running test-javascript: " + ApplifierImpactProperties.TEST_JAVASCRIPT , this);
-					ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(ApplifierImpactProperties.TEST_JAVASCRIPT));
+					ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(ApplifierImpactProperties.TEST_JAVASCRIPT, this));
 					ApplifierImpactProperties.RUN_WEBVIEW_TESTS = false;
 				}
 			}
@@ -126,7 +126,7 @@ public class ApplifierImpactWebView extends WebView {
 
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_HANDLE_NATIVE_EVENT, eventType, dataString);
 			ApplifierImpactUtils.Log("Send native event to WebApp: " + javascriptString, this);
-			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString));
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString, this));
 		}
 	}
 	
@@ -164,7 +164,7 @@ public class ApplifierImpactWebView extends WebView {
 			
 			String initString = String.format("%s%s(%s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_INIT, initData.toString());
 			ApplifierImpactUtils.Log("Initializing WebView with JS call: " + initString, this);
-			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(initString));
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(initString, this));
 		}
 	}
 
