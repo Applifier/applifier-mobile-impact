@@ -16,6 +16,24 @@ In any issues, please file in issue with us in this Github repository, or log a 
 Everyplay GameAds SDK Release Notes
 ==================================
 
+v1.1.0 February 20th, 2014
+--------------------------
+
+*iOS & Android*
+
+- Support for multiple ad-placements with different settings for ads (aka. zones)  API
+- various minor fixes on both platforms
+
+*Android*
+
+- Support for Android Advertising ID, requires Google Play Services libraries
+- Better adplan performance on Android (New ads checked more frequently)
+
+*iOS*
+
+- device model detection improvements on iOS
+
+
 v1.0.10 September 25th, 2013
 --------------------------
 *iOS:*
