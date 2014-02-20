@@ -3,6 +3,8 @@ android/sources/bin
 android/example/bin
 android/sources/gen
 android/example/gen
+android/unittests/bin
+android/unittests/gen
 device/
 testvideos/
 protographics/
@@ -39,3 +41,4 @@ air/android/res/drawable-xhdpi/
 =======
 android/example/.settings/
 android/sources/.settings/
+android/unittests/.settings/

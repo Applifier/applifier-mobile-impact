@@ -10,7 +10,9 @@
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
-#import "../ApplifierImpactProperties/ApplifierImpactShowOptionsParser.h"
+
+#import "../ApplifierImpactZone/ApplifierImpactZoneManager.h"
+#import "../ApplifierImpactZone/ApplifierImpactIncentivizedZone.h"
 
 @interface ApplifierImpactAnalyticsUploader () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSMutableArray *uploadQueue;
@@ -117,27 +119,19 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
   dispatch_release(self.analyticsQueue);
 }
 
-
-#pragma mark - Public
-
-- (void)queueUrl:(NSString *)url {
-  if (url != nil) {
-    AIAssert(![NSThread isMainThread]);
-    
-    NSArray *queryStringComponents = [url componentsSeparatedByString:@"?"];
-    NSString *urlPath = [queryStringComponents objectAtIndex:0];
-    NSString *queryString = [queryStringComponents objectAtIndex:1];
-    
-    [self _queueWithURLString:urlPath queryString:queryString httpMethod:@"GET" retries:[NSNumber numberWithInt:0]];
-  }
-}
-
-
 #pragma mark - Click track
 
 - (void)sendOpenAppStoreRequest:(ApplifierImpactCampaign *)campaign {
   if (campaign != nil) {
-    NSString *query = [NSString stringWithFormat:@"%@=%@&%@=%@&%@=%@&%@=%@&%@=%@", kApplifierImpactAnalyticsQueryParamGameIdKey, [[ApplifierImpactProperties sharedInstance] impactGameId], kApplifierImpactAnalyticsQueryParamEventTypeKey, kApplifierImpactAnalyticsEventTypeOpenAppStore, kApplifierImpactAnalyticsQueryParamTrackingIdKey, [[ApplifierImpactProperties sharedInstance] gamerId], kApplifierImpactAnalyticsQueryParamProviderIdKey, campaign.id, kApplifierImpactAnalyticsQueryParamRewardItemKey, [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey]];
+    NSString *query = [NSString stringWithFormat:@"%@=%@&%@=%@&%@=%@&%@=%@", kApplifierImpactAnalyticsQueryParamGameIdKey, [[ApplifierImpactProperties sharedInstance] impactGameId], kApplifierImpactAnalyticsQueryParamEventTypeKey, kApplifierImpactAnalyticsEventTypeOpenAppStore, kApplifierImpactAnalyticsQueryParamTrackingIdKey, [[ApplifierImpactProperties sharedInstance] gamerId], kApplifierImpactAnalyticsQueryParamProviderIdKey, campaign.id];
+    
+    id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+    query = [NSString stringWithFormat:@"%@&%@=%@", query, kApplifierImpactAnalyticsQueryParamZoneIdKey, [currentZone getZoneId]];
+    
+    if([currentZone isIncentivized]) {
+      id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
+      query = [NSString stringWithFormat:@"%@&%@=%@", query, kApplifierImpactAnalyticsQueryParamRewardItemKey, [itemManager getCurrentItem].key];
+    }
     
     [self performSelector:@selector(sendAnalyticsRequestWithQueryString:) onThread:self.backgroundThread withObject:query waitUntilDone:NO];
   }
@@ -168,10 +162,36 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
 			positionString = kApplifierImpactAnalyticsEventTypeVideoEnd;
 
     if (positionString != nil) {
-      NSString *trackingQuery = [NSString stringWithFormat:@"%@/video/%@/%@/%@?%@=%@", [[ApplifierImpactProperties sharedInstance] gamerId], positionString, campaignId, [[ApplifierImpactProperties sharedInstance] impactGameId], kApplifierImpactAnalyticsQueryParamRewardItemKey, [[ApplifierImpactCampaignManager sharedInstance] currentRewardItemKey]];
+      NSString *trackingQuery = [NSString stringWithFormat:@"%@/video/%@/%@/%@", [[ApplifierImpactProperties sharedInstance] gamerId], positionString, campaignId, [[ApplifierImpactProperties sharedInstance] impactGameId]];
 
-      if ([[ApplifierImpactShowOptionsParser sharedInstance] gamerSID] != nil) {
-        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [[ApplifierImpactShowOptionsParser sharedInstance] gamerSID]];
+      id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
+      trackingQuery = [NSString stringWithFormat:@"%@?%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamZoneIdKey, [currentZone getZoneId]];
+      
+      if ([ApplifierImpactDevice getIOSMajorVersion] < 7) {
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactInitQueryParamMacAddressKey, [ApplifierImpactDevice md5MACAddressString]];
+      }
+      
+      id advertisingIdentifierString = [ApplifierImpactDevice advertisingIdentifier];
+      id md5AdvertisingIdentifierString = [ApplifierImpactDevice md5AdvertisingIdentifierString];
+      
+      // Add advertisingTrackingId info if identifier is available
+      if (advertisingIdentifierString != nil) {
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactInitQueryParamRawAdvertisingTrackingIdKey, advertisingIdentifierString];
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactInitQueryParamAdvertisingTrackingIdKey, md5AdvertisingIdentifierString];
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%i", trackingQuery, kApplifierImpactInitQueryParamTrackingEnabledKey, [ApplifierImpactDevice canUseTracking]];
+      }
+      
+      trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactInitQueryParamSoftwareVersionKey, [ApplifierImpactDevice softwareVersion]];
+      trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactInitQueryParamDeviceTypeKey, [ApplifierImpactDevice analyticsMachineName]];
+      trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactInitQueryParamConnectionTypeKey, [ApplifierImpactDevice currentConnectionType]];
+      
+      if([currentZone isIncentivized]) {
+        id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamRewardItemKey, [itemManager getCurrentItem].key];
+      }
+      
+      if ([currentZone getGamerSid] != nil) {
+        trackingQuery = [NSString stringWithFormat:@"%@&%@=%@", trackingQuery, kApplifierImpactAnalyticsQueryParamGamerSIDKey, [currentZone getGamerSid]];
       }
       
       if (!viewed) {
@@ -185,12 +205,11 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
   AILOG_DEBUG(@"");
   NSArray *queryStringComponents = [queryString componentsSeparatedByString:@"?"];
   NSString *trackingPath = [queryStringComponents objectAtIndex:0];
-  queryString = [queryStringComponents objectAtIndex:1];
-  
-	if (queryString == nil || [queryString length] == 0) {
-		AILOG_DEBUG(@"Invalid input.");
-		return;
-	}
+  if([queryStringComponents count] > 1) {
+    queryString = [queryStringComponents objectAtIndex:1];
+  } else {
+    queryString = nil;
+  }
   
   AILOG_DEBUG(@"Tracking report: %@%@%@ : %@", [[ApplifierImpactProperties sharedInstance] impactBaseUrl], kApplifierImpactAnalyticsTrackingPath, trackingPath, queryString);
   

@@ -12,8 +12,9 @@
 #import <ApplifierImpact/ApplifierImpact.h>
 
 @interface ImpactInterstitial : NSObject <BurstlyAdInterstitialProtocol, ApplifierImpactDelegate> {
-    id<BurstlyAdInterstitialDelegate> _delegate;
-    NSMutableDictionary *_params;
+  id<BurstlyAdInterstitialDelegate> _delegate;
+  NSString * _zoneId;
+  NSMutableDictionary *_params;
 }
 
 - (id)initWithParams:(NSDictionary *)params;

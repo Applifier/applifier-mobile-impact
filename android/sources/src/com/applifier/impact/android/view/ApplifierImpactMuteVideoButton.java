@@ -1,8 +1,5 @@
 package com.applifier.impact.android.view;
 
-import com.applifier.impact.android.data.ApplifierImpactDevice;
-import com.applifier.impact.android.data.ApplifierImpactGraphicsBundle;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
@@ -10,6 +7,9 @@ import android.util.DisplayMetrics;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import com.applifier.impact.android.data.ApplifierImpactDevice;
+import com.applifier.impact.android.data.ApplifierImpactGraphicsBundle;
 
 public class ApplifierImpactMuteVideoButton extends ImageButton {
 

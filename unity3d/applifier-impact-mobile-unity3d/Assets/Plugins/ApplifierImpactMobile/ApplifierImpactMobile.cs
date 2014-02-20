@@ -7,10 +7,6 @@ public class ApplifierImpactMobile : MonoBehaviour {
 	public string gameId = "";
 	public bool debugModeEnabled = false;
 	public bool testModeEnabled = false;
-	public bool openAnimated = false;
-	public bool noOfferscreen = false;
-	public bool videoUsesDeviceOrientation = false;
-	public bool muteVideoSounds = false;
 	public bool useNativeUiWhenPossible = false;
 	
 	private static ApplifierImpactMobile sharedInstance;
@@ -18,7 +14,6 @@ public class ApplifierImpactMobile : MonoBehaviour {
 	private static bool _impactOpen = false;
 	private static float _savedTimeScale = 1f;
 	private static float _savedAudioVolume = 1f;
-	private static string _gamerSID = "";
 	
 	private static string _rewardItemNameKey = "";
 	private static string _rewardItemPictureKey = "";
@@ -115,10 +110,6 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		return false;
 	}
 	
-	public static void setGamerSID (string sid) {
-		_gamerSID = sid;
-	}
-	
 	public static void stopAll () {
 		ApplifierImpactMobileExternal.stopAll();
 	}
@@ -208,27 +199,20 @@ public class ApplifierImpactMobile : MonoBehaviour {
 		return retDict;
 	}
 	
-	public static bool showImpact () {
-		if (!_impactOpen && _campaignsAvailable) {
-			ApplifierImpactMobile instance = SharedInstance;
-			
-			if(instance) {
-				bool animated = false;
-				bool noOfferscreen = false;
-				bool videoUsesDeviceOrientation = false;
-				bool muteVideoSounds = false;
-				string gamerSID = _gamerSID;
+	public static bool showImpact (string zoneId) {
+		return showImpact (zoneId, "", null);	
+	}
+	
+	public static bool showImpact (string zoneId, string rewardItemKey) {
+		return showImpact (zoneId, rewardItemKey, null);	
+	}
+	
+	public static bool showImpact (string zoneId, string rewardItemKey, Dictionary<string, string> options) {
+		if (!_impactOpen && _campaignsAvailable) {			
+			if(SharedInstance) {							
+				string optionsString = parseOptionsDictionary(options);
 				
-				if (instance != null) {
-					animated = instance.openAnimated;
-					noOfferscreen = instance.noOfferscreen;
-					videoUsesDeviceOrientation = instance.videoUsesDeviceOrientation;
-					muteVideoSounds = instance.muteVideoSounds;
-					
-					ApplifierImpactMobileExternal.Log("UnityAndroid: " + muteVideoSounds + ", " + videoUsesDeviceOrientation);
-				}
-				
-				if (ApplifierImpactMobileExternal.showImpact(animated, noOfferscreen, gamerSID, muteVideoSounds, videoUsesDeviceOrientation)) {				
+				if (ApplifierImpactMobileExternal.showImpact(zoneId, rewardItemKey, optionsString)) {				
 					if (_impactOpenDelegate != null)
 						_impactOpenDelegate();
 					
@@ -238,6 +222,8 @@ public class ApplifierImpactMobile : MonoBehaviour {
 					AudioListener.pause = true;
 					AudioListener.volume = 0;
 					Time.timeScale = 0;
+					
+					return true;
 				}
 			}
 		}
@@ -259,6 +245,34 @@ public class ApplifierImpactMobile : MonoBehaviour {
 			_rewardItemNameKey = splittedKeyData.ToArray().GetValue(0).ToString();
 			_rewardItemPictureKey = splittedKeyData.ToArray().GetValue(1).ToString();
 		}
+	}
+	
+	private static string parseOptionsDictionary(Dictionary<string, string> options) {
+		string optionsString = "";
+		if(options != null) {
+			bool added = false;
+			if(options.ContainsKey("noOfferScreen")) {
+				optionsString += (added ? "," : "") + "noOfferScreen:" + options["noOfferScreen"];
+				added = true;
+			}
+			if(options.ContainsKey("openAnimated")) {
+				optionsString += (added ? "," : "") + "openAnimated:" + options["openAnimated"];
+				added = true;
+			}
+			if(options.ContainsKey("sid")) {
+				optionsString += (added ? "," : "") + "sid:" + options["sid"];
+				added = true;
+			}
+			if(options.ContainsKey("muteVideoSounds")) {
+				optionsString += (added ? "," : "") + "muteVideoSounds:" + options["muteVideoSounds"];
+				added = true;
+			}
+			if(options.ContainsKey("useDeviceOrientationForVideo")) {
+				optionsString += (added ? "," : "") + "useDeviceOrientationForVideo:" + options["useDeviceOrientationForVideo"];
+				added = true;
+			}
+		}
+		return optionsString;
 	}
 
 	/* Events */

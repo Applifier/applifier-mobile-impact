@@ -56,6 +56,8 @@ extern NSString * const kApplifierImpactWebViewDataParamMacAddressKey;
 extern NSString * const kApplifierImpactWebViewDataParamSdkVersionKey;
 extern NSString * const kApplifierImpactWebViewDataParamSdkIsCurrentKey;
 extern NSString * const kApplifierImpactWebViewDataParamIosVersionKey;
+extern NSString * const kApplifierImpactWebViewDataParamZoneKey;
+extern NSString * const kApplifierImpactWebViewDataParamZonesKey;
 
 extern NSString * const kApplifierImpactWebViewEventDataCampaignIdKey;
 extern NSString * const kApplifierImpactWebViewEventDataRewatchKey;
@@ -150,6 +152,7 @@ extern NSString * const kApplifierImpactInitQueryParamOdin1IdKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamEventTypeKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamTrackingIdKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamProviderIdKey;
+extern NSString * const kApplifierImpactAnalyticsQueryParamZoneIdKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamRewardItemKey;
 extern NSString * const kApplifierImpactAnalyticsQueryParamGamerSIDKey;
 
@@ -167,24 +170,10 @@ extern NSString * const kApplifierImpactTrackingEventTypeVideoEnd;
 /* Devicetypes */
 
 extern NSString * const kApplifierImpactDeviceIphone;
-extern NSString * const kApplifierImpactDeviceIphone3g;
-extern NSString * const kApplifierImpactDeviceIphone3gs;
-extern NSString * const kApplifierImpactDeviceIphone4;
-extern NSString * const kApplifierImpactDeviceIphone4s;
-extern NSString * const kApplifierImpactDeviceIphone5;
 extern NSString * const kApplifierImpactDeviceIpod;
-extern NSString * const kApplifierImpactDeviceIpodTouch1gen;
-extern NSString * const kApplifierImpactDeviceIpodTouch2gen;
-extern NSString * const kApplifierImpactDeviceIpodTouch3gen;
-extern NSString * const kApplifierImpactDeviceIpodTouch4gen;
-extern NSString * const kApplifierImpactDeviceIpodTouch5gen;
 extern NSString * const kApplifierImpactDeviceIpad;
-extern NSString * const kApplifierImpactDeviceIpad1;
-extern NSString * const kApplifierImpactDeviceIpad2;
-extern NSString * const kApplifierImpactDeviceIpad3;
 extern NSString * const kApplifierImpactDeviceIosUnknown;
 extern NSString * const kApplifierImpactDeviceSimulator;
-
 
 /* Init Query Params */
 
@@ -228,6 +217,22 @@ extern NSString * const kApplifierImpactGoogleAnalyticsEventBufferingDurationKey
 extern NSString * const kApplifierImpactGoogleAnalyticsEventCachingDurationKey;
 extern NSString * const kApplifierImpactGoogleAnalyticsEventValueKey;
 extern NSString * const kApplifierImpactGoogleAnalyticsEventTypeKey;
+
+/* Zones */
+
+extern NSString * const kApplifierImpactZonesRootKey;
+extern NSString * const kApplifierImpactZoneIdKey;
+extern NSString * const kApplifierImpactZoneNameKey;
+extern NSString * const kApplifierImpactZoneDefaultKey;
+extern NSString * const kApplifierImpactZoneIsIncentivizedKey;
+extern NSString * const kApplifierImpactZoneRewardItemsKey;
+extern NSString * const kApplifierImpactZoneDefaultRewardItemKey;
+extern NSString * const kApplifierImpactZoneAllowOverrides;
+extern NSString * const kApplifierImpactZoneNoOfferScreenKey;
+extern NSString * const kApplifierImpactZoneOpenAnimatedKey;
+extern NSString * const kApplifierImpactZoneMuteVideoSoundsKey;
+extern NSString * const kApplifierImpactZoneUseDeviceOrientationForVideoKey;
+extern NSString * const kApplifierImpactZoneAllowVideoSkipInSecondsKey;
 
 @interface ApplifierImpactConstants : NSObject
 

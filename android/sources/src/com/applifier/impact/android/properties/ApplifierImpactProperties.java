@@ -1,16 +1,15 @@
 package com.applifier.impact.android.properties;
 
+import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.util.Map;
 
-import org.json.JSONObject;
+import android.app.Activity;
 
-import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
-
-import android.app.Activity;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient.Info;
 
 public class ApplifierImpactProperties {
 	//public static String CAMPAIGN_DATA_URL = "http://192.168.1.246:3500/mobile/campaigns";
@@ -22,15 +21,15 @@ public class ApplifierImpactProperties {
 	public static String CAMPAIGN_QUERY_STRING = null;
 	public static String IMPACT_GAME_ID = null;
 	public static String IMPACT_GAMER_ID = null;
-	public static String GAMER_SID = null;
 	public static Boolean TESTMODE_ENABLED = false;
-	public static Activity BASE_ACTIVITY = null;
-	public static Activity CURRENT_ACTIVITY = null;
+	public static WeakReference<Activity> BASE_ACTIVITY = null;
+	public static WeakReference<Activity> CURRENT_ACTIVITY = null;
 	public static ApplifierImpactCampaign SELECTED_CAMPAIGN = null;
 	public static Boolean IMPACT_DEBUG_MODE = false;
-	public static Map<String, Object> IMPACT_DEVELOPER_OPTIONS = null;
-	public static int ALLOW_VIDEO_SKIP = 0;
-	public static int ALLOW_BACK_BUTTON_SKIP = 0;
+	public static Info ADVERTISING_TRACKING_INFO = null;
+	public static int CAMPAIGN_REFRESH_VIEWS_COUNT = 0;
+	public static int CAMPAIGN_REFRESH_VIEWS_MAX = 0;
+	public static int CAMPAIGN_REFRESH_SECONDS = 0;
 	
 	public static String TEST_DATA = null;
 	public static String TEST_URL = null;
@@ -57,21 +56,15 @@ public class ApplifierImpactProperties {
 			
 			if (!ApplifierImpactDevice.getAndroidId().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
 				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ANDROIDID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidId(), "UTF-8"));
-			
-			if (!ApplifierImpactDevice.getTelephonyId().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
-				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_TELEPHONYID_KEY, URLEncoder.encode(ApplifierImpactDevice.getTelephonyId(), "UTF-8"));
-			
-			if (!ApplifierImpactDevice.getAndroidSerial().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
-				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_SERIALID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidSerial(), "UTF-8"));
 
-			if (!ApplifierImpactDevice.getOpenUdid().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
-				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_OPENUDID_KEY, URLEncoder.encode(ApplifierImpactDevice.getOpenUdid(), "UTF-8"));
-			
 			if (!ApplifierImpactDevice.getMacAddress().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
 				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_MACADDRESS_KEY, URLEncoder.encode(ApplifierImpactDevice.getMacAddress(), "UTF-8"));
-
-			if (!ApplifierImpactDevice.getOdin1Id().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
-				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ODIN1ID_KEY, URLEncoder.encode(ApplifierImpactDevice.getOdin1Id(), "UTF-8"));
+			
+			if(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO != null) {
+				queryString = String.format("%s&%s=%d", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_TRACKINGENABLED_KEY, ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.isLimitAdTrackingEnabled() ? 0 : 1);
+				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ADVERTISINGTRACKINGID_KEY, URLEncoder.encode(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.getId(), "UTF-8"));
+				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_RAWADVERTISINGTRACKINGID_KEY, URLEncoder.encode(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.getId(), "UTF-8"));
+			}
 			
 			queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_PLATFORM_KEY, "android");
 			queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_GAMEID_KEY, URLEncoder.encode(ApplifierImpactProperties.IMPACT_GAME_ID, "UTF-8"));
@@ -99,66 +92,36 @@ public class ApplifierImpactProperties {
 			}
 		}
 		else {
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
-				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ENCRYPTED_KEY, ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.CURRENT_ACTIVITY) ? "false" : "true");
+			if (ApplifierImpactProperties.getCurrentActivity() != null) {
+				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ENCRYPTED_KEY, ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.getCurrentActivity()) ? "false" : "true");
 			}
 		}
-		
+				
 		_campaignQueryString = queryString;
-	}
-	
-	public static JSONObject getDeveloperOptionsAsJson () {
-		if (IMPACT_DEVELOPER_OPTIONS != null) {
-			JSONObject options = new JSONObject();
-			
-			boolean noOfferscreen = false;
-			boolean openAnimated = false;
-			boolean muteVideoSounds = false;
-			boolean videoUsesDeviceOrientation = false;
-			
-			try {
-				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY))
-					noOfferscreen = (Boolean)IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY);
-				
-				options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, noOfferscreen);
-				
-				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY))
-					openAnimated = (Boolean)IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY);
-				
-				options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, openAnimated);
-				
-				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS))
-					muteVideoSounds = (Boolean)IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS);
-				
-				options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, muteVideoSounds);
-				
-				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY))
-					options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY));
-				
-				if (IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION))
-					videoUsesDeviceOrientation = (Boolean)IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION);
-				
-				options.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION, videoUsesDeviceOrientation);
-
-			}
-			catch (Exception e) {
-				ApplifierImpactUtils.Log("Could not create JSON", ApplifierImpactProperties.class);
-			}
-
-			return options;
-		}
-		
-		return null;
 	}
 	
 	public static String getCampaignQueryUrl () {
 		createCampaignQueryString();
 		String url = CAMPAIGN_DATA_URL;
 		
-		if (ApplifierImpactUtils.isDebuggable(BASE_ACTIVITY) && TEST_URL != null)
+		if (ApplifierImpactUtils.isDebuggable(getBaseActivity()) && TEST_URL != null)
 			url = TEST_URL;
 			
 		return String.format("%s%s", url, _campaignQueryString);
+	}
+	
+	public static Activity getBaseActivity() {
+		if(BASE_ACTIVITY != null) {
+			return BASE_ACTIVITY.get();
+		}
+		return null;
+	}
+	
+	public static Activity getCurrentActivity() {
+		if(CURRENT_ACTIVITY != null) {
+			return CURRENT_ACTIVITY.get();
+		}
+		return null;
 	}
 	
 	public static void setExtraParams (Map<String, String> params) {

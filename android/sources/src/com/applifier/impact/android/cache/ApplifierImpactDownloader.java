@@ -126,9 +126,9 @@ public class ApplifierImpactDownloader {
 	}
 	
 	private static void cacheCampaign (ApplifierImpactCampaign campaign) {
-		if (ApplifierImpactProperties.CURRENT_ACTIVITY == null || ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext() == null) return;
+		if (ApplifierImpactProperties.getCurrentActivity() == null || ApplifierImpactProperties.getCurrentActivity().getBaseContext() == null) return;
 		
-		ConnectivityManager cm = (ConnectivityManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager cm = (ConnectivityManager)ApplifierImpactProperties.getCurrentActivity().getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 	    
 		if (cm != null && cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
 			ApplifierImpactUtils.Log("Starting download for: " + campaign.getVideoFilename(), ApplifierImpactDownloader.class);

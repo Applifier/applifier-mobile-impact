@@ -6,6 +6,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.burstly.ImpactAdaptor;
+
 import com.burstly.lib.component.IBurstlyAdaptor;
 import com.burstly.lib.feature.networks.IAdaptorFactory;
 

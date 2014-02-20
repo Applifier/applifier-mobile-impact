@@ -5,16 +5,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.applifier.impact.android.ApplifierImpact;
-import com.applifier.impact.android.ApplifierImpactUtils;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
-import com.applifier.impact.android.properties.ApplifierImpactProperties;
-import com.applifier.impact.android.view.ApplifierImpactBufferingView;
-import com.applifier.impact.android.view.ApplifierImpactMuteVideoButton;
-import com.applifier.impact.android.view.ApplifierImpactMuteVideoButton.ApplifierImpactMuteVideoButtonState;
-import com.applifier.impact.android.webapp.ApplifierImpactInstrumentation;
-import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -27,6 +17,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
+import com.applifier.impact.android.view.ApplifierImpactBufferingView;
+import com.applifier.impact.android.view.ApplifierImpactMuteVideoButton;
+import com.applifier.impact.android.view.ApplifierImpactMuteVideoButton.ApplifierImpactMuteVideoButtonState;
+import com.applifier.impact.android.webapp.ApplifierImpactInstrumentation;
+import com.applifier.impact.android.webapp.ApplifierImpactWebData;
+import com.applifier.impact.android.webapp.ApplifierImpactWebData.ApplifierVideoPosition;
+import com.applifier.impact.android.zone.ApplifierImpactZone;
+
 public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	private static final int FILL_PARENT = -1;
 
@@ -35,7 +36,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	
 	private RelativeLayout _skipText = null;
 	private TextView _skipTextView = null;
-	private int _skipTimeInSeconds = 0;
+	private long _skipTimeInSeconds = 0;
 	
 	private RelativeLayout _bufferingText = null;
 	
@@ -110,8 +111,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	public void pauseVideo () {
 		purgeVideoPausedTimer();
 		
-		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && _videoView != null && _videoView.isPlaying()) {
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {			
+		if (ApplifierImpactProperties.getCurrentActivity() != null && _videoView != null && _videoView.isPlaying()) {
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {			
 				@Override
 				public void run() {
 					_videoView.pause();
@@ -162,12 +163,13 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	public int getSecondsUntilBackButtonAllowed () {
 		int timeUntilBackButton = 0;
 		
-		if (ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP > 0 && _videoStartedPlayingMillis > 0) {
-			timeUntilBackButton = Math.round((ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP * 1000) - (System.currentTimeMillis() - _videoStartedPlayingMillis));
+		ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if (currentZone.allowVideoSkipInSeconds() > 0 && _videoStartedPlayingMillis > 0) {
+			timeUntilBackButton = Math.round((currentZone.allowVideoSkipInSeconds() * 1000) - (System.currentTimeMillis() - _videoStartedPlayingMillis));
 			if (timeUntilBackButton < 0)
 				timeUntilBackButton = 0;
 		}
-		else if (ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP > 0 && _videoStartedPlayingMillis <= 0){
+		else if (currentZone.allowVideoSkipInSeconds() > 0 && _videoStartedPlayingMillis <= 0){
 			return 1;
 		}
 		
@@ -177,7 +179,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	
 	/* INTERNAL METHODS */
 	private void storeVolume () {
-		AudioManager am = ((AudioManager)((Context)ApplifierImpactProperties.CURRENT_ACTIVITY).getSystemService(Context.AUDIO_SERVICE));
+		AudioManager am = ((AudioManager)((Context)ApplifierImpactProperties.getCurrentActivity()).getSystemService(Context.AUDIO_SERVICE));
 		int curVol = 0;
 		int maxVol = 0;
 		
@@ -201,8 +203,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	
 	
 	private void startVideo () {
-		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {			
+		if (ApplifierImpactProperties.getCurrentActivity() != null) {
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {			
 				@Override
 				public void run() {
 					_videoView.start();
@@ -226,9 +228,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	}
 
 	private void createView () {
-		if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null && 
-			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS) && 
-			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS).equals(true)) {
+		ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if (currentZone.muteVideoSounds()) {
 			_muted = true;
 		}
 		
@@ -397,12 +398,15 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	}
 	
 	private boolean hasSkipDuration () {
-		return ApplifierImpactProperties.ALLOW_VIDEO_SKIP > 0;
+		ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		return currentZone.allowVideoSkipInSeconds() > 0;
 	}
 	
-	private int getSkipDuration () {
-		if (hasSkipDuration())
-			return ApplifierImpactProperties.ALLOW_VIDEO_SKIP;
+	private long getSkipDuration () {
+		if (hasSkipDuration()) {
+			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			return currentZone.allowVideoSkipInSeconds();
+		}	
 		
 		return 0;
 	}
@@ -477,7 +481,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	}
 	
 	private void setBufferingTextVisibility(final int visibility, final boolean hasSkip, final boolean canSkip) {
-		ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
+		ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {				
 			@Override
 			public void run() {
 				if(_bufferingText != null) {
@@ -512,7 +516,9 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			case KeyEvent.KEYCODE_BACK:
 				ApplifierImpactUtils.Log("onKeyDown", this);
 				
-				if (ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP == 0 || (ApplifierImpactProperties.ALLOW_BACK_BUTTON_SKIP > 0 && getSecondsUntilBackButtonAllowed() == 0)) {
+				ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+				long allowBackButtonSkip = currentZone.disableBackButtonForSeconds();
+				if (allowBackButtonSkip == 0 || (allowBackButtonSkip > 0 && getSecondsUntilBackButtonAllowed() == 0)) {
 					clearVideoPlayer();
 					
 					bufferingDuration = getBufferingDuration();
@@ -596,7 +602,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				setBufferingTextVisibility(VISIBLE, true, true);
 			}
 			
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {				
 				@Override
 				public void run() {
 					if (_timeLeftInSecondsText != null) {
@@ -612,7 +618,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 					_skipTimeLeft = 0f;
 				
 				if (_skipTimeLeft == 0) {
-					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
+					ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {				
 						@Override
 						public void run() {
 							enableSkippingFromSkipText();
@@ -620,7 +626,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 					});
 				}
 				else {
-					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
+					ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {				
 						@Override
 						public void run() {
 							if (_skipTextView != null && !_videoHasStalled) {
@@ -632,7 +638,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				}
 			}
 			else if (_playHeadHasMoved && (_duration / 1000) <= _skipTimeInSeconds) {
-				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
+				ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {				
 					@Override
 					public void run() {
 						hideSkipText();
@@ -661,10 +667,10 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				ApplifierImpactUtils.Log("Could not get videoView buffering percentage", this);
 			}
 			
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && !_playHeadHasMoved && _bufferingStartedMillis > 0 && 
+			if (ApplifierImpactProperties.getCurrentActivity() != null && !_playHeadHasMoved && _bufferingStartedMillis > 0 && 
 				(System.currentTimeMillis() - _bufferingStartedMillis) > (ApplifierImpactProperties.MAX_BUFFERING_WAIT_SECONDS * 1000)) {
 				this.cancel();
-				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {
+				ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						ApplifierImpactUtils.Log("Buffering taking too long.. cancelling video play", this);
@@ -673,8 +679,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				});
 			}
 						
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && _videoView != null && bufferPercentage < 15 && _videoView.getParent() == null) {				
-				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {					
+			if (ApplifierImpactProperties.getCurrentActivity() != null && _videoView != null && bufferPercentage < 15 && _videoView.getParent() == null) {				
+				ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {					
 					@Override
 					public void run() {
 						createAndAddBufferingView();
@@ -682,8 +688,8 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 				});				
 			}
 			
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && _videoPlayheadPrepared && _playHeadHasMoved) {
-				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {
+			if (ApplifierImpactProperties.getCurrentActivity() != null && _videoPlayheadPrepared && _playHeadHasMoved) {
+				ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						hideBufferingView();

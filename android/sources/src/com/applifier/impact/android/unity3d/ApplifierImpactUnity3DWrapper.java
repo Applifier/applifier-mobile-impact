@@ -78,19 +78,26 @@ public class ApplifierImpactUnity3DWrapper implements IApplifierImpactListener {
 		}
 	}
 	
-	public boolean showImpact (boolean openAnimated, boolean noOfferscreen, final String gamerSID, boolean muteVideoSounds, boolean useDeviceOrientationForVideo) {
+	public boolean showImpact (final String zoneId, final String rewardItemKey, final String optionsString) {
 		if (_applifierImpact != null && _applifierImpact.canShowCampaigns() && _applifierImpact.canShowImpact()) {
-			HashMap<String, Object> params = new HashMap<String, Object>();
-			params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY, openAnimated);
-			params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, noOfferscreen);
-			params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_MUTE_VIDEO_SOUNDS, muteVideoSounds);
-			params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_VIDEO_USES_DEVICE_ORIENTATION, useDeviceOrientationForVideo);
+			HashMap<String, Object> options = null;
 			
-			if (gamerSID != null && gamerSID.length() > 0)
-				params.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, gamerSID);
+			if(optionsString.length() > 0) {
+				options = new HashMap<String, Object>();
+				for(String rawOptionPair : optionsString.split(",")) {
+					String[] optionPair = rawOptionPair.split(":");
+					options.put(optionPair[0], optionPair[1]);
+				}
+			}
 			
-			ApplifierImpactUtils.Log("Opening with: openAnimated=" + openAnimated + ", noOfferscreen=" + noOfferscreen + ", gamerSID=" + gamerSID + ", muteVideoSounds=" + muteVideoSounds + ", useDeviceOrientationForVideo=" + useDeviceOrientationForVideo, this);
-			return _applifierImpact.showImpact(params);
+			if(rewardItemKey.length() > 0) {
+				_applifierImpact.setZone(zoneId, rewardItemKey);
+			} else {
+				_applifierImpact.setZone(zoneId);
+			}
+			
+			//ApplifierImpactUtils.Log("Opening with: openAnimated=" + openAnimated + ", noOfferscreen=" + noOfferscreen + ", gamerSID=" + gamerSID + ", muteVideoSounds=" + muteVideoSounds + ", useDeviceOrientationForVideo=" + useDeviceOrientationForVideo, this);
+			return _applifierImpact.showImpact(options);
 		}
 		
 		return false;

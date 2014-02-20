@@ -5,11 +5,6 @@ import java.lang.reflect.Method;
 
 import org.json.JSONObject;
 
-import com.applifier.impact.android.ApplifierImpactUtils;
-import com.applifier.impact.android.data.ApplifierImpactDevice;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
-import com.applifier.impact.android.properties.ApplifierImpactProperties;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -25,6 +20,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.data.ApplifierImpactDevice;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
 public class ApplifierImpactWebView extends WebView {
 
@@ -86,7 +86,7 @@ public class ApplifierImpactWebView extends WebView {
 			
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_CHANGE_VIEW, view, dataString);
 			_currentWebView = view;
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString, this));
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString, this));
 			ApplifierImpactUtils.Log("Send change view to WebApp: " + javascriptString, this);
 			
 			if (data != null) {
@@ -99,18 +99,18 @@ public class ApplifierImpactWebView extends WebView {
 				
 				ApplifierImpactUtils.Log("dataHasApiActionKey=" + data.has(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY) , this);
 				ApplifierImpactUtils.Log("actionEqualsWebViewApiOpen=" + action.equals(ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN) , this);
-				ApplifierImpactUtils.Log("isDebuggable=" + ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.BASE_ACTIVITY) , this);
+				ApplifierImpactUtils.Log("isDebuggable=" + ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.getBaseActivity()) , this);
 				ApplifierImpactUtils.Log("runWebViewTests=" + ApplifierImpactProperties.RUN_WEBVIEW_TESTS , this);
 				ApplifierImpactUtils.Log("testJavaScriptContents=" + ApplifierImpactProperties.TEST_JAVASCRIPT , this);
 				
 				if (data.has(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY) &&
 					action != null &&
 					action.equals(ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN) &&
-					ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.BASE_ACTIVITY) &&
+					ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.getBaseActivity()) &&
 					ApplifierImpactProperties.RUN_WEBVIEW_TESTS &&
 					ApplifierImpactProperties.TEST_JAVASCRIPT != null) {
 					ApplifierImpactUtils.Log("Running test-javascript: " + ApplifierImpactProperties.TEST_JAVASCRIPT , this);
-					ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(ApplifierImpactProperties.TEST_JAVASCRIPT, this));
+					ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(ApplifierImpactProperties.TEST_JAVASCRIPT, this));
 					ApplifierImpactProperties.RUN_WEBVIEW_TESTS = false;
 				}
 			}
@@ -126,7 +126,7 @@ public class ApplifierImpactWebView extends WebView {
 
 			String javascriptString = String.format("%s%s(\"%s\", %s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_HANDLE_NATIVE_EVENT, eventType, dataString);
 			ApplifierImpactUtils.Log("Send native event to WebApp: " + javascriptString, this);
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString, this));
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(javascriptString, this));
 		}
 	}
 	
@@ -145,16 +145,13 @@ public class ApplifierImpactWebView extends WebView {
 
 				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getAndroidSerial()))
 					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SERIALID_KEY, ApplifierImpactDevice.getAndroidSerial());
-
-				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getTelephonyId()))
-					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_TELEPHONYID_KEY, ApplifierImpactDevice.getTelephonyId());
 				
-				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_OPENUDID_KEY, ApplifierImpactDevice.getOpenUdid());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_MACADDRESS_KEY, ApplifierImpactDevice.getMacAddress());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDKVERSION_KEY, ApplifierImpactConstants.IMPACT_VERSION);
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SCREENDENSITY_KEY, ApplifierImpactDevice.getScreenDensity());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SCREENSIZE_KEY, ApplifierImpactDevice.getScreenSize());
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_ZONES_KEY, ApplifierImpactWebData.getZoneManager().getZonesJson());
 				
 				// Tracking data
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SOFTWAREVERSION_KEY, ApplifierImpactDevice.getSoftwareVersion());
@@ -167,7 +164,7 @@ public class ApplifierImpactWebView extends WebView {
 			
 			String initString = String.format("%s%s(%s);", ApplifierImpactConstants.IMPACT_WEBVIEW_JS_PREFIX, ApplifierImpactConstants.IMPACT_WEBVIEW_JS_INIT, initData.toString());
 			ApplifierImpactUtils.Log("Initializing WebView with JS call: " + initString, this);
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new ApplifierImpactJavascriptRunner(initString, this));
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new ApplifierImpactJavascriptRunner(initString, this));
 		}
 	}
 
@@ -219,7 +216,6 @@ public class ApplifierImpactWebView extends WebView {
 		getSettings().setLightTouchEnabled(false);
 		getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 		getSettings().setSupportMultipleWindows(false);
-		getSettings().setPluginsEnabled(false);
 		getSettings().setAllowFileAccess(false);
 		
 		setHorizontalScrollBarEnabled(false);

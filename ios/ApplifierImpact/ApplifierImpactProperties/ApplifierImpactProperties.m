@@ -11,7 +11,7 @@
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 
-NSString * const kApplifierImpactVersion = @"1010";
+NSString * const kApplifierImpactVersion = @"1100";
 
 @implementation ApplifierImpactProperties
 
@@ -29,11 +29,9 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
 - (ApplifierImpactProperties *)init {
   if (self = [super init]) {
     [self setMaxNumberOfAnalyticsRetries:5];
-    [self setAllowVideoSkipInSeconds:0];
     [self setCampaignDataUrl:@"https://impact.applifier.com/mobile/campaigns"];
     //[self setCampaignDataUrl:@"https://staging-impact.applifier.com/mobile/campaigns"];
     //[self setCampaignDataUrl:@"http://192.168.1.246:3500/mobile/campaigns"];
-    //[self setCampaignDataUrl:@"http://192.168.1.166:3500/mobile/campaigns"];
     [self setCampaignQueryString:[self _createCampaignQueryString]];
     [self setSdkIsCurrent:true];
     [self setExpectedSdkVersion:@"0"];
@@ -55,11 +53,7 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamSdkVersionKey, kApplifierImpactVersion];
   
   if ([ApplifierImpactDevice getIOSMajorVersion] < 7) {
-    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamOpenUdidKey, [ApplifierImpactDevice md5OpenUDIDString]];
     queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamMacAddressKey, [ApplifierImpactDevice md5MACAddressString]];
-    if ([ApplifierImpactDevice ODIN1] != nil) {
-      queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamOdin1IdKey, [ApplifierImpactDevice ODIN1]];
-    }
   }
   
   id advertisingIdentifierString = [ApplifierImpactDevice advertisingIdentifier];
@@ -72,13 +66,9 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
     queryParams = [NSString stringWithFormat:@"%@&%@=%i", queryParams, kApplifierImpactInitQueryParamTrackingEnabledKey, [ApplifierImpactDevice canUseTracking]];
   }
   
-  // Add tracking params if canUseTracking (returns always true < ios6)
-  if ([ApplifierImpactDevice canUseTracking]) {
-    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamSoftwareVersionKey, [ApplifierImpactDevice softwareVersion]];
-    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamHardwareVersionKey, @"unknown"];
-    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamDeviceTypeKey, [ApplifierImpactDevice analyticsMachineName]];
-    queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamConnectionTypeKey, [ApplifierImpactDevice currentConnectionType]];
-  }
+  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamSoftwareVersionKey, [ApplifierImpactDevice softwareVersion]];
+  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamDeviceTypeKey, [ApplifierImpactDevice analyticsMachineName]];
+  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamConnectionTypeKey, [ApplifierImpactDevice currentConnectionType]];
   
   if ([self testModeEnabled]) {
     queryParams = [NSString stringWithFormat:@"%@&%@=true", queryParams, kApplifierImpactInitQueryParamTestKey];
@@ -93,6 +83,8 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
   else {
     queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, kApplifierImpactInitQueryParamEncryptionKey, [ApplifierImpactDevice isEncrypted] ? @"true" : @"false"];
   }
+  
+  queryParams = [NSString stringWithFormat:@"%@&%@=%@", queryParams, @"forceWebViewUrl", @"http://172.16.160.184:8080/dev-build/impact/index.html"];
   
   return queryParams;
 }

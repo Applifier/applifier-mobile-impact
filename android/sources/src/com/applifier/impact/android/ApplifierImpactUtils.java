@@ -15,10 +15,6 @@ import java.util.ArrayList;
 
 import javax.security.auth.x500.X500Principal;
 
-import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
-import com.applifier.impact.android.properties.ApplifierImpactProperties;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -28,6 +24,10 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.os.Environment;
 import android.util.Log;
+
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
 
 public class ApplifierImpactUtils {
 

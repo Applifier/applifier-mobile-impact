@@ -9,7 +9,7 @@
 #import "ApplifierImpactViewStateDefaultEndScreen.h"
 
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
-#import "../ApplifierImpactCampaign/ApplifierImpactRewardItem.h"
+#import "../ApplifierImpactItem/ApplifierImpactRewardItem.h"
 
 @implementation ApplifierImpactViewStateDefaultEndScreen
 

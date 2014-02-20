@@ -5,17 +5,21 @@ import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
 
-import com.applifier.impact.android.ApplifierImpactUtils;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
-import com.applifier.impact.android.properties.ApplifierImpactProperties;
-
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
+
+import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class ApplifierImpactDevice {
 	
@@ -28,20 +32,7 @@ public class ApplifierImpactDevice {
 	}
 	
 	public static int getDeviceType () {
-		return ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getConfiguration().screenLayout;
-	}
-	
-	public static String getOdin1Id () {
-		String odin1ID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
-		
-		try {
-			odin1ID = ApplifierImpactUtils.SHA1(Secure.getString(ApplifierImpactProperties.CURRENT_ACTIVITY.getContentResolver(), Secure.ANDROID_ID));
-		}
-		catch (Exception e) {
-			ApplifierImpactUtils.Log("Could not resolve ODIN1 Id: " + e.getMessage(), ApplifierImpactDevice.class);
-		}
-		
-		return odin1ID;
+		return ApplifierImpactProperties.getCurrentActivity().getResources().getConfiguration().screenLayout;
 	}
 
 	@SuppressLint("DefaultLocale")
@@ -49,7 +40,7 @@ public class ApplifierImpactDevice {
 		String androidID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		
 		try {
-			androidID = ApplifierImpactUtils.Md5(Secure.getString(ApplifierImpactProperties.CURRENT_ACTIVITY.getContentResolver(), Secure.ANDROID_ID));
+			androidID = ApplifierImpactUtils.Md5(Secure.getString(ApplifierImpactProperties.getCurrentActivity().getContentResolver(), Secure.ANDROID_ID));
 			androidID = androidID.toLowerCase();
 		}
 		catch (Exception e) {
@@ -57,21 +48,6 @@ public class ApplifierImpactDevice {
 		}
 		
 		return androidID;
-	}
-	
-	public static String getTelephonyId () {
-		String telephonyID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
-		
-		try {
-			TelephonyManager tmanager = (TelephonyManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getSystemService(Context.TELEPHONY_SERVICE);
-			telephonyID = ApplifierImpactUtils.Md5(tmanager.getDeviceId());
-			telephonyID = telephonyID.toLowerCase();
-		}
-		catch (Exception e) {
-			ApplifierImpactUtils.Log("Problems fetching telephonyId: " + e.getMessage(), ApplifierImpactDevice.class);
-		}
-		
-		return telephonyID;
 	}
 	
 	public static String getAndroidSerial () {
@@ -98,6 +74,14 @@ public class ApplifierImpactDevice {
 		}
 		
 		return buildMacAddressFromInterface(intf);
+    }
+    
+    public static void fetchAdvertisingTrackingInfo(final Activity context) {
+    	if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS) {
+    		try {
+    			ApplifierImpactProperties.ADVERTISING_TRACKING_INFO = AdvertisingIdClient.getAdvertisingIdInfo(context);
+    		} catch(Exception e) {}
+    	}
     }
 	
     @SuppressLint("DefaultLocale")
@@ -152,13 +136,6 @@ public class ApplifierImpactDevice {
         
     	return null;
     }
-    
-	public static String getOpenUdid () {
-		String deviceId = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
-		ApplifierImpactOpenUDID.syncContext(ApplifierImpactProperties.CURRENT_ACTIVITY);
-		deviceId = ApplifierImpactUtils.Md5(ApplifierImpactOpenUDID.getOpenUDIDInContext());
-		return deviceId.toLowerCase();
-	}
 	
 	public static String getConnectionType () {
 		if (isUsingWifi()) {
@@ -171,12 +148,12 @@ public class ApplifierImpactDevice {
 	@SuppressWarnings("deprecation")
 	public static boolean isUsingWifi () {
 		ConnectivityManager mConnectivity = null;
-		mConnectivity = (ConnectivityManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getSystemService(Context.CONNECTIVITY_SERVICE);
+		mConnectivity = (ConnectivityManager)ApplifierImpactProperties.getCurrentActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		if (mConnectivity == null)
 			return false;
 
-		TelephonyManager mTelephony = (TelephonyManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getSystemService(Context.TELEPHONY_SERVICE);
+		TelephonyManager mTelephony = (TelephonyManager)ApplifierImpactProperties.getCurrentActivity().getSystemService(Context.TELEPHONY_SERVICE);
 		// Skip if no connection, or background data disabled
 		NetworkInfo info = mConnectivity.getActiveNetworkInfo();
 		if (info == null || !mConnectivity.getBackgroundDataSetting() || !mConnectivity.getActiveNetworkInfo().isConnected() || mTelephony == null) {
@@ -193,7 +170,7 @@ public class ApplifierImpactDevice {
 	}
 	
 	public static int getScreenDensity () {
-		return ApplifierImpactProperties.CURRENT_ACTIVITY.getResources().getDisplayMetrics().densityDpi;
+		return ApplifierImpactProperties.getCurrentActivity().getResources().getDisplayMetrics().densityDpi;
 	}
 	
 	public static int getScreenSize () {

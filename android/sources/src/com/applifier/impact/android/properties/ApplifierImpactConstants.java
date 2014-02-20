@@ -8,7 +8,7 @@ public class ApplifierImpactConstants {
 	public static final String PENDING_REQUESTS_FILENAME = "pendingrequests.dat";
 
 	/* Impact */
-	public static final String IMPACT_VERSION = "109";
+	public static final String IMPACT_VERSION = "1100";
 	public static final String IMPACT_REQUEST_METHOD_POST = "POST";
 	public static final String IMPACT_REQUEST_METHOD_GET = "GET";
 	
@@ -36,6 +36,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SOFTWAREVERSION_KEY = "softwareVersion";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SCREENDENSITY_KEY = "screenDensity";
 	public static final String IMPACT_WEBVIEW_DATAPARAM_SCREENSIZE_KEY = "screenSize";
+	public static final String IMPACT_WEBVIEW_DATAPARAM_ZONES_KEY = "zones";
 
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_COMPLETED = "completed";
 	public static final String IMPACT_WEBVIEW_VIEWTYPE_START = "start";
@@ -49,7 +50,8 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_WEBVIEW_API_OPEN = "open";
 	public static final String IMPACT_WEBVIEW_API_PLAYSTORE = "appStore";
 	public static final String IMPACT_WEBVIEW_API_ACTION_VIDEOSTARTEDPLAYING = "video_started_playing";	
-	public static final String IMPACT_WEBVIEW_API_DEVELOPER_OPTIONS = "developerOptions";
+	public static final String IMPACT_WEBVIEW_API_ZONE_KEY = "zone";
+	public static final String IMPACT_WEBVIEW_API_REWARD_ITEM_KEY = "itemKey";
 		
 	public static final String IMPACT_WEBVIEW_EVENTDATA_CAMPAIGNID_KEY = "campaignId";	
 	public static final String IMPACT_WEBVIEW_EVENTDATA_REWATCH_KEY = "rewatch";	
@@ -79,9 +81,27 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_CAMPAIGN_BYPASSAPPSHEET_KEY = "bypassAppSheet";
 	public static final String IMPACT_CAMPAIGN_ALLOWVIDEOSKIP_KEY = "allowSkipVideoInSeconds";
 	public static final String IMPACT_CAMPAIGN_DISABLEBACKBUTTON_KEY = "disableBackButtonForSeconds";
+	public static final String IMPACT_CAMPAIGN_REFRESH_VIEWS_KEY = "refreshCampaignsAfterViewed";
+	public static final String IMPACT_CAMPAIGN_REFRESH_SECONDS_KEY = "refreshCampaignsAfterSeconds";
 	
+	/* Zone JSON Properties */
+	public static final String IMPACT_ZONES_KEY = "zones";
+	public static final String IMPACT_ZONE_ID_KEY = "id";
+	public static final String IMPACT_ZONE_NAME_KEY = "name";
+	public static final String IMPACT_ZONE_INCENTIVIZED_KEY = "incentivised";
+	public static final String IMPACT_ZONE_DEFAULT_KEY = "default";
+	public static final String IMPACT_ZONE_DEFAULT_REWARD_ITEM_KEY = "defaultRewardItem";
+	public static final String IMPACT_ZONE_REWARD_ITEMS_KEY = "rewardItems";
+	public static final String IMPACT_ZONE_MUTE_VIDEO_SOUNDS_KEY = "muteVideoSounds";
+	public static final String IMPACT_ZONE_OPEN_ANIMATED_KEY = "openAnimated";
+	public static final String IMPACT_ZONE_NO_OFFER_SCREEN_KEY = "noOfferScreen";
+	public static final String IMPACT_ZONE_USE_DEVICE_ORIENTATION_FOR_VIDEO_KEY = "useDeviceOrientationForVideo";
+	public static final String IMPACT_ZONE_ALLOW_VIDEO_SKIP_IN_SECONDS_KEY = "allowVideoSkipInSeconds";
+	public static final String IMPACT_ZONE_DISABLE_BACK_BUTTON_FOR_SECONDS = "disableBackButtonForSeconds";
+	public static final String IMPACT_ZONE_ALLOW_CLIENT_OVERRIDES_KEY = "allowClientOverrides";
+
 	/* Reward Item JSON Properties */
-	public static final String IMPACT_REWARD_ITEMKEY_KEY = "itemKey";
+	public static final String IMPACT_REWARD_ITEMKEY_KEY = "key";
 	public static final String IMPACT_REWARD_NAME_KEY = "name";
 	public static final String IMPACT_REWARD_PICTURE_KEY = "picture";
 	public static final String IMPACT_REWARD_ITEM_KEY = "item";
@@ -110,6 +130,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_INIT_QUERYPARAM_OPENUDID_KEY = "openUdid";
 	public static final String IMPACT_INIT_QUERYPARAM_MACADDRESS_KEY = "macAddress";
 	public static final String IMPACT_INIT_QUERYPARAM_ADVERTISINGTRACKINGID_KEY = "advertisingTrackingId";
+	public static final String IMPACT_INIT_QUERYPARAM_RAWADVERTISINGTRACKINGID_KEY = "rawAdvertisingTrackingId";
 	public static final String IMPACT_INIT_QUERYPARAM_TRACKINGENABLED_KEY = "trackingEnabled";
 	public static final String IMPACT_INIT_QUERYPARAM_SOFTWAREVERSION_KEY = "softwareVersion";
 	public static final String IMPACT_INIT_QUERYPARAM_HARDWAREVERSION_KEY = "hardwareVersion";
@@ -132,6 +153,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_EVENTTYPE_KEY = "type";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_TRACKINGID_KEY = "trackingId";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_PROVIDERID_KEY = "providerId";
+	public static final String IMPACT_ANALYTICS_QUERYPARAM_ZONE_KEY = "zone";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_REWARDITEM_KEY = "rewardItem";
 	public static final String IMPACT_ANALYTICS_QUERYPARAM_GAMERSID_KEY = "sid";
 	

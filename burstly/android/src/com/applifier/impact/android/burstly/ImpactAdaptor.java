@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 
 import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.IApplifierImpactListener;
@@ -21,17 +22,21 @@ import com.burstly.lib.component.IBurstlyAdaptorListener;
  */
 public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener {
 	
-	public static final String IMPACT_ADAPTOR_VERSION = "1.0.5";
+	public static final String IMPACT_ADAPTOR_VERSION = "1.0.6";
 	
 	public static String FEATURE_PRECACHE = "precacheInterstitial";
 	
 	public final static String KEY_IMPACT_GAME_ID ="impact_game_id";
+	public final static String KEY_IMPACT_ZONE_ID = "zoneId";
 	public final static String KEY_TEST_MODE = "impact_test_mode";
 	public final static String KEY_CLIENT_TARGETING_PARAMS = "clientTargetingParams";
 	public final static String KEY_SKIP_OFFER_SCREEN = "skipOfferScreen";
 	public final static String KEY_DISABLE_REWARDS = "disableRewards";
 	
 	private String gameId = null;
+	private String zoneId = null;
+	
+	private Map<String, Object> options = null;
 	
 	private boolean campaignLoadingComplete = false;
 	
@@ -63,14 +68,8 @@ public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener 
 	private IBurstlyAdaptorListener listener;
 	
 	/**
-	 * Custom SID, if any
-	 */
-	private String customSid = null;
-	
-	/**
 	 * Some options for showing Impact
 	 */
-	private boolean skipOfferScreen = false;
 	private boolean disableRewards = false;
 
 	/**
@@ -147,12 +146,8 @@ public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener 
 		}
 		
 		if(this.impact.canShowImpact() && this.impact.canShowCampaigns()) {
-			HashMap<String, Object> props = new HashMap<String, Object>();
-			if(this.customSid != null) {
-				props.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_GAMERSID_KEY, this.customSid);
-			}
-			props.put(ApplifierImpact.APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY, this.skipOfferScreen);
-			this.impact.showImpact(props);
+			this.impact.setZone(this.zoneId);
+			this.impact.showImpact(this.options);
 		}
 	}
 
@@ -181,6 +176,13 @@ public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener 
 			throw new IllegalArgumentException("Server must return impact_game_id");
 		}
 		
+		this.zoneId = (String)impactParams.get(ImpactAdaptor.KEY_IMPACT_ZONE_ID);
+		
+		this.options = new HashMap<String, Object>();
+		this.options.putAll(impactParams);
+		
+		//WebView.setWebContentsDebuggingEnabled(true);
+		
 	    boolean testModeEnabled = "true".equals(impactParams.get(ImpactAdaptor.KEY_TEST_MODE));
 	    ApplifierImpact.setDebugMode(testModeEnabled);
 	    ApplifierImpact.setTestMode(testModeEnabled);
@@ -188,18 +190,14 @@ public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener 
 		this.impact = new ApplifierImpact((Activity)this.mContext, this.gameId, this);
 		this.impact.setImpactListener(this);
 		
-		// See if we have some options
-		this.skipOfferScreen = ("true".equals(impactParams.get(ImpactAdaptor.KEY_SKIP_OFFER_SCREEN)));
-		this.disableRewards = ("true".equals(impactParams.get(ImpactAdaptor.KEY_DISABLE_REWARDS)));
-		
 		// See if we have a custom user ID
 		if(impactParams.get(ImpactAdaptor.KEY_CLIENT_TARGETING_PARAMS) != null) {
 			Map targetingParams = (Map)impactParams.get(ImpactAdaptor.KEY_CLIENT_TARGETING_PARAMS);
 			if(targetingParams.get("sid") != null) {
 				if(!this.disableRewards)
-					this.customSid = targetingParams.get("sid").toString();
+					this.options.put("sid", targetingParams.get("sid").toString());
 				else 
-					this.customSid = "NO_REWARD";
+					this.options.put("sid", "NO_REWARD");
 			}
 		}
 		
@@ -280,14 +278,14 @@ public class ImpactAdaptor implements IBurstlyAdaptor, IApplifierImpactListener 
 	@Override
 	public void onCampaignsAvailable() {
 		this.campaignLoadingComplete = true;
-		Log.d("burstly_applifier","ImpactAdator.onCampaignsAvailable");
+		Log.d("burstly_applifier","ImpactAdaptor.onCampaignsAvailable");
 		this.notifyBurstlyOfAdLoading();
 	}
 
 	@Override
 	public void onCampaignsFetchFailed() {
 		this.campaignLoadingComplete = true;
-		Log.d("burstly_applifier","ImpactAdator.onCampaignsFetchFailed");		
+		Log.d("burstly_applifier","ImpactAdaptor.onCampaignsFetchFailed");		
 		this.notifyBurstlyOfAdLoading();
 	}	
 

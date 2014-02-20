@@ -17,6 +17,7 @@
 #import "../ApplifierImpactView/ApplifierImpactMainViewController.h"
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 #import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
+#import "../ApplifierImpactZone/ApplifierImpactZoneManager.h"
 
 @interface ApplifierImpactWebAppController ()
   @property (nonatomic, strong) NSDictionary* webAppInitalizationParams;
@@ -203,7 +204,6 @@ static ApplifierImpactWebAppController *sharedImpactWebAppController = nil;
   [webAppValues setValue: [[ApplifierImpactCampaignManager sharedInstance] campaignData] forKey:kApplifierImpactWebViewDataParamCampaignDataKey];
   [webAppValues setValue: @"ios"                                                         forKey:kApplifierImpactWebViewDataParamPlatformKey];
   [webAppValues setValue: [ApplifierImpactDevice md5DeviceId]                            forKey:kApplifierImpactWebViewDataParamDeviceIdKey];
-  [webAppValues setValue: [ApplifierImpactDevice md5OpenUDIDString]                      forKey:kApplifierImpactWebViewDataParamOpenUdidIdKey];
   [webAppValues setValue: [ApplifierImpactDevice md5MACAddressString]                    forKey:kApplifierImpactWebViewDataParamMacAddressKey];
   [webAppValues setValue: [[ApplifierImpactProperties sharedInstance] impactVersion]     forKey:kApplifierImpactWebViewDataParamSdkVersionKey];
   [webAppValues setValue: [[ApplifierImpactProperties sharedInstance] impactGameId]      forKey:kApplifierImpactWebViewDataParamGameIdKey];

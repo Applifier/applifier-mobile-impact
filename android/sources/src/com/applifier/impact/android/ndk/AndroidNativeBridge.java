@@ -5,11 +5,13 @@
 
 package com.applifier.impact.android.ndk;
 
+import java.util.HashMap;
+
 import android.app.Activity;
 import android.util.Log;
+
 import com.applifier.impact.android.ApplifierImpact;
 import com.applifier.impact.android.IApplifierImpactListener;
-import java.util.*;
 
 /**
  * The Impact Android JDK <-> NDK bridge

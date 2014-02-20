@@ -21,7 +21,7 @@ public static class ApplifierImpactMobileExternal {
 		Log ("UnityEditor: init(), gameId=" + gameId + ", testModeEnabled=" + testModeEnabled + ", gameObjectName=" + gameObjectName + ", debugModeEnabled=" + debugModeEnabled + ", useNativeUIWhenPossible=" + useNativeUIWhenPossible);
 	}
 	
-	public static bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID, bool muteVideoSounds, bool videoUsesDeviceOrientation) {
+	public static bool showImpact (string zoneId, string rewardItemKey, string options) {
 		Log ("UnityEditor: showImpact()");
 		return false;
 	}
@@ -97,7 +97,7 @@ public static class ApplifierImpactMobileExternal {
 	public static extern void init (string gameId, bool testModeEnabled, bool debugModeEnabled, string gameObjectName, bool useNativeUIWhenPossible);
 	
 	[DllImport ("__Internal")]
-	public static extern bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID, bool muteVideoSounds, bool videoUsesDeviceOrientation);
+	public static extern bool showImpact (string zoneId, string rewardItemKey, string options);
 	
 	[DllImport ("__Internal")]
 	public static extern void hideImpact ();
@@ -144,7 +144,7 @@ public static class ApplifierImpactMobileExternal {
 #elif UNITY_ANDROID
 	private static AndroidJavaObject applifierImpact;
 	private static AndroidJavaObject applifierImpactUnity;
-	private static AndroidJavaClass applifierImpactClass;
+	private static AndroidJavaObject currentActivity;
 	
 	public static void init (string gameId, bool testModeEnabled, bool debugModeEnabled, string gameObjectName, bool useNativeUIWhenPossible) {
 		if (useNativeUIWhenPossible) {
@@ -152,15 +152,14 @@ public static class ApplifierImpactMobileExternal {
 		}
 		
 		Log("UnityAndroid: init(), gameId=" + gameId + ", testModeEnabled=" + testModeEnabled + ", gameObjectName=" + gameObjectName + ", debugModeEnabled=" + debugModeEnabled);
-		AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-		AndroidJavaObject activity = jc.GetStatic<AndroidJavaObject>("currentActivity");
+		currentActivity = (new AndroidJavaClass("com.unity3d.player.UnityPlayer")).GetStatic<AndroidJavaObject>("currentActivity");
 		applifierImpactUnity = new AndroidJavaObject("com.applifier.impact.android.unity3d.ApplifierImpactUnity3DWrapper");
-		applifierImpactUnity.Call("init", gameId, activity, testModeEnabled, debugModeEnabled, gameObjectName);
+		applifierImpactUnity.Call("init", gameId, currentActivity, testModeEnabled, debugModeEnabled, gameObjectName);
 	}
 	
-	public static bool showImpact (bool openAnimated, bool noOfferscreen, string gamerSID, bool muteVideoSounds, bool videoUsesDeviceOrientation) {
+	public static bool showImpact (string zoneId, string rewardItemKey, string options) {
 		Log ("UnityAndroid: showImpact()");
-		return applifierImpactUnity.Call<bool>("showImpact", openAnimated, noOfferscreen, gamerSID, muteVideoSounds, videoUsesDeviceOrientation);
+		return applifierImpactUnity.Call<bool>("showImpact", zoneId, rewardItemKey, options);
 	}
 	
 	public static void hideImpact () {

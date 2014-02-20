@@ -1,26 +1,12 @@
 package com.applifier.impact.android;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONObject;
-
-import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
-import com.applifier.impact.android.cache.ApplifierImpactDownloader;
-import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
-import com.applifier.impact.android.campaign.ApplifierImpactRewardItem;
-import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
-import com.applifier.impact.android.properties.ApplifierImpactProperties;
-import com.applifier.impact.android.view.ApplifierImpactMainView;
-import com.applifier.impact.android.view.IApplifierImpactMainViewListener;
-import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewAction;
-import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewState;
-import com.applifier.impact.android.webapp.*;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -32,10 +18,33 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 
+import com.applifier.impact.android.cache.ApplifierImpactCacheManager;
+import com.applifier.impact.android.cache.ApplifierImpactDownloader;
+import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
+import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
+import com.applifier.impact.android.data.ApplifierImpactDevice;
+import com.applifier.impact.android.item.ApplifierImpactRewardItem;
+import com.applifier.impact.android.item.ApplifierImpactRewardItemManager;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
+import com.applifier.impact.android.properties.ApplifierImpactProperties;
+import com.applifier.impact.android.view.ApplifierImpactMainView;
+import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewAction;
+import com.applifier.impact.android.view.ApplifierImpactMainView.ApplifierImpactMainViewState;
+import com.applifier.impact.android.view.IApplifierImpactMainViewListener;
+import com.applifier.impact.android.webapp.ApplifierImpactWebData;
+import com.applifier.impact.android.webapp.IApplifierImpactWebBridgeListener;
+import com.applifier.impact.android.webapp.IApplifierImpactWebDataListener;
+import com.applifier.impact.android.zone.ApplifierImpactIncentivizedZone;
+import com.applifier.impact.android.zone.ApplifierImpactZone;
+
+import android.os.SystemClock;
+
 
 public class ApplifierImpact implements IApplifierImpactCacheListener, 
 										IApplifierImpactWebDataListener, 
-										IApplifierImpactWebBrigeListener,
+										IApplifierImpactWebBridgeListener,
 										IApplifierImpactMainViewListener {
 	
 	// Reward item HashMap keys
@@ -61,10 +70,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private boolean _impactReadySent = false;
 	private boolean _webAppLoaded = false;
 	private boolean _openRequestFromDeveloper = false;
+	private boolean _refreshAfterShowImpact = false;
 	private AlertDialog _alertDialog = null;
 		
 	private TimerTask _pauseScreenTimer = null;
 	private Timer _pauseTimer = null;
+	private TimerTask _campaignRefreshTimerTask = null;
+	private Timer _campaignRefreshTimer = null;
+	private long _campaignRefreshTimerDeadline = 0;
 	
 	// Listeners
 	private IApplifierImpactListener _impactListener = null;
@@ -119,8 +132,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public void changeActivity (Activity activity) {
 		if (activity == null) return;
 		
-		if (activity != null && !activity.equals(ApplifierImpactProperties.CURRENT_ACTIVITY)) {
-			ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
+		if (activity != null && !activity.equals(ApplifierImpactProperties.getCurrentActivity())) {
+			ApplifierImpactProperties.CURRENT_ACTIVITY = new WeakReference<Activity>(activity);
 			
 			// Not the most pretty way to detect when the fullscreen activity is ready
 			if (activity != null &&
@@ -145,7 +158,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				_openRequestFromDeveloper = false;
 			}
 			else {
-				ApplifierImpactProperties.BASE_ACTIVITY = activity;
+				ApplifierImpactProperties.BASE_ACTIVITY = new WeakReference<Activity>(activity);
 			}
 		}
 	}
@@ -159,37 +172,51 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		return false;
 	}
 	
+	public boolean setZone(String zoneId) {
+		if(!_showingImpact) {
+			return ApplifierImpactWebData.getZoneManager().setCurrentZone(zoneId);
+		}		
+		return false;
+	}
+	
+	public boolean setZone(String zoneId, String rewardItemKey) {
+		if(!_showingImpact && setZone(zoneId)) {
+			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			if(currentZone.isIncentivized()) {
+				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)currentZone).itemManager();
+				return itemManager.setCurrentItem(rewardItemKey);
+			}
+		}
+		return false;
+	}
+	
 	public boolean showImpact (Map<String, Object> options) {
 		if (canShowImpact()) {
-			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS = options;
+			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
 			
-			if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null) {
-				if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY) && ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true)) {
+			if (currentZone != null) {
+				currentZone.mergeOptions(options);
+				
+				if (currentZone.noOfferScreen()) {
 					if (webdata.getViewableVideoPlanCampaigns().size() > 0) {
 						ApplifierImpactCampaign selectedCampaign = webdata.getViewableVideoPlanCampaigns().get(0);
 						ApplifierImpactProperties.SELECTED_CAMPAIGN = selectedCampaign;
 					}
 				}
-				if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY) && ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY) != null) {
-					ApplifierImpactProperties.GAMER_SID = "" + ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_GAMERSID_KEY);
-				}
+				
+				_openRequestFromDeveloper = true;
+				_showingImpact = true;
+				startImpactFullscreenActivity();
+				return _showingImpact;
 			}
-			
-			return showImpact();
+					
 		}
 		
 		return false;
 	}
 	
 	public boolean showImpact () {
-		if (canShowImpact()) {
-			_openRequestFromDeveloper = true;
-			_showingImpact = true;
-			startImpactFullscreenActivity();
-			return _showingImpact;
-		}
-
-		return false;
+		return showImpact(null);
 	}
 	
 	public boolean canShowCampaigns () {
@@ -236,70 +263,80 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	/* PUBLIC MULTIPLE REWARD ITEM SUPPORT */
 	
 	public boolean hasMultipleRewardItems () {
-		if (webdata.getRewardItems() != null && webdata.getRewardItems().size() > 0)
-			return true;
-		
+		ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if(zone.isIncentivized()) {
+			ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+			return itemManager.itemCount() > 1;
+		}		
 		return false;
 	}
 	
 	public ArrayList<String> getRewardItemKeys () {
-		if (webdata.getRewardItems() != null && webdata.getRewardItems().size() > 0) {
-			ArrayList<ApplifierImpactRewardItem> rewardItems = webdata.getRewardItems();
+		ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if(zone.isIncentivized()) {
+			ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+			ArrayList<ApplifierImpactRewardItem> rewardItems = itemManager.allItems();
 			ArrayList<String> rewardItemKeys = new ArrayList<String>();
 			for (ApplifierImpactRewardItem rewardItem : rewardItems) {
 				rewardItemKeys.add(rewardItem.getKey());
 			}
 			
 			return rewardItemKeys;
-		}
-		
+		}		
 		return null;
 	}
 	
 	public String getDefaultRewardItemKey () {
-		if (webdata != null && webdata.getDefaultRewardItem() != null)
-			return webdata.getDefaultRewardItem().getKey();
-		
+		ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if(zone.isIncentivized()) {
+			ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+			return itemManager.getDefaultItem().getKey();
+		}		
 		return null;
 	}
 	
 	public String getCurrentRewardItemKey () {
-		if (webdata != null && webdata.getCurrentRewardItemKey() != null)
-			return webdata.getCurrentRewardItemKey();
-			
+		ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if(zone.isIncentivized()) {
+			ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+			return itemManager.getCurrentItem().getKey();
+		}			
 		return null;
 	}
 	
 	public boolean setRewardItemKey (String rewardItemKey) {
 		if (canShowImpact()) {
-			ApplifierImpactRewardItem rewardItem = webdata.getRewardItemByKey(rewardItemKey);
-			
-			if (rewardItem != null) {
-				webdata.setCurrentRewardItem(rewardItem);
-				return true;
+			ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			if(zone.isIncentivized()) {
+				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+				return itemManager.setCurrentItem(rewardItemKey);
 			}
 		}
-		
 		return false;
 	}
 	
 	public void setDefaultRewardItemAsRewardItem () {
 		if (canShowImpact()) {
-			if (webdata != null && webdata.getDefaultRewardItem() != null) {
-				webdata.setCurrentRewardItem(webdata.getDefaultRewardItem());
+			ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			if(zone.isIncentivized()) {
+				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+				itemManager.setCurrentItem(itemManager.getDefaultItem().getKey());
 			}
 		}
 	}
 	
 	public Map<String, String> getRewardItemDetailsWithKey (String rewardItemKey) {
-		ApplifierImpactRewardItem rewardItem = webdata.getRewardItemByKey(rewardItemKey);
-		if (rewardItem != null) {
-			return rewardItem.getDetails();
+		ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if(zone.isIncentivized()) {
+			ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+			ApplifierImpactRewardItem rewardItem = itemManager.getItem(rewardItemKey);
+			if (rewardItem != null) {
+				return rewardItem.getDetails();
+			}
+			else {
+				ApplifierImpactUtils.Log("Could not fetch reward item: " + rewardItemKey, this);
+			}
 		}
-		else {
-			ApplifierImpactUtils.Log("Could not fetch reward item: " + rewardItemKey, this);
-		}
-		
 		return null;
 	}
 	
@@ -310,8 +347,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public void onMainViewAction (ApplifierImpactMainViewAction action) {
 		switch (action) {
 			case BackButtonPressed:
-				if (_showingImpact)
+				if (_showingImpact) {
 					close();
+				}
 				break;
 			case VideoStart:
 				if (_impactListener != null)
@@ -319,12 +357,14 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				cancelPauseScreenTimer();
 				break;
 			case VideoEnd:
+				ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT++;
 				if (_impactListener != null && ApplifierImpactProperties.SELECTED_CAMPAIGN != null && !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed()) {
 					ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 					_impactListener.onVideoCompleted(getCurrentRewardItemKey(), false);
 				}
 				break;
 			case VideoSkipped:
+				ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT++;
 				if (_impactListener != null && ApplifierImpactProperties.SELECTED_CAMPAIGN != null && !ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed()) {
 					ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
 					_impactListener.onVideoCompleted(getCurrentRewardItemKey(), true);
@@ -336,8 +376,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				break;
 		}
 	}
-	
-	
+
 	// IApplifierImpactCacheListener
 	@Override
 	public void onCampaignUpdateStarted () {	
@@ -376,6 +415,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			}
 			
 			if (!dataFetchFailed) {
+				setupCampaignRefreshTimer();
+				
 				if (jsonData.has(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDK_IS_CURRENT_KEY)) {
 					try {
 						sdkIsCurrent = jsonData.getBoolean(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDK_IS_CURRENT_KEY);
@@ -387,8 +428,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			}
 		}
 		
-		if (!dataFetchFailed && !sdkIsCurrent && ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.CURRENT_ACTIVITY)) {
-			_alertDialog = new AlertDialog.Builder(ApplifierImpactProperties.CURRENT_ACTIVITY).create();
+		if (!dataFetchFailed && !sdkIsCurrent && ApplifierImpactUtils.isDebuggable(ApplifierImpactProperties.getCurrentActivity())) {
+			_alertDialog = new AlertDialog.Builder(ApplifierImpactProperties.getCurrentActivity()).create();
 			_alertDialog.setTitle("Applifier Impact");
 			_alertDialog.setMessage("You are not running the latest version of Applifier Impact android. Please update your version (this dialog won't appear in release builds).");
 			_alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
@@ -406,7 +447,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	@Override
 	public void onWebDataFailed () {
-		if (_impactListener != null)
+		if (_impactListener != null && !_impactReadySent)
 			_impactListener.onCampaignsFetchFailed();
 	}
 	
@@ -469,9 +510,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		if (canShowCampaigns()) {
 			JSONObject setViewData = new JSONObject();
 			
-			try {
+			try {				
 				setViewData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_INITCOMPLETE);
-				setViewData.put(ApplifierImpactConstants.IMPACT_REWARD_ITEMKEY_KEY, webdata.getCurrentRewardItemKey());
 			}
 			catch (Exception e) {
 				dataOk = false;
@@ -537,9 +577,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private void openPlayStoreAsIntent (String playStoreId) {
 		ApplifierImpactUtils.Log("Opening playstore activity with storeId: " + playStoreId, this);
 		
-		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+		if (ApplifierImpactProperties.getCurrentActivity() != null) {
 			try {
-				ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + playStoreId)));
+				ApplifierImpactProperties.getCurrentActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + playStoreId)));
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Couldn't start PlayStore intent!", this);
@@ -550,9 +590,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private void openPlayStoreInBrowser (String url) {
 	    ApplifierImpactUtils.Log("Could not open PlayStore activity, opening in browser with url: " + url, this);
 	    
-		if (ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+		if (ApplifierImpactProperties.getCurrentActivity() != null) {
 			try {
-				ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+				ApplifierImpactProperties.getCurrentActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Couldn't start browser intent!", this);
@@ -560,7 +600,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		}
 	}
 	
-	private void init (Activity activity, String gameId, IApplifierImpactListener listener) {
+	private void init (final Activity activity, String gameId, IApplifierImpactListener listener) {
 		if (_initialized) return; 
 		
 		if(gameId.length() == 0) {
@@ -580,8 +620,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		setImpactListener(listener);
 		
 		ApplifierImpactProperties.IMPACT_GAME_ID = gameId;
-		ApplifierImpactProperties.BASE_ACTIVITY = activity;
-		ApplifierImpactProperties.CURRENT_ACTIVITY = activity;
+		ApplifierImpactProperties.BASE_ACTIVITY = new WeakReference<Activity>(activity);
+		ApplifierImpactProperties.CURRENT_ACTIVITY = new WeakReference<Activity>(activity);
 		
 		ApplifierImpactUtils.Log("Is debuggable=" + ApplifierImpactUtils.isDebuggable(activity), this);
 		
@@ -591,16 +631,21 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		webdata = new ApplifierImpactWebData();
 		webdata.setWebDataListener(this);
 
-		if (webdata.initCampaigns()) {
-			_initialized = true;
-		}
+		new Thread(new Runnable() {
+			public void run() {
+				ApplifierImpactDevice.fetchAdvertisingTrackingInfo(activity);
+				if (webdata.initCampaigns()) {
+					_initialized = true;
+				}
+			}
+		}).start();	
 	}
 	
 	private void close () {
 		cancelPauseScreenTimer();
-		if(ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
+		if(ApplifierImpactProperties.getCurrentActivity() != null) {
 			ApplifierImpactCloseRunner closeRunner = new ApplifierImpactCloseRunner();
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(closeRunner);
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(closeRunner);
 		}
 	}
 	
@@ -609,9 +654,15 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		JSONObject data = new JSONObject();
 		
 		try  {
+			ApplifierImpactZone zone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+			
 			data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ACTION_KEY, ApplifierImpactConstants.IMPACT_WEBVIEW_API_OPEN);
-			data.put(ApplifierImpactConstants.IMPACT_REWARD_ITEMKEY_KEY, webdata.getCurrentRewardItemKey());
-			data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_DEVELOPER_OPTIONS, ApplifierImpactProperties.getDeveloperOptionsAsJson());
+			data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_ZONE_KEY, zone.getZoneId());
+			
+			if(zone.isIncentivized()) {
+				ApplifierImpactRewardItemManager itemManager = ((ApplifierImpactIncentivizedZone)zone).itemManager();
+				data.put(ApplifierImpactConstants.IMPACT_WEBVIEW_API_REWARD_ITEM_KEY, itemManager.getCurrentItem().getKey());
+			}
 		}
 		catch (Exception e) {
 			dataOk = false;
@@ -625,10 +676,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			if (mainview != null) {
 				mainview.openImpact(view, data);
 				
-				if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null && 
-					ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY)  && 
-					ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_NOOFFERSCREEN_KEY).equals(true))
-						playVideo();
+				ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+				if (currentZone.noOfferScreen()) {
+					playVideo();
+				}		
 				
 				if (_impactListener != null)
 					_impactListener.onImpactOpen();
@@ -651,7 +702,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	private void sendImpactReadyEvent () {
 		if (!_impactReadySent && _impactListener != null) {
-			ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {				
+			ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {				
 				@Override
 				public void run() {
 					ApplifierImpactUtils.Log("Impact ready!", this);
@@ -663,7 +714,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 
 	private void setupViews () {
-		mainview = new ApplifierImpactMainView(ApplifierImpactProperties.CURRENT_ACTIVITY, this);
+		mainview = new ApplifierImpactMainView(ApplifierImpactProperties.getCurrentActivity(), this);
 	}
 
 	private void playVideo () {
@@ -680,31 +731,31 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				public void run() {
 					ApplifierImpactUtils.Log("Delayed video start", this);
 					ApplifierImpactPlayVideoRunner playVideoRunner = new ApplifierImpactPlayVideoRunner();
-					if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
-						ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
+					if (ApplifierImpactProperties.getCurrentActivity() != null)
+						ApplifierImpactProperties.getCurrentActivity().runOnUiThread(playVideoRunner);
 				}
 			}, delay);
 		}
 		else {
 			ApplifierImpactPlayVideoRunner playVideoRunner = new ApplifierImpactPlayVideoRunner();
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null)
-				ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(playVideoRunner);
+			if (ApplifierImpactProperties.getCurrentActivity() != null)
+				ApplifierImpactProperties.getCurrentActivity().runOnUiThread(playVideoRunner);
 		}
 	}
 	
 	private void startImpactFullscreenActivity () {
-		Intent newIntent = new Intent(ApplifierImpactProperties.CURRENT_ACTIVITY, com.applifier.impact.android.view.ApplifierImpactFullscreenActivity.class);
+		Intent newIntent = new Intent(ApplifierImpactProperties.getCurrentActivity(), com.applifier.impact.android.view.ApplifierImpactFullscreenActivity.class);
 		int flags = Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK;
 		
-		if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS != null && 
-			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) && 
-			ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(true))
-				flags = Intent.FLAG_ACTIVITY_NEW_TASK;
+		ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+		if (currentZone.openAnimated()) {
+			flags = Intent.FLAG_ACTIVITY_NEW_TASK;
+		}
 		
 		newIntent.addFlags(flags);
 		
 		try {
-			ApplifierImpactProperties.BASE_ACTIVITY.startActivity(newIntent);
+			ApplifierImpactProperties.getBaseActivity().startActivity(newIntent);
 		}
 		catch (ActivityNotFoundException e) {
 			ApplifierImpactUtils.Log("Could not find activity: " + e.getStackTrace(), this);
@@ -733,7 +784,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			@Override
 			public void run() {
 				if(ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
-					PowerManager pm = (PowerManager)ApplifierImpactProperties.CURRENT_ACTIVITY.getBaseContext().getSystemService(Context.POWER_SERVICE);			
+					PowerManager pm = (PowerManager)ApplifierImpactProperties.getCurrentActivity().getBaseContext().getSystemService(Context.POWER_SERVICE);			
 					if (!pm.isScreenOn()) {
 						mainview.webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, new JSONObject());
 						close();
@@ -747,7 +798,72 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		_pauseTimer.scheduleAtFixedRate(_pauseScreenTimer, 0, 50);
 	}
 	
-	
+	private void refreshCampaigns() {
+		if(_refreshAfterShowImpact) {
+			_refreshAfterShowImpact = false;
+			ApplifierImpactUtils.Log("Starting delayed ad plan refresh", this);
+			webdata.initCampaigns();
+			return;
+		}
+
+		if(_campaignRefreshTimerDeadline > 0 && SystemClock.elapsedRealtime() > _campaignRefreshTimerDeadline) {
+			removeCampaignRefreshTimer();
+			ApplifierImpactUtils.Log("Refreshing ad plan from server due to timer deadline", this);
+			webdata.initCampaigns();
+			return;
+		}
+
+		if (ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_MAX > 0) {
+			if(ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_COUNT >= ApplifierImpactProperties.CAMPAIGN_REFRESH_VIEWS_MAX) {
+				ApplifierImpactUtils.Log("Refreshing ad plan from server due to endscreen limit", this);
+				webdata.initCampaigns();
+				return;
+			}
+		}
+
+		if (webdata != null && webdata.getVideoPlanCampaigns() != null) {
+			if(webdata.getViewableVideoPlanCampaigns().size() == 0) {
+				ApplifierImpactUtils.Log("All available videos watched, refreshing ad plan from server", this);
+				webdata.initCampaigns();
+				return;
+			}
+		} else {
+			ApplifierImpactUtils.Log("Unable to read video data to determine if ad plans should be refreshed", this);
+		}
+	}
+
+	private void setupCampaignRefreshTimer() {
+		removeCampaignRefreshTimer();
+
+		if(ApplifierImpactProperties.CAMPAIGN_REFRESH_SECONDS > 0) {
+			_campaignRefreshTimerTask = new TimerTask() {
+				@Override
+				public void run() {
+					if(!_showingImpact) {
+						ApplifierImpactUtils.Log("Refreshing ad plan to get new data", this);
+						webdata.initCampaigns();
+					} else {
+						ApplifierImpactUtils.Log("Refreshing ad plan after current ad", this);
+						_refreshAfterShowImpact = true;
+					}
+				}
+			};
+
+			_campaignRefreshTimerDeadline = SystemClock.elapsedRealtime() + ApplifierImpactProperties.CAMPAIGN_REFRESH_SECONDS * 1000;
+
+			_campaignRefreshTimer = new Timer();
+			_campaignRefreshTimer.schedule(_campaignRefreshTimerTask, ApplifierImpactProperties.CAMPAIGN_REFRESH_SECONDS * 1000);
+		}
+	}
+
+	private void removeCampaignRefreshTimer() {
+		_campaignRefreshTimerDeadline = 0;
+
+		if(_campaignRefreshTimer != null) {
+			_campaignRefreshTimer.cancel();
+		}
+	}
+
 	/* INTERNAL CLASSES */
 
 	// FIX: Could these 2 classes be moved to MainView
@@ -755,9 +871,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	private class ApplifierImpactCloseRunner implements Runnable {
 		JSONObject _data = null;
 		@Override
-		public void run() {
-			
-			if (ApplifierImpactProperties.CURRENT_ACTIVITY != null && ApplifierImpactProperties.CURRENT_ACTIVITY.getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
+		public void run() {			
+			if (ApplifierImpactProperties.getCurrentActivity() != null && ApplifierImpactProperties.getCurrentActivity().getClass().getName().equals(ApplifierImpactConstants.IMPACT_FULLSCREEN_ACTIVITY_CLASSNAME)) {
 				Boolean dataOk = true;			
 				JSONObject data = new JSONObject();
 				
@@ -779,30 +894,28 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 					testTimer.schedule(new TimerTask() {
 						@Override
 						public void run() {
-							if(ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
-								ApplifierImpactProperties.CURRENT_ACTIVITY.runOnUiThread(new Runnable() {
+							if(ApplifierImpactProperties.getCurrentActivity() != null) {
+								ApplifierImpactProperties.getCurrentActivity().runOnUiThread(new Runnable() {
 									@Override
 									public void run() {
 										if(mainview != null) {
 											mainview.closeImpact(_data);
 										}
-										if(ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
-											ApplifierImpactProperties.CURRENT_ACTIVITY.finish();
+										if(ApplifierImpactProperties.getCurrentActivity() != null) {
+											ApplifierImpactProperties.getCurrentActivity().finish();
 										}
 										
-										if (ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS == null || 
-											!ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.containsKey(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY) || 
-											ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS.get(APPLIFIER_IMPACT_OPTION_OPENANIMATED_KEY).equals(false)) {
-											if(ApplifierImpactProperties.CURRENT_ACTIVITY != null) {
-												ApplifierImpactProperties.CURRENT_ACTIVITY.overridePendingTransition(0, 0);
-											}
+										ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+										if (!currentZone.openAnimated()) {
+											ApplifierImpactProperties.getCurrentActivity().overridePendingTransition(0, 0);
 										}	
 										
-										ApplifierImpactProperties.IMPACT_DEVELOPER_OPTIONS = null;
 										_showingImpact = false;
-										
+
 										if (_impactListener != null)
 											_impactListener.onImpactClose();
+
+										refreshCampaigns();
 									}
 								});
 							}

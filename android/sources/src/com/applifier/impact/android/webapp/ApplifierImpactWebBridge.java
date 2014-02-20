@@ -39,7 +39,7 @@ public class ApplifierImpactWebBridge {
 		}
 	}
 	
-	private IApplifierImpactWebBrigeListener _listener = null;
+	private IApplifierImpactWebBridgeListener _listener = null;
 	
 	private ApplifierImpactWebEvent getEventType (String event) {
 		for (ApplifierImpactWebEvent evt : ApplifierImpactWebEvent.values()) {
@@ -50,7 +50,7 @@ public class ApplifierImpactWebBridge {
 		return null;
 	}
 	
-	public ApplifierImpactWebBridge (IApplifierImpactWebBrigeListener listener) {
+	public ApplifierImpactWebBridge (IApplifierImpactWebBridgeListener listener) {
 		_listener = listener;
 	}
 	
@@ -110,7 +110,7 @@ public class ApplifierImpactWebBridge {
 						try {
 							Intent i = new Intent(Intent.ACTION_VIEW);
 							i.setData(Uri.parse(clickUrl));
-							ApplifierImpactProperties.CURRENT_ACTIVITY.startActivity(i);
+							ApplifierImpactProperties.getCurrentActivity().startActivity(i);
 						}
 						catch (Exception e) {
 							ApplifierImpactUtils.Log("Could not start activity for opening URL: " + clickUrl + ", maybe malformed URL?", this);

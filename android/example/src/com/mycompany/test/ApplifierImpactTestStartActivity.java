@@ -4,12 +4,6 @@ package com.mycompany.test;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.applifier.impact.android.ApplifierImpact;
-import com.applifier.impact.android.IApplifierImpactListener;
-import com.applifier.impact.android.properties.ApplifierImpactConstants;
-
-import com.mycompany.test.R;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +16,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.applifier.impact.android.ApplifierImpact;
+import com.applifier.impact.android.IApplifierImpactListener;
+import com.applifier.impact.android.properties.ApplifierImpactConstants;
 
 public class ApplifierImpactTestStartActivity extends Activity implements IApplifierImpactListener {
 	private ApplifierImpact ai = null;
@@ -45,7 +43,7 @@ public class ApplifierImpactTestStartActivity extends Activity implements IAppli
 		Log.d(ApplifierImpactConstants.LOG_NAME, "Init impact");
 		
 		ApplifierImpact.setDebugMode(true);
-		ApplifierImpact.setTestMode(true);
+		//ApplifierImpact.setTestMode(true);
 		
 		_optionsView = ((RelativeLayout)findViewById(R.id.optionsView));
 		

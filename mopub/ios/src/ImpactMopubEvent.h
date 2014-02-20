@@ -18,9 +18,8 @@
 #import <ApplifierImpact/ApplifierImpact.h>
 
  
-@interface ImpactMopubEvent : MPInterstitialCustomEvent <ApplifierImpactDelegate>
-
-@property NSNumber *muteSoundsOption;
-@property NSNumber *deviceOrientationOption;
-
+@interface ImpactMopubEvent : MPInterstitialCustomEvent <ApplifierImpactDelegate> {
+  NSString * _zoneId;
+  NSMutableDictionary *_params;
+}
 @end

@@ -41,6 +41,8 @@ NSString * const kApplifierImpactWebViewDataParamMacAddressKey = @"macAddress";
 NSString * const kApplifierImpactWebViewDataParamSdkVersionKey = @"sdkVersion";
 NSString * const kApplifierImpactWebViewDataParamIosVersionKey = @"iOSVersion";
 NSString * const kApplifierImpactWebViewDataParamSdkIsCurrentKey = @"sdkIsCurrent";
+NSString * const kApplifierImpactWebViewDataParamZoneKey = @"zone";
+NSString * const kApplifierImpactWebViewDataParamZonesKey = @"zones";
 
 NSString * const kApplifierImpactWebViewEventDataCampaignIdKey = @"campaignId";
 NSString * const kApplifierImpactWebViewEventDataRewatchKey = @"rewatch";
@@ -98,7 +100,7 @@ NSString * const kApplifierImpactCampaignAllowVideoSkipKey = @"allowSkipVideoInS
 
 /* Reward Item JSON Properties */
 
-NSString * const kApplifierImpactRewardItemKeyKey = @"itemKey";
+NSString * const kApplifierImpactRewardItemKeyKey = @"key";
 NSString * const kApplifierImpactRewardNameKey = @"name";
 NSString * const kApplifierImpactRewardPictureKey = @"picture";
 NSString * const kApplifierImpactRewardItemKey = @"item";
@@ -136,6 +138,7 @@ NSString * const kApplifierImpactAnalyticsQueryParamGameIdKey = @"gameId";
 NSString * const kApplifierImpactAnalyticsQueryParamEventTypeKey = @"type";
 NSString * const kApplifierImpactAnalyticsQueryParamTrackingIdKey = @"trackingId";
 NSString * const kApplifierImpactAnalyticsQueryParamProviderIdKey = @"providerId";
+NSString * const kApplifierImpactAnalyticsQueryParamZoneIdKey = @"zone";
 NSString * const kApplifierImpactAnalyticsQueryParamRewardItemKey = @"rewardItem";
 NSString * const kApplifierImpactAnalyticsQueryParamGamerSIDKey = @"sid";
 
@@ -153,21 +156,8 @@ NSString * const kApplifierImpactTrackingEventTypeVideoEnd = @"view";
 /* Devicetypes */
 
 NSString * const kApplifierImpactDeviceIphone = @"iphone";
-NSString * const kApplifierImpactDeviceIphone3g = @"iphone3g";
-NSString * const kApplifierImpactDeviceIphone3gs = @"iphone3gs";
-NSString * const kApplifierImpactDeviceIphone4 = @"iphone4";
-NSString * const kApplifierImpactDeviceIphone4s = @"iphone4s";
-NSString * const kApplifierImpactDeviceIphone5 = @"iphone5";
 NSString * const kApplifierImpactDeviceIpod = @"ipod";
-NSString * const kApplifierImpactDeviceIpodTouch1gen = @"ipodtouch1gen";
-NSString * const kApplifierImpactDeviceIpodTouch2gen = @"ipodtouch2gen";
-NSString * const kApplifierImpactDeviceIpodTouch3gen = @"ipodtouch3gen";
-NSString * const kApplifierImpactDeviceIpodTouch4gen = @"ipodtouch4gen";
-NSString * const kApplifierImpactDeviceIpodTouch5gen = @"ipodtouch5gen";
 NSString * const kApplifierImpactDeviceIpad = @"ipad";
-NSString * const kApplifierImpactDeviceIpad1 = @"ipad1";
-NSString * const kApplifierImpactDeviceIpad2 = @"ipad2";
-NSString * const kApplifierImpactDeviceIpad3 = @"ipad3";
 NSString * const kApplifierImpactDeviceIosUnknown = @"iosUnknown";
 NSString * const kApplifierImpactDeviceSimulator = @"simulator";
 
@@ -215,6 +205,22 @@ NSString * const kApplifierImpactGoogleAnalyticsEventBufferingDurationKey = @"bu
 NSString * const kApplifierImpactGoogleAnalyticsEventCachingDurationKey = @"cachingDuration";
 NSString * const kApplifierImpactGoogleAnalyticsEventValueKey = @"eventValue";
 NSString * const kApplifierImpactGoogleAnalyticsEventTypeKey = @"eventType";
+
+/* Zones */
+
+NSString * const kApplifierImpactZonesRootKey = @"zones";
+NSString * const kApplifierImpactZoneIdKey = @"id";
+NSString * const kApplifierImpactZoneNameKey = @"name";
+NSString * const kApplifierImpactZoneDefaultKey = @"default";
+NSString * const kApplifierImpactZoneIsIncentivizedKey = @"incentivised";
+NSString * const kApplifierImpactZoneRewardItemsKey = @"rewardItems";
+NSString * const kApplifierImpactZoneDefaultRewardItemKey = @"defaultRewardItem";
+NSString * const kApplifierImpactZoneAllowOverrides = @"allowClientOverrides";
+NSString * const kApplifierImpactZoneNoOfferScreenKey = @"noOfferScreen";
+NSString * const kApplifierImpactZoneOpenAnimatedKey = @"openAnimated";
+NSString * const kApplifierImpactZoneMuteVideoSoundsKey = @"muteVideoSounds";
+NSString * const kApplifierImpactZoneUseDeviceOrientationForVideoKey = @"useDeviceOrientationForVideo";
+NSString * const kApplifierImpactZoneAllowVideoSkipInSecondsKey = @"allowVideoSkipInSeconds";
 
 @implementation ApplifierImpactConstants
 
