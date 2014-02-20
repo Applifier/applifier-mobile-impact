@@ -96,7 +96,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_ZONE_OPEN_ANIMATED_KEY = "openAnimated";
 	public static final String IMPACT_ZONE_NO_OFFER_SCREEN_KEY = "noOfferScreen";
 	public static final String IMPACT_ZONE_USE_DEVICE_ORIENTATION_FOR_VIDEO_KEY = "useDeviceOrientationForVideo";
-	public static final String IMPACT_ZONE_ALLOW_VIDEO_SKIP_IN_SECONDS_KEY = "allowVideoSkipInSeconds";
+	public static final String IMPACT_ZONE_ALLOW_VIDEO_SKIP_IN_SECONDS_KEY = "allowSkipVideoInSeconds";
 	public static final String IMPACT_ZONE_DISABLE_BACK_BUTTON_FOR_SECONDS = "disableBackButtonForSeconds";
 	public static final String IMPACT_ZONE_ALLOW_CLIENT_OVERRIDES_KEY = "allowClientOverrides";
 
