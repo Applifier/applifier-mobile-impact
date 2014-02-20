@@ -29,8 +29,8 @@ static ApplifierImpactProperties *sharedImpactProperties = nil;
 - (ApplifierImpactProperties *)init {
   if (self = [super init]) {
     [self setMaxNumberOfAnalyticsRetries:5];
-    //[self setCampaignDataUrl:@"https://impact.applifier.com/mobile/campaigns"];
-    [self setCampaignDataUrl:@"https://staging-impact.applifier.com/mobile/campaigns"];
+    [self setCampaignDataUrl:@"https://impact.applifier.com/mobile/campaigns"];
+    //[self setCampaignDataUrl:@"https://staging-impact.applifier.com/mobile/campaigns"];
     //[self setCampaignDataUrl:@"http://192.168.1.246:3500/mobile/campaigns"];
     [self setCampaignQueryString:[self _createCampaignQueryString]];
     [self setSdkIsCurrent:true];
