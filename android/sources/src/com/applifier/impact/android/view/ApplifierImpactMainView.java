@@ -221,7 +221,8 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		if ((ApplifierImpactProperties.SELECTED_CAMPAIGN != null &&
 			ApplifierImpactProperties.SELECTED_CAMPAIGN.isViewed()) ||
 			_currentState != ApplifierImpactMainViewState.VideoPlayer || 
-			(_currentState == ApplifierImpactMainViewState.VideoPlayer && videoplayerview != null && videoplayerview.getSecondsUntilBackButtonAllowed() == 0)) {
+			(_currentState == ApplifierImpactMainViewState.VideoPlayer && videoplayerview != null && videoplayerview.getSecondsUntilBackButtonAllowed() == 0) ||
+			(_currentState == ApplifierImpactMainViewState.VideoPlayer && ApplifierImpactWebData.getZoneManager().getCurrentZone().disableBackButtonForSeconds() == 0)) {
 			sendActionToListener(ApplifierImpactMainViewAction.BackButtonPressed);
 		}
 		else {
