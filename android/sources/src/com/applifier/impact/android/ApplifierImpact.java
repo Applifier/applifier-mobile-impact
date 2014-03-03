@@ -174,6 +174,10 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	
 	public boolean setZone(String zoneId) {
 		if(!_showingImpact) {
+			if(ApplifierImpactWebData.getZoneManager() == null) {
+				throw new IllegalStateException("Unable to set zone before campaigns are available");
+			}
+			
 			return ApplifierImpactWebData.getZoneManager().setCurrentZone(zoneId);
 		}		
 		return false;
