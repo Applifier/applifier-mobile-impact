@@ -17,6 +17,10 @@ ios/ApplifierImpact.xcworkspace/project.xcworkspace/xcuserdata
 ios/ApplifierImpact.xcworkspace/xcuserdata
 ios/build/ApplifierImpact.build/
 ios/build/Release-iphoneos/ApplifierImpact.embeddedframework/
+ios/build/Test-iphoneos/
+ios/build/Test-iphonesimulator/
+ios/build/Debug-iphonesimulator/
+ios/build/Debug-iphoneos/
 bin-debug/
 xcuserdata/
 Release-iphonesimulator/
