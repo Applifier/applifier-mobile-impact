@@ -202,12 +202,22 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 				currentZone.mergeOptions(options);
 				
 				if (currentZone.noOfferScreen()) {
-					if (webdata.getViewableVideoPlanCampaigns().size() > 0) {
-						ApplifierImpactCampaign selectedCampaign = webdata.getViewableVideoPlanCampaigns().get(0);
+					ArrayList<ApplifierImpactCampaign> viewableCampaigns = webdata.getViewableVideoPlanCampaigns();
+
+					if (viewableCampaigns.size() > 0) {
+						ApplifierImpactCampaign selectedCampaign = viewableCampaigns.get(0);
 						ApplifierImpactProperties.SELECTED_CAMPAIGN = selectedCampaign;
+
+						if(viewableCampaigns.size() > 1) {
+							ApplifierImpactCampaign nextCampaign = viewableCampaigns.get(1);
+
+							if(cachemanager.isCampaignCached(selectedCampaign) && !cachemanager.isCampaignCached(nextCampaign) && nextCampaign.allowCacheVideo()) {
+								cachemanager.cacheNextVideo(nextCampaign);
+							}
+						}
 					}
 				}
-				
+
 				_openRequestFromDeveloper = true;
 				_showingImpact = true;
 				startImpactFullscreenActivity();

@@ -109,7 +109,15 @@ public class ApplifierImpactCacheManager implements IApplifierImpactCampaignHand
 		}
 	}
 
-	
+	public boolean isCampaignCached(ApplifierImpactCampaign campaign) {
+		return ApplifierImpactUtils.isFileInCache(campaign.getVideoFilename());
+	}
+
+	public void cacheNextVideo(ApplifierImpactCampaign campaign) {
+		ApplifierImpactCampaignHandler campaignHandler = new ApplifierImpactCampaignHandler(campaign);
+		campaignHandler.downloadCampaign();
+	}
+
 	// EVENT METHDOS
 	
 	@Override
