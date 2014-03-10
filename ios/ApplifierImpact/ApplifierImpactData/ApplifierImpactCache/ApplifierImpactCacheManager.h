@@ -5,18 +5,18 @@
 
 #import <Foundation/Foundation.h>
 
-@class ApplifierImpactCache;
+@class ApplifierImpactCacheManager;
 @class ApplifierImpactCampaign;
 
 @protocol ApplifierImpactCacheDelegate <NSObject>
 
 @required
-- (void)cache:(ApplifierImpactCache *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign;
-- (void)cacheFinishedCachingCampaigns:(ApplifierImpactCache *)cache;
+- (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign;
+- (void)cacheFinishedCachingCampaigns:(ApplifierImpactCacheManager *)cache;
 
 @end
 
-@interface ApplifierImpactCache : NSObject
+@interface ApplifierImpactCacheManager : NSObject
 
 @property (nonatomic, weak) id<ApplifierImpactCacheDelegate> delegate;
 

@@ -3,11 +3,11 @@
 //  Copyright (c) 2012 Applifier. All rights reserved.
 //
 
-#import "../ApplifierImpact.h"
-#import "ApplifierImpactCache.h"
-#import "../ApplifierImpactCampaign/ApplifierImpactCampaign.h"
+#import "ApplifierImpact.h"
+#import "ApplifierImpactCacheManager.h"
+#import "ApplifierImpactCampaign.h"
 #import "ApplifierImpactInstrumentation.h"
-#import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
+#import "ApplifierImpactConstants.h"
 
 NSString * const kApplifierImpactCacheCampaignKey = @"kApplifierImpactCacheCampaignKey";
 NSString * const kApplifierImpactCacheConnectionKey = @"kApplifierImpactCacheConnectionKey";
@@ -23,13 +23,13 @@ NSString * const kApplifierImpactCacheEntryCampaignIDKey = @"kApplifierImpactCac
 NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCacheEntryFilenameKey";
 NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCacheEntryFilesizeKey";
 
-@interface ApplifierImpactCache () <NSURLConnectionDelegate>
+@interface ApplifierImpactCacheManager () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSFileHandle *fileHandle;
 @property (nonatomic, strong) NSMutableArray *downloadQueue;
 @property (nonatomic, strong) NSMutableDictionary *currentDownload;
 @end
 
-@implementation ApplifierImpactCache
+@implementation ApplifierImpactCacheManager
 
 #pragma mark - Private
 
@@ -41,10 +41,10 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 }
 
 - (NSString *)_videoFilenameForCampaign:(ApplifierImpactCampaign *)campaign {
-  if ([campaign.trailerDownloadableURL lastPathComponent] == nil || [campaign.trailerDownloadableURL lastPathComponent].length < 3) {
-    return [NSString stringWithFormat:@"%@-%@", campaign.id, @"failed.mp4"];
-  }
-  
+    if ([campaign.trailerDownloadableURL lastPathComponent] == nil || [campaign.trailerDownloadableURL lastPathComponent].length < 3) {
+        return [NSString stringWithFormat:@"%@-%@", campaign.id, @"failed.mp4"];
+    }
+    
 	return [NSString stringWithFormat:@"%@-%@", campaign.id, [campaign.trailerDownloadableURL lastPathComponent]];
 }
 
@@ -73,34 +73,34 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 		return NO;
 	}
 	
-  if (campaign.shouldCacheVideo) {
-    NSString *filePath = [self _videoPathForCampaign:campaign];
-    long long existingFilesize = [self _filesizeForPath:filePath];
-    long long filesize = [self _cachedFilesizeForVideoFilename:[self _videoFilenameForCampaign:campaign]];
-    
-    if (![self campaignExistsInQueue:campaign] && (existingFilesize < filesize || filesize == 0)) {
-      AILOG_DEBUG(@"Queueing %@, id %@", campaign.trailerDownloadableURL, campaign.id);
-      
-      // Initialize downloadque only if it's NULL
-      if (_downloadQueue == nil) {
-        _downloadQueue = [NSMutableArray array];
-      }
-      
-      NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:campaign.trailerDownloadableURL];
-      NSMutableDictionary *downloadDictionary = [NSMutableDictionary dictionary];
-      [downloadDictionary setObject:request forKey:kApplifierImpactCacheURLRequestKey];
-      [downloadDictionary setObject:campaign forKey:kApplifierImpactCacheCampaignKey];
-      [downloadDictionary setObject:filePath forKey:kApplifierImpactCacheFilePathKey];
-      [downloadDictionary setObject:(existingFilesize > 0 ? kApplifierImpactCacheDownloadResumeExpected : kApplifierImpactCacheDownloadNewDownload) forKey:kApplifierImpactCacheResumeKey];
-      [self.downloadQueue addObject:downloadDictionary];
-      [self _startDownload];
-      
-      return YES;
+    if (campaign.shouldCacheVideo) {
+        NSString *filePath = [self _videoPathForCampaign:campaign];
+        long long existingFilesize = [self _filesizeForPath:filePath];
+        long long filesize = [self _cachedFilesizeForVideoFilename:[self _videoFilenameForCampaign:campaign]];
+        
+        if (![self campaignExistsInQueue:campaign] && (existingFilesize < filesize || filesize == 0)) {
+            AILOG_DEBUG(@"Queueing %@, id %@", campaign.trailerDownloadableURL, campaign.id);
+            
+            // Initialize downloadque only if it's NULL
+            if (_downloadQueue == nil) {
+                _downloadQueue = [NSMutableArray array];
+            }
+            
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:campaign.trailerDownloadableURL];
+            NSMutableDictionary *downloadDictionary = [NSMutableDictionary dictionary];
+            [downloadDictionary setObject:request forKey:kApplifierImpactCacheURLRequestKey];
+            [downloadDictionary setObject:campaign forKey:kApplifierImpactCacheCampaignKey];
+            [downloadDictionary setObject:filePath forKey:kApplifierImpactCacheFilePathKey];
+            [downloadDictionary setObject:(existingFilesize > 0 ? kApplifierImpactCacheDownloadResumeExpected : kApplifierImpactCacheDownloadNewDownload) forKey:kApplifierImpactCacheResumeKey];
+            [self.downloadQueue addObject:downloadDictionary];
+            [self _startDownload];
+            
+            return YES;
+        }
     }
-  }
-  else {
-    AILOG_DEBUG(@"Skipping campaign video caching: cacheVideo is false");
-  }
+    else {
+        AILOG_DEBUG(@"Skipping campaign video caching: cacheVideo is false");
+    }
 	
 	return NO;
 }
@@ -143,17 +143,17 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	[self.currentDownload setObject:urlConnection forKey:kApplifierImpactCacheConnectionKey];
 	[urlConnection start];
 	
-  ApplifierImpactCampaign *campaign = [self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey];
-  if (campaign != nil) {
-    long long cachingStarted = [[NSDate date] timeIntervalSince1970] * 1000;
-    campaign.videoCachingStartTime = cachingStarted;
-    [ApplifierImpactInstrumentation gaInstrumentationVideoCaching:campaign withValuesFrom:@{kApplifierImpactGoogleAnalyticsEventValueKey:kApplifierImpactGoogleAnalyticsEventVideoCachingStart}];
-  }
-  
+    ApplifierImpactCampaign *campaign = [self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey];
+    if (campaign != nil) {
+        long long cachingStarted = [[NSDate date] timeIntervalSince1970] * 1000;
+        campaign.videoCachingStartTime = cachingStarted;
+        [ApplifierImpactInstrumentation gaInstrumentationVideoCaching:campaign withValuesFrom:@{kApplifierImpactGoogleAnalyticsEventValueKey:kApplifierImpactGoogleAnalyticsEventVideoCachingStart}];
+    }
+    
 	[self.downloadQueue removeObjectAtIndex:0];
 	
 	AILOG_DEBUG(@"starting download %@", self.currentDownload);
-
+    
 	return YES;
 }
 
@@ -166,67 +166,67 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 - (void)_downloadFinishedWithFailure:(BOOL)failure {
 	AILOG_DEBUG(@"download finished with failure: %@", failure ? @"yes" : @"no");
 	
-  NSError *err;
+    NSError *err;
 	[self.fileHandle closeFile];
 	self.fileHandle = nil;
-  long long cachingFinished = [[NSDate date] timeIntervalSince1970] * 1000;
+    long long cachingFinished = [[NSDate date] timeIntervalSince1970] * 1000;
 	ApplifierImpactCampaign *campaign = [self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey];
-  campaign.videoCachingEndTime = cachingFinished;
-  
-  // Check that file came through OK
-  if (!failure) {
-    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
+    campaign.videoCachingEndTime = cachingFinished;
     
-    if (err == nil) {
-      NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
-      long long fileSize = [fileSizeNumber longLongValue];
-      AILOG_DEBUG(@"File size values are: expectedSize=%lld, actualSize=%lld", campaign.expectedTrailerSize, fileSize);
-      if (campaign.expectedTrailerSize > 0 && fileSize != campaign.expectedTrailerSize) {
-        AILOG_DEBUG(@"Problems with file size, expected: %lld, got: %lld", campaign.expectedTrailerSize, fileSize);
-        [[NSFileManager defaultManager] removeItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
-        AILOG_DEBUG(@"Removing file at: %@", [self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey]);
+    // Check that file came through OK
+    if (!failure) {
+        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
+        
+        if (err == nil) {
+            NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
+            long long fileSize = [fileSizeNumber longLongValue];
+            AILOG_DEBUG(@"File size values are: expectedSize=%lld, actualSize=%lld", campaign.expectedTrailerSize, fileSize);
+            if (campaign.expectedTrailerSize > 0 && fileSize != campaign.expectedTrailerSize) {
+                AILOG_DEBUG(@"Problems with file size, expected: %lld, got: %lld", campaign.expectedTrailerSize, fileSize);
+                [[NSFileManager defaultManager] removeItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
+                AILOG_DEBUG(@"Removing file at: %@", [self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey]);
+                NSDictionary *data = @{kApplifierImpactGoogleAnalyticsEventValueKey:kApplifierImpactGoogleAnalyticsEventVideoCachingFailed};
+                [ApplifierImpactInstrumentation gaInstrumentationVideoCaching:campaign withValuesFrom:data];
+            }
+        }
+        else {
+            AILOG_DEBUG(@"Could not get file stats, something could be wrong with the file!");
+        }
+    }
+    
+    // FIX: _queueCampaignDownload cannot ever start download again because self.currentDownload has a reference
+    // to the failed campaign and existinqueue will say YES. Currently okay since downloads do not support retries
+    // and therefore any of the files could remain in forever download loop. Fix downloads to have retries.
+    
+	if (failure) {
+		[self _queueCampaignDownload:campaign];
+        if ([self isCampaignVideoCached:campaign]) {
+            [[NSFileManager defaultManager] removeItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
+        }
         NSDictionary *data = @{kApplifierImpactGoogleAnalyticsEventValueKey:kApplifierImpactGoogleAnalyticsEventVideoCachingFailed};
         [ApplifierImpactInstrumentation gaInstrumentationVideoCaching:campaign withValuesFrom:data];
-      }
-    }
-    else {
-      AILOG_DEBUG(@"Could not get file stats, something could be wrong with the file!");
-    }
-  }
-  
-  // FIX: _queueCampaignDownload cannot ever start download again because self.currentDownload has a reference
-  // to the failed campaign and existinqueue will say YES. Currently okay since downloads do not support retries
-  // and therefore any of the files could remain in forever download loop. Fix downloads to have retries.
-  
-	if (failure) {		
-		[self _queueCampaignDownload:campaign];
-    if ([self isCampaignVideoCached:campaign]) {
-      [[NSFileManager defaultManager] removeItemAtPath:[self.currentDownload objectForKey:kApplifierImpactCacheFilePathKey] error:&err];
-    }
-    NSDictionary *data = @{kApplifierImpactGoogleAnalyticsEventValueKey:kApplifierImpactGoogleAnalyticsEventVideoCachingFailed};
-    [ApplifierImpactInstrumentation gaInstrumentationVideoCaching:campaign withValuesFrom:data];
 	}
 	else {
 		[self.delegate cache:self finishedCachingCampaign:[self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey]];
-    NSDictionary *data = @{kApplifierImpactGoogleAnalyticsEventValueKey:kApplifierImpactGoogleAnalyticsEventVideoCachingCompleted,
-                           kApplifierImpactGoogleAnalyticsEventCachingDurationKey:@(campaign.videoCachingEndTime - campaign.videoCachingStartTime)};
-    [ApplifierImpactInstrumentation gaInstrumentationVideoCaching:campaign withValuesFrom:data];
-  }
+        NSDictionary *data = @{kApplifierImpactGoogleAnalyticsEventValueKey:kApplifierImpactGoogleAnalyticsEventVideoCachingCompleted,
+                               kApplifierImpactGoogleAnalyticsEventCachingDurationKey:@(campaign.videoCachingEndTime - campaign.videoCachingStartTime)};
+        [ApplifierImpactInstrumentation gaInstrumentationVideoCaching:campaign withValuesFrom:data];
+    }
 	
 	self.currentDownload = nil;
 	
 	if ([self.downloadQueue count] == 0) {
-    [self.delegate cacheFinishedCachingCampaigns:self];
-    _downloadQueue = nil;
-  }
-		
+        [self.delegate cacheFinishedCachingCampaigns:self];
+        _downloadQueue = nil;
+    }
+    
 	[self _startDownload];
 }
 
 - (void)_cleanUpIndexWithCampaigns:(NSArray *)campaigns {
 	// FIXME: what to do with old campaigns?
 	
-  if (campaigns == nil || [campaigns count] == 0) {
+    if (campaigns == nil || [campaigns count] == 0) {
 		AILOG_DEBUG(@"No new campaigns.");
 		return;
 	}
@@ -276,7 +276,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 		index = [NSMutableArray array];
 	
 	ApplifierImpactCampaign *campaign = [self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey];
-
+    
 	BOOL found = NO;
 	if (campaign != nil) {
 		for (NSDictionary *cacheEntry in index) {
@@ -291,7 +291,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 				}
 			}
 		}
-
+        
 		if (!found) {
 			AILOG_DEBUG(@"Adding campaign '%@' to index.", campaign.id);
 			NSMutableDictionary *cacheEntry = [NSMutableDictionary dictionary];
@@ -308,11 +308,11 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 }
 
 - (void)_removeInvalidDownloadsWithCampaigns:(NSArray *)campaigns {
-  if ([self.downloadQueue count] == 0) {
+    if ([self.downloadQueue count] == 0) {
 		AILOG_DEBUG(@"No downloads queued.");
 		return;
 	}
-  
+    
 	NSMutableArray *downloadsToRemove = [NSMutableArray array];
 	
 	for (NSDictionary *downloadDictionary in self.downloadQueue) {
@@ -345,7 +345,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	AIAssertV(![NSThread isMainThread], nil);
 	
 	if ((self = [super init])) {
-    AILOG_DEBUG(@"creating downloadqueue");
+        AILOG_DEBUG(@"creating downloadqueue");
 	}
 	
 	return self;
@@ -353,15 +353,15 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 
 - (void)cacheCampaigns:(NSArray *)campaigns {
 	AIAssert(![NSThread isMainThread]);
-
-  if (campaigns == nil) {
+    
+    if (campaigns == nil) {
 		AILOG_DEBUG(@"Input is nil.");
 		return;
 	}
 	
 	NSError *error = nil;
 	NSString *cachePath = [self _cachePath];
-  
+    
 	if (![[NSFileManager defaultManager] createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:nil error:&error]) {
 		AILOG_DEBUG(@"Couldn't create cache path. Error: %@", error);
 		return;
@@ -369,13 +369,13 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	
 	[self _removeInvalidDownloadsWithCampaigns:campaigns];
 	[self _cleanUpIndexWithCampaigns:campaigns];
-  
-  BOOL downloadsQueued = NO;
-  
+    
+    BOOL downloadsQueued = NO;
+    
 	for (ApplifierImpactCampaign *campaign in campaigns) {
 		if ([self _queueCampaignDownload:campaign]) {
-      downloadsQueued = YES;
-    } 	  
+            downloadsQueued = YES;
+        }
 	}
 	
 	if (!downloadsQueued) {
@@ -385,34 +385,34 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 }
 
 - (BOOL)campaignExistsInQueue:(ApplifierImpactCampaign *)campaign {
-  BOOL existsInQueue = NO;
-  
-  if (self.downloadQueue != nil) {
-    for (NSDictionary *downloadDictionary in self.downloadQueue) {
-      ApplifierImpactCampaign *downloadCampaign = [downloadDictionary objectForKey:kApplifierImpactCacheCampaignKey];
-      if ([downloadCampaign.id isEqualToString:campaign.id]) {
-        existsInQueue = YES;
-        break;
-      }
+    BOOL existsInQueue = NO;
+    
+    if (self.downloadQueue != nil) {
+        for (NSDictionary *downloadDictionary in self.downloadQueue) {
+            ApplifierImpactCampaign *downloadCampaign = [downloadDictionary objectForKey:kApplifierImpactCacheCampaignKey];
+            if ([downloadCampaign.id isEqualToString:campaign.id]) {
+                existsInQueue = YES;
+                break;
+            }
+        }
     }
-  }
-  
-  ApplifierImpactCampaign *currentDownloadingCampaign = [self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey];
-  if ([currentDownloadingCampaign.id isEqualToString:campaign.id]) {
-    existsInQueue = YES;
-  }
-  
-  if (existsInQueue) {
-    AILOG_DEBUG(@"Campaign '%@' exists in downloadQueue.", campaign.id);
-  }
+    
+    ApplifierImpactCampaign *currentDownloadingCampaign = [self.currentDownload objectForKey:kApplifierImpactCacheCampaignKey];
+    if ([currentDownloadingCampaign.id isEqualToString:campaign.id]) {
+        existsInQueue = YES;
+    }
+    
+    if (existsInQueue) {
+        AILOG_DEBUG(@"Campaign '%@' exists in downloadQueue.", campaign.id);
+    }
 	
 	return existsInQueue;
 }
 
 - (BOOL)isCampaignVideoCached:(ApplifierImpactCampaign *)campaign {
-  BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[self _videoPathForCampaign:campaign]];
-  AILOG_DEBUG(@"File exists at path: %@, %i", [self _videoPathForCampaign:campaign], exists);
-  return exists;
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[self _videoPathForCampaign:campaign]];
+    AILOG_DEBUG(@"File exists at path: %@, %i", [self _videoPathForCampaign:campaign], exists);
+    return exists;
 }
 
 - (NSURL *)localVideoURLForCampaign:(ApplifierImpactCampaign *)campaign {
@@ -440,7 +440,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	}
 	
 	[self.downloadQueue removeAllObjects];
-  _downloadQueue = nil;
+    _downloadQueue = nil;
 }
 
 
@@ -449,13 +449,13 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	NSHTTPURLResponse *httpResponse = nil;
 	
-  if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-    httpResponse = (NSHTTPURLResponse *)response;
-  }
-
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+        httpResponse = (NSHTTPURLResponse *)response;
+    }
+    
 	NSString *resumeStatus = [self.currentDownload objectForKey:kApplifierImpactCacheResumeKey];
 	BOOL resumeExpected = [resumeStatus isEqualToString:kApplifierImpactCacheDownloadResumeExpected];
-  
+    
 	if (resumeExpected && [httpResponse statusCode] == 200) {
 		AILOG_DEBUG(@"Resume expected but got status code 200, restarting download.");
 		
@@ -471,10 +471,10 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 		[self _saveCurrentlyDownloadingCampaignToIndexWithFilesize:size];
 		NSDictionary *fsAttributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[self _cachePath] error:nil];
 		
-    if (fsAttributes != nil) {
+        if (fsAttributes != nil) {
 			long long freeSpace = [[fsAttributes objectForKey:NSFileSystemFreeSize] longLongValue];
 			
-      if (size > freeSpace) {
+            if (size > freeSpace) {
 				AILOG_DEBUG(@"Not enough space, canceling download. (%lld needed, %lld free)", size, freeSpace);
 				[connection cancel];
 				[self _downloadFinishedWithFailure:YES];
@@ -484,7 +484,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-  [self.fileHandle writeData:data];
+    [self.fileHandle writeData:data];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {

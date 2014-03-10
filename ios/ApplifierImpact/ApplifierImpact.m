@@ -4,18 +4,18 @@
 //
 
 #import "ApplifierImpact.h"
-#import "ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
-#import "ApplifierImpactCampaign/ApplifierImpactCampaign.h"
-#import "ApplifierImpactItem/ApplifierImpactRewardItem.h"
-#import "ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
-#import "ApplifierImpactDevice/ApplifierImpactDevice.h"
-#import "ApplifierImpactProperties/ApplifierImpactProperties.h"
-#import "ApplifierImpactView/ApplifierImpactMainViewController.h"
-#import "ApplifierImpactZone/ApplifierImpactZoneManager.h"
-#import "ApplifierImpactZone/ApplifierImpactIncentivizedZone.h"
+#import "ApplifierImpactCampaignManager.h"
+#import "ApplifierImpactCampaign.h"
+#import "ApplifierImpactRewardItem.h"
+#import "ApplifierImpactAnalyticsUploader.h"
+#import "ApplifierImpactDevice.h"
+#import "ApplifierImpactProperties.h"
+#import "ApplifierImpactMainViewController.h"
+#import "ApplifierImpactZoneManager.h"
+#import "ApplifierImpactIncentivizedZone.h"
 
-#import "ApplifierImpactInitializer/ApplifierImpactDefaultInitializer.h"
-#import "ApplifierImpactInitializer/ApplifierImpactNoWebViewInitializer.h"
+#import "ApplifierImpactDefaultInitializer.h"
+#import "ApplifierImpactNoWebViewInitializer.h"
 
 NSString * const kApplifierImpactRewardItemPictureKey = @"picture";
 NSString * const kApplifierImpactRewardItemNameKey = @"name";
