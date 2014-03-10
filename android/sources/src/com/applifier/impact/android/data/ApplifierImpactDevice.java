@@ -17,11 +17,10 @@ import android.telephony.TelephonyManager;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class ApplifierImpactDevice {
+
+	public static Object ADVERTISING_TRACKING_INFO = null;
 	
 	public static String getSoftwareVersion () {
 		return "" + Build.VERSION.SDK_INT;
@@ -77,10 +76,41 @@ public class ApplifierImpactDevice {
     }
     
     public static void fetchAdvertisingTrackingInfo(final Activity context) {
-    	if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS) {
-    		try {
-    			ApplifierImpactProperties.ADVERTISING_TRACKING_INFO = AdvertisingIdClient.getAdvertisingIdInfo(context);
-    		} catch(Exception e) {}
+    	try {
+    		Class<?> GooglePlayServicesUtil = Class.forName("com.google.android.gms.common.GooglePlayServicesUtil");
+    		Method isGooglePlayServicesAvailable = GooglePlayServicesUtil.getMethod("isGooglePlayServicesAvailable", Context.class);
+    		if(isGooglePlayServicesAvailable.invoke(null, context).equals(0)) { // ConnectionResult.SUCCESS
+    			Class<?> AdvertisingClientId = Class.forName("com.google.android.gms.ads.identifier.AdvertisingIdClient");
+        		Method getAdvertisingIdInfo = AdvertisingClientId.getMethod("getAdvertisingIdInfo", Context.class);
+        		ApplifierImpactDevice.ADVERTISING_TRACKING_INFO = getAdvertisingIdInfo.invoke(null, context);
+    		}
+    		
+    	} catch(Exception e) {}
+    }
+    
+    public static String getAdvertisingTrackingId() {
+    	try {
+    		if(ApplifierImpactDevice.ADVERTISING_TRACKING_INFO != null) {
+        		Class<?> Info = Class.forName("com.google.android.gms.ads.identifier.AdvertisingIdClient$Info");
+        		Method getId = Info.getMethod("getId");
+        		return (String)getId.invoke(ApplifierImpactDevice.ADVERTISING_TRACKING_INFO);
+        	}
+    		return null;
+    	} catch(Exception e) {
+    		return null;
+    	}
+    }
+    
+    public static boolean isLimitAdTrackingEnabled() {
+    	try {
+    		if(ApplifierImpactDevice.ADVERTISING_TRACKING_INFO != null) {
+        		Class<?> Info = Class.forName("com.google.android.gms.ads.identifier.AdvertisingIdClient$Info");
+        		Method isLimitAdTrackingEnabled = Info.getMethod("isLimitAdTrackingEnabled");
+        		return (Boolean)isLimitAdTrackingEnabled.invoke(ApplifierImpactDevice.ADVERTISING_TRACKING_INFO);
+        	}
+    		return false;
+    	} catch(Exception e) {
+    		return false;
     	}
     }
 	
