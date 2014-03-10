@@ -83,9 +83,12 @@ public class ApplifierImpactDevice {
     			Class<?> AdvertisingClientId = Class.forName("com.google.android.gms.ads.identifier.AdvertisingIdClient");
         		Method getAdvertisingIdInfo = AdvertisingClientId.getMethod("getAdvertisingIdInfo", Context.class);
         		ApplifierImpactDevice.ADVERTISING_TRACKING_INFO = getAdvertisingIdInfo.invoke(null, context);
-    		}
-    		
-    	} catch(Exception e) {}
+    		} else {
+    			ApplifierImpactUtils.Log("Unable to fetch advertising tracking info", ApplifierImpactDevice.class);
+    		}  		
+    	} catch(Exception e) {
+    		ApplifierImpactUtils.Log("Warning! Google Play Services is needed to access Android advertising identifier. Please add Google Play Services to your game.", ApplifierImpactDevice.class);
+    	}
     }
     
     public static String getAdvertisingTrackingId() {
