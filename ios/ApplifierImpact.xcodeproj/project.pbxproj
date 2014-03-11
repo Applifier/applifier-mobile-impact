@@ -118,10 +118,8 @@
 		99F2F6181858A52200A773C2 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C2B17E8881300845E0B /* StoreKit.framework */; };
 		99FE3C0117E85B2200845E0B /* ApplifierImpactZone.h in Headers */ = {isa = PBXBuildFile; fileRef = 99FE3BFF17E85B2200845E0B /* ApplifierImpactZone.h */; };
 		99FE3C0217E85B2200845E0B /* ApplifierImpactZone.m in Sources */ = {isa = PBXBuildFile; fileRef = 99FE3C0017E85B2200845E0B /* ApplifierImpactZone.m */; };
-		99FE3C1217E87E1400845E0B /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C1117E87E1400845E0B /* SenTestingKit.framework */; };
 		99FE3C1C17E87E1500845E0B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 99FE3C1A17E87E1500845E0B /* InfoPlist.strings */; };
 		99FE3C2617E87E9200845E0B /* ApplifierImpactZoneTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 99FE3C2517E87E9200845E0B /* ApplifierImpactZoneTests.m */; };
-		99FE3C2F17E8887600845E0B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C2917E8880000845E0B /* AVFoundation.framework */; };
 		99FE3C3217E888A900845E0B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C3117E888A600845E0B /* CoreGraphics.framework */; };
 		99FE3C3717E889A000845E0B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C3617E8899D00845E0B /* CoreMedia.framework */; };
 		99FE3C3917E889DC00845E0B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C3817E889D900845E0B /* SystemConfiguration.framework */; };
@@ -130,6 +128,54 @@
 		C822D76218CF4A52007AAE44 /* ApplifierImpactCacheOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = C822D75E18CF4A52007AAE44 /* ApplifierImpactCacheOperation.h */; };
 		C822D76318CF4A52007AAE44 /* ApplifierImpactCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheOperation.m */; };
 		C822D76718CF4A94007AAE44 /* ApplifierImpactCacheManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D76618CF4A94007AAE44 /* ApplifierImpactCacheManagerTests.m */; };
+		C822D76818CF4CAA007AAE44 /* ApplifierImpactIncentivizedZone.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A8516017FACAAA0090F8FF /* ApplifierImpactIncentivizedZone.m */; };
+		C822D76918CF4CBD007AAE44 /* ApplifierImpactRewardItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A8515A17FABF830090F8FF /* ApplifierImpactRewardItemManager.m */; };
+		C822D76A18CF4CC9007AAE44 /* ApplifierImpactRewardItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A8515817FABF830090F8FF /* ApplifierImpactRewardItem.m */; };
+		C822D76B18CF4CD7007AAE44 /* ApplifierImpactZone.m in Sources */ = {isa = PBXBuildFile; fileRef = 99FE3C0017E85B2200845E0B /* ApplifierImpactZone.m */; };
+		C822D76C18CF4CDF007AAE44 /* ApplifierImpactZoneParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A78DBA17E9B81B00731814 /* ApplifierImpactZoneParser.m */; };
+		C822D76D18CF4CF8007AAE44 /* ApplifierImpact.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC203C1622F01F007DE419 /* ApplifierImpact.m */; };
+		C822D76E18CF4CF8007AAE44 /* ApplifierImpactCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D75D18CF4A52007AAE44 /* ApplifierImpactCacheManager.m */; };
+		C822D76F18CF4CF8007AAE44 /* ApplifierImpactCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheOperation.m */; };
+		C822D77018CF4CF8007AAE44 /* ApplifierImpactInstrumentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BC12F617392D0D0015A35E /* ApplifierImpactInstrumentation.m */; };
+		C822D77118CF4CF8007AAE44 /* ApplifierImpactAnalyticsUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC201E1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.m */; };
+		C822D77218CF4CF8007AAE44 /* ApplifierImpactProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 78057A0F1643CADB005EF487 /* ApplifierImpactProperties.m */; };
+		C822D77318CF4CF8007AAE44 /* ApplifierImpactConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 7887E41B169EB62F00D67A2A /* ApplifierImpactConstants.m */; };
+		C822D77418CF4CF8007AAE44 /* ApplifierImpactURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */; };
+		C822D78318CF4CF8007AAE44 /* ApplifierImpactViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8BA170D6F32000CFC99 /* ApplifierImpactViewState.m */; };
+		C822D78418CF4CF8007AAE44 /* ApplifierImpactViewStateDefaultOffers.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8BE170D7126000CFC99 /* ApplifierImpactViewStateDefaultOffers.m */; };
+		C822D78D18CF4D47007AAE44 /* ApplifierImpactDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 786F5D63163142BB00FD34C4 /* ApplifierImpactDevice.m */; };
+		C822D78E18CF4D5D007AAE44 /* ApplifierImpactCampaignManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20281622EFFD007DE419 /* ApplifierImpactCampaignManager.m */; };
+		C822D78F18CF4D66007AAE44 /* ApplifierImpactCampaign.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20261622EFFD007DE419 /* ApplifierImpactCampaign.m */; };
+		C822D79018CF4D6F007AAE44 /* ApplifierImpactDefaultInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8DF170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.m */; };
+		C822D79118CF4D7C007AAE44 /* ApplifierImpactMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8B6170D6E66000CFC99 /* ApplifierImpactMainViewController.m */; };
+		C822D79218CF4D86007AAE44 /* ApplifierImpactNoWebViewInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8E317155F1A000CFC99 /* ApplifierImpactNoWebViewInitializer.m */; };
+		C822D79318CF4D91007AAE44 /* ApplifierImpactWebAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 786F5D971636AF9600FD34C4 /* ApplifierImpactWebAppController.m */; };
+		C822D79418CF4D98007AAE44 /* ApplifierImpactZoneManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A78DB817E9B81B00731814 /* ApplifierImpactZoneManager.m */; };
+		C822D79618CF4DA6007AAE44 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C822D79518CF4DA6007AAE44 /* UIKit.framework */; };
+		C822D79718CF4DB0007AAE44 /* ApplifierImpactInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8DB170EF726000CFC99 /* ApplifierImpactInitializer.m */; };
+		C822D79818CF4DB8007AAE44 /* ApplifierImpactViewStateDefaultEndScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8CA170DAD1D000CFC99 /* ApplifierImpactViewStateDefaultEndScreen.m */; };
+		C822D79918CF4DC3007AAE44 /* ApplifierImpactViewStateDefaultSpinner.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8D2170DB671000CFC99 /* ApplifierImpactViewStateDefaultSpinner.m */; };
+		C822D79A18CF4DCC007AAE44 /* ApplifierImpactViewStateDefaultVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8C6170D9644000CFC99 /* ApplifierImpactViewStateDefaultVideoPlayer.m */; };
+		C822D79B18CF4DD3007AAE44 /* ApplifierImpactViewStateNoWebViewEndScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8F71716DEFE000CFC99 /* ApplifierImpactViewStateNoWebViewEndScreen.m */; };
+		C822D79C18CF4DDB007AAE44 /* ApplifierImpactViewStateNoWebViewVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8E71716A930000CFC99 /* ApplifierImpactViewStateNoWebViewVideoPlayer.m */; };
+		C822D79F18CF4E43007AAE44 /* ApplifierImpactDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8FF171C02F3000CFC99 /* ApplifierImpactDialog.m */; };
+		C822D7A018CF4E56007AAE44 /* ApplifierImpactBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */; };
+		C822D7A118CF4E56007AAE44 /* ApplifierImpactVideoMuteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CC095CAD17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.m */; };
+		C822D7A218CF4E56007AAE44 /* ApplifierImpactVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 786F5D6C1635359400FD34C4 /* ApplifierImpactVideoPlayer.m */; };
+		C822D7A318CF4E56007AAE44 /* ApplifierImpactVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 787893A4165CE94F00134FC3 /* ApplifierImpactVideoView.m */; };
+		C822D7A418CF4E56007AAE44 /* ApplifierImpactVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7835377A166365BB00D46B7C /* ApplifierImpactVideoViewController.m */; };
+		C822D7A518CF4E56007AAE44 /* ApplifierImpactNoWebViewEndScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8F31716DD16000CFC99 /* ApplifierImpactNoWebViewEndScreenViewController.m */; };
+		C822D7A618CF4E56007AAE44 /* ApplifierImpactUIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8FB171C020F000CFC99 /* ApplifierImpactUIView.m */; };
+		C822D7A718CF4E56007AAE44 /* ApplifierImpactNativeSpinner.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D903171C0E6A000CFC99 /* ApplifierImpactNativeSpinner.m */; };
+		C822D7A818CF4E56007AAE44 /* ApplifierImpactNativeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D907171D4FEC000CFC99 /* ApplifierImpactNativeButton.m */; };
+		C822D7A918CF4E56007AAE44 /* ApplifierImpactImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D90B171EA115000CFC99 /* ApplifierImpactImageView.m */; };
+		C822D7AA18CF4E56007AAE44 /* ApplifierImpactNoWebViewEndScreenBottomBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D90F171ED567000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.m */; };
+		C822D7AB18CF4E56007AAE44 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D913171FF7AC000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m */; };
+		C822D7AC18CF4E56007AAE44 /* ApplifierImpactImageViewRoundedCorners.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D91717200A8B000CFC99 /* ApplifierImpactImageViewRoundedCorners.m */; };
+		C822D7AD18CF4E56007AAE44 /* ApplifierImpactViewStateVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8EB1716AA44000CFC99 /* ApplifierImpactViewStateVideoPlayer.m */; };
+		C822D7AE18CF4E56007AAE44 /* ApplifierImpactViewStateEndScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8D6170EC939000CFC99 /* ApplifierImpactViewStateEndScreen.m */; };
+		C822D7AF18CF4E67007AAE44 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C2917E8880000845E0B /* AVFoundation.framework */; };
+		C822D7B018CF4EC2007AAE44 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C1117E87E1400845E0B /* SenTestingKit.framework */; };
 		CC095C991733A30E00A0BD3C /* ApplifierImpactBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */; settings = {ATTRIBUTES = (); }; };
 		CC095C9A1733A30E00A0BD3C /* ApplifierImpactBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */; };
 		CC095CAE17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095CAC17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h */; };
@@ -282,6 +328,8 @@
 		C822D75E18CF4A52007AAE44 /* ApplifierImpactCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCacheOperation.h; sourceTree = "<group>"; };
 		C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCacheOperation.m; sourceTree = "<group>"; };
 		C822D76618CF4A94007AAE44 /* ApplifierImpactCacheManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCacheManagerTests.m; sourceTree = "<group>"; };
+		C822D79518CF4DA6007AAE44 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		C822D79D18CF4DE9007AAE44 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactBundle.h; sourceTree = "<group>"; };
 		CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactBundle.m; sourceTree = "<group>"; };
 		CC095CAC17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactVideoMuteButton.h; sourceTree = "<group>"; };
@@ -306,12 +354,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C822D7B018CF4EC2007AAE44 /* SenTestingKit.framework in Frameworks */,
+				C822D7AF18CF4E67007AAE44 /* AVFoundation.framework in Frameworks */,
+				C822D79618CF4DA6007AAE44 /* UIKit.framework in Frameworks */,
 				99FE3C3917E889DC00845E0B /* SystemConfiguration.framework in Frameworks */,
 				99F2F6181858A52200A773C2 /* StoreKit.framework in Frameworks */,
 				99FE3C3717E889A000845E0B /* CoreMedia.framework in Frameworks */,
 				99FE3C3217E888A900845E0B /* CoreGraphics.framework in Frameworks */,
-				99FE3C2F17E8887600845E0B /* AVFoundation.framework in Frameworks */,
-				99FE3C1217E87E1400845E0B /* SenTestingKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -636,6 +685,8 @@
 		CCF83B871733A13200DA12C1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C822D79D18CF4DE9007AAE44 /* XCTest.framework */,
+				C822D79518CF4DA6007AAE44 /* UIKit.framework */,
 				99FE3C3817E889D900845E0B /* SystemConfiguration.framework */,
 				99FE3C3617E8899D00845E0B /* CoreMedia.framework */,
 				99FE3C3417E8894700845E0B /* CoreVideo.framework */,
@@ -803,7 +854,8 @@
 		CC1588FD150789ED00B3D188 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastTestingUpgradeCheck = 0510;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Applifier;
 			};
 			buildConfigurationList = CC158900150789ED00B3D188 /* Build configuration list for PBXProject "ApplifierImpact" */;
@@ -916,11 +968,56 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C822D7A018CF4E56007AAE44 /* ApplifierImpactBundle.m in Sources */,
+				C822D7A118CF4E56007AAE44 /* ApplifierImpactVideoMuteButton.m in Sources */,
+				C822D7A218CF4E56007AAE44 /* ApplifierImpactVideoPlayer.m in Sources */,
+				C822D7A318CF4E56007AAE44 /* ApplifierImpactVideoView.m in Sources */,
+				C822D7A418CF4E56007AAE44 /* ApplifierImpactVideoViewController.m in Sources */,
+				C822D7A518CF4E56007AAE44 /* ApplifierImpactNoWebViewEndScreenViewController.m in Sources */,
+				C822D7A618CF4E56007AAE44 /* ApplifierImpactUIView.m in Sources */,
+				C822D7A718CF4E56007AAE44 /* ApplifierImpactNativeSpinner.m in Sources */,
+				C822D7A818CF4E56007AAE44 /* ApplifierImpactNativeButton.m in Sources */,
+				C822D7A918CF4E56007AAE44 /* ApplifierImpactImageView.m in Sources */,
+				C822D7AA18CF4E56007AAE44 /* ApplifierImpactNoWebViewEndScreenBottomBar.m in Sources */,
+				C822D7AB18CF4E56007AAE44 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m in Sources */,
+				C822D7AC18CF4E56007AAE44 /* ApplifierImpactImageViewRoundedCorners.m in Sources */,
+				C822D7AD18CF4E56007AAE44 /* ApplifierImpactViewStateVideoPlayer.m in Sources */,
+				C822D7AE18CF4E56007AAE44 /* ApplifierImpactViewStateEndScreen.m in Sources */,
+				C822D76D18CF4CF8007AAE44 /* ApplifierImpact.m in Sources */,
+				C822D76E18CF4CF8007AAE44 /* ApplifierImpactCacheManager.m in Sources */,
+				C822D76F18CF4CF8007AAE44 /* ApplifierImpactCacheOperation.m in Sources */,
+				C822D77018CF4CF8007AAE44 /* ApplifierImpactInstrumentation.m in Sources */,
+				C822D77118CF4CF8007AAE44 /* ApplifierImpactAnalyticsUploader.m in Sources */,
+				C822D77218CF4CF8007AAE44 /* ApplifierImpactProperties.m in Sources */,
+				C822D78F18CF4D66007AAE44 /* ApplifierImpactCampaign.m in Sources */,
+				C822D77318CF4CF8007AAE44 /* ApplifierImpactConstants.m in Sources */,
+				C822D79C18CF4DDB007AAE44 /* ApplifierImpactViewStateNoWebViewVideoPlayer.m in Sources */,
+				C822D77418CF4CF8007AAE44 /* ApplifierImpactURLProtocol.m in Sources */,
+				C822D79A18CF4DCC007AAE44 /* ApplifierImpactViewStateDefaultVideoPlayer.m in Sources */,
+				C822D79B18CF4DD3007AAE44 /* ApplifierImpactViewStateNoWebViewEndScreen.m in Sources */,
+				C822D79F18CF4E43007AAE44 /* ApplifierImpactDialog.m in Sources */,
+				C822D78318CF4CF8007AAE44 /* ApplifierImpactViewState.m in Sources */,
+				C822D78418CF4CF8007AAE44 /* ApplifierImpactViewStateDefaultOffers.m in Sources */,
+				C822D76B18CF4CD7007AAE44 /* ApplifierImpactZone.m in Sources */,
+				C822D79018CF4D6F007AAE44 /* ApplifierImpactDefaultInitializer.m in Sources */,
+				C822D76818CF4CAA007AAE44 /* ApplifierImpactIncentivizedZone.m in Sources */,
 				99FE3C2617E87E9200845E0B /* ApplifierImpactZoneTests.m in Sources */,
+				C822D79318CF4D91007AAE44 /* ApplifierImpactWebAppController.m in Sources */,
+				C822D79818CF4DB8007AAE44 /* ApplifierImpactViewStateDefaultEndScreen.m in Sources */,
+				C822D78E18CF4D5D007AAE44 /* ApplifierImpactCampaignManager.m in Sources */,
+				C822D79218CF4D86007AAE44 /* ApplifierImpactNoWebViewInitializer.m in Sources */,
 				99A8516A17FC45160090F8FF /* ApplifierImpactRewardItemManagerTests.m in Sources */,
+				C822D76C18CF4CDF007AAE44 /* ApplifierImpactZoneParser.m in Sources */,
+				C822D79118CF4D7C007AAE44 /* ApplifierImpactMainViewController.m in Sources */,
+				C822D79418CF4D98007AAE44 /* ApplifierImpactZoneManager.m in Sources */,
 				9945F95D180575A000A97B70 /* ApplifierImpactZoneManagerTests.m in Sources */,
+				C822D79718CF4DB0007AAE44 /* ApplifierImpactInitializer.m in Sources */,
+				C822D78D18CF4D47007AAE44 /* ApplifierImpactDevice.m in Sources */,
 				9945F95B180572A200A97B70 /* ApplifierImpactZoneParserTests.m in Sources */,
 				99A8516817FC41C00090F8FF /* ApplifierImpactRewardItemTests.m in Sources */,
+				C822D76A18CF4CC9007AAE44 /* ApplifierImpactRewardItem.m in Sources */,
+				C822D79918CF4DC3007AAE44 /* ApplifierImpactViewStateDefaultSpinner.m in Sources */,
+				C822D76918CF4CBD007AAE44 /* ApplifierImpactRewardItemManager.m in Sources */,
 				C822D76718CF4A94007AAE44 /* ApplifierImpactCacheManagerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1046,7 +1143,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/build/Release-iphoneos\"",
 					"\"$(SRCROOT)/build/Release-iphonesimulator\"",
 				);
@@ -1054,6 +1150,7 @@
 				GCC_PREFIX_HEADER = "ApplifierImpactTests/ApplifierImpactTests-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
+					"OS_OBJECT_USE_OBJC=0",
 					"TEST=1",
 				);
 				INFOPLIST_FILE = "ApplifierImpactTests/ApplifierImpactTests-Info.plist";
@@ -1076,7 +1173,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/build/Release-iphoneos\"",
 					"\"$(SRCROOT)/build/Release-iphonesimulator\"",
 				);
@@ -1093,12 +1189,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUILD_DIR = "$(SRCROOT)/build";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(SDKROOT)/Developer/Library/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1112,6 +1208,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TARGET_arm64 = 7.0;
@@ -1125,7 +1222,6 @@
 		99FE3C3B17E896F100845E0B /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CONTENTS_FOLDER_PATH = "$(WRAPPER_NAME)/Versions/$(FRAMEWORK_VERSION)";
@@ -1158,7 +1254,6 @@
 		99FE3C3C17E896F100845E0B /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1188,7 +1283,6 @@
 		99FE3C3D17E896F100845E0B /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -1200,7 +1294,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/build/Release-iphoneos\"",
 					"\"$(SRCROOT)/build/Release-iphonesimulator\"",
 				);
@@ -1211,6 +1304,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"TEST=1",
+					"OS_OBJECT_USE_OBJC=0",
 				);
 				INFOPLIST_FILE = "ApplifierImpactTests/ApplifierImpactTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
@@ -1229,7 +1323,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUILD_DIR = "$(SRCROOT)/build";
@@ -1241,6 +1334,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(SDKROOT)/Developer/Library/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1271,7 +1365,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUILD_DIR = "$(SRCROOT)/build";
@@ -1283,6 +1376,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SDKROOT)/Developer/Library/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = "OS_OBJECT_USE_OBJC=0";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -1292,6 +1386,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TARGET_arm64 = 7.0;
