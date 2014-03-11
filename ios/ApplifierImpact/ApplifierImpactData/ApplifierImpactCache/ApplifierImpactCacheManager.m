@@ -24,7 +24,7 @@ NSString * const kApplifierImpactCacheEntryCampaignIDKey = @"kApplifierImpactCac
 NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCacheEntryFilenameKey";
 NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCacheEntryFilesizeKey";
 
-@interface ApplifierImpactCacheManager () <NSURLConnectionDelegate, ApplifierImpactCacheOperationDelegate>
+@interface ApplifierImpactCacheManager () <ApplifierImpactCacheOperationDelegate>
 @property (nonatomic, strong) NSOperationQueue * cacheOperationsQueue;
 @property (nonatomic, strong) NSMutableDictionary *campaignsOperations;
 @end
@@ -162,6 +162,12 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 }
 
 - (void)operationFailed:(ApplifierImpactCacheOperation *)cacheOperation {
+  @synchronized(self) {
+    [self _removeCacheOperationForCampaign:cacheOperation.campaignToCache];
+  }
+}
+
+- (void)operationCancelled:(ApplifierImpactCacheOperation *)cacheOperation {
   @synchronized(self) {
     [self _removeCacheOperationForCampaign:cacheOperation.campaignToCache];
   }
