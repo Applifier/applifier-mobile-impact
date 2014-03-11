@@ -15,7 +15,7 @@
 #import "ApplifierImpactZoneParser.h"
 #import "ApplifierImpactZoneManager.h"
 
-@interface ApplifierImpactCampaignManager () <NSURLConnectionDelegate, ApplifierImpactCacheDelegate>
+@interface ApplifierImpactCampaignManager () <NSURLConnectionDelegate, ApplifierImpactCacheManagerDelegate>
 @property (nonatomic, strong) NSURLConnection *urlConnection;
 @property (nonatomic, strong) NSMutableData *campaignDownloadData;
 @property (nonatomic, strong) ApplifierImpactCacheManager *cacheManager;
