@@ -12,6 +12,7 @@
 @protocol ApplifierImpactCacheManagerDelegate <NSObject>
 @optional
 - (void)cache:(ApplifierImpactCacheManager *)cache failedToCacheCampaign:(ApplifierImpactCampaign *)campaign;
+- (void)cache:(ApplifierImpactCacheManager *)cache cancelledCaching:(ApplifierImpactCampaign *)campaign;
 
 @required
 - (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign;
