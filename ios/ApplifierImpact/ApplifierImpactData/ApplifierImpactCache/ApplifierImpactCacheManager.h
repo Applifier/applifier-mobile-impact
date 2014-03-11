@@ -9,7 +9,9 @@
 @class ApplifierImpactCacheManager;
 @class ApplifierImpactCampaign;
 
-@protocol ApplifierImpactCacheDelegate <NSObject>
+@protocol ApplifierImpactCacheManagerDelegate <NSObject>
+@optional
+- (void)cache:(ApplifierImpactCacheManager *)cache failedToCacheCampaign:(ApplifierImpactCampaign *)campaign;
 
 @required
 - (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign;
@@ -18,7 +20,7 @@
 
 @interface ApplifierImpactCacheManager : NSObject
 
-@property (nonatomic, weak) id<ApplifierImpactCacheDelegate> delegate;
+@property (nonatomic, weak) id<ApplifierImpactCacheManagerDelegate> delegate;
 
 - (void)cacheCampaign:(ApplifierImpactCampaign *)campaignToCache;
 - (NSURL *)localVideoURLForCampaign:(ApplifierImpactCampaign *)campaign;
