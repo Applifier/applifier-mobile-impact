@@ -93,9 +93,13 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	return self;
 }
 
+- (BOOL)_isValidCampaignToCache:(ApplifierImpactCampaign *)campaignToCache {
+  return [self campaignExistsInQueue:campaignToCache];
+}
+
 - (void)cacheCampaign:(ApplifierImpactCampaign *)campaignToCache {
   @synchronized(self) {
-    if ([self campaignExistsInQueue:campaignToCache]) return;
+    if (![self _isValidCampaignToCache:campaignToCache]) return;
     ApplifierImpactCacheOperation * cacheOperation = [ApplifierImpactCacheOperation new];
     cacheOperation.campaignToCache = campaignToCache;
     cacheOperation.delegate = self;

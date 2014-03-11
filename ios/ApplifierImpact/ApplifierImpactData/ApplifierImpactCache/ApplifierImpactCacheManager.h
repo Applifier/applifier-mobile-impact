@@ -13,7 +13,6 @@
 
 @required
 - (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign;
-- (void)cacheFinishedCachingCampaigns:(ApplifierImpactCacheManager *)cache;
 
 @end
 

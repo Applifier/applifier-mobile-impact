@@ -301,10 +301,7 @@ static int retryCount = 0;
 #pragma mark - ApplifierImpactCacheDelegate
 
 - (void)cache:(ApplifierImpactCacheManager *)cacheManager finishedCachingCampaign:(ApplifierImpactCampaign *)campaign {
-}
-
-- (void)cacheFinishedCachingCampaigns:(ApplifierImpactCacheManager *)cacheManager {
-	dispatch_async(dispatch_get_main_queue(), ^{
+  dispatch_async(dispatch_get_main_queue(), ^{
 		[self.delegate campaignManager:self updatedWithCampaigns:self.campaigns gamerID:[[ApplifierImpactProperties sharedInstance] gamerId]];
 	});
 }
