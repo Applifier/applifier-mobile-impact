@@ -1,3 +1,4 @@
+
 //
 //  ApplifierImpactCache.h
 //  Copyright (c) 2012 Applifier. All rights reserved.
@@ -20,10 +21,10 @@
 
 @property (nonatomic, weak) id<ApplifierImpactCacheDelegate> delegate;
 
-- (void)cacheCampaigns:(NSArray *)campaigns;
+- (void)cacheCampaign:(ApplifierImpactCampaign *)campaignToCache;
 - (NSURL *)localVideoURLForCampaign:(ApplifierImpactCampaign *)campaign;
 - (BOOL)campaignExistsInQueue:(ApplifierImpactCampaign *)campaign;
-- (void)cancelAllDownloads;
 - (BOOL)isCampaignVideoCached:(ApplifierImpactCampaign *)campaign;
+- (void)cancelAllDownloads;
 
 @end

@@ -129,7 +129,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
       NSString *gamerId = [jsonDictionary objectForKey:kApplifierImpactGamerIDKey];
       
       [[ApplifierImpactProperties sharedInstance] setGamerId:gamerId];
-      [self.cacheManager cacheCampaigns:self.campaigns];
+//      [self.cacheManager cacheCampaigns:self.campaigns];
       
       dispatch_async(dispatch_get_main_queue(), ^(void) {
         [self.delegate campaignManagerCampaignDataReceived];
