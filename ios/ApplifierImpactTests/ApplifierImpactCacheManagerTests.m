@@ -7,8 +7,6 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "ApplifierImpactCampaign.h"
-#import "ApplifierImpactCacheManager.h"
 
 @interface ApplifierImpactCacheManagerTests : SenTestCase
 
@@ -29,10 +27,5 @@ extern void __gcov_flush();
   [super tearDown];
 }
 
-- (void)testCacheEmptyCampaign {
-  ApplifierImpactCacheManager * cacheManager = [ApplifierImpactCacheManager new];
-  ApplifierImpactCampaign * campaignToCache = [ApplifierImpactCampaign new];
-  [cacheManager cacheCampaign:campaignToCache];
-}
 
 @end
