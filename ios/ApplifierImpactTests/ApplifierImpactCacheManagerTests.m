@@ -163,8 +163,6 @@ extern void __gcov_flush();
   NSArray * campaigns = [[ApplifierImpactCampaignManager sharedInstance] performSelector:@selector(deserializeCampaigns:) withObject:campaignsDataArray];
   STAssertTrue(jsonString != nil, @"empty json string");
   [_cacheManager cacheCampaigns:campaigns];
-  sleep(1);
-  [_cacheManager cancelAllDownloads];
   [self threadBlocked:^BOOL{
     @synchronized(self) {
       return cachingResult != CachingResultFinishedAll;
@@ -212,7 +210,6 @@ extern void __gcov_flush();
 - (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign {
   @synchronized(self) {
     cachingResult = CachingResultFinished;
-    NSLog(@"finished %@",campaign.trailerDownloadableURL);
   }
 }
 
