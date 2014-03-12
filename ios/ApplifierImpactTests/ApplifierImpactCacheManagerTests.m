@@ -38,9 +38,10 @@ extern void __gcov_flush();
 		NSPort *port = [[NSPort alloc] init];
 		[port scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 		
-		while(isThreadBlocked) {
+		while(isThreadBlocked()) {
 			@autoreleasepool {
-				[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+				[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
+                                 beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
 			}
 		}
 	}
@@ -109,6 +110,12 @@ extern void __gcov_flush();
   campaignToCache.trailerDownloadableURL = [NSURL URLWithString:@"tmp"];
   [_cacheManager cacheCampaign:campaignToCache];
   
+  [self threadBlocked:^BOOL{
+    @synchronized(self) {
+      return cachingResult == CachingResultUndefined;
+    }
+  }];
+  
   STAssertTrue(cachingResult == CachingResultFailed,
                @"caching should fail campaign filled with wrong values");
 }
@@ -130,8 +137,14 @@ extern void __gcov_flush();
   STAssertTrue(campaignToCache != nil, @"campaign is nil");
   [_cacheManager cacheCampaign:campaignToCache];
   
-//  STAssertTrue(cachingResult == CachingResultFailed,
-//               @"caching should fail campaign filled with wrong values");
+  [self threadBlocked:^BOOL{
+    @synchronized(self) {
+      return cachingResult == CachingResultUndefined;
+    }
+  }];
+  
+  STAssertTrue(cachingResult == CachingResultFinished,
+               @"caching should be ok when caching valid campaigns");
 }
 
 #pragma mark - ApplifierImpactCacheManagerDelegate

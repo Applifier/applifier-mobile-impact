@@ -8,7 +8,7 @@
 #import "ApplifierImpactCampaign.h"
 #import "ApplifierImpactInstrumentation.h"
 #import "ApplifierImpactConstants.h"
-#import "ApplifierImpactCacheOperation.h"
+#import "ApplifierImpactCacheCampaignOperation.h"
 
 NSString * const kApplifierImpactCacheCampaignKey = @"kApplifierImpactCacheCampaignKey";
 NSString * const kApplifierImpactCacheConnectionKey = @"kApplifierImpactCacheConnectionKey";
@@ -127,7 +127,7 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
     
     if ([self campaignExistsInQueue:campaignToCache]) return;
     
-    ApplifierImpactCacheOperation * cacheOperation = [ApplifierImpactCacheOperation new];
+    ApplifierImpactCacheCampaignOperation * cacheOperation = [ApplifierImpactCacheCampaignOperation new];
     cacheOperation.campaignToCache = campaignToCache;
     cacheOperation.delegate = self;
     self.campaignsOperations[campaignToCache.id] = cacheOperation;
@@ -176,25 +176,26 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 #pragma mark ApplifierImpactCacheOperationDelegate
 #pragma mark ----
 
-- (void)operationStarted:(ApplifierImpactCacheOperation *)cacheOperation {
+- (void)operationStarted:(ApplifierImpactCacheCampaignOperation *)cacheOperation {
   @synchronized(self) {
     [self _removeCacheOperationForCampaign:cacheOperation.campaignToCache];
   }
 }
 
-- (void)operationFinished:(ApplifierImpactCacheOperation *)cacheOperation {
+- (void)operationFinished:(ApplifierImpactCacheCampaignOperation *)cacheOperation {
+  @synchronized(self) {
+    [self _removeCacheOperationForCampaign:cacheOperation.campaignToCache];
+    [self.delegate cache:self finishedCachingCampaign:cacheOperation.campaignToCache];
+  }
+}
+
+- (void)operationFailed:(ApplifierImpactCacheCampaignOperation *)cacheOperation {
   @synchronized(self) {
     [self _removeCacheOperationForCampaign:cacheOperation.campaignToCache];
   }
 }
 
-- (void)operationFailed:(ApplifierImpactCacheOperation *)cacheOperation {
-  @synchronized(self) {
-    [self _removeCacheOperationForCampaign:cacheOperation.campaignToCache];
-  }
-}
-
-- (void)operationCancelled:(ApplifierImpactCacheOperation *)cacheOperation {
+- (void)operationCancelled:(ApplifierImpactCacheCampaignOperation *)cacheOperation {
   @synchronized(self) {
     [self _removeCacheOperationForCampaign:cacheOperation.campaignToCache];
   }
