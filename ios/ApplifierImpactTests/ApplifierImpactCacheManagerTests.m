@@ -24,7 +24,7 @@ typedef enum {
 } CachingResult;
 
 @interface ApplifierImpactCacheManagerTests : SenTestCase <ApplifierImpactCacheManagerDelegate> {
-  @private
+@private
   CachingResult cachingResult;
   ApplifierImpactCacheManager * _cacheManager;
 }
@@ -163,6 +163,34 @@ extern void __gcov_flush();
   NSArray * campaigns = [[ApplifierImpactCampaignManager sharedInstance] performSelector:@selector(deserializeCampaigns:) withObject:campaignsDataArray];
   STAssertTrue(jsonString != nil, @"empty json string");
   [_cacheManager cacheCampaigns:campaigns];
+  sleep(1);
+  [_cacheManager cancelAllDownloads];
+  [self threadBlocked:^BOOL{
+    @synchronized(self) {
+      return cachingResult != CachingResultFinishedAll;
+    }
+  }];
+  
+  STAssertTrue(cachingResult == CachingResultFinishedAll,
+               @"caching should be ok when caching valid campaigns");
+}
+
+- (void)testCancelAllOperatons {
+  cachingResult = CachingResultUndefined;
+  NSError * error = nil;
+  NSStringEncoding encoding = NSStringEncodingConversionAllowLossy;
+  NSString * pathToResource = [[NSBundle bundleForClass:[self class]] pathForResource:@"jsonData.txt" ofType:nil];
+  NSString * jsonString = [[NSString alloc] initWithContentsOfFile:pathToResource
+                                                      usedEncoding:&encoding
+                                                             error:&error];
+  NSDictionary * jsonDataDictionary = [jsonString JSONValue];
+  NSDictionary *jsonDictionary = [jsonDataDictionary objectForKey:kApplifierImpactJsonDataRootKey];
+  NSArray  * campaignsDataArray = [jsonDictionary objectForKey:kApplifierImpactCampaignsKey];
+  NSArray * campaigns = [[ApplifierImpactCampaignManager sharedInstance] performSelector:@selector(deserializeCampaigns:) withObject:campaignsDataArray];
+  STAssertTrue(jsonString != nil, @"empty json string");
+  [_cacheManager cacheCampaigns:campaigns];
+  sleep(4);
+  [_cacheManager cancelAllDownloads];
   [self threadBlocked:^BOOL{
     @synchronized(self) {
       return cachingResult != CachingResultFinishedAll;

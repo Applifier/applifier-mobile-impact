@@ -61,6 +61,10 @@
   [_fileHandle closeFile];
 }
 
+- (void)cancel {
+  [_connection cancel];
+}
+
 #pragma mark - NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -105,15 +109,12 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-//	[self _downloadFinishedWithFailure:NO];
   @synchronized(self) {
     _operationFinished = YES;
   }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-//	AILOG_DEBUG(@"%@", error);
-//	[self _downloadFinishedWithFailure:YES];
   @synchronized(self) {
     _operationFinished = YES;
   }
@@ -126,7 +127,6 @@
 @private
   NSOperationQueue * _internalQueue;
 }
-
 
 @end
 
@@ -169,6 +169,16 @@
     }
   }];
   [self.delegate operationFinished:self];
+}
+
+-(void)cancel {
+  [_internalQueue cancelAllOperations];
+  [self threadBlocked:^BOOL{
+    @synchronized(_internalQueue){
+      return _internalQueue.operationCount != 0;
+    }
+  }];
+  [self.delegate operationCancelled:self];
 }
 
 - (void)dealloc {
