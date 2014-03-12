@@ -20,6 +20,7 @@ typedef enum {
   CachingResultFinishedAll,
   CachingResultFailed,
   CachingResultCancelled,
+  CachingResultCancelledAll,
   
 } CachingResult;
 
@@ -191,11 +192,11 @@ extern void __gcov_flush();
   [_cacheManager cancelAllDownloads];
   [self threadBlocked:^BOOL{
     @synchronized(self) {
-      return cachingResult != CachingResultFinishedAll;
+      return cachingResult != CachingResultCancelledAll;
     }
   }];
   
-  STAssertTrue(cachingResult == CachingResultFinishedAll,
+  STAssertTrue(cachingResult == CachingResultCancelledAll,
                @"caching should be ok when caching valid campaigns");
 }
 
@@ -222,6 +223,12 @@ extern void __gcov_flush();
 - (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingAllCampaigns:(NSArray *)campaigns {
   @synchronized(self) {
     cachingResult = CachingResultFinishedAll;
+  }
+}
+
+- (void)cache:(ApplifierImpactCacheManager *)cache cancelledCachingAllCampaigns:(NSArray *)campaigns {
+  @synchronized(self) {
+    cachingResult = CachingResultCancelledAll;
   }
 }
 

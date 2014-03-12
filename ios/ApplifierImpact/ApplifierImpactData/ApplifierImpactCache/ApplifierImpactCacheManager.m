@@ -158,9 +158,6 @@
   @synchronized(self) {
     if (!campaign.id) return;
     [self.campaignsOperations removeObjectForKey:campaign.id];
-    if (!self.campaignsOperations.count) {
-      [self.delegate cache:self finishedCachingAllCampaigns:nil];
-    }
   }
 }
 
@@ -178,6 +175,9 @@
   @synchronized(self) {
     [self.delegate cache:self finishedCachingCampaign:cacheOperation.campaignToCache];
     [self _removeCacheOperationForCampaign:cacheOperation.campaignToCache];
+    if (!self.campaignsOperations.count) {
+      [self.delegate cache:self finishedCachingAllCampaigns:nil];
+    }
   }
 }
 
@@ -192,6 +192,9 @@
   @synchronized(self) {
     [self.delegate cache:self cancelledCachingCampaign:cacheOperation.campaignToCache];
     [self _removeCacheOperationForCampaign:cacheOperation.campaignToCache];
+    if (!self.campaignsOperations.count) {
+      [self.delegate cache:self cancelledCachingAllCampaigns:nil];
+    }
   }
 }
 

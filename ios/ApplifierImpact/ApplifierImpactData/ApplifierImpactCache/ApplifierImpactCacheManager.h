@@ -13,6 +13,7 @@
 @optional
 - (void)cache:(ApplifierImpactCacheManager *)cache failedToCacheCampaign:(ApplifierImpactCampaign *)campaign;
 - (void)cache:(ApplifierImpactCacheManager *)cache cancelledCachingCampaign:(ApplifierImpactCampaign *)campaign;
+- (void)cache:(ApplifierImpactCacheManager *)cache cancelledCachingAllCampaigns:(NSArray *)campaigns;
 
 @required
 - (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign;

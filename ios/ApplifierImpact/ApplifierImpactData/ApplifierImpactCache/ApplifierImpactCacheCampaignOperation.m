@@ -63,6 +63,8 @@
 
 - (void)cancel {
   [_connection cancel];
+  [_fileHandle closeFile];
+  _fileHandle = nil;
 }
 
 #pragma mark - NSURLConnectionDelegate
