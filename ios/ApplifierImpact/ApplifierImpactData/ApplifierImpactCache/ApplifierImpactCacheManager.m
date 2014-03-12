@@ -10,20 +10,6 @@
 #import "ApplifierImpactConstants.h"
 #import "ApplifierImpactCacheCampaignOperation.h"
 
-NSString * const kApplifierImpactCacheCampaignKey = @"kApplifierImpactCacheCampaignKey";
-NSString * const kApplifierImpactCacheConnectionKey = @"kApplifierImpactCacheConnectionKey";
-NSString * const kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFilePathKey";
-NSString * const kApplifierImpactCacheURLRequestKey = @"kApplifierImpactCacheURLRequestKey";
-NSString * const kApplifierImpactCacheIndexKey = @"kApplifierImpactCacheIndexKey";
-NSString * const kApplifierImpactCacheResumeKey = @"kApplifierImpactCacheResumeKey";
-
-NSString * const kApplifierImpactCacheDownloadResumeExpected = @"kApplifierImpactCacheDownloadResumeExpected";
-NSString * const kApplifierImpactCacheDownloadNewDownload = @"kApplifierImpactCacheDownloadNewDownload";
-
-NSString * const kApplifierImpactCacheEntryCampaignIDKey = @"kApplifierImpactCacheEntryCampaignIDKey";
-NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCacheEntryFilenameKey";
-NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCacheEntryFilesizeKey";
-
 @interface ApplifierImpactCacheManager () <ApplifierImpactCacheOperationDelegate>
 @property (nonatomic, strong) NSOperationQueue * cacheOperationsQueue;
 @property (nonatomic, strong) NSMutableDictionary *campaignsOperations;
@@ -129,6 +115,8 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
     
     ApplifierImpactCacheCampaignOperation * cacheOperation = [ApplifierImpactCacheCampaignOperation new];
     cacheOperation.campaignToCache = campaignToCache;
+    cacheOperation.directoryPath = [self _cachePath];
+    cacheOperation.filePathURL = [[self localVideoURLForCampaign:campaignToCache] relativePath];
     cacheOperation.delegate = self;
     self.campaignsOperations[campaignToCache.id] = cacheOperation;
     [self.cacheOperationsQueue addOperation:cacheOperation];
@@ -168,7 +156,11 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 
 - (void)_removeCacheOperationForCampaign:(ApplifierImpactCampaign *)campaign {
   @synchronized(self) {
+    if (!campaign.id) return;
     [self.campaignsOperations removeObjectForKey:campaign.id];
+    if (!self.campaignsOperations.count) {
+      [self.delegate cache:self finishedCachingAllCampaigns:nil];
+    }
   }
 }
 
@@ -184,19 +176,21 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 
 - (void)operationFinished:(ApplifierImpactCacheCampaignOperation *)cacheOperation {
   @synchronized(self) {
-    [self _removeCacheOperationForCampaign:cacheOperation.campaignToCache];
     [self.delegate cache:self finishedCachingCampaign:cacheOperation.campaignToCache];
+    [self _removeCacheOperationForCampaign:cacheOperation.campaignToCache];
   }
 }
 
 - (void)operationFailed:(ApplifierImpactCacheCampaignOperation *)cacheOperation {
   @synchronized(self) {
+    [self.delegate cache:self failedToCacheCampaign:cacheOperation.campaignToCache];
     [self _removeCacheOperationForCampaign:cacheOperation.campaignToCache];
   }
 }
 
 - (void)operationCancelled:(ApplifierImpactCacheCampaignOperation *)cacheOperation {
   @synchronized(self) {
+    [self.delegate cache:self cancelledCachingCampaign:cacheOperation.campaignToCache];
     [self _removeCacheOperationForCampaign:cacheOperation.campaignToCache];
   }
 }

@@ -17,8 +17,10 @@
 typedef enum {
   CachingResultUndefined = 0,
   CachingResultFinished,
+  CachingResultFinishedAll,
   CachingResultFailed,
   CachingResultCancelled,
+  
 } CachingResult;
 
 @interface ApplifierImpactCacheManagerTests : SenTestCase <ApplifierImpactCacheManagerDelegate> {
@@ -139,11 +141,35 @@ extern void __gcov_flush();
   
   [self threadBlocked:^BOOL{
     @synchronized(self) {
-      return cachingResult == CachingResultUndefined;
+      return cachingResult != CachingResultFinishedAll;
     }
   }];
   
-  STAssertTrue(cachingResult == CachingResultFinished,
+  STAssertTrue(cachingResult == CachingResultFinishedAll,
+               @"caching should be ok when caching valid campaigns");
+}
+
+- (void)testCacheAllCampaigns {
+  cachingResult = CachingResultUndefined;
+  NSError * error = nil;
+  NSStringEncoding encoding = NSStringEncodingConversionAllowLossy;
+  NSString * pathToResource = [[NSBundle bundleForClass:[self class]] pathForResource:@"jsonData.txt" ofType:nil];
+  NSString * jsonString = [[NSString alloc] initWithContentsOfFile:pathToResource
+                                                      usedEncoding:&encoding
+                                                             error:&error];
+  NSDictionary * jsonDataDictionary = [jsonString JSONValue];
+  NSDictionary *jsonDictionary = [jsonDataDictionary objectForKey:kApplifierImpactJsonDataRootKey];
+  NSArray  * campaignsDataArray = [jsonDictionary objectForKey:kApplifierImpactCampaignsKey];
+  NSArray * campaigns = [[ApplifierImpactCampaignManager sharedInstance] performSelector:@selector(deserializeCampaigns:) withObject:campaignsDataArray];
+  STAssertTrue(jsonString != nil, @"empty json string");
+  [_cacheManager cacheCampaigns:campaigns];
+  [self threadBlocked:^BOOL{
+    @synchronized(self) {
+      return cachingResult != CachingResultFinishedAll;
+    }
+  }];
+  
+  STAssertTrue(cachingResult == CachingResultFinishedAll,
                @"caching should be ok when caching valid campaigns");
 }
 
@@ -158,12 +184,19 @@ extern void __gcov_flush();
 - (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign {
   @synchronized(self) {
     cachingResult = CachingResultFinished;
+    NSLog(@"finished %@",campaign.trailerDownloadableURL);
   }
 }
 
 - (void)cache:(ApplifierImpactCacheManager *)cache cancelledCachingCampaign:(ApplifierImpactCampaign *)campaign {
   @synchronized(self) {
     cachingResult = CachingResultCancelled;
+  }
+}
+
+- (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingAllCampaigns:(NSArray *)campaigns {
+  @synchronized(self) {
+    cachingResult = CachingResultFinishedAll;
   }
 }
 

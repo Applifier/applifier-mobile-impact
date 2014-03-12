@@ -8,11 +8,16 @@
 
 #import "ApplifierImpactCacheCampaignOperation.h"
 
-@interface ApplifierImpactCacheVideoOperation : NSOperation {
-  
+@interface ApplifierImpactCacheVideoOperation : NSOperation <NSURLConnectionDelegate>  {
+  @private
+  BOOL _operationFinished;
+  NSFileHandle * _fileHandle;
+  NSURLConnection * _connection;
 }
 
 @property (nonatomic, weak) NSURL * videoURL;
+@property (nonatomic, copy) NSString * filePath;
+@property (nonatomic, copy) NSString * directoryPath;
 
 @end
 
@@ -33,14 +38,34 @@
 }
 
 - (void)main {
-  sleep(10);
+  _operationFinished = NO;
+  BOOL isDir = NO;
+  if ([[NSFileManager defaultManager] fileExistsAtPath:self.filePath]) {
+    [[NSFileManager defaultManager] removeItemAtPath:self.filePath error:nil];
+  }
+  if (![[NSFileManager defaultManager] fileExistsAtPath:self.directoryPath isDirectory:&isDir]) {
+    [[NSFileManager defaultManager] createDirectoryAtPath:self.directoryPath
+                              withIntermediateDirectories:YES
+                                               attributes:nil
+                                                    error:nil];
+  }
+  [[NSFileManager defaultManager] createFileAtPath:self.filePath contents:nil attributes:nil];
+  _fileHandle = [NSFileHandle fileHandleForWritingAtPath:self.filePath];
+  NSURLRequest * request = [NSURLRequest requestWithURL:self.videoURL];
+  _connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+  [self threadBlocked:^BOOL{
+    @synchronized(self) {
+      return _operationFinished != YES;
+    }
+  }];
+  [_fileHandle closeFile];
 }
 
 #pragma mark - NSURLConnectionDelegate
 
-//- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-//	NSHTTPURLResponse *httpResponse = nil;
-//
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	NSHTTPURLResponse *httpResponse = nil;
+
 //    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
 //        httpResponse = (NSHTTPURLResponse *)response;
 //    }
@@ -73,20 +98,26 @@
 //			}
 //		}
 //	}
-//}
-//
-//- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-//    [self.fileHandle writeData:data];
-//}
-//
-//- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    [_fileHandle writeData:data];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 //	[self _downloadFinishedWithFailure:NO];
-//}
-//
-//- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+  @synchronized(self) {
+    _operationFinished = YES;
+  }
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 //	AILOG_DEBUG(@"%@", error);
 //	[self _downloadFinishedWithFailure:YES];
-//}
+  @synchronized(self) {
+    _operationFinished = YES;
+  }
+}
 
 
 @end
@@ -129,6 +160,8 @@
   [self.delegate operationStarted:self];
   ApplifierImpactCacheVideoOperation * cacheVideoOperation = [ApplifierImpactCacheVideoOperation new];
   cacheVideoOperation.videoURL = self.campaignToCache.trailerDownloadableURL;
+  cacheVideoOperation.filePath = self.filePathURL;
+  cacheVideoOperation.directoryPath = self.directoryPath;
   [_internalQueue addOperation:cacheVideoOperation];
   [self threadBlocked:^BOOL{
     @synchronized(_internalQueue){
@@ -136,6 +169,11 @@
     }
   }];
   [self.delegate operationFinished:self];
+}
+
+- (void)dealloc {
+  self.filePathURL = nil;
+  self.directoryPath = nil;
 }
 
 @end

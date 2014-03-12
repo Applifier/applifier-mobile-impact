@@ -9,6 +9,20 @@
 #import <Foundation/Foundation.h>
 #import "ApplifierImpactCampaign.h"
 
+static NSString * const kApplifierImpactCacheCampaignKey = @"kApplifierImpactCacheCampaignKey";
+static NSString * const kApplifierImpactCacheConnectionKey = @"kApplifierImpactCacheConnectionKey";
+static NSString * const kApplifierImpactCacheFilePathKey = @"kApplifierImpactCacheFilePathKey";
+static NSString * const kApplifierImpactCacheURLRequestKey = @"kApplifierImpactCacheURLRequestKey";
+static NSString * const kApplifierImpactCacheIndexKey = @"kApplifierImpactCacheIndexKey";
+static NSString * const kApplifierImpactCacheResumeKey = @"kApplifierImpactCacheResumeKey";
+
+static NSString * const kApplifierImpactCacheDownloadResumeExpected = @"kApplifierImpactCacheDownloadResumeExpected";
+static NSString * const kApplifierImpactCacheDownloadNewDownload = @"kApplifierImpactCacheDownloadNewDownload";
+
+static NSString * const kApplifierImpactCacheEntryCampaignIDKey = @"kApplifierImpactCacheEntryCampaignIDKey";
+static NSString * const kApplifierImpactCacheEntryFilenameKey = @"kApplifierImpactCacheEntryFilenameKey";
+static NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCacheEntryFilesizeKey";
+
 @class ApplifierImpactCacheCampaignOperation;
 
 @protocol ApplifierImpactCacheOperationDelegate <NSObject>
@@ -26,6 +40,7 @@
 @interface ApplifierImpactCacheCampaignOperation : NSOperation
 
 @property (nonatomic, assign) ApplifierImpactCampaign * campaignToCache;
+@property (nonatomic, copy) NSString * filePathURL, * directoryPath;
 @property (nonatomic, assign) id <ApplifierImpactCacheOperationDelegate> delegate;
 
 @end

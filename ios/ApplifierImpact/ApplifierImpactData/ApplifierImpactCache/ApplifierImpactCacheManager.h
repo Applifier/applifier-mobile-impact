@@ -16,12 +16,13 @@
 
 @required
 - (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign;
+- (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingAllCampaigns:(NSArray *)campaigns;
 
 @end
 
 @interface ApplifierImpactCacheManager : NSObject
 
-@property (nonatomic, weak) id<ApplifierImpactCacheManagerDelegate> delegate;
+@property (nonatomic, weak) id <ApplifierImpactCacheManagerDelegate> delegate;
 
 - (void)cacheCampaigns:(NSArray *)campaigns;
 - (void)cacheCampaign:(ApplifierImpactCampaign *)campaignToCache;
