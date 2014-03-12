@@ -12,7 +12,7 @@
 @protocol ApplifierImpactCacheManagerDelegate <NSObject>
 @optional
 - (void)cache:(ApplifierImpactCacheManager *)cache failedToCacheCampaign:(ApplifierImpactCampaign *)campaign;
-- (void)cache:(ApplifierImpactCacheManager *)cache cancelledCaching:(ApplifierImpactCampaign *)campaign;
+- (void)cache:(ApplifierImpactCacheManager *)cache cancelledCachingCampaign:(ApplifierImpactCampaign *)campaign;
 
 @required
 - (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign;
@@ -23,6 +23,7 @@
 
 @property (nonatomic, weak) id<ApplifierImpactCacheManagerDelegate> delegate;
 
+- (void)cacheCampaigns:(NSArray *)campaigns;
 - (void)cacheCampaign:(ApplifierImpactCampaign *)campaignToCache;
 - (NSURL *)localVideoURLForCampaign:(ApplifierImpactCampaign *)campaign;
 - (BOOL)campaignExistsInQueue:(ApplifierImpactCampaign *)campaign;

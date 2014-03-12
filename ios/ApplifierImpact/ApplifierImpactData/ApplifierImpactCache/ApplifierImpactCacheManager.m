@@ -93,15 +93,40 @@ NSString * const kApplifierImpactCacheEntryFilesizeKey = @"kApplifierImpactCache
 	return self;
 }
 
+- (BOOL)campaignHasValidCache:(ApplifierImpactCampaign *)campaignToCache {
+  return NO;
+}
+
 - (BOOL)_isValidCampaignToCache:(ApplifierImpactCampaign *)campaignToCache {
   @synchronized(self) {
-    return ![self campaignExistsInQueue:campaignToCache];
+    return campaignToCache.id != nil && campaignToCache.isValidCampaign && campaignToCache.trailerDownloadableURL;
+  }
+}
+
+- (void)cacheCampaigns:(NSArray *)campaigns {
+  @synchronized(self) {
+    if (!campaigns.count) return;
+    [campaigns enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+      ApplifierImpactCampaign * campaigntoCache = nil;
+      if ([obj isKindOfClass:[ApplifierImpactCampaign class]]) {
+        campaigntoCache = (ApplifierImpactCampaign *)obj;
+        [self cacheCampaign:campaigntoCache];
+      }
+    }];
   }
 }
 
 - (void)cacheCampaign:(ApplifierImpactCampaign *)campaignToCache {
   @synchronized(self) {
-    if (![self _isValidCampaignToCache:campaignToCache]) return;
+    if (![self _isValidCampaignToCache:campaignToCache]) {
+      if ([self.delegate respondsToSelector:@selector(cache:failedToCacheCampaign:)]) {
+        [self.delegate cache:self failedToCacheCampaign:campaignToCache];
+      }
+      return;
+    }
+    
+    if ([self campaignExistsInQueue:campaignToCache]) return;
+    
     ApplifierImpactCacheOperation * cacheOperation = [ApplifierImpactCacheOperation new];
     cacheOperation.campaignToCache = campaignToCache;
     cacheOperation.delegate = self;
