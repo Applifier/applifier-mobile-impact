@@ -5,31 +5,29 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ApplifierImpactCacheFileOperation.h"
+
 
 @class ApplifierImpactCacheManager;
 @class ApplifierImpactCampaign;
 
 @protocol ApplifierImpactCacheManagerDelegate <NSObject>
 @optional
-- (void)cache:(ApplifierImpactCacheManager *)cache failedToCacheCampaign:(ApplifierImpactCampaign *)campaign;
-- (void)cache:(ApplifierImpactCacheManager *)cache cancelledCachingCampaign:(ApplifierImpactCampaign *)campaign;
-- (void)cache:(ApplifierImpactCacheManager *)cache cancelledCachingAllCampaigns:(NSArray *)campaigns;
-
-@required
-- (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign;
-- (void)cache:(ApplifierImpactCacheManager *)cache finishedCachingAllCampaigns:(NSArray *)campaigns;
-
+- (void)startedCaching:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign;
+- (void)finishedCaching:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign;
+- (void)failedCaching:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign;
+- (void)cancelledCaching:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign;
+- (void)cacheQueueEmpty;
 @end
 
 @interface ApplifierImpactCacheManager : NSObject
 
 @property (nonatomic, weak) id <ApplifierImpactCacheManagerDelegate> delegate;
 
-- (void)cacheCampaigns:(NSArray *)campaigns;
-- (void)cacheCampaign:(ApplifierImpactCampaign *)campaignToCache;
-- (NSURL *)localVideoURLForCampaign:(ApplifierImpactCampaign *)campaign;
-- (BOOL)campaignExistsInQueue:(ApplifierImpactCampaign *)campaign;
-- (BOOL)isCampaignVideoCached:(ApplifierImpactCampaign *)campaign;
+- (void)cache:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign;
+- (NSURL *)localURLFor:(ResourceType)resourceType ofCampaign:(ApplifierImpactCampaign *)campaign;
+- (BOOL)is:(ResourceType)resourceType cachedForCampaign:(ApplifierImpactCampaign *)campaign;
+- (BOOL)campaignExistsInQueue:(ApplifierImpactCampaign *)campaign withResourceType:(ResourceType)resourceType;
 - (void)cancelAllDownloads;
 
 @end

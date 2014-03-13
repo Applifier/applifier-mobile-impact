@@ -125,8 +125,8 @@
 		99FE3C3917E889DC00845E0B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C3817E889D900845E0B /* SystemConfiguration.framework */; };
 		C822D76018CF4A52007AAE44 /* ApplifierImpactCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C822D75C18CF4A52007AAE44 /* ApplifierImpactCacheManager.h */; };
 		C822D76118CF4A52007AAE44 /* ApplifierImpactCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D75D18CF4A52007AAE44 /* ApplifierImpactCacheManager.m */; };
-		C822D76218CF4A52007AAE44 /* ApplifierImpactCacheCampaignOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = C822D75E18CF4A52007AAE44 /* ApplifierImpactCacheCampaignOperation.h */; };
-		C822D76318CF4A52007AAE44 /* ApplifierImpactCacheCampaignOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheCampaignOperation.m */; };
+		C822D76218CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = C822D75E18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.h */; };
+		C822D76318CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.m */; };
 		C822D76718CF4A94007AAE44 /* ApplifierImpactCacheManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D76618CF4A94007AAE44 /* ApplifierImpactCacheManagerTests.m */; };
 		C822D76818CF4CAA007AAE44 /* ApplifierImpactIncentivizedZone.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A8516017FACAAA0090F8FF /* ApplifierImpactIncentivizedZone.m */; };
 		C822D76918CF4CBD007AAE44 /* ApplifierImpactRewardItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A8515A17FABF830090F8FF /* ApplifierImpactRewardItemManager.m */; };
@@ -135,7 +135,7 @@
 		C822D76C18CF4CDF007AAE44 /* ApplifierImpactZoneParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A78DBA17E9B81B00731814 /* ApplifierImpactZoneParser.m */; };
 		C822D76D18CF4CF8007AAE44 /* ApplifierImpact.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC203C1622F01F007DE419 /* ApplifierImpact.m */; };
 		C822D76E18CF4CF8007AAE44 /* ApplifierImpactCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D75D18CF4A52007AAE44 /* ApplifierImpactCacheManager.m */; };
-		C822D76F18CF4CF8007AAE44 /* ApplifierImpactCacheCampaignOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheCampaignOperation.m */; };
+		C822D76F18CF4CF8007AAE44 /* ApplifierImpactCacheFileOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.m */; };
 		C822D77018CF4CF8007AAE44 /* ApplifierImpactInstrumentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BC12F617392D0D0015A35E /* ApplifierImpactInstrumentation.m */; };
 		C822D77118CF4CF8007AAE44 /* ApplifierImpactAnalyticsUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC201E1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.m */; };
 		C822D77218CF4CF8007AAE44 /* ApplifierImpactProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 78057A0F1643CADB005EF487 /* ApplifierImpactProperties.m */; };
@@ -338,8 +338,8 @@
 		99FE3C3817E889D900845E0B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		C822D75C18CF4A52007AAE44 /* ApplifierImpactCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCacheManager.h; sourceTree = "<group>"; };
 		C822D75D18CF4A52007AAE44 /* ApplifierImpactCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCacheManager.m; sourceTree = "<group>"; };
-		C822D75E18CF4A52007AAE44 /* ApplifierImpactCacheCampaignOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCacheCampaignOperation.h; sourceTree = "<group>"; };
-		C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheCampaignOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCacheCampaignOperation.m; sourceTree = "<group>"; };
+		C822D75E18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCacheFileOperation.h; sourceTree = "<group>"; };
+		C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCacheFileOperation.m; sourceTree = "<group>"; };
 		C822D76618CF4A94007AAE44 /* ApplifierImpactCacheManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCacheManagerTests.m; sourceTree = "<group>"; };
 		C822D79518CF4DA6007AAE44 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C822D79D18CF4DE9007AAE44 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -593,8 +593,8 @@
 			children = (
 				C822D75C18CF4A52007AAE44 /* ApplifierImpactCacheManager.h */,
 				C822D75D18CF4A52007AAE44 /* ApplifierImpactCacheManager.m */,
-				C822D75E18CF4A52007AAE44 /* ApplifierImpactCacheCampaignOperation.h */,
-				C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheCampaignOperation.m */,
+				C822D75E18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.h */,
+				C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.m */,
 			);
 			path = ApplifierImpactCache;
 			sourceTree = "<group>";
@@ -749,7 +749,7 @@
 				78AC20411622F01F007DE419 /* ApplifierImpact.h in Headers */,
 				78CB843A16255FAA00E94915 /* ApplifierImpactURLProtocol.h in Headers */,
 				786F5D64163142BB00FD34C4 /* ApplifierImpactDevice.h in Headers */,
-				C822D76218CF4A52007AAE44 /* ApplifierImpactCacheCampaignOperation.h in Headers */,
+				C822D76218CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.h in Headers */,
 				786F5D6F1635359500FD34C4 /* ApplifierImpactVideoPlayer.h in Headers */,
 				786F5D981636AF9600FD34C4 /* ApplifierImpactWebAppController.h in Headers */,
 				99A8515B17FABF830090F8FF /* ApplifierImpactRewardItem.h in Headers */,
@@ -1006,7 +1006,7 @@
 				C86FABB718D075F7009EDE8F /* ApplifierImpactSBJsonTokeniser.m in Sources */,
 				C822D76D18CF4CF8007AAE44 /* ApplifierImpact.m in Sources */,
 				C822D76E18CF4CF8007AAE44 /* ApplifierImpactCacheManager.m in Sources */,
-				C822D76F18CF4CF8007AAE44 /* ApplifierImpactCacheCampaignOperation.m in Sources */,
+				C822D76F18CF4CF8007AAE44 /* ApplifierImpactCacheFileOperation.m in Sources */,
 				C822D77018CF4CF8007AAE44 /* ApplifierImpactInstrumentation.m in Sources */,
 				C822D77118CF4CF8007AAE44 /* ApplifierImpactAnalyticsUploader.m in Sources */,
 				C822D77218CF4CF8007AAE44 /* ApplifierImpactProperties.m in Sources */,
@@ -1099,7 +1099,7 @@
 				7894D901171C02F4000CFC99 /* ApplifierImpactDialog.m in Sources */,
 				7894D905171C0E6B000CFC99 /* ApplifierImpactNativeSpinner.m in Sources */,
 				7894D909171D4FEC000CFC99 /* ApplifierImpactNativeButton.m in Sources */,
-				C822D76318CF4A52007AAE44 /* ApplifierImpactCacheCampaignOperation.m in Sources */,
+				C822D76318CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.m in Sources */,
 				7894D90D171EA116000CFC99 /* ApplifierImpactImageView.m in Sources */,
 				7894D911171ED568000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.m in Sources */,
 				7894D915171FF7AD000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.m in Sources */,
