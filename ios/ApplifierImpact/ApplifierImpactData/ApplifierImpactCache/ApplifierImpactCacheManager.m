@@ -26,7 +26,7 @@ static NSString * const kApplifierImpactCacheOperationKey = @"kApplifierImpactCa
 static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifierImpactCacheOperationCampaignKey";
 
 
-@interface ApplifierImpactCacheManager () <ApplifierImpactFileCacheOperationDelegate>
+@interface ApplifierImpactCacheManager () <ApplifierImpactCacheOperationDelegate>
 @property (nonatomic, strong) NSOperationQueue * cacheOperationsQueue;
 @property (nonatomic, strong) NSMutableDictionary *campaignsOperations;
 @end
@@ -97,9 +97,9 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
 }
 
 - (BOOL)isCampaignVideoCached:(ApplifierImpactCampaign *)campaign {
-  BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[self _videoPathForCampaign:campaign]];
-  AILOG_DEBUG(@"File exists at path: %@, %i", [self _videoPathForCampaign:campaign], exists);
-  return exists;
+  BOOL cached = [self _filesizeForPath:[self _videoPathForCampaign:campaign]] == campaign.expectedTrailerSize && campaign.expectedTrailerSize;
+  AILOG_DEBUG(@"File exists at path: %@, %i", [self _videoPathForCampaign:campaign], cached);
+  return cached;
 }
 
 #pragma mark - Public
@@ -136,19 +136,32 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
 	}
 }
 
-- (void)cache:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign {
+- (BOOL)_isCampaignValid:(ApplifierImpactCampaign *)campaign {
+  return campaign != nil && campaign.expectedTrailerSize;
+}
+
+- (BOOL)cache:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign {
   @synchronized(self) {
-    if ([self campaignExistsInQueue:campaign withResourceType:resourceType]) return;
-    ApplifierImpactCacheFileOperation * cacheOperation = [ApplifierImpactCacheFileOperation new];
-    cacheOperation.directoryPath = [self _cachePath];
-    cacheOperation.downloadURL = [self _downloadURLFor:resourceType of:campaign];
-    cacheOperation.filePath = [[self localURLFor:resourceType ofCampaign:campaign] relativePath];
+    if ([self campaignExistsInQueue:campaign withResourceType:resourceType] ||
+        ![self _isCampaignValid:campaign]) return NO;
+    
+    ApplifierImpactCacheOperation * cacheOperation = nil;
+    if (resourceType == ResourceTypeTrailerVideo) {
+      ApplifierImpactCacheFileOperation  * tmp = [ApplifierImpactCacheFileOperation new];
+      tmp.directoryPath = [self _cachePath];
+      tmp.downloadURL = [self _downloadURLFor:resourceType of:campaign];
+      tmp.filePath = [[self localURLFor:resourceType ofCampaign:campaign] relativePath];
+      tmp.expectedFileSize = campaign.expectedTrailerSize;
+      cacheOperation = tmp;
+    }
+    
     cacheOperation.delegate = self;
     cacheOperation.operationKey = [self operationKey:campaign resourceType:resourceType];
     cacheOperation.resourceType = resourceType;
     self.campaignsOperations[[self operationKey:campaign resourceType:resourceType]] = @{ kApplifierImpactCacheOperationKey : cacheOperation,
                                                                                           kApplifierImpactCacheOperationCampaignKey : campaign};
     [self.cacheOperationsQueue addOperation:cacheOperation];
+    return YES;
   }
 }
 
@@ -161,7 +174,7 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
     default:
       break;
   }
-  return NO;
+  return result;
 }
 
 - (NSString *)operationKey:(ApplifierImpactCampaign *)campaign resourceType:(ResourceType)resourceType {
@@ -181,7 +194,7 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
   }
 }
 
-- (void)_removeOperation:(ApplifierImpactCacheFileOperation *)cacheOperation {
+- (void)_removeOperation:(ApplifierImpactCacheOperation *)cacheOperation {
   @synchronized(self) {
     if (!cacheOperation.operationKey) return;
     [self.campaignsOperations removeObjectForKey:cacheOperation.operationKey];
@@ -195,7 +208,7 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
 #pragma mark ApplifierImpactFileCacheOperationDelegate
 #pragma mark ----
 
-- (void)operationStarted:(ApplifierImpactCacheFileOperation *)cacheOperation  {
+- (void)operationStarted:(ApplifierImpactCacheOperation *)cacheOperation  {
   @synchronized(self) {
     if ([self.delegate respondsToSelector:@selector(startedCaching:forCampaign:)]) {
       NSDictionary * operationInfo = self.campaignsOperations[cacheOperation.operationKey];
@@ -206,7 +219,7 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
   }
 }
 
-- (void)operationFinished:(ApplifierImpactCacheFileOperation *)cacheOperation {
+- (void)operationFinished:(ApplifierImpactCacheOperation *)cacheOperation {
   @synchronized(self) {
     if ([self.delegate respondsToSelector:@selector(finishedCaching:forCampaign:)]) {
       NSDictionary * operationInfo = self.campaignsOperations[cacheOperation.operationKey];
@@ -217,7 +230,7 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
   }
 }
 
-- (void)operationFailed:(ApplifierImpactCacheFileOperation *)cacheOperation {
+- (void)operationFailed:(ApplifierImpactCacheOperation *)cacheOperation {
   @synchronized(self) {
     if ([self.delegate respondsToSelector:@selector(failedCaching:forCampaign:)]) {
       NSDictionary * operationInfo = self.campaignsOperations[cacheOperation.operationKey];
@@ -228,7 +241,7 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
   }
 }
 
-- (void)operationCancelled:(ApplifierImpactCacheFileOperation *)cacheOperation {
+- (void)operationCancelled:(ApplifierImpactCacheOperation *)cacheOperation {
   @synchronized(self) {
     if ([self.delegate respondsToSelector:@selector(cancelledCaching:forCampaign:)]) {
       NSDictionary * operationInfo = self.campaignsOperations[cacheOperation.operationKey];

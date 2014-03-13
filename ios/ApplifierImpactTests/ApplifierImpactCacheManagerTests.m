@@ -71,15 +71,7 @@ extern void __gcov_flush();
 - (void)testCacheNilCampaign {
   _cachingResult = CachingResultUndefined;
   ApplifierImpactCampaign * campaignToCache = nil;
-  [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
-  
-  [self threadBlocked:^BOOL{
-    @synchronized(self) {
-      return _cachingResult != CachingResultFinishedAll;
-    }
-  }];
-  
-  STAssertTrue(_cachingResult == CachingResultFailed,
+  STAssertTrue([_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache] != YES,
                @"caching should fail instantly in same thread when caching nil campaign");
 }
 
@@ -87,15 +79,8 @@ extern void __gcov_flush();
   _cachingResult = CachingResultUndefined;
   ApplifierImpactCampaign * campaignToCache = [ApplifierImpactCampaign new];
   [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
-  
-  [self threadBlocked:^BOOL{
-    @synchronized(self) {
-      return _cachingResult != CachingResultFinishedAll;
-    }
-  }];
-  
-  STAssertTrue(_cachingResult == CachingResultFailed,
-               @"caching should fail instantly in same thread when caching empty campaign");
+  STAssertTrue([_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache] != YES,
+               @"caching should fail instantly in same thread when caching nil campaign");
 }
 
 - (void)testCachePartiallyFilledCampaign {
@@ -103,44 +88,24 @@ extern void __gcov_flush();
   ApplifierImpactCampaign * campaignToCache = [ApplifierImpactCampaign new];
   campaignToCache.id = @"tmp";
   [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
-  
-  [self threadBlocked:^BOOL{
-    @synchronized(self) {
-      return _cachingResult != CachingResultFinishedAll;
-    }
-  }];
-  
-  STAssertTrue(_cachingResult == CachingResultFailed,
-               @"caching should fail instantly in same thread when caching partially empty campaign");
+  STAssertTrue([_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache] != YES,
+               @"caching should fail instantly in same thread when caching nil campaign");
   
   _cachingResult = CachingResultUndefined;
   campaignToCache.id = @"tmp";
   campaignToCache.isValidCampaign = NO;
   [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
   
-  [self threadBlocked:^BOOL{
-    @synchronized(self) {
-      return _cachingResult != CachingResultFinishedAll;
-    }
-  }];
-  
-  STAssertTrue(_cachingResult == CachingResultFailed,
-               @"caching should fail instantly in same thread when caching partially empty campaign");
+  STAssertTrue([_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache] != YES,
+               @"caching should fail instantly in same thread when caching nil campaign");
   
   _cachingResult = CachingResultUndefined;
   campaignToCache.id = @"tmp";
   campaignToCache.isValidCampaign = YES;
   [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
   
-  
-  [self threadBlocked:^BOOL{
-    @synchronized(self) {
-      return _cachingResult != CachingResultFinishedAll;
-    }
-  }];
-  
-  STAssertTrue(_cachingResult == CachingResultFailed,
-               @"caching should fail instantly in same thread when caching partially empty campaign");
+  STAssertTrue([_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache] != YES,
+               @"caching should fail instantly in same thread when caching nil campaign");
 }
 
 - (void)testCacheCampaignFilledWithWrongValues {
@@ -149,16 +114,23 @@ extern void __gcov_flush();
   campaignToCache.id = @"tmp";
   campaignToCache.isValidCampaign = YES;
   campaignToCache.trailerDownloadableURL = [NSURL URLWithString:@"tmp"];
-  [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
+  BOOL addedToQueue = [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
   
-  [self threadBlocked:^BOOL{
-    @synchronized(self) {
-      return _cachingResult != CachingResultFinishedAll;
-    }
-  }];
+  if (addedToQueue) {
+    [self threadBlocked:^BOOL{
+      @synchronized(self) {
+        return _cachingResult != CachingResultFinishedAll;
+      }
+    }];
+  }
   
-  STAssertTrue(_cachingResult == CachingResultFailed,
-               @"caching should fail campaign filled with wrong values");
+  STAssertTrue([_cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaignToCache] != YES,
+               @"video should not be cached");
+  
+  if (addedToQueue) {
+    STAssertTrue(_cachingResult == CachingResultFinishedAll,
+                 @"caching should fail campaign filled with wrong values");
+  }
 }
 
 - (void)testCacheSingleValidCampaign {
@@ -176,14 +148,19 @@ extern void __gcov_flush();
   STAssertTrue(jsonString != nil, @"empty json string");
   ApplifierImpactCampaign * campaignToCache = campaigns[0];
   STAssertTrue(campaignToCache != nil, @"campaign is nil");
-  [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
+  BOOL addedToQueue = [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
   
-  [self threadBlocked:^BOOL{
-    @synchronized(self) {
-      return _cachingResult != CachingResultFinishedAll;
-    }
-  }];
+  if (addedToQueue) {
+    [self threadBlocked:^BOOL{
+      @synchronized(self) {
+        return _cachingResult != CachingResultFinishedAll;
+      }
+    }];
+  }
   
+  STAssertTrue([_cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaignToCache],
+               @"video should be cached");
+  if (addedToQueue)
   STAssertTrue(_cachingResult == CachingResultFinishedAll,
                @"caching should be ok when caching valid campaigns");
 }
@@ -204,6 +181,7 @@ extern void __gcov_flush();
   [campaigns  enumerateObjectsUsingBlock:^(ApplifierImpactCampaign *campaign, NSUInteger idx, BOOL *stop) {
     [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaign];
   }];
+  
   [self threadBlocked:^BOOL{
     @synchronized(self) {
       return _cachingResult != CachingResultFinishedAll;
@@ -246,18 +224,21 @@ extern void __gcov_flush();
 
 - (void)finishedCaching:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign {
   @synchronized(self) {
+    NSLog(@"finishedCaching %@", campaign.trailerDownloadableURL);
     _cachingResult = CachingResultFinished;
   }
 }
 
 - (void)failedCaching:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign {
   @synchronized(self) {
+    NSLog(@"failedCaching %@", campaign.trailerDownloadableURL);
     _cachingResult = CachingResultFailed;
   }
 }
 
 - (void)cancelledCaching:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign {
   @synchronized(self) {
+    NSLog(@"cancelledCaching %@", campaign.trailerDownloadableURL);
     _cachingResult = CachingResultCancelled;
   }
 }

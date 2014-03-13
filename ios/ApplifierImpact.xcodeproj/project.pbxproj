@@ -189,6 +189,9 @@
 		C86FABBC18D075F7009EDE8F /* ApplifierImpactSBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E930E165245DC009667F6 /* ApplifierImpactSBJsonParser.m */; };
 		C86FABBD18D075F7009EDE8F /* ApplifierImpactSBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E9310165245DC009667F6 /* ApplifierImpactSBJsonWriter.m */; };
 		C86FABBE18D075F7009EDE8F /* NSObject+ApplifierImpactSBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E9312165245DC009667F6 /* NSObject+ApplifierImpactSBJson.m */; };
+		C8A51D0018D1DBA600A4DC07 /* ApplifierImpactCacheOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = C8A51CFE18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.h */; };
+		C8A51D0118D1DBA600A4DC07 /* ApplifierImpactCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C8A51CFF18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.m */; };
+		C8A51D0218D1DBB000A4DC07 /* ApplifierImpactCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C8A51CFF18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.m */; };
 		CC095C991733A30E00A0BD3C /* ApplifierImpactBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */; settings = {ATTRIBUTES = (); }; };
 		CC095C9A1733A30E00A0BD3C /* ApplifierImpactBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */; };
 		CC095CAE17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095CAC17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h */; };
@@ -344,6 +347,8 @@
 		C822D79518CF4DA6007AAE44 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C822D79D18CF4DE9007AAE44 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		C86FABB118D06C56009EDE8F /* jsonData.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = jsonData.txt; sourceTree = "<group>"; };
+		C8A51CFE18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCacheOperation.h; sourceTree = "<group>"; };
+		C8A51CFF18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCacheOperation.m; sourceTree = "<group>"; };
 		CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactBundle.h; sourceTree = "<group>"; };
 		CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactBundle.m; sourceTree = "<group>"; };
 		CC095CAC17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactVideoMuteButton.h; sourceTree = "<group>"; };
@@ -593,6 +598,8 @@
 			children = (
 				C822D75C18CF4A52007AAE44 /* ApplifierImpactCacheManager.h */,
 				C822D75D18CF4A52007AAE44 /* ApplifierImpactCacheManager.m */,
+				C8A51CFE18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.h */,
+				C8A51CFF18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.m */,
 				C822D75E18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.h */,
 				C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.m */,
 			);
@@ -767,6 +774,7 @@
 				784E93381652482D009667F6 /* ApplifierImpactSBJsonStreamWriterState.h in Headers */,
 				784E933C1652487C009667F6 /* ApplifierImpactSBJsonUTF8Stream.h in Headers */,
 				787893A5165CE94F00134FC3 /* ApplifierImpactVideoView.h in Headers */,
+				C8A51D0018D1DBA600A4DC07 /* ApplifierImpactCacheOperation.h in Headers */,
 				7835377B166365BB00D46B7C /* ApplifierImpactVideoViewController.h in Headers */,
 				7887E41C169EB63000D67A2A /* ApplifierImpactConstants.h in Headers */,
 				7894D8B7170D6E66000CFC99 /* ApplifierImpactMainViewController.h in Headers */,
@@ -1041,6 +1049,7 @@
 				C86FABB418D075F7009EDE8F /* ApplifierImpactSBJsonStreamWriter.m in Sources */,
 				C822D78D18CF4D47007AAE44 /* ApplifierImpactDevice.m in Sources */,
 				9945F95B180572A200A97B70 /* ApplifierImpactZoneParserTests.m in Sources */,
+				C8A51D0218D1DBB000A4DC07 /* ApplifierImpactCacheOperation.m in Sources */,
 				99A8516817FC41C00090F8FF /* ApplifierImpactRewardItemTests.m in Sources */,
 				C822D76A18CF4CC9007AAE44 /* ApplifierImpactRewardItem.m in Sources */,
 				C822D79918CF4DC3007AAE44 /* ApplifierImpactViewStateDefaultSpinner.m in Sources */,
@@ -1065,6 +1074,7 @@
 				786F5D991636AF9600FD34C4 /* ApplifierImpactWebAppController.m in Sources */,
 				78057A131643CADB005EF487 /* ApplifierImpactProperties.m in Sources */,
 				784E9315165245DC009667F6 /* ApplifierImpactSBJsonParser.m in Sources */,
+				C8A51D0118D1DBA600A4DC07 /* ApplifierImpactCacheOperation.m in Sources */,
 				784E9317165245DC009667F6 /* ApplifierImpactSBJsonWriter.m in Sources */,
 				784E9319165245DC009667F6 /* NSObject+ApplifierImpactSBJson.m in Sources */,
 				784E9323165246A6009667F6 /* ApplifierImpactSBJsonStreamParser.m in Sources */,

@@ -7,31 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ApplifierImpactCampaign.h"
+#import "ApplifierImpactCacheOperation.h"
 
-typedef enum {
-  ResourceTypeTrailerVideo = 0,
-} ResourceType;
-
-@class ApplifierImpactCacheFileOperation;
-
-@protocol ApplifierImpactFileCacheOperationDelegate <NSObject>
-
-@optional
-- (void)operationStarted:(ApplifierImpactCacheFileOperation *)cacheOperation;
-- (void)operationFinished:(ApplifierImpactCacheFileOperation *)cacheOperation;
-- (void)operationFailed:(ApplifierImpactCacheFileOperation *)cacheOperation;
-- (void)operationCancelled:(ApplifierImpactCacheFileOperation *)cacheOperation;
-
-@end
-
-@interface ApplifierImpactCacheFileOperation : NSOperation
+@interface ApplifierImpactCacheFileOperation : ApplifierImpactCacheOperation
 
 @property (nonatomic, strong) NSURL * downloadURL;
 @property (nonatomic, copy)   NSString * filePath, * directoryPath;
-@property (nonatomic, assign) id <ApplifierImpactFileCacheOperationDelegate> delegate;
-@property (nonatomic, assign) NSUInteger expectedFileSize;
-@property (nonatomic, copy)   NSString * operationKey;
-@property (nonatomic, assign) ResourceType resourceType;
+
 
 @end
