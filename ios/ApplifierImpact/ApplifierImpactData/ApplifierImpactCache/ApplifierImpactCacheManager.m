@@ -80,6 +80,28 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
 	return size;
 }
 
+- (BOOL)campaignHasValidCache:(ApplifierImpactCampaign *)campaignToCache {
+  return NO;
+}
+
+- (NSURL *)_downloadURLFor:(ResourceType)resourceType of:(ApplifierImpactCampaign *)campaign {
+  NSURL * url = nil;
+  switch (resourceType) {
+    case ResourceTypeTrailerVideo:
+      url = campaign.trailerDownloadableURL;
+      break;
+    default:
+      break;
+  }
+  return url;
+}
+
+- (BOOL)isCampaignVideoCached:(ApplifierImpactCampaign *)campaign {
+  BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[self _videoPathForCampaign:campaign]];
+  AILOG_DEBUG(@"File exists at path: %@, %i", [self _videoPathForCampaign:campaign], exists);
+  return exists;
+}
+
 #pragma mark - Public
 
 - (id)init {
@@ -95,8 +117,23 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
 	return self;
 }
 
-- (BOOL)campaignHasValidCache:(ApplifierImpactCampaign *)campaignToCache {
-  return NO;
+- (NSURL *)localURLFor:(ResourceType)resourceType ofCampaign:(ApplifierImpactCampaign *)campaign {
+	@synchronized (self) {
+		if (campaign == nil) {
+			AILOG_DEBUG(@"Input is nil.");
+			return nil;
+		}
+		NSString *path = nil;
+    switch (resourceType) {
+      case ResourceTypeTrailerVideo:
+        path = [self _videoPathForCampaign:campaign];
+        break;
+        
+      default:
+        break;
+    }
+		return [NSURL fileURLWithPath:path];
+	}
 }
 
 - (void)cache:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign {
@@ -127,18 +164,6 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
   return NO;
 }
 
-- (NSURL *)_downloadURLFor:(ResourceType)resourceType of:(ApplifierImpactCampaign *)campaign {
-  NSURL * url = nil;
-  switch (resourceType) {
-    case ResourceTypeTrailerVideo:
-      url = campaign.trailerDownloadableURL;
-      break;
-    default:
-      break;
-  }
-  return url;
-}
-
 - (NSString *)operationKey:(ApplifierImpactCampaign *)campaign resourceType:(ResourceType)resourceType {
   return [NSString stringWithFormat:@"%@-%d", campaign.id, resourceType];
 }
@@ -148,31 +173,6 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
   @synchronized(self) {
     return self.campaignsOperations[[self operationKey:campaign resourceType:resourceType]] != nil;
   }
-}
-
-- (BOOL)isCampaignVideoCached:(ApplifierImpactCampaign *)campaign {
-  BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[self _videoPathForCampaign:campaign]];
-  AILOG_DEBUG(@"File exists at path: %@, %i", [self _videoPathForCampaign:campaign], exists);
-  return exists;
-}
-
-- (NSURL *)localURLFor:(ResourceType)resourceType ofCampaign:(ApplifierImpactCampaign *)campaign {
-	@synchronized (self) {
-		if (campaign == nil) {
-			AILOG_DEBUG(@"Input is nil.");
-			return nil;
-		}
-		NSString *path = nil;
-    switch (resourceType) {
-      case ResourceTypeTrailerVideo:
-        path = [self _videoPathForCampaign:campaign];
-        break;
-        
-      default:
-        break;
-    }
-		return [NSURL fileURLWithPath:path];
-	}
 }
 
 - (void)cancelAllDownloads {
