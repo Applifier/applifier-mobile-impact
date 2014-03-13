@@ -12,9 +12,9 @@
 @private
   BOOL _operationFinished;
   BOOL _failedToDownload;
+  BOOL _operationCancelled;
   NSFileHandle * _fileHandle;
   NSURLConnection * _connection;
-  NSTimer * _timer;
   long long downloadedFileSize;
   unsigned int elapsedTime;
 }
@@ -42,6 +42,7 @@
     [self.delegate operationStarted:self];
   }
   _failedToDownload = YES;
+  _operationCancelled = NO;
   NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:self.filePath error:nil];
   long long size = [attributes fileSize];
   if (size != self.expectedFileSize) {
@@ -75,36 +76,33 @@
       [self.delegate operationFailed:self];
     }
   } else {
-    if ([self.delegate respondsToSelector:@selector(operationFinished:)]) {
-      [self.delegate operationFinished:self];
+    if (_operationCancelled) {
+      if ([self.delegate respondsToSelector:@selector(operationCancelled:)]) {
+        [self.delegate operationCancelled:self];
+      }
+    } else {
+      if ([self.delegate respondsToSelector:@selector(operationFinished:)]) {
+        [self.delegate operationFinished:self];
+      }
     }
   }
+  
+  [_fileHandle closeFile];
+  _fileHandle = nil;
 }
 
 - (void)cancel {
-  [_connection cancel];
-  [_fileHandle closeFile];
-  _fileHandle = nil;
-  if ([self.delegate respondsToSelector:@selector(operationCancelled:)]) {
-    [self.delegate operationCancelled:self];
+  @synchronized(self){
+    [_connection cancel];
+    _operationFinished = YES;
+    _failedToDownload = NO;
+    _operationCancelled = YES;
   }
-}
-
-- (void)tick:(NSTimer *)ticker {
-  elapsedTime++;
-  NSLog(@"Speed %lld kb/s", (long long)downloadedFileSize/(long long)(elapsedTime * 1024));
 }
 
 #pragma mark - NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-  if (!_timer) {
-    _timer = [NSTimer scheduledTimerWithTimeInterval:1
-                                              target:self
-                                            selector:@selector(tick:)
-                                            userInfo:nil
-                                             repeats:YES];
-  }
   [_fileHandle writeData:data];
   downloadedFileSize += [data length];
 }
@@ -118,7 +116,7 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
   @synchronized(self) {
-     _failedToDownload = YES;
+    _failedToDownload = YES;
     _operationFinished = YES;
   }
 }

@@ -20,7 +20,7 @@
 
 @interface ApplifierImpactCampaignManager : NSObject
 
-@property (nonatomic, weak) id<ApplifierImpactCampaignManagerDelegate> delegate;
+@property (nonatomic, weak) id <ApplifierImpactCampaignManagerDelegate> delegate;
 @property (nonatomic, strong) NSArray *campaigns;
 @property (nonatomic, strong) NSDictionary *campaignData;
 @property (nonatomic, strong) ApplifierImpactCampaign *selectedCampaign;
@@ -32,6 +32,7 @@
 - (ApplifierImpactCampaign *)getCampaignWithITunesId:(NSString *)iTunesId;
 - (ApplifierImpactCampaign *)getCampaignWithClickUrl:(NSString *)clickUrl;
 - (NSArray *)getViewableCampaigns;
+- (void)cacheNextCampaignAfter:(ApplifierImpactCampaign *)currentCampaign;
 
 + (id)sharedInstance;
 

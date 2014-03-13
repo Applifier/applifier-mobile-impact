@@ -79,6 +79,7 @@
 - (void)startVideoPlayback:(BOOL)createVideoController withDelegate:(id)videoControllerDelegate {
   if ([[ApplifierImpactMainViewController sharedInstance] isOpen]) {
     [self.videoController playCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
+    [[ApplifierImpactCampaignManager sharedInstance] cacheNextCampaignAfter:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
   }
 }
 

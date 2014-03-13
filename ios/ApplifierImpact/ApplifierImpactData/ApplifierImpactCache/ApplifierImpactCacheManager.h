@@ -24,6 +24,7 @@
 
 @property (nonatomic, weak) id <ApplifierImpactCacheManagerDelegate> delegate;
 
+- (void)cancelCacheForCampaign:(ApplifierImpactCampaign *)campaign withResourceType:(ResourceType)resourceType;
 - (BOOL)cache:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign;
 - (NSURL *)localURLFor:(ResourceType)resourceType ofCampaign:(ApplifierImpactCampaign *)campaign;
 - (BOOL)is:(ResourceType)resourceType cachedForCampaign:(ApplifierImpactCampaign *)campaign;
