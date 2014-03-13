@@ -185,13 +185,11 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
     if ([self.cacheManager campaignExistsInQueue:campaign withResourceType:ResourceTypeTrailerVideo]) {
       [self.cacheManager cancelCacheForCampaign:campaign withResourceType:ResourceTypeTrailerVideo];
     }
-		if (videoURL == nil || ![campaign shouldCacheVideo] || ![self.cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaign])
+		if (videoURL == nil || ![self.cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaign])
     {
       AILOG_DEBUG(@"Campaign is not cached!");
       videoURL = campaign.trailerStreamingURL;
     }
-    
-    
 		return videoURL;
 	}
 }

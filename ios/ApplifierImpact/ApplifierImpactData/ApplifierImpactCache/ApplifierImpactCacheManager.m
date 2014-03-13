@@ -235,9 +235,10 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
   @synchronized(self) {
     NSDictionary * operationInfo = self.campaignsOperations[cacheOperation.operationKey];
     ApplifierImpactCampaign * campaign = operationInfo[kApplifierImpactCacheOperationCampaignKey];
+    [self _removeOperation:cacheOperation];
     if ([self.delegate respondsToSelector:@selector(finishedCaching:forCampaign:)])
       [self.delegate finishedCaching:cacheOperation.resourceType forCampaign:campaign];
-    [self _removeOperation:cacheOperation];
+    
   }
 }
 
@@ -245,9 +246,10 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
   @synchronized(self) {
     NSDictionary * operationInfo = self.campaignsOperations[cacheOperation.operationKey];
     ApplifierImpactCampaign * campaign = operationInfo[kApplifierImpactCacheOperationCampaignKey];
+    [self _removeOperation:cacheOperation];
     if ([self.delegate respondsToSelector:@selector(failedCaching:forCampaign:)])
       [self.delegate failedCaching:cacheOperation.resourceType forCampaign:campaign];
-    [self _removeOperation:cacheOperation];
+    
   }
 }
 
@@ -255,9 +257,10 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
   @synchronized(self) {
     NSDictionary * operationInfo = self.campaignsOperations[cacheOperation.operationKey];
     ApplifierImpactCampaign * campaign = operationInfo[kApplifierImpactCacheOperationCampaignKey];
+    [self _removeOperation:cacheOperation];
     if ([self.delegate respondsToSelector:@selector(cancelledCaching:forCampaign:)])
       [self.delegate cancelledCaching:cacheOperation.resourceType forCampaign:campaign];
-    [self _removeOperation:cacheOperation];
+    
   }
 }
 
