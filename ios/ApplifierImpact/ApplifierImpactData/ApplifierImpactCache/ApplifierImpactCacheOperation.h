@@ -17,7 +17,7 @@ typedef enum {
 
 @protocol ApplifierImpactCacheOperationDelegate <NSObject>
 
-@optional
+@required
 - (void)operationStarted:(ApplifierImpactCacheOperation *)cacheOperation;
 - (void)operationFinished:(ApplifierImpactCacheOperation *)cacheOperation;
 - (void)operationFailed:(ApplifierImpactCacheOperation *)cacheOperation;

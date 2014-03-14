@@ -28,9 +28,11 @@ typedef enum {
   ApplifierImpactCacheManager * _cacheManager;
 }
 
-@end
+- (NSString *)cachePath;
 
 extern void __gcov_flush();
+
+@end
 
 @implementation ApplifierImpactCacheManagerTests
 
@@ -48,7 +50,7 @@ extern void __gcov_flush();
 	}
 }
 
-- (NSString *)_cachePath {
+- (NSString *)cachePath {
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
 	return [[paths objectAtIndex:0] stringByAppendingPathComponent:@"applifier"];
 }
@@ -58,7 +60,7 @@ extern void __gcov_flush();
   [super setUp];
   _cacheManager = [ApplifierImpactCacheManager new];
   _cacheManager.delegate = self;
-  [[NSFileManager defaultManager] removeItemAtPath:[self _cachePath] error:nil];
+  [[NSFileManager defaultManager] removeItemAtPath:[self cachePath] error:nil];
   // Put setup code here. This method is called before the invocation of each test method in the class.
 }
 
@@ -180,6 +182,9 @@ extern void __gcov_flush();
   STAssertTrue(jsonString != nil, @"empty json string");
   [campaigns  enumerateObjectsUsingBlock:^(ApplifierImpactCampaign *campaign, NSUInteger idx, BOOL *stop) {
     [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaign];
+    if (idx > 2) {
+      *stop = YES;
+    }
   }];
   
   [self threadBlocked:^BOOL{
@@ -207,9 +212,58 @@ extern void __gcov_flush();
   STAssertTrue(jsonString != nil, @"empty json string");
   [campaigns  enumerateObjectsUsingBlock:^(ApplifierImpactCampaign *campaign, NSUInteger idx, BOOL *stop) {
     [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaign];
+    if (idx > 2) {
+      *stop = YES;
+    }
   }];
   sleep(4);
   [_cacheManager cancelAllDownloads];
+  [self threadBlocked:^BOOL{
+    @synchronized(self) {
+      return _cachingResult != CachingResultFinishedAll;
+    }
+  }];
+  
+  STAssertTrue(_cachingResult == CachingResultFinishedAll,
+               @"caching should be ok when caching valid campaigns");
+}
+
+- (void)testCacheAllOperationsTwice {
+  _cachingResult = CachingResultUndefined;
+  NSError * error = nil;
+  NSStringEncoding encoding = NSStringEncodingConversionAllowLossy;
+  NSString * pathToResource = [[NSBundle bundleForClass:[self class]] pathForResource:@"jsonData.txt" ofType:nil];
+  NSString * jsonString = [[NSString alloc] initWithContentsOfFile:pathToResource
+                                                      usedEncoding:&encoding
+                                                             error:&error];
+  NSDictionary * jsonDataDictionary = [jsonString JSONValue];
+  NSDictionary *jsonDictionary = [jsonDataDictionary objectForKey:kApplifierImpactJsonDataRootKey];
+  NSArray  * campaignsDataArray = [jsonDictionary objectForKey:kApplifierImpactCampaignsKey];
+  NSArray * campaigns = [[ApplifierImpactCampaignManager sharedInstance] performSelector:@selector(deserializeCampaigns:) withObject:campaignsDataArray];
+  STAssertTrue(jsonString != nil, @"empty json string");
+  [campaigns  enumerateObjectsUsingBlock:^(ApplifierImpactCampaign *campaign, NSUInteger idx, BOOL *stop) {
+    [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaign];
+    if (idx > 2) {
+      *stop = YES;
+    }
+  }];
+  
+  [self threadBlocked:^BOOL{
+    @synchronized(self) {
+      return _cachingResult != CachingResultFinishedAll;
+    }
+  }];
+  
+  STAssertTrue(_cachingResult == CachingResultFinishedAll,
+               @"caching should be ok when caching valid campaigns");
+  
+  [campaigns  enumerateObjectsUsingBlock:^(ApplifierImpactCampaign *campaign, NSUInteger idx, BOOL *stop) {
+    [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaign];
+    if (idx > 2) {
+      *stop = YES;
+    }
+  }];
+  
   [self threadBlocked:^BOOL{
     @synchronized(self) {
       return _cachingResult != CachingResultFinishedAll;

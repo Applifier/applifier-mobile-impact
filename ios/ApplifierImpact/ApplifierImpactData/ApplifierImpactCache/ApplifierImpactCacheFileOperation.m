@@ -10,18 +10,21 @@
 
 @interface ApplifierImpactCacheFileOperation () <NSURLConnectionDelegate> {
 @private
-  BOOL _operationFinished;
-  BOOL _failedToDownload;
-  BOOL _operationCancelled;
   NSFileHandle * _fileHandle;
   NSURLConnection * _connection;
-  long long downloadedFileSize;
-  unsigned int elapsedTime;
+  BOOL _finished;
+  BOOL _cancelEventSent;
 }
 
 @end
 
 @implementation ApplifierImpactCacheFileOperation
+
+- (BOOL)isFinished {
+  @synchronized (self) {
+    return _finished;
+  }
+}
 
 - (void)threadBlocked:(BOOL (^)())isThreadBlocked {
 	@autoreleasepool {
@@ -37,16 +40,23 @@
 	}
 }
 
+- (void)cancel {
+  [super cancel];
+  if ([self.delegate respondsToSelector:@selector(operationCancelled:)]) {
+    @synchronized(self) {
+      _cancelEventSent = YES;
+    }
+    [self.delegate operationCancelled:self];
+  }
+}
+
 - (void)main {
   if ([self.delegate respondsToSelector:@selector(operationStarted:)]) {
     [self.delegate operationStarted:self];
   }
-  _failedToDownload = YES;
-  _operationCancelled = NO;
   NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:self.filePath error:nil];
   long long size = [attributes fileSize];
   if (size != self.expectedFileSize) {
-    _operationFinished = NO;
     BOOL isDir = NO;
     if ([[NSFileManager defaultManager] fileExistsAtPath:self.filePath]) {
       [[NSFileManager defaultManager] removeItemAtPath:self.filePath error:nil];
@@ -63,40 +73,40 @@
     _connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     [self threadBlocked:^BOOL{
       @synchronized(self) {
-        return _operationFinished != YES;
+        return ![self isFinished] && ![self isCancelled] && !_cancelEventSent;
       }
     }];
-    [_fileHandle closeFile];
   }
   
-  attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:self.filePath error:nil];
-  size = [attributes fileSize];
-  if (size != self.expectedFileSize || _failedToDownload) {
-    if ([self.delegate respondsToSelector:@selector(operationFailed:)]) {
-      [self.delegate operationFailed:self];
-    }
-  } else {
-    if (_operationCancelled) {
-      if ([self.delegate respondsToSelector:@selector(operationCancelled:)]) {
-        [self.delegate operationCancelled:self];
-      }
-    } else {
-      if ([self.delegate respondsToSelector:@selector(operationFinished:)]) {
-        [self.delegate operationFinished:self];
-      }
-    }
+  @synchronized(self) {
+    _finished = ![self isCancelled] || _cancelEventSent;
   }
   
   [_fileHandle closeFile];
   _fileHandle = nil;
-}
-
-- (void)cancel {
-  @synchronized(self){
-    [_connection cancel];
-    _operationFinished = YES;
-    _failedToDownload = NO;
-    _operationCancelled = YES;
+  
+  attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:self.filePath error:nil];
+  size = [attributes fileSize];
+  @synchronized (self) {
+    if ([self isCancelled] && !_cancelEventSent) {
+      if ([self.delegate respondsToSelector:@selector(operationCancelled:)]) {
+        [self.delegate operationCancelled:self];
+      }
+    }
+  }
+  
+  if (size == self.expectedFileSize) {
+    if ([self.delegate respondsToSelector:@selector(operationFinished:)]) {
+      [self.delegate operationFinished:self];
+    }
+    return;
+  }
+  
+  if (size != self.expectedFileSize && ![self isCancelled]) {
+    if ([self.delegate respondsToSelector:@selector(operationFailed:)]) {
+      [self.delegate operationFailed:self];
+    }
+    return;
   }
 }
 
@@ -104,20 +114,17 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
   [_fileHandle writeData:data];
-  downloadedFileSize += [data length];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
   @synchronized(self) {
-    _operationFinished = YES;
-    _failedToDownload = NO;
+    _finished = YES;
   }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
   @synchronized(self) {
-    _failedToDownload = YES;
-    _operationFinished = YES;
+    _finished = YES;
   }
 }
 
