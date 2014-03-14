@@ -13,4 +13,5 @@ public interface IApplifierImpactVideoPlayerListener extends IApplifierImpactVie
 	public void onVideoPlaybackStarted ();
 	public void onVideoPlaybackError ();
 	public void onVideoSkip ();
+	public void onVideoHidden ();
 }
