@@ -17,8 +17,7 @@
 - (void)finishedCaching:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign;
 - (void)failedCaching:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign;
 - (void)cancelledCaching:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign;
-#warning TODO - add results of all execution - about failed and finished cancelled operations
-- (void)cacheQueueEmpty;
+- (void)cachingQueueEmpty;
 @end
 
 @interface ApplifierImpactCacheManager : NSObject

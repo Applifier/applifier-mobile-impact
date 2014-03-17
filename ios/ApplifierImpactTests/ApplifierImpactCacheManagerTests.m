@@ -80,34 +80,28 @@ extern void __gcov_flush();
 - (void)testCacheEmptyCampaign {
   _cachingResult = CachingResultUndefined;
   ApplifierImpactCampaign * campaignToCache = [ApplifierImpactCampaign new];
-  [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
   STAssertTrue([_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache] != YES,
-               @"caching should fail instantly in same thread when caching nil campaign");
+               @"caching should fail instantly in same thread when caching empty campaign");
 }
 
 - (void)testCachePartiallyFilledCampaign {
   _cachingResult = CachingResultUndefined;
   ApplifierImpactCampaign * campaignToCache = [ApplifierImpactCampaign new];
   campaignToCache.id = @"tmp";
-  [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
   STAssertTrue([_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache] != YES,
-               @"caching should fail instantly in same thread when caching nil campaign");
+               @"caching should fail instantly in same thread when caching partially filled campaign");
   
   _cachingResult = CachingResultUndefined;
   campaignToCache.id = @"tmp";
   campaignToCache.isValidCampaign = NO;
-  [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
-  
   STAssertTrue([_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache] != YES,
-               @"caching should fail instantly in same thread when caching nil campaign");
+               @"caching should fail instantly in same thread when caching partially filled campaign");
   
   _cachingResult = CachingResultUndefined;
   campaignToCache.id = @"tmp";
   campaignToCache.isValidCampaign = YES;
-  [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
-  
   STAssertTrue([_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache] != YES,
-               @"caching should fail instantly in same thread when caching nil campaign");
+               @"caching should fail instantly in same thread when caching partially filled campaign");
 }
 
 - (void)testCacheCampaignFilledWithWrongValues {
@@ -126,12 +120,13 @@ extern void __gcov_flush();
     }];
   }
   
-  STAssertTrue([_cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaignToCache] != YES,
-               @"video should not be cached");
+  STAssertTrue(addedToQueue != true, @"operation should not added to queue");
   
   if (addedToQueue) {
     STAssertTrue(_cachingResult == CachingResultFinishedAll,
                  @"caching should fail campaign filled with wrong values");
+    STAssertTrue([_cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaignToCache] != YES,
+                 @"video should not be cached");
   }
 }
 
@@ -160,11 +155,18 @@ extern void __gcov_flush();
     }];
   }
   
-  STAssertTrue([_cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaignToCache],
-               @"video should be cached");
-  if (addedToQueue)
-  STAssertTrue(_cachingResult == CachingResultFinishedAll,
-               @"caching should be ok when caching valid campaigns");
+  STAssertTrue(addedToQueue == true, @"operation shoulb be added to queue");
+  
+  if (addedToQueue) {
+    STAssertTrue(_cachingResult == CachingResultFinishedAll,
+                 @"caching should be ok when caching valid campaigns");
+    STAssertTrue([_cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaignToCache],
+                 @"video should be cached");
+  }
+  
+  STAssertTrue([_cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaignToCache] == true,
+               @"cache invalid for campaign %@",
+               campaignToCache.id);
 }
 
 - (void)testCacheAllCampaigns {
@@ -175,11 +177,14 @@ extern void __gcov_flush();
   NSString * jsonString = [[NSString alloc] initWithContentsOfFile:pathToResource
                                                       usedEncoding:&encoding
                                                              error:&error];
+  
+  STAssertTrue(jsonString != nil, @"empty json string");
+  
   NSDictionary * jsonDataDictionary = [jsonString JSONValue];
   NSDictionary *jsonDictionary = [jsonDataDictionary objectForKey:kApplifierImpactJsonDataRootKey];
   NSArray  * campaignsDataArray = [jsonDictionary objectForKey:kApplifierImpactCampaignsKey];
   NSArray * campaigns = [[ApplifierImpactCampaignManager sharedInstance] performSelector:@selector(deserializeCampaigns:) withObject:campaignsDataArray];
-  STAssertTrue(jsonString != nil, @"empty json string");
+  
   [campaigns  enumerateObjectsUsingBlock:^(ApplifierImpactCampaign *campaign, NSUInteger idx, BOOL *stop) {
     [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaign];
     if (idx > 2) {
@@ -195,6 +200,13 @@ extern void __gcov_flush();
   
   STAssertTrue(_cachingResult == CachingResultFinishedAll,
                @"caching should be ok when caching valid campaigns");
+  
+  [campaigns  enumerateObjectsUsingBlock:^(ApplifierImpactCampaign *campaign, NSUInteger idx, BOOL *stop) {
+    STAssertTrue([_cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaign] == true, @"cache invalid for campaign %@", campaign.id);
+    if (idx > 2) {
+      *stop = YES;
+    }
+  }];
 }
 
 - (void)testCancelAllOperatons {
@@ -278,26 +290,23 @@ extern void __gcov_flush();
 
 - (void)finishedCaching:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign {
   @synchronized(self) {
-    NSLog(@"finishedCaching %@", campaign.trailerDownloadableURL);
     _cachingResult = CachingResultFinished;
   }
 }
 
 - (void)failedCaching:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign {
   @synchronized(self) {
-    NSLog(@"failedCaching %@", campaign.trailerDownloadableURL);
     _cachingResult = CachingResultFailed;
   }
 }
 
 - (void)cancelledCaching:(ResourceType)resourceType forCampaign:(ApplifierImpactCampaign *)campaign {
   @synchronized(self) {
-    NSLog(@"cancelledCaching %@", campaign.trailerDownloadableURL);
     _cachingResult = CachingResultCancelled;
   }
 }
 
-- (void)cacheQueueEmpty {
+- (void)cachingQueueEmpty {
   @synchronized(self) {
     _cachingResult = CachingResultFinishedAll;
   }

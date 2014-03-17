@@ -96,8 +96,8 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
 
 - (BOOL)isCampaignVideoCached:(ApplifierImpactCampaign *)campaign {
   @synchronized(self) {
-    BOOL cached = [self _filesizeForPath:[self _videoPathForCampaign:campaign]] == campaign.expectedTrailerSize && campaign.expectedTrailerSize;
-    AILOG_DEBUG(@"File exists at path: %@, %i", [self _videoPathForCampaign:campaign], cached);
+    BOOL cached = [self _filesizeForPath:[self _videoPathForCampaign:campaign]] == campaign.expectedTrailerSize &&
+    campaign.expectedTrailerSize;
     return cached;
   }
 }
@@ -212,8 +212,8 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
   @synchronized(self) {
     if (!cacheOperation.operationKey) return;
     [self.campaignsOperations removeObjectForKey:cacheOperation.operationKey];
-    if (!self.campaignsOperations.count && [self.delegate respondsToSelector:@selector(cacheQueueEmpty)]) {
-      [self.delegate cacheQueueEmpty];
+    if (self.campaignsOperations.count == 0 && [self.delegate respondsToSelector:@selector(cachingQueueEmpty)]) {
+      [self.delegate cachingQueueEmpty];
     }
   }
 }

@@ -51,9 +51,9 @@
 }
 
 - (void)main {
-  if ([self.delegate respondsToSelector:@selector(operationStarted:)]) {
+  if ([self.delegate respondsToSelector:@selector(operationStarted:)])
     [self.delegate operationStarted:self];
-  }
+  
   NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:self.filePath error:nil];
   long long size = [attributes fileSize];
   if (size != self.expectedFileSize) {
@@ -89,23 +89,20 @@
   size = [attributes fileSize];
   @synchronized (self) {
     if ([self isCancelled] && !_cancelEventSent) {
-      if ([self.delegate respondsToSelector:@selector(operationCancelled:)]) {
+      if ([self.delegate respondsToSelector:@selector(operationCancelled:)])
         [self.delegate operationCancelled:self];
-      }
     }
   }
   
   if (size == self.expectedFileSize) {
-    if ([self.delegate respondsToSelector:@selector(operationFinished:)]) {
+    if ([self.delegate respondsToSelector:@selector(operationFinished:)])
       [self.delegate operationFinished:self];
-    }
     return;
   }
   
   if (size != self.expectedFileSize && ![self isCancelled]) {
-    if ([self.delegate respondsToSelector:@selector(operationFailed:)]) {
+    if ([self.delegate respondsToSelector:@selector(operationFailed:)])
       [self.delegate operationFailed:self];
-    }
     return;
   }
 }
