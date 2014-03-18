@@ -236,7 +236,16 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		ApplifierImpactUtils.Log("Creating custom view", this);
 				
 		setBackgroundColor(0xFF000000);
-		_videoView = new VideoView(getContext());
+		_videoView = new VideoView(getContext()) {
+			@Override
+			public void onWindowVisibilityChanged(int visibility) {
+				if(visibility == View.VISIBLE) {
+					super.onWindowVisibilityChanged(visibility);
+				} else {
+					_listener.onVideoHidden();
+				}
+			}
+		};
 		_videoView.setId(3001);
 		RelativeLayout.LayoutParams videoLayoutParams = new RelativeLayout.LayoutParams(FILL_PARENT, FILL_PARENT);
 		videoLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
