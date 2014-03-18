@@ -105,6 +105,8 @@
 		78CB843B16255FAA00E94915 /* ApplifierImpactURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */; };
 		9945F95B180572A200A97B70 /* ApplifierImpactZoneParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9945F95A180572A200A97B70 /* ApplifierImpactZoneParserTests.m */; };
 		9945F95D180575A000A97B70 /* ApplifierImpactZoneManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9945F95C180575A000A97B70 /* ApplifierImpactZoneManagerTests.m */; };
+		99466CC418D1D87E00A63151 /* ApplifierImpactAppSheetManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 99466CC218D1D87E00A63151 /* ApplifierImpactAppSheetManager.h */; };
+		99466CC518D1D87E00A63151 /* ApplifierImpactAppSheetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 99466CC318D1D87E00A63151 /* ApplifierImpactAppSheetManager.m */; };
 		99A78DBB17E9B81B00731814 /* ApplifierImpactZoneManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 99A78DB717E9B81B00731814 /* ApplifierImpactZoneManager.h */; };
 		99A78DBC17E9B81B00731814 /* ApplifierImpactZoneManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A78DB817E9B81B00731814 /* ApplifierImpactZoneManager.m */; };
 		99A78DBD17E9B81B00731814 /* ApplifierImpactZoneParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 99A78DB917E9B81B00731814 /* ApplifierImpactZoneParser.h */; };
@@ -252,6 +254,8 @@
 		78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactURLProtocol.m; sourceTree = "<group>"; };
 		9945F95A180572A200A97B70 /* ApplifierImpactZoneParserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactZoneParserTests.m; sourceTree = "<group>"; };
 		9945F95C180575A000A97B70 /* ApplifierImpactZoneManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactZoneManagerTests.m; sourceTree = "<group>"; };
+		99466CC218D1D87E00A63151 /* ApplifierImpactAppSheetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApplifierImpactAppSheetManager.h; path = ApplifierImpactAppSheet/ApplifierImpactAppSheetManager.h; sourceTree = "<group>"; };
+		99466CC318D1D87E00A63151 /* ApplifierImpactAppSheetManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ApplifierImpactAppSheetManager.m; path = ApplifierImpactAppSheet/ApplifierImpactAppSheetManager.m; sourceTree = "<group>"; };
 		99A78DB717E9B81B00731814 /* ApplifierImpactZoneManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApplifierImpactZoneManager.h; path = ApplifierImpactZone/ApplifierImpactZoneManager.h; sourceTree = "<group>"; };
 		99A78DB817E9B81B00731814 /* ApplifierImpactZoneManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ApplifierImpactZoneManager.m; path = ApplifierImpactZone/ApplifierImpactZoneManager.m; sourceTree = "<group>"; };
 		99A78DB917E9B81B00731814 /* ApplifierImpactZoneParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApplifierImpactZoneParser.h; path = ApplifierImpactZone/ApplifierImpactZoneParser.h; sourceTree = "<group>"; };
@@ -478,6 +482,15 @@
 			path = ApplifierImpactURLProtocol;
 			sourceTree = "<group>";
 		};
+		99466CC118D1D85000A63151 /* ApplifierImpactAppSheet */ = {
+			isa = PBXGroup;
+			children = (
+				99466CC218D1D87E00A63151 /* ApplifierImpactAppSheetManager.h */,
+				99466CC318D1D87E00A63151 /* ApplifierImpactAppSheetManager.m */,
+			);
+			name = ApplifierImpactAppSheet;
+			sourceTree = "<group>";
+		};
 		99A8515617FABF620090F8FF /* ApplifierImpactItem */ = {
 			isa = PBXGroup;
 			children = (
@@ -563,6 +576,7 @@
 		CC15890C150789ED00B3D188 /* ApplifierImpact */ = {
 			isa = PBXGroup;
 			children = (
+				99466CC118D1D85000A63151 /* ApplifierImpactAppSheet */,
 				78AC203B1622F01F007DE419 /* ApplifierImpact.h */,
 				78AC203C1622F01F007DE419 /* ApplifierImpact.m */,
 				CCF83B8A1733A13200DA12C1 /* ApplifierImpactBundle */,
@@ -718,6 +732,7 @@
 				7894D908171D4FEC000CFC99 /* ApplifierImpactNativeButton.h in Headers */,
 				7894D90C171EA116000CFC99 /* ApplifierImpactImageView.h in Headers */,
 				99A8516117FACAAA0090F8FF /* ApplifierImpactIncentivizedZone.h in Headers */,
+				99466CC418D1D87E00A63151 /* ApplifierImpactAppSheetManager.h in Headers */,
 				7894D910171ED568000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBar.h in Headers */,
 				7894D914171FF7AD000CFC99 /* ApplifierImpactNoWebViewEndScreenBottomBarContent.h in Headers */,
 				7894D91817200A8D000CFC99 /* ApplifierImpactImageViewRoundedCorners.h in Headers */,
@@ -929,6 +944,7 @@
 				78AC202E1622EFFD007DE419 /* ApplifierImpactCampaignManager.m in Sources */,
 				78AC20421622F01F007DE419 /* ApplifierImpact.m in Sources */,
 				78CB843B16255FAA00E94915 /* ApplifierImpactURLProtocol.m in Sources */,
+				99466CC518D1D87E00A63151 /* ApplifierImpactAppSheetManager.m in Sources */,
 				786F5D65163142BB00FD34C4 /* ApplifierImpactDevice.m in Sources */,
 				786F5D701635359500FD34C4 /* ApplifierImpactVideoPlayer.m in Sources */,
 				786F5D991636AF9600FD34C4 /* ApplifierImpactWebAppController.m in Sources */,
@@ -1049,14 +1065,14 @@
 					"TEST=1",
 				);
 				INFOPLIST_FILE = "ApplifierImpactTests/ApplifierImpactTests-Info.plist";
-        IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
-        TARGET_arm64 = 7.0;
-        TARGET_armv7 = 5.0;
-        TARGET_armv7s = 5.0;
-        TARGET_i386 = 5.0;
-        TARGET_x86_64 = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGET_arm64 = 7.0;
+				TARGET_armv7 = 5.0;
+				TARGET_armv7s = 5.0;
+				TARGET_i386 = 5.0;
+				TARGET_x86_64 = 5.0;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
@@ -1080,13 +1096,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ApplifierImpactTests/ApplifierImpactTests-Prefix.pch";
 				INFOPLIST_FILE = "ApplifierImpactTests/ApplifierImpactTests-Info.plist";
-        IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
-        TARGET_arm64 = 7.0;
-        TARGET_armv7 = 5.0;
-        TARGET_armv7s = 5.0;
-        TARGET_i386 = 5.0;
-        TARGET_x86_64 = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGET_arm64 = 7.0;
+				TARGET_armv7 = 5.0;
+				TARGET_armv7s = 5.0;
+				TARGET_i386 = 5.0;
+				TARGET_x86_64 = 5.0;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
@@ -1095,6 +1111,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
+				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUILD_DIR = "$(SRCROOT)/build";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
@@ -1111,12 +1130,9 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
-        ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
-        ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
 				TARGET_arm64 = 7.0;
 				TARGET_armv7 = 5.0;
 				TARGET_armv7s = 5.0;
@@ -1131,12 +1147,6 @@
 				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-        IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
-        TARGET_arm64 = 7.0;
-        TARGET_armv7 = 5.0;
-        TARGET_armv7s = 5.0;
-        TARGET_i386 = 5.0;
-        TARGET_x86_64 = 5.0;
 				CONTENTS_FOLDER_PATH = "$(WRAPPER_NAME)/Versions/$(FRAMEWORK_VERSION)";
 				DEAD_CODE_STRIPPING = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1155,10 +1165,16 @@
 				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpact-Info.plist";
 				INFOPLIST_PATH = "$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Info.plist";
 				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_object;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				TARGET_arm64 = 7.0;
+				TARGET_armv7 = 5.0;
+				TARGET_armv7s = 5.0;
+				TARGET_i386 = 5.0;
+				TARGET_x86_64 = 5.0;
 				UNLOCALIZED_RESOURCES_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Resources";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -1167,6 +1183,9 @@
 		99FE3C3C17E896F100845E0B /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
+				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1182,20 +1201,17 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpactBundle/ApplifierImpactBundle-Info.plist";
 				INSTALL_PATH = "";
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
-        ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
-        ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-        IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
-        TARGET_arm64 = 7.0;
-        TARGET_armv7 = 5.0;
-        TARGET_armv7s = 5.0;
-        TARGET_i386 = 5.0;
-        TARGET_x86_64 = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = ApplifierImpact;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGET_arm64 = 7.0;
+				TARGET_armv7 = 5.0;
+				TARGET_armv7s = 5.0;
+				TARGET_i386 = 5.0;
+				TARGET_x86_64 = 5.0;
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Test;
@@ -1323,6 +1339,9 @@
 		CC158916150789ED00B3D188 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
+				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CONTENTS_FOLDER_PATH = "$(WRAPPER_NAME)/Versions/$(FRAMEWORK_VERSION)";
 				DEAD_CODE_STRIPPING = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1334,27 +1353,27 @@
 				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpact-Info.plist";
 				INFOPLIST_PATH = "$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Info.plist";
 				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_object;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				TARGET_arm64 = 7.0;
+				TARGET_armv7 = 5.0;
+				TARGET_armv7s = 5.0;
+				TARGET_i386 = 5.0;
+				TARGET_x86_64 = 5.0;
 				UNLOCALIZED_RESOURCES_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Resources";
 				WRAPPER_EXTENSION = framework;
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
-        ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
-        ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-        IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
-        TARGET_arm64 = 7.0;
-        TARGET_armv7 = 5.0;
-        TARGET_armv7s = 5.0;
-        TARGET_i386 = 5.0;
-        TARGET_x86_64 = 5.0;
 			};
 			name = Debug;
 		};
 		CC158917150789ED00B3D188 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
+				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CONTENTS_FOLDER_PATH = "$(WRAPPER_NAME)/Versions/$(FRAMEWORK_VERSION)";
 				DEAD_CODE_STRIPPING = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1366,19 +1385,16 @@
 				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpact-Info.plist";
 				INFOPLIST_PATH = "$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Info.plist";
 				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
-        ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
-        ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-        IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
-        TARGET_arm64 = 7.0;
-        TARGET_armv7 = 5.0;
-        TARGET_armv7s = 5.0;
-        TARGET_i386 = 5.0;
-        TARGET_x86_64 = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_object;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				TARGET_arm64 = 7.0;
+				TARGET_armv7 = 5.0;
+				TARGET_armv7s = 5.0;
+				TARGET_i386 = 5.0;
+				TARGET_x86_64 = 5.0;
 				UNLOCALIZED_RESOURCES_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Resources";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -1387,6 +1403,9 @@
 		CCF83B911733A13200DA12C1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
+				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1402,20 +1421,17 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpactBundle/ApplifierImpactBundle-Info.plist";
 				INSTALL_PATH = "";
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
-        ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
-        ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-        IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
-        TARGET_arm64 = 7.0;
-        TARGET_armv7 = 5.0;
-        TARGET_armv7s = 5.0;
-        TARGET_i386 = 5.0;
-        TARGET_x86_64 = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = ApplifierImpact;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGET_arm64 = 7.0;
+				TARGET_armv7 = 5.0;
+				TARGET_armv7s = 5.0;
+				TARGET_i386 = 5.0;
+				TARGET_x86_64 = 5.0;
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Debug;
@@ -1423,6 +1439,9 @@
 		CCF83B921733A13200DA12C1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
+				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1438,19 +1457,16 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "ApplifierImpact/ApplifierImpactBundle/ApplifierImpactBundle-Info.plist";
 				INSTALL_PATH = "";
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
-        ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
-        ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-        IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
-        TARGET_arm64 = 7.0;
-        TARGET_armv7 = 5.0;
-        TARGET_armv7s = 5.0;
-        TARGET_i386 = 5.0;
-        TARGET_x86_64 = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
 				PRODUCT_NAME = ApplifierImpact;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGET_arm64 = 7.0;
+				TARGET_armv7 = 5.0;
+				TARGET_armv7s = 5.0;
+				TARGET_i386 = 5.0;
+				TARGET_x86_64 = 5.0;
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Release;

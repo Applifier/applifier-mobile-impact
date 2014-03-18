@@ -8,6 +8,7 @@
 
 #import "ApplifierImpactViewStateVideoPlayer.h"
 #import "../ApplifierImpactVideo/ApplifierImpactVideoViewController.h"
+#import "ApplifierImpactAppSheetManager.h"
 
 @implementation ApplifierImpactViewStateVideoPlayer
 
@@ -19,7 +20,7 @@
   if ([[ApplifierImpactCampaignManager sharedInstance] selectedCampaign] != nil &&
       ![[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].bypassAppSheet &&
       ![[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].viewed) {
-    [self preloadAppSheetWithId:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].itunesID];
+    [[ApplifierImpactAppSheetManager sharedInstance] preloadAppSheetWithId:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign].itunesID];
   }
   
   self.checkIfWatched = YES;
@@ -32,10 +33,6 @@
   AILOG_DEBUG(@"");
   [super exitState:options];
   [self dismissVideoController];
-  
-  if (self.storeController != nil) {
-    self.storeController = nil;
-  }
 }
 
 - (void)applyOptions:(NSDictionary *)options {

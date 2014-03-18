@@ -8,37 +8,9 @@
 
 #import "ApplifierImpactViewState.h"
 #import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
-
-@interface CustomStoreProductViewController : SKStoreProductViewController
-@end
-
-@implementation CustomStoreProductViewController
-
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-  return [UIApplication sharedApplication].statusBarOrientation;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-  return UIInterfaceOrientationMaskAll;
-}
-
-- (BOOL)shouldAutorotate {
-  return YES;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-  return YES;
-}
-
-@end
-
-@interface ApplifierImpactViewState ()
-  @property (nonatomic, weak) UIViewController *targetController;
-@end
+#import "ApplifierImpactAppSheetManager.h"
 
 @implementation ApplifierImpactViewState
-
-@synthesize storeController = _storeController;
 
 - (id)init {
   self = [super init];
@@ -99,7 +71,7 @@
     }
   }
   
-  if (iTunesId != nil && !bypassAppSheet && [self _canOpenStoreProductViewController]) {
+  if (iTunesId != nil && !bypassAppSheet && [ApplifierImpactAppSheetManager canOpenStoreProductViewController]) {
     AILOG_DEBUG(@"Opening Appstore in AppSheet: %@", iTunesId);
     [self openAppSheetWithId:iTunesId toViewController:targetViewController];
   }
@@ -109,126 +81,22 @@
   }
 }
 
-#pragma mark - AppStore opening
-
-- (void)preloadAppSheetWithId:(NSString *)iTunesId {
-  AILOG_DEBUG(@"");
-  if ([self _canOpenStoreProductViewController]) {
-    AILOG_DEBUG(@"Can open storeProductViewController");
-    if (![iTunesId isKindOfClass:[NSString class]] || iTunesId == nil || [iTunesId length] < 1) return;
-    
-    /*
-     FIX: This _could_ bug someday. The key @"id" is written literally (and
-     not using SKStoreProductParameterITunesItemIdentifier), so that
-     with some compiler options (or linker flags) you wouldn't get errors.
-     
-     The way this could bug someday is that Apple changes the contents of
-     SKStoreProductParameterITunesItemIdentifier.
-     
-     HOWTOFIX: Find a way to reflect global constant SKStoreProductParameterITunesItemIdentifier
-     by using string value and not the constant itself.
-     */
-    NSDictionary *productParams = @{@"id":iTunesId};
-    self.storeController = [[CustomStoreProductViewController alloc] init];
-    
-    /*
-    void (^storeControllerComplete)(BOOL result, NSError *error) = ^(BOOL result, NSError *error) {
-      AILOG_DEBUG(@"Result: %i", result);
-      if (result) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-          self.storeController = nil;
-        });
-      }
-      else {
-        AILOG_DEBUG(@"Loading product information failed: %@", error);
-      }
-    };*/
-    
-    SEL loadProduct = @selector(loadProductWithParameters:completionBlock:);
-    if ([self.storeController respondsToSelector:loadProduct]) {
-      [self performSelectorInBackground:@selector(backgroundLoadProduct:) withObject:productParams];
-    }
-  }
-}
-
-- (void)backgroundLoadProduct:(id)productParams {
-  SEL loadProduct = @selector(loadProductWithParameters:completionBlock:);
-  
-  void (^storeControllerComplete)(BOOL result, NSError *error) = ^(BOOL result, NSError *error) {
-    AILOG_DEBUG(@"Result: %i", result);
-    if (result) {
-      dispatch_async(dispatch_get_main_queue(), ^{
-        self.storeController = nil;
-      });
-    }
-    else {
-      AILOG_DEBUG(@"Loading product information failed: %@", error);
-    }
-  };
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-  [self.storeController performSelector:loadProduct withObject:productParams withObject:storeControllerComplete];
-#pragma clang diagnostic pop
-}
-
-- (BOOL)_canOpenStoreProductViewController {
-  Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
-  return [storeProductViewControllerClass instancesRespondToSelector:@selector(loadProductWithParameters:completionBlock:)];
-}
-
 - (void)openAppSheetWithId:(NSString *)iTunesId toViewController:(UIViewController *)targetViewController {
-  Class storeProductViewControllerClass = NSClassFromString(@"SKStoreProductViewController");
-  if ([storeProductViewControllerClass instancesRespondToSelector:@selector(loadProductWithParameters:completionBlock:)] == YES) {
-    if (![iTunesId isKindOfClass:[NSString class]] || iTunesId == nil || [iTunesId length] < 1) return;
-    
-    /*
-     FIX: This _could_ bug someday. The key @"id" is written literally (and
-     not using SKStoreProductParameterITunesItemIdentifier), so that
-     with some compiler options (or linker flags) you wouldn't get errors.
-     
-     The way this could bug someday is that Apple changes the contents of
-     SKStoreProductParameterITunesItemIdentifier.
-     
-     HOWTOFIX: Find a way to reflect global constant SKStoreProductParameterITunesItemIdentifier
-     by using string value and not the constant itself.
-     */
-    NSDictionary *productParams = @{@"id":iTunesId};
-    
-    self.storeController = [[CustomStoreProductViewController alloc] init];
-    
-    if ([self.storeController respondsToSelector:@selector(setDelegate:)]) {
-      [self.storeController performSelector:@selector(setDelegate:) withObject:self];
-    }
-    
-    void (^storeControllerComplete)(BOOL result, NSError *error) = ^(BOOL result, NSError *error) {
-      AILOG_DEBUG(@"Result: %i", result);
-      if (result) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-          self.targetController = targetViewController;
-          [targetViewController presentViewController:self.storeController animated:YES completion:nil];
-          ApplifierImpactCampaign *campaign = [[ApplifierImpactCampaignManager sharedInstance] getCampaignWithITunesId:iTunesId];
-          
-          if (campaign != nil) {
-            [[ApplifierImpactAnalyticsUploader sharedInstance] sendOpenAppStoreRequest:campaign];
-          }
-        });
-      }
-      else {
-        AILOG_DEBUG(@"Loading product information failed: %@", error);
-      }
-      
+  [self applyOptions:@{kApplifierImpactNativeEventShowSpinner:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyLoading}}];
+  id storeController = [[ApplifierImpactAppSheetManager sharedInstance] getAppSheetController:iTunesId];
+  if(storeController != nil) {
+    dispatch_async(dispatch_get_main_queue(), ^{
       [self applyOptions:@{kApplifierImpactNativeEventHideSpinner:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyLoading}}];
-    };
-    
-    [self applyOptions:@{kApplifierImpactNativeEventShowSpinner:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyLoading}}];
-    
-    SEL loadProduct = @selector(loadProductWithParameters:completionBlock:);
-    if ([self.storeController respondsToSelector:loadProduct]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-      [self.storeController performSelector:loadProduct withObject:productParams withObject:storeControllerComplete];
-#pragma clang diagnostic pop
-    }
+      [targetViewController presentViewController:storeController animated:YES completion:nil];
+      ApplifierImpactCampaign *campaign = [[ApplifierImpactCampaignManager sharedInstance] getCampaignWithITunesId:iTunesId];
+      if (campaign != nil) {
+        [[ApplifierImpactAnalyticsUploader sharedInstance] sendOpenAppStoreRequest:campaign];
+      }
+    });
+  } else {
+    [[ApplifierImpactAppSheetManager sharedInstance] openAppSheetWithId:iTunesId toViewController:targetViewController withCompletionBlock:^(BOOL result, NSError *error) {
+      [self applyOptions:@{kApplifierImpactNativeEventHideSpinner:@{kApplifierImpactTextKeyKey:kApplifierImpactTextKeyLoading}}];
+    }];
   }
 }
 
@@ -248,23 +116,6 @@
   // DOES NOT INITIALIZE WEBVIEW
   [[ApplifierImpactWebAppController sharedInstance] openExternalUrl:clickUrl];
   return;
-}
-
-
-#pragma mark - SKStoreProductViewControllerDelegate
-
-- (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
-  AILOG_DEBUG(@"");
-  if (self.targetController != nil) {
-    [self.targetController dismissViewControllerAnimated:YES completion:nil];
-  }
-  
-  self.storeController = nil;
-}
-
-- (void)dealloc {
-  self.targetController = nil;
-  self.storeController = nil;
 }
 
 @end
