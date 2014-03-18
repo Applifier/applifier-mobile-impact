@@ -98,7 +98,7 @@ static ApplifierImpactZoneManager *sharedZoneManager = nil;
   return self._currentZone;
 }
 
-- (int)zoneCount {
+- (NSUInteger)zoneCount {
   return self._zones.count;
 }
 

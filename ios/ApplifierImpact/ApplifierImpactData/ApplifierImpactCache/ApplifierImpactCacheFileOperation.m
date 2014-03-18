@@ -42,17 +42,17 @@
 
 - (void)cancel {
   [super cancel];
-  if ([self.delegate respondsToSelector:@selector(operationCancelled:)]) {
+  if ([self.delegate respondsToSelector:@selector(cacheOperationCancelled:)]) {
     @synchronized(self) {
       _cancelEventSent = YES;
     }
-    [self.delegate operationCancelled:self];
+    [self.delegate cacheOperationCancelled:self];
   }
 }
 
 - (void)main {
-  if ([self.delegate respondsToSelector:@selector(operationStarted:)])
-    [self.delegate operationStarted:self];
+  if ([self.delegate respondsToSelector:@selector(cacheOperationStarted:)])
+    [self.delegate cacheOperationStarted:self];
   
   NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:self.filePath error:nil];
   long long size = [attributes fileSize];
@@ -89,20 +89,20 @@
   size = [attributes fileSize];
   @synchronized (self) {
     if ([self isCancelled] && !_cancelEventSent) {
-      if ([self.delegate respondsToSelector:@selector(operationCancelled:)])
-        [self.delegate operationCancelled:self];
+      if ([self.delegate respondsToSelector:@selector(cacheOperationCancelled:)])
+        [self.delegate cacheOperationCancelled:self];
     }
   }
   
   if (size == self.expectedFileSize) {
-    if ([self.delegate respondsToSelector:@selector(operationFinished:)])
-      [self.delegate operationFinished:self];
+    if ([self.delegate respondsToSelector:@selector(cacheOperationFinished:)])
+      [self.delegate cacheOperationFinished:self];
     return;
   }
   
   if (size != self.expectedFileSize && ![self isCancelled]) {
-    if ([self.delegate respondsToSelector:@selector(operationFailed:)])
-      [self.delegate operationFailed:self];
+    if ([self.delegate respondsToSelector:@selector(cacheOperationFailed:)])
+      [self.delegate cacheOperationFailed:self];
     return;
   }
 }

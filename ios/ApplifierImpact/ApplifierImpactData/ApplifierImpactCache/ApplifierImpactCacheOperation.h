@@ -18,10 +18,10 @@ typedef enum {
 @protocol ApplifierImpactCacheOperationDelegate <NSObject>
 
 @required
-- (void)operationStarted:(ApplifierImpactCacheOperation *)cacheOperation;
-- (void)operationFinished:(ApplifierImpactCacheOperation *)cacheOperation;
-- (void)operationFailed:(ApplifierImpactCacheOperation *)cacheOperation;
-- (void)operationCancelled:(ApplifierImpactCacheOperation *)cacheOperation;
+- (void)cacheOperationStarted:(ApplifierImpactCacheOperation *)cacheOperation;
+- (void)cacheOperationFinished:(ApplifierImpactCacheOperation *)cacheOperation;
+- (void)cacheOperationFailed:(ApplifierImpactCacheOperation *)cacheOperation;
+- (void)cacheOperationCancelled:(ApplifierImpactCacheOperation *)cacheOperation;
 
 @end
 

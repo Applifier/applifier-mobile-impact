@@ -148,6 +148,7 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
         ![self _isCampaignValid:campaign]) return NO;
     
     ApplifierImpactCacheOperation * cacheOperation = nil;
+    
     if (resourceType == ResourceTypeTrailerVideo) {
       ApplifierImpactCacheFileOperation  * tmp = [ApplifierImpactCacheFileOperation new];
       tmp.directoryPath = [self _cachePath];
@@ -156,12 +157,12 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
       tmp.expectedFileSize = campaign.expectedTrailerSize;
       cacheOperation = tmp;
     }
-    
+    NSString * key = [self operationKey:campaign resourceType:resourceType];
     cacheOperation.delegate = self;
-    cacheOperation.operationKey = [self operationKey:campaign resourceType:resourceType];
+    cacheOperation.operationKey = key;
     cacheOperation.resourceType = resourceType;
-    self.campaignsOperations[[self operationKey:campaign resourceType:resourceType]] = @{ kApplifierImpactCacheOperationKey : cacheOperation,
-                                                                                          kApplifierImpactCacheOperationCampaignKey : campaign};
+    self.campaignsOperations[key] = @{ kApplifierImpactCacheOperationKey : cacheOperation,
+                                       kApplifierImpactCacheOperationCampaignKey : campaign };
     [self.cacheOperationsQueue addOperation:cacheOperation];
     return YES;
   }
@@ -189,11 +190,14 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
   }
 }
 
+
+
 - (NSString *)operationKey:(ApplifierImpactCampaign *)campaign resourceType:(ResourceType)resourceType {
   @synchronized(self) {
     return [NSString stringWithFormat:@"%@-%d", campaign.id, resourceType];
   }
 }
+
 
 - (BOOL)campaignExistsInQueue:(ApplifierImpactCampaign *)campaign
              withResourceType:(ResourceType)resourceType {
@@ -212,9 +216,10 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
   @synchronized(self) {
     if (!cacheOperation.operationKey) return;
     [self.campaignsOperations removeObjectForKey:cacheOperation.operationKey];
-    if (self.campaignsOperations.count == 0 && [self.delegate respondsToSelector:@selector(cachingQueueEmpty)]) {
+    
+    if (self.campaignsOperations.count == 0 &&
+        [self.delegate respondsToSelector:@selector(cachingQueueEmpty)])
       [self.delegate cachingQueueEmpty];
-    }
   }
 }
 
@@ -222,39 +227,43 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
 #pragma mark ApplifierImpactFileCacheOperationDelegate
 #pragma mark ----
 
-- (void)operationStarted:(ApplifierImpactCacheOperation *)cacheOperation  {
+- (void)cacheOperationStarted:(ApplifierImpactCacheOperation *)cacheOperation  {
   @synchronized(self) {
     NSDictionary * operationInfo = self.campaignsOperations[cacheOperation.operationKey];
     ApplifierImpactCampaign * campaign = operationInfo[kApplifierImpactCacheOperationCampaignKey];
+    AILOG_DEBUG(@"for campaign %@", campaign.id);
     if ([self.delegate respondsToSelector:@selector(startedCaching:forCampaign:)])
       [self.delegate startedCaching:cacheOperation.resourceType forCampaign:campaign];
   }
 }
 
-- (void)operationFinished:(ApplifierImpactCacheOperation *)cacheOperation {
+- (void)cacheOperationFinished:(ApplifierImpactCacheOperation *)cacheOperation {
   @synchronized(self) {
     NSDictionary * operationInfo = self.campaignsOperations[cacheOperation.operationKey];
     ApplifierImpactCampaign * campaign = operationInfo[kApplifierImpactCacheOperationCampaignKey];
+    AILOG_DEBUG(@"for campaign %@", campaign.id);
     if ([self.delegate respondsToSelector:@selector(finishedCaching:forCampaign:)])
       [self.delegate finishedCaching:cacheOperation.resourceType forCampaign:campaign];
     [self _removeOperation:cacheOperation];
   }
 }
 
-- (void)operationFailed:(ApplifierImpactCacheOperation *)cacheOperation {
+- (void)cacheOperationFailed:(ApplifierImpactCacheOperation *)cacheOperation {
   @synchronized(self) {
     NSDictionary * operationInfo = self.campaignsOperations[cacheOperation.operationKey];
     ApplifierImpactCampaign * campaign = operationInfo[kApplifierImpactCacheOperationCampaignKey];
+    AILOG_DEBUG(@"for campaign %@", campaign.id);
     if ([self.delegate respondsToSelector:@selector(failedCaching:forCampaign:)])
       [self.delegate failedCaching:cacheOperation.resourceType forCampaign:campaign];
     [self _removeOperation:cacheOperation];
   }
 }
 
-- (void)operationCancelled:(ApplifierImpactCacheOperation *)cacheOperation {
+- (void)cacheOperationCancelled:(ApplifierImpactCacheOperation *)cacheOperation {
   @synchronized(self) {
     NSDictionary * operationInfo = self.campaignsOperations[cacheOperation.operationKey];
     ApplifierImpactCampaign * campaign = operationInfo[kApplifierImpactCacheOperationCampaignKey];
+    AILOG_DEBUG(@"for campaign %@", campaign.id);
     if ([self.delegate respondsToSelector:@selector(cancelledCaching:forCampaign:)])
       [self.delegate cancelledCaching:cacheOperation.resourceType forCampaign:campaign];
     [self _removeOperation:cacheOperation];

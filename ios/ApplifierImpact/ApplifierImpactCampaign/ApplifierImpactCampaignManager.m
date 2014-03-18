@@ -183,13 +183,15 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 		
 		NSURL *videoURL = [self.cacheManager localURLFor:ResourceTypeTrailerVideo ofCampaign:campaign];
     if ([self.cacheManager campaignExistsInQueue:campaign withResourceType:ResourceTypeTrailerVideo]) {
+      AILOG_DEBUG(@"Cancel caching video for campaign %@", campaign.id);
       [self.cacheManager cancelCacheForCampaign:campaign withResourceType:ResourceTypeTrailerVideo];
     }
 		if (videoURL == nil || ![self.cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaign])
     {
-      AILOG_DEBUG(@"Campaign is not cached!");
+      AILOG_DEBUG(@"Choosing streaming URL for campaign %@", campaign.id);
       videoURL = campaign.trailerStreamingURL;
     }
+    AILOG_DEBUG(@"Choosing trailer URL for campaign %@", campaign.id);
 		return videoURL;
 	}
 }
