@@ -130,7 +130,6 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
       
       [[ApplifierImpactProperties sharedInstance] setGamerId:gamerId];
       [self.cacheManager cache:ResourceTypeTrailerVideo forCampaign:self.campaigns[0]];
-//      [self.cacheManager cacheCampaigns:self.campaigns];
       
       dispatch_async(dispatch_get_main_queue(), ^(void) {
         [self.delegate campaignManagerCampaignDataReceived];
@@ -186,7 +185,7 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
       AILOG_DEBUG(@"Cancel caching video for campaign %@", campaign.id);
       [self.cacheManager cancelCacheForCampaign:campaign withResourceType:ResourceTypeTrailerVideo];
     }
-		if (videoURL == nil || ![self.cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaign])
+		if (![self.cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaign])
     {
       AILOG_DEBUG(@"Choosing streaming URL for campaign %@", campaign.id);
       videoURL = campaign.trailerStreamingURL;
