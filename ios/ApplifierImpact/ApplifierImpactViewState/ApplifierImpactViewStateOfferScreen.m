@@ -1,12 +1,12 @@
 //
-//  ApplifierImpactViewStateDefaultOffers.m
+//  ApplifierImpactViewStateOfferScreen.m
 //  ApplifierImpact
 //
 //  Created by Pekka Palmu on 4/4/13.
 //  Copyright (c) 2013 Applifier. All rights reserved.
 //
 
-#import "ApplifierImpactViewStateDefaultOffers.h"
+#import "ApplifierImpactViewStateOfferScreen.h"
 
 #import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
@@ -18,7 +18,7 @@
 #import "../ApplifierImpactZone/ApplifierImpactZoneManager.h"
 #import "../ApplifierImpactZone/ApplifierImpactIncentivizedZone.h"
 
-@implementation ApplifierImpactViewStateDefaultOffers
+@implementation ApplifierImpactViewStateOfferScreen
 
 - (ApplifierImpactViewStateType)getStateType {
   return kApplifierImpactViewStateTypeOfferScreen;

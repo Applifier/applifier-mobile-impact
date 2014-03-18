@@ -15,7 +15,6 @@ typedef enum {
   kApplifierImpactViewStateTypeEndScreen,
   kApplifierImpactViewStateTypeVideoPlayer,
   kApplifierImpactViewStateTypeNone,
-  kApplifierImpactViewStateTypeSpinner,
   kApplifierImpactViewStateTypeInvalid
 } ApplifierImpactViewStateType;
 

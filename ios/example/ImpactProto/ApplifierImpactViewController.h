@@ -21,6 +21,5 @@
 
 @property (nonatomic, retain) IBOutlet UIImageView *loadingImage;
 @property (nonatomic, retain) IBOutlet UIView *contentView;
-@property (nonatomic, retain) IBOutlet UISwitch *webviewSwitch;
 
 @end

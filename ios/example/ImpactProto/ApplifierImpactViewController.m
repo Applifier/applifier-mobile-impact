@@ -24,8 +24,6 @@
 @synthesize optionsId;
 @synthesize loadingImage;
 @synthesize contentView;
-@synthesize webviewSwitch;
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -66,10 +64,6 @@
         AILOG_DEBUG(@"Setting optionsId");
         // TEST STUFF, DO NOT USE IN PRODUCTION APPS
         [[ApplifierImpact sharedInstance] setTestOptionsId:self.optionsId.text];
-    }
-    
-    if (!self.webviewSwitch.isOn) {
-        [[ApplifierImpact sharedInstance] setImpactMode:kApplifierImpactModeNoWebView];
     }
     
     // Initialize Applifier Impact

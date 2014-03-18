@@ -9,10 +9,9 @@
 #import "ApplifierImpactDefaultInitializer.h"
 
 #import "../ApplifierImpactWebView/ApplifierImpactWebAppController.h"
-#import "../ApplifierImpactViewState/ApplifierImpactViewStateDefaultOffers.h"
-#import "../ApplifierImpactViewState/ApplifierImpactViewStateDefaultVideoPlayer.h"
-#import "../ApplifierImpactViewState/ApplifierImpactViewStateDefaultEndScreen.h"
-#import "../ApplifierImpactViewState/ApplifierImpactViewStateDefaultSpinner.h"
+#import "../ApplifierImpactViewState/ApplifierImpactViewStateOfferScreen.h"
+#import "../ApplifierImpactViewState/ApplifierImpactViewStateVideoPlayer.h"
+#import "../ApplifierImpactViewState/ApplifierImpactViewStateEndScreen.h"
 
 #import "../ApplifierImpactZone/ApplifierImpactZoneManager.h"
 #import "../ApplifierImpactZone/ApplifierImpactIncentivizedZone.h"
@@ -23,10 +22,9 @@
 	AILOG_DEBUG(@"");
   [super initImpact:options];
   
-  [[ApplifierImpactMainViewController sharedInstance] applyViewStateHandler:[[ApplifierImpactViewStateDefaultOffers alloc] init]];
-  [[ApplifierImpactMainViewController sharedInstance] applyViewStateHandler:[[ApplifierImpactViewStateDefaultVideoPlayer alloc] init]];
-  [[ApplifierImpactMainViewController sharedInstance] applyViewStateHandler:[[ApplifierImpactViewStateDefaultEndScreen alloc] init]];
-  [[ApplifierImpactMainViewController sharedInstance] applyViewStateHandler:[[ApplifierImpactViewStateDefaultSpinner alloc] init]];
+  [[ApplifierImpactMainViewController sharedInstance] applyViewStateHandler:[[ApplifierImpactViewStateOfferScreen alloc] init]];
+  [[ApplifierImpactMainViewController sharedInstance] applyViewStateHandler:[[ApplifierImpactViewStateVideoPlayer alloc] init]];
+  [[ApplifierImpactMainViewController sharedInstance] applyViewStateHandler:[[ApplifierImpactViewStateEndScreen alloc] init]];
   
   [ApplifierImpactWebAppController sharedInstance];
   [[ApplifierImpactWebAppController sharedInstance] setDelegate:self];

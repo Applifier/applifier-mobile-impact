@@ -7,7 +7,6 @@ public class ApplifierImpactMobile : MonoBehaviour {
 	public string gameId = "";
 	public bool debugModeEnabled = false;
 	public bool testModeEnabled = false;
-	public bool useNativeUiWhenPossible = false;
 	
 	private static ApplifierImpactMobile sharedInstance;
 	private static bool _campaignsAvailable = false;
@@ -60,7 +59,7 @@ public class ApplifierImpactMobile : MonoBehaviour {
 				sharedInstance = (ApplifierImpactMobile) FindObjectOfType(typeof(ApplifierImpactMobile));
 
 				#if (UNITY_IPHONE || UNITY_ANDROID) && !UNITY_EDITOR
-				ApplifierImpactMobileExternal.init(sharedInstance.gameId, sharedInstance.testModeEnabled, sharedInstance.debugModeEnabled && Debug.isDebugBuild, sharedInstance.gameObject.name, sharedInstance.useNativeUiWhenPossible);
+				ApplifierImpactMobileExternal.init(sharedInstance.gameId, sharedInstance.testModeEnabled, sharedInstance.debugModeEnabled && Debug.isDebugBuild, sharedInstance.gameObject.name);
 				#endif
 			}
 

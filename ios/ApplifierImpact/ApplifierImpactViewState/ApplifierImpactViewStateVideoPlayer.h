@@ -12,7 +12,7 @@
 #import "../ApplifierImpactCampaign/ApplifierImpactCampaignManager.h"
 #import "../ApplifierImpact.h"
 
-@interface ApplifierImpactViewStateVideoPlayer : ApplifierImpactViewState
+@interface ApplifierImpactViewStateVideoPlayer : ApplifierImpactViewState <ApplifierImpactVideoControllerDelegate>
   @property (nonatomic, strong) ApplifierImpactVideoViewController *videoController;
   @property (nonatomic, assign) BOOL checkIfWatched;
 

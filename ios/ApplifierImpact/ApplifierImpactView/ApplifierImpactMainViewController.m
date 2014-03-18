@@ -14,10 +14,9 @@
 #import "../ApplifierImpactData/ApplifierImpactAnalyticsUploader.h"
 #import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
 
-#import "../ApplifierImpactViewState/ApplifierImpactViewStateDefaultOffers.h"
-#import "../ApplifierImpactViewState/ApplifierImpactViewStateDefaultVideoPlayer.h"
-#import "../ApplifierImpactViewState/ApplifierImpactViewStateDefaultEndScreen.h"
-#import "../ApplifierImpactViewState/ApplifierImpactViewStateDefaultSpinner.h"
+#import "../ApplifierImpactViewState/ApplifierImpactViewStateOfferScreen.h"
+#import "../ApplifierImpactViewState/ApplifierImpactViewStateVideoPlayer.h"
+#import "../ApplifierImpactViewState/ApplifierImpactViewStateEndScreen.h"
 
 #import "../ApplifierImpact.h"
 
