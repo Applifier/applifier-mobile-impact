@@ -184,8 +184,9 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
     {
       AILOG_DEBUG(@"Choosing streaming URL for campaign %@", campaign.id);
       videoURL = campaign.trailerStreamingURL;
+    } else {
+      AILOG_DEBUG(@"Choosing trailer URL for campaign %@", campaign.id);
     }
-    AILOG_DEBUG(@"Choosing trailer URL for campaign %@", campaign.id);
 		return videoURL;
 	}
 }
