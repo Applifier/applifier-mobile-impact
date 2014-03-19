@@ -58,7 +58,7 @@ extern void __gcov_flush();
 - (void)setUp
 {
   [super setUp];
-  _cacheManager = [ApplifierImpactCacheManager new];
+  _cacheManager = [ApplifierImpactCacheManager sharedInstance];
   _cacheManager.delegate = self;
   [[NSFileManager defaultManager] removeItemAtPath:[self cachePath] error:nil];
   // Put setup code here. This method is called before the invocation of each test method in the class.

@@ -31,7 +31,15 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
 @property (nonatomic, strong) NSMutableDictionary *campaignsOperations;
 @end
 
+static ApplifierImpactCacheManager * _inst = nil;
+
 @implementation ApplifierImpactCacheManager
+
++ sharedInstance {
+  @synchronized (self) {
+    return _inst == nil ? _inst = [[self class] new] : _inst;
+  }
+}
 
 #pragma mark - Private
 
@@ -138,7 +146,7 @@ static NSString * const kApplifierImpactCacheOperationCampaignKey = @"kApplifier
 
 - (BOOL)_isCampaignValid:(ApplifierImpactCampaign *)campaign {
   @synchronized(self) {
-    return campaign != nil && campaign.expectedTrailerSize;
+    return campaign != nil && campaign.expectedTrailerSize && campaign.id && campaign.allowedToCacheVideo;
   }
 }
 

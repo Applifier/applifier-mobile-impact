@@ -94,6 +94,7 @@ NSString * const kApplifierImpactCampaignIDKey = @"id";
 NSString * const kApplifierImpactCampaignTaglineKey = @"tagLine";
 NSString * const kApplifierImpactCampaignStoreIDKey = @"iTunesId";
 NSString * const kApplifierImpactCampaignCacheVideoKey = @"cacheVideo";
+NSString * const kApplifierImpactCampaignAllowedToCacheVideoKey = @"allowCache";
 NSString * const kApplifierImpactCampaignBypassAppSheet = @"bypassAppSheet";
 NSString * const kApplifierImpactCampaignExpectedFileSize = @"trailerSize";
 NSString * const kApplifierImpactCampaignAllowVideoSkipKey = @"allowSkipVideoInSeconds";
