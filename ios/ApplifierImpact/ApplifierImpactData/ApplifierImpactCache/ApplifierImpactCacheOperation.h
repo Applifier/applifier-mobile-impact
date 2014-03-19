@@ -28,7 +28,7 @@ typedef enum {
 @interface ApplifierImpactCacheOperation : NSOperation
 
 @property (nonatomic, assign) id <ApplifierImpactCacheOperationDelegate> delegate;
-@property (nonatomic, assign) NSUInteger expectedFileSize;
+@property (nonatomic, assign) long long expectedFileSize;
 @property (nonatomic, copy)   NSString * operationKey;
 @property (nonatomic, assign) ResourceType resourceType;
 
