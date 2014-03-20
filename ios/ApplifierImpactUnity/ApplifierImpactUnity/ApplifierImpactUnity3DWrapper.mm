@@ -7,7 +7,11 @@
 //
 
 #import "ApplifierImpactUnity3DWrapper.h"
+#if UNITY_VERSION >= 420
+#import "UnityAppController.h"
+#else
 #import "AppController.h"
+#endif
 
 static ApplifierImpactUnity3DWrapper *applifierImpact = NULL;
 
