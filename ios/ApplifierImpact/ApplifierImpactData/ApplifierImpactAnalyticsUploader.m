@@ -323,7 +323,7 @@ static ApplifierImpactAnalyticsUploader *sharedImpactAnalyticsUploader = nil;
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
   
   if ([httpResponse statusCode] >= 400) {
-    AILOG_DEBUG(@"ERROR FECTHING URL: %i", [httpResponse statusCode]);
+    AILOG_DEBUG(@"ERROR FECTHING URL: %li", (long)[httpResponse statusCode]);
     [self _saveFailedUpload:self.currentUpload];
   }
 }

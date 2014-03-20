@@ -20,6 +20,6 @@
 - (BOOL)setCurrentItem:(NSString *)rewardItemKey;
 
 - (NSArray *)allItems;
-- (int)itemCount;
+- (NSUInteger)itemCount;
 
 @end

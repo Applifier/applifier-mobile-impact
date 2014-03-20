@@ -103,6 +103,9 @@
 
 - (void)startVideoPlayback:(BOOL)createVideoController withDelegate:(id)videoControllerDelegate {
   if ([[ApplifierImpactMainViewController sharedInstance] isOpen]) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+      [[ApplifierImpactCampaignManager sharedInstance] cacheNextCampaignAfter:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
+    });
     [self.videoController playCampaign:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
   }
 }

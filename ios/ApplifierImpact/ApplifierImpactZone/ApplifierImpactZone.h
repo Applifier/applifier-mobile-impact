@@ -28,7 +28,7 @@
 
 - (void)setNoOfferScreen:(BOOL)noOfferScreen;
 
-- (int)allowVideoSkipInSeconds;
+- (NSInteger)allowVideoSkipInSeconds;
 
 - (BOOL)allowsOverride:(NSString *)option;
 - (void)mergeOptions:(NSDictionary *)options;

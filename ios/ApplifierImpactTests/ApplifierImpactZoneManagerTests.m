@@ -8,7 +8,6 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-#import <objc/objc-runtime.h>
 extern void __gcov_flush();
 
 #import "ApplifierImpactZoneManager.h"

@@ -6,19 +6,18 @@
 #import "ApplifierImpactCampaignManager.h"
 #import "ApplifierImpactCampaign.h"
 #import "ApplifierImpactRewardItem.h"
-#import "../ApplifierImpact.h"
-#import "../ApplifierImpactSBJSON/ApplifierImpactSBJsonParser.h"
-#import "../ApplifierImpactData/ApplifierImpactCache.h"
-#import "../ApplifierImpactSBJSON/NSObject+ApplifierImpactSBJson.h"
-#import "../ApplifierImpactProperties/ApplifierImpactProperties.h"
-#import "../ApplifierImpactProperties/ApplifierImpactConstants.h"
+#import "ApplifierImpact.h"
+#import "ApplifierImpactSBJsonParser.h"
+#import "ApplifierImpactCacheManager.h"
+#import "NSObject+ApplifierImpactSBJson.h"
+#import "ApplifierImpactProperties.h"
+#import "ApplifierImpactConstants.h"
 #import "ApplifierImpactZoneParser.h"
 #import "ApplifierImpactZoneManager.h"
 
-@interface ApplifierImpactCampaignManager () <NSURLConnectionDelegate, ApplifierImpactCacheDelegate>
+@interface ApplifierImpactCampaignManager () <NSURLConnectionDelegate>
 @property (nonatomic, strong) NSURLConnection *urlConnection;
 @property (nonatomic, strong) NSMutableData *campaignDownloadData;
-@property (nonatomic, strong) ApplifierImpactCache *cache;
 @end
 
 @implementation ApplifierImpactCampaignManager
@@ -129,7 +128,12 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
       NSString *gamerId = [jsonDictionary objectForKey:kApplifierImpactGamerIDKey];
       
       [[ApplifierImpactProperties sharedInstance] setGamerId:gamerId];
-      [self.cache cacheCampaigns:self.campaigns];
+      
+      [self.campaigns enumerateObjectsUsingBlock:^(ApplifierImpactCampaign *campaign, NSUInteger idx, BOOL *stop) {
+        if (campaign.shouldCacheVideo) {
+          [[ApplifierImpactCacheManager sharedInstance] cache:ResourceTypeTrailerVideo forCampaign:campaign];
+        }
+      }];
       
       dispatch_async(dispatch_get_main_queue(), ^(void) {
         [self.delegate campaignManagerCampaignDataReceived];
@@ -147,17 +151,6 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 
 
 #pragma mark - Public
-
-- (id)init {
-	AIAssertV(![NSThread isMainThread], nil);
-	
-	if ((self = [super init])) {
-		_cache = [[ApplifierImpactCache alloc] init];
-		_cache.delegate = self;
-	}
-	
-	return self;
-}
 
 - (void)updateCampaigns {
 	AIAssert(![NSThread isMainThread]);
@@ -179,17 +172,37 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 			AILOG_DEBUG(@"Input is nil.");
 			return nil;
 		}
+    
+    ApplifierImpactCacheManager * cacheManager = [ApplifierImpactCacheManager sharedInstance];
 		
-		NSURL *videoURL = [self.cache localVideoURLForCampaign:campaign];
-		if (videoURL == nil || [self.cache campaignExistsInQueue:campaign] || ![campaign shouldCacheVideo] || ![self.cache isCampaignVideoCached:campaign]) {
-      AILOG_DEBUG(@"Campaign is not cached!");
-      videoURL = campaign.trailerStreamingURL;
+		NSURL *videoURL = [cacheManager localURLFor:ResourceTypeTrailerVideo ofCampaign:campaign];
+    if ([cacheManager campaignExistsInQueue:campaign withResourceType:ResourceTypeTrailerVideo]) {
+      AILOG_DEBUG(@"Cancel caching video for campaign %@", campaign.id);
+      [cacheManager cancelCacheForCampaign:campaign withResourceType:ResourceTypeTrailerVideo];
     }
-    
-    AILOG_DEBUG(@"%@ and %i", videoURL.absoluteString, [self.cache campaignExistsInQueue:campaign]);
-    
+		if (![cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaign])
+    {
+      AILOG_DEBUG(@"Choosing streaming URL for campaign %@", campaign.id);
+      videoURL = campaign.trailerStreamingURL;
+    } else {
+      AILOG_DEBUG(@"Choosing trailer URL for campaign %@", campaign.id);
+    }
 		return videoURL;
 	}
+}
+
+- (void)cacheNextCampaignAfter:(ApplifierImpactCampaign *)currentCampaign {
+  __block NSUInteger currentIndex = 0;
+  [self.campaigns enumerateObjectsUsingBlock:^(ApplifierImpactCampaign *campaign, NSUInteger idx, BOOL *stop) {
+    if ([campaign.id isEqualToString:currentCampaign.id]) {
+      currentIndex = idx + 1;
+      *stop = YES;
+    }
+  }];
+  
+  if (currentIndex <= self.campaigns.count - 1) {
+    [[ApplifierImpactCacheManager sharedInstance] cache:ResourceTypeTrailerVideo forCampaign:self.campaigns[currentIndex]];
+  }
 }
 
 - (ApplifierImpactCampaign *)getCampaignWithId:(NSString *)campaignId {
@@ -258,13 +271,11 @@ static ApplifierImpactCampaignManager *sharedImpactCampaignManager = nil;
 	[self.urlConnection cancel];
 	self.urlConnection = nil;
 	
-	[self.cache cancelAllDownloads];
+	[[ApplifierImpactCacheManager sharedInstance] cancelAllDownloads];
 }
 
 - (void)dealloc {
-	self.cache.delegate = nil;
 }
-
 
 #pragma mark - NSURLConnectionDelegate
 
@@ -300,11 +311,8 @@ static int retryCount = 0;
 
 #pragma mark - ApplifierImpactCacheDelegate
 
-- (void)cache:(ApplifierImpactCache *)cache finishedCachingCampaign:(ApplifierImpactCampaign *)campaign {
-}
-
-- (void)cacheFinishedCachingCampaigns:(ApplifierImpactCache *)cache {
-	dispatch_async(dispatch_get_main_queue(), ^{
+- (void)cache:(ApplifierImpactCacheManager *)cacheManager finishedCachingCampaign:(ApplifierImpactCampaign *)campaign {
+  dispatch_async(dispatch_get_main_queue(), ^{
 		[self.delegate campaignManager:self updatedWithCampaigns:self.campaigns gamerID:[[ApplifierImpactProperties sharedInstance] gamerId]];
 	});
 }

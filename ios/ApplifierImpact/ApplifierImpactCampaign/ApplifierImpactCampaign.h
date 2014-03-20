@@ -21,6 +21,7 @@
 @property (nonatomic, strong) NSString *tagLine;
 @property (nonatomic, strong) NSString *itunesID;
 @property (nonatomic, assign) BOOL shouldCacheVideo;
+@property (nonatomic, assign) BOOL allowedToCacheVideo;
 @property (nonatomic, assign) BOOL viewed;
 @property (nonatomic, assign) BOOL bypassAppSheet;
 @property (nonatomic, assign) long long expectedTrailerSize;
@@ -31,7 +32,7 @@
 @property (nonatomic, assign) long long videoBufferingEndTime;
 @property (nonatomic, assign) BOOL nativeTrackingQuerySent;
 
-
 - (id)initWithData:(NSDictionary *)data;
 - (long long)geBufferingDuration;
+
 @end

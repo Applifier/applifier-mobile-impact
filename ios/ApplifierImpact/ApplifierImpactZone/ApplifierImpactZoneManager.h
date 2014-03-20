@@ -24,6 +24,6 @@
 - (BOOL)setCurrentZone:(NSString *)zoneId;
 - (ApplifierImpactZone *)getCurrentZone;
 
-- (int)zoneCount;
+- (NSUInteger)zoneCount;
 
 @end

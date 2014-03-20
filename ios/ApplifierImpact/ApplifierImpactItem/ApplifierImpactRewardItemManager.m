@@ -65,7 +65,7 @@
   return [self._items allValues];
 }
 
-- (int)itemCount {
+- (NSUInteger)itemCount {
   return self._items.count;
 }
 

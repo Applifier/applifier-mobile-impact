@@ -94,7 +94,7 @@
         //[[ApplifierImpact sharedInstance] setViewController:self showImmediatelyInNewController:YES];
         
         NSLog(@"showImpact: %i", [[ApplifierImpact sharedInstance] showImpact:@{
-          kApplifierImpactOptionNoOfferscreenKey:@false,
+          kApplifierImpactOptionNoOfferscreenKey:@true,
           kApplifierImpactOptionOpenAnimatedKey:@true,
           kApplifierImpactOptionGamerSIDKey:@"gom",
           kApplifierImpactOptionMuteVideoSounds:@false,

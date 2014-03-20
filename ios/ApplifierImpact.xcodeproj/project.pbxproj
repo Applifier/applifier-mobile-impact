@@ -61,8 +61,6 @@
 		7894D8ED1716AA44000CFC99 /* ApplifierImpactViewStateVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8EB1716AA44000CFC99 /* ApplifierImpactViewStateVideoPlayer.m */; };
 		78AC20211622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */; };
 		78AC20221622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC201E1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.m */; };
-		78AC20231622EFF3007DE419 /* ApplifierImpactCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC201F1622EFF3007DE419 /* ApplifierImpactCache.h */; };
-		78AC20241622EFF3007DE419 /* ApplifierImpactCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20201622EFF3007DE419 /* ApplifierImpactCache.m */; };
 		78AC202B1622EFFD007DE419 /* ApplifierImpactCampaign.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC20251622EFFD007DE419 /* ApplifierImpactCampaign.h */; };
 		78AC202C1622EFFD007DE419 /* ApplifierImpactCampaign.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20261622EFFD007DE419 /* ApplifierImpactCampaign.m */; };
 		78AC202D1622EFFD007DE419 /* ApplifierImpactCampaignManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 78AC20271622EFFD007DE419 /* ApplifierImpactCampaignManager.h */; };
@@ -73,6 +71,7 @@
 		78BC12F817392D0D0015A35E /* ApplifierImpactInstrumentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BC12F617392D0D0015A35E /* ApplifierImpactInstrumentation.m */; };
 		78CB843A16255FAA00E94915 /* ApplifierImpactURLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CB843816255FAA00E94915 /* ApplifierImpactURLProtocol.h */; };
 		78CB843B16255FAA00E94915 /* ApplifierImpactURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */; };
+		8426634418DB0AB6004AD5B3 /* ApplifierImpactAppSheetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 99466CC318D1D87E00A63151 /* ApplifierImpactAppSheetManager.m */; };
 		9945F95B180572A200A97B70 /* ApplifierImpactZoneParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9945F95A180572A200A97B70 /* ApplifierImpactZoneParserTests.m */; };
 		9945F95D180575A000A97B70 /* ApplifierImpactZoneManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9945F95C180575A000A97B70 /* ApplifierImpactZoneManagerTests.m */; };
 		99466CC418D1D87E00A63151 /* ApplifierImpactAppSheetManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 99466CC218D1D87E00A63151 /* ApplifierImpactAppSheetManager.h */; };
@@ -92,16 +91,80 @@
 		99F2F6181858A52200A773C2 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C2B17E8881300845E0B /* StoreKit.framework */; };
 		99FE3C0117E85B2200845E0B /* ApplifierImpactZone.h in Headers */ = {isa = PBXBuildFile; fileRef = 99FE3BFF17E85B2200845E0B /* ApplifierImpactZone.h */; };
 		99FE3C0217E85B2200845E0B /* ApplifierImpactZone.m in Sources */ = {isa = PBXBuildFile; fileRef = 99FE3C0017E85B2200845E0B /* ApplifierImpactZone.m */; };
-		99FE3C1217E87E1400845E0B /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C1117E87E1400845E0B /* SenTestingKit.framework */; };
-		99FE3C1417E87E1400845E0B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C1317E87E1400845E0B /* UIKit.framework */; };
-		99FE3C1617E87E1400845E0B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C1517E87E1400845E0B /* Foundation.framework */; };
 		99FE3C1C17E87E1500845E0B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 99FE3C1A17E87E1500845E0B /* InfoPlist.strings */; };
 		99FE3C2617E87E9200845E0B /* ApplifierImpactZoneTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 99FE3C2517E87E9200845E0B /* ApplifierImpactZoneTests.m */; };
-		99FE3C2E17E8884900845E0B /* ApplifierImpact.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C2D17E8884800845E0B /* ApplifierImpact.framework */; };
-		99FE3C2F17E8887600845E0B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C2917E8880000845E0B /* AVFoundation.framework */; };
 		99FE3C3217E888A900845E0B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C3117E888A600845E0B /* CoreGraphics.framework */; };
 		99FE3C3717E889A000845E0B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C3617E8899D00845E0B /* CoreMedia.framework */; };
 		99FE3C3917E889DC00845E0B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C3817E889D900845E0B /* SystemConfiguration.framework */; };
+		C822D76018CF4A52007AAE44 /* ApplifierImpactCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C822D75C18CF4A52007AAE44 /* ApplifierImpactCacheManager.h */; };
+		C822D76118CF4A52007AAE44 /* ApplifierImpactCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D75D18CF4A52007AAE44 /* ApplifierImpactCacheManager.m */; };
+		C822D76218CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = C822D75E18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.h */; };
+		C822D76318CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.m */; };
+		C822D76718CF4A94007AAE44 /* ApplifierImpactCacheManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D76618CF4A94007AAE44 /* ApplifierImpactCacheManagerTests.m */; };
+		C822D76818CF4CAA007AAE44 /* ApplifierImpactIncentivizedZone.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A8516017FACAAA0090F8FF /* ApplifierImpactIncentivizedZone.m */; };
+		C822D76918CF4CBD007AAE44 /* ApplifierImpactRewardItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A8515A17FABF830090F8FF /* ApplifierImpactRewardItemManager.m */; };
+		C822D76A18CF4CC9007AAE44 /* ApplifierImpactRewardItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A8515817FABF830090F8FF /* ApplifierImpactRewardItem.m */; };
+		C822D76B18CF4CD7007AAE44 /* ApplifierImpactZone.m in Sources */ = {isa = PBXBuildFile; fileRef = 99FE3C0017E85B2200845E0B /* ApplifierImpactZone.m */; };
+		C822D76C18CF4CDF007AAE44 /* ApplifierImpactZoneParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A78DBA17E9B81B00731814 /* ApplifierImpactZoneParser.m */; };
+		C822D76D18CF4CF8007AAE44 /* ApplifierImpact.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC203C1622F01F007DE419 /* ApplifierImpact.m */; };
+		C822D76E18CF4CF8007AAE44 /* ApplifierImpactCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D75D18CF4A52007AAE44 /* ApplifierImpactCacheManager.m */; };
+		C822D76F18CF4CF8007AAE44 /* ApplifierImpactCacheFileOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.m */; };
+		C822D77018CF4CF8007AAE44 /* ApplifierImpactInstrumentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BC12F617392D0D0015A35E /* ApplifierImpactInstrumentation.m */; };
+		C822D77118CF4CF8007AAE44 /* ApplifierImpactAnalyticsUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC201E1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.m */; };
+		C822D77218CF4CF8007AAE44 /* ApplifierImpactProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 78057A0F1643CADB005EF487 /* ApplifierImpactProperties.m */; };
+		C822D77318CF4CF8007AAE44 /* ApplifierImpactConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 7887E41B169EB62F00D67A2A /* ApplifierImpactConstants.m */; };
+		C822D77418CF4CF8007AAE44 /* ApplifierImpactURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */; };
+		C822D78318CF4CF8007AAE44 /* ApplifierImpactViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8BA170D6F32000CFC99 /* ApplifierImpactViewState.m */; };
+		C822D78418CF4CF8007AAE44 /* ApplifierImpactViewStateOfferScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8BE170D7126000CFC99 /* ApplifierImpactViewStateOfferScreen.m */; };
+		C822D78D18CF4D47007AAE44 /* ApplifierImpactDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 786F5D63163142BB00FD34C4 /* ApplifierImpactDevice.m */; };
+		C822D78E18CF4D5D007AAE44 /* ApplifierImpactCampaignManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20281622EFFD007DE419 /* ApplifierImpactCampaignManager.m */; };
+		C822D78F18CF4D66007AAE44 /* ApplifierImpactCampaign.m in Sources */ = {isa = PBXBuildFile; fileRef = 78AC20261622EFFD007DE419 /* ApplifierImpactCampaign.m */; };
+		C822D79018CF4D6F007AAE44 /* ApplifierImpactDefaultInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8DF170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.m */; };
+		C822D79118CF4D7C007AAE44 /* ApplifierImpactMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8B6170D6E66000CFC99 /* ApplifierImpactMainViewController.m */; };
+		C822D79218CF4D86007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D79318CF4D91007AAE44 /* ApplifierImpactWebAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 786F5D971636AF9600FD34C4 /* ApplifierImpactWebAppController.m */; };
+		C822D79418CF4D98007AAE44 /* ApplifierImpactZoneManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A78DB817E9B81B00731814 /* ApplifierImpactZoneManager.m */; };
+		C822D79618CF4DA6007AAE44 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C822D79518CF4DA6007AAE44 /* UIKit.framework */; };
+		C822D79718CF4DB0007AAE44 /* ApplifierImpactInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8DB170EF726000CFC99 /* ApplifierImpactInitializer.m */; };
+		C822D79818CF4DB8007AAE44 /* ApplifierImpactViewStateEndScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8CA170DAD1D000CFC99 /* ApplifierImpactViewStateEndScreen.m */; };
+		C822D79918CF4DC3007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D79A18CF4DCC007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D79B18CF4DD3007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D79C18CF4DDB007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D79F18CF4E43007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D7A018CF4E56007AAE44 /* ApplifierImpactBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */; };
+		C822D7A118CF4E56007AAE44 /* ApplifierImpactVideoMuteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CC095CAD17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.m */; };
+		C822D7A218CF4E56007AAE44 /* ApplifierImpactVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 786F5D6C1635359400FD34C4 /* ApplifierImpactVideoPlayer.m */; };
+		C822D7A318CF4E56007AAE44 /* ApplifierImpactVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 787893A4165CE94F00134FC3 /* ApplifierImpactVideoView.m */; };
+		C822D7A418CF4E56007AAE44 /* ApplifierImpactVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7835377A166365BB00D46B7C /* ApplifierImpactVideoViewController.m */; };
+		C822D7A518CF4E56007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D7A618CF4E56007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D7A718CF4E56007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D7A818CF4E56007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D7A918CF4E56007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D7AA18CF4E56007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D7AB18CF4E56007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D7AC18CF4E56007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D7AD18CF4E56007AAE44 /* ApplifierImpactViewStateVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7894D8EB1716AA44000CFC99 /* ApplifierImpactViewStateVideoPlayer.m */; };
+		C822D7AE18CF4E56007AAE44 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C822D7AF18CF4E67007AAE44 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C2917E8880000845E0B /* AVFoundation.framework */; };
+		C822D7B018CF4EC2007AAE44 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FE3C1117E87E1400845E0B /* SenTestingKit.framework */; };
+		C86FABB218D06C56009EDE8F /* jsonData.txt in Resources */ = {isa = PBXBuildFile; fileRef = C86FABB118D06C56009EDE8F /* jsonData.txt */; };
+		C86FABB318D075F7009EDE8F /* ApplifierImpactSBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E933B1652487B009667F6 /* ApplifierImpactSBJsonUTF8Stream.m */; };
+		C86FABB418D075F7009EDE8F /* ApplifierImpactSBJsonStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E932F1652482B009667F6 /* ApplifierImpactSBJsonStreamWriter.m */; };
+		C86FABB518D075F7009EDE8F /* ApplifierImpactSBJsonStreamWriterAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E93311652482C009667F6 /* ApplifierImpactSBJsonStreamWriterAccumulator.m */; };
+		C86FABB618D075F7009EDE8F /* ApplifierImpactSBJsonStreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E93331652482D009667F6 /* ApplifierImpactSBJsonStreamWriterState.m */; };
+		C86FABB718D075F7009EDE8F /* ApplifierImpactSBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E932B165246F5009667F6 /* ApplifierImpactSBJsonTokeniser.m */; };
+		C86FABB818D075F7009EDE8F /* ApplifierImpactSBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E931B165246A6009667F6 /* ApplifierImpactSBJsonStreamParser.m */; };
+		C86FABB918D075F7009EDE8F /* ApplifierImpactSBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E931D165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAccumulator.m */; };
+		C86FABBA18D075F7009EDE8F /* ApplifierImpactSBJsonStreamParserAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E931F165246A6009667F6 /* ApplifierImpactSBJsonStreamParserAdapter.m */; };
+		C86FABBB18D075F7009EDE8F /* ApplifierImpactSBJsonStreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E9321165246A6009667F6 /* ApplifierImpactSBJsonStreamParserState.m */; };
+		C86FABBC18D075F7009EDE8F /* ApplifierImpactSBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E930E165245DC009667F6 /* ApplifierImpactSBJsonParser.m */; };
+		C86FABBD18D075F7009EDE8F /* ApplifierImpactSBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E9310165245DC009667F6 /* ApplifierImpactSBJsonWriter.m */; };
+		C86FABBE18D075F7009EDE8F /* NSObject+ApplifierImpactSBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 784E9312165245DC009667F6 /* NSObject+ApplifierImpactSBJson.m */; };
+		C8A51D0018D1DBA600A4DC07 /* ApplifierImpactCacheOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = C8A51CFE18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.h */; };
+		C8A51D0118D1DBA600A4DC07 /* ApplifierImpactCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C8A51CFF18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.m */; };
+		C8A51D0218D1DBB000A4DC07 /* ApplifierImpactCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C8A51CFF18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.m */; };
 		CC095C991733A30E00A0BD3C /* ApplifierImpactBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */; settings = {ATTRIBUTES = (); }; };
 		CC095C9A1733A30E00A0BD3C /* ApplifierImpactBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */; };
 		CC095CAE17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h in Headers */ = {isa = PBXBuildFile; fileRef = CC095CAC17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h */; };
@@ -180,8 +243,6 @@
 		7894D8EB1716AA44000CFC99 /* ApplifierImpactViewStateVideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactViewStateVideoPlayer.m; sourceTree = "<group>"; };
 		78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactAnalyticsUploader.h; sourceTree = "<group>"; };
 		78AC201E1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactAnalyticsUploader.m; sourceTree = "<group>"; };
-		78AC201F1622EFF3007DE419 /* ApplifierImpactCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCache.h; sourceTree = "<group>"; };
-		78AC20201622EFF3007DE419 /* ApplifierImpactCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCache.m; sourceTree = "<group>"; };
 		78AC20251622EFFD007DE419 /* ApplifierImpactCampaign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCampaign.h; sourceTree = "<group>"; };
 		78AC20261622EFFD007DE419 /* ApplifierImpactCampaign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCampaign.m; sourceTree = "<group>"; };
 		78AC20271622EFFD007DE419 /* ApplifierImpactCampaignManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCampaignManager.h; sourceTree = "<group>"; };
@@ -212,8 +273,6 @@
 		99FE3C0017E85B2200845E0B /* ApplifierImpactZone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ApplifierImpactZone.m; path = ApplifierImpactZone/ApplifierImpactZone.m; sourceTree = "<group>"; };
 		99FE3C1017E87E1300845E0B /* ApplifierImpactTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ApplifierImpactTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		99FE3C1117E87E1400845E0B /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		99FE3C1317E87E1400845E0B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		99FE3C1517E87E1400845E0B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		99FE3C1917E87E1500845E0B /* ApplifierImpactTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ApplifierImpactTests-Info.plist"; sourceTree = "<group>"; };
 		99FE3C1B17E87E1500845E0B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		99FE3C2017E87E1500845E0B /* ApplifierImpactTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ApplifierImpactTests-Prefix.pch"; sourceTree = "<group>"; };
@@ -221,11 +280,20 @@
 		99FE3C2717E8873D00845E0B /* ApplifierImpact.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplifierImpact.framework; path = "build/Release-iphoneos/ApplifierImpact.framework"; sourceTree = "<group>"; };
 		99FE3C2917E8880000845E0B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		99FE3C2B17E8881300845E0B /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		99FE3C2D17E8884800845E0B /* ApplifierImpact.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplifierImpact.framework; path = "build/Release-iphonesimulator/ApplifierImpact.framework"; sourceTree = "<group>"; };
 		99FE3C3117E888A600845E0B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		99FE3C3417E8894700845E0B /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		99FE3C3617E8899D00845E0B /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		99FE3C3817E889D900845E0B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		C822D75C18CF4A52007AAE44 /* ApplifierImpactCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCacheManager.h; sourceTree = "<group>"; };
+		C822D75D18CF4A52007AAE44 /* ApplifierImpactCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCacheManager.m; sourceTree = "<group>"; };
+		C822D75E18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCacheFileOperation.h; sourceTree = "<group>"; };
+		C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCacheFileOperation.m; sourceTree = "<group>"; };
+		C822D76618CF4A94007AAE44 /* ApplifierImpactCacheManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCacheManagerTests.m; sourceTree = "<group>"; };
+		C822D79518CF4DA6007AAE44 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		C822D79D18CF4DE9007AAE44 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		C86FABB118D06C56009EDE8F /* jsonData.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = jsonData.txt; sourceTree = "<group>"; };
+		C8A51CFE18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactCacheOperation.h; sourceTree = "<group>"; };
+		C8A51CFF18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCacheOperation.m; sourceTree = "<group>"; };
 		CC095C971733A30E00A0BD3C /* ApplifierImpactBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactBundle.h; sourceTree = "<group>"; };
 		CC095C981733A30E00A0BD3C /* ApplifierImpactBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactBundle.m; sourceTree = "<group>"; };
 		CC095CAC17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactVideoMuteButton.h; sourceTree = "<group>"; };
@@ -250,15 +318,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C822D7B018CF4EC2007AAE44 /* SenTestingKit.framework in Frameworks */,
+				C822D7AF18CF4E67007AAE44 /* AVFoundation.framework in Frameworks */,
+				C822D79618CF4DA6007AAE44 /* UIKit.framework in Frameworks */,
 				99FE3C3917E889DC00845E0B /* SystemConfiguration.framework in Frameworks */,
 				99F2F6181858A52200A773C2 /* StoreKit.framework in Frameworks */,
 				99FE3C3717E889A000845E0B /* CoreMedia.framework in Frameworks */,
-				99FE3C2E17E8884900845E0B /* ApplifierImpact.framework in Frameworks */,
 				99FE3C3217E888A900845E0B /* CoreGraphics.framework in Frameworks */,
-				99FE3C2F17E8887600845E0B /* AVFoundation.framework in Frameworks */,
-				99FE3C1217E87E1400845E0B /* SenTestingKit.framework in Frameworks */,
-				99FE3C1417E87E1400845E0B /* UIKit.framework in Frameworks */,
-				99FE3C1617E87E1400845E0B /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,12 +439,11 @@
 		78AC20131622EF56007DE419 /* ApplifierImpactData */ = {
 			isa = PBXGroup;
 			children = (
+				C822D75B18CF4A52007AAE44 /* ApplifierImpactCache */,
 				78BC12F517392D0D0015A35E /* ApplifierImpactInstrumentation.h */,
 				78BC12F617392D0D0015A35E /* ApplifierImpactInstrumentation.m */,
 				78AC201D1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h */,
 				78AC201E1622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.m */,
-				78AC201F1622EFF3007DE419 /* ApplifierImpactCache.h */,
-				78AC20201622EFF3007DE419 /* ApplifierImpactCache.m */,
 			);
 			path = ApplifierImpactData;
 			sourceTree = "<group>";
@@ -430,6 +495,7 @@
 		99FE3C1717E87E1400845E0B /* ApplifierImpactTests */ = {
 			isa = PBXGroup;
 			children = (
+				C822D76618CF4A94007AAE44 /* ApplifierImpactCacheManagerTests.m */,
 				9945F95C180575A000A97B70 /* ApplifierImpactZoneManagerTests.m */,
 				9945F95A180572A200A97B70 /* ApplifierImpactZoneParserTests.m */,
 				99A8516917FC45160090F8FF /* ApplifierImpactRewardItemManagerTests.m */,
@@ -443,11 +509,25 @@
 		99FE3C1817E87E1500845E0B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C86FABB118D06C56009EDE8F /* jsonData.txt */,
 				99FE3C1917E87E1500845E0B /* ApplifierImpactTests-Info.plist */,
 				99FE3C1A17E87E1500845E0B /* InfoPlist.strings */,
 				99FE3C2017E87E1500845E0B /* ApplifierImpactTests-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C822D75B18CF4A52007AAE44 /* ApplifierImpactCache */ = {
+			isa = PBXGroup;
+			children = (
+				C822D75C18CF4A52007AAE44 /* ApplifierImpactCacheManager.h */,
+				C822D75D18CF4A52007AAE44 /* ApplifierImpactCacheManager.m */,
+				C8A51CFE18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.h */,
+				C8A51CFF18D1DBA600A4DC07 /* ApplifierImpactCacheOperation.m */,
+				C822D75E18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.h */,
+				C822D75F18CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.m */,
+			);
+			path = ApplifierImpactCache;
 			sourceTree = "<group>";
 		};
 		CC095C941733A2A800A0BD3C /* Resources */ = {
@@ -552,18 +632,17 @@
 		CCF83B871733A13200DA12C1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C822D79D18CF4DE9007AAE44 /* XCTest.framework */,
+				C822D79518CF4DA6007AAE44 /* UIKit.framework */,
 				99FE3C3817E889D900845E0B /* SystemConfiguration.framework */,
 				99FE3C3617E8899D00845E0B /* CoreMedia.framework */,
 				99FE3C3417E8894700845E0B /* CoreVideo.framework */,
 				99FE3C3117E888A600845E0B /* CoreGraphics.framework */,
-				99FE3C2D17E8884800845E0B /* ApplifierImpact.framework */,
 				99FE3C2B17E8881300845E0B /* StoreKit.framework */,
 				99FE3C2917E8880000845E0B /* AVFoundation.framework */,
 				99FE3C2717E8873D00845E0B /* ApplifierImpact.framework */,
 				CCF83B881733A13200DA12C1 /* CoreFoundation.framework */,
 				99FE3C1117E87E1400845E0B /* SenTestingKit.framework */,
-				99FE3C1317E87E1400845E0B /* UIKit.framework */,
-				99FE3C1517E87E1400845E0B /* Foundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -597,12 +676,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				78AC20211622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.h in Headers */,
-				78AC20231622EFF3007DE419 /* ApplifierImpactCache.h in Headers */,
 				78AC202B1622EFFD007DE419 /* ApplifierImpactCampaign.h in Headers */,
 				78AC202D1622EFFD007DE419 /* ApplifierImpactCampaignManager.h in Headers */,
 				78AC20411622F01F007DE419 /* ApplifierImpact.h in Headers */,
 				78CB843A16255FAA00E94915 /* ApplifierImpactURLProtocol.h in Headers */,
 				786F5D64163142BB00FD34C4 /* ApplifierImpactDevice.h in Headers */,
+				C822D76218CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.h in Headers */,
 				786F5D6F1635359500FD34C4 /* ApplifierImpactVideoPlayer.h in Headers */,
 				786F5D981636AF9600FD34C4 /* ApplifierImpactWebAppController.h in Headers */,
 				99A8515B17FABF830090F8FF /* ApplifierImpactRewardItem.h in Headers */,
@@ -620,6 +699,7 @@
 				784E93381652482D009667F6 /* ApplifierImpactSBJsonStreamWriterState.h in Headers */,
 				784E933C1652487C009667F6 /* ApplifierImpactSBJsonUTF8Stream.h in Headers */,
 				787893A5165CE94F00134FC3 /* ApplifierImpactVideoView.h in Headers */,
+				C8A51D0018D1DBA600A4DC07 /* ApplifierImpactCacheOperation.h in Headers */,
 				7835377B166365BB00D46B7C /* ApplifierImpactVideoViewController.h in Headers */,
 				7887E41C169EB63000D67A2A /* ApplifierImpactConstants.h in Headers */,
 				7894D8B7170D6E66000CFC99 /* ApplifierImpactMainViewController.h in Headers */,
@@ -629,6 +709,7 @@
 				7894D8DC170EF726000CFC99 /* ApplifierImpactInitializer.h in Headers */,
 				7894D8E0170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.h in Headers */,
 				7894D8EC1716AA44000CFC99 /* ApplifierImpactViewStateVideoPlayer.h in Headers */,
+				C822D76018CF4A52007AAE44 /* ApplifierImpactCacheManager.h in Headers */,
 				99A8516117FACAAA0090F8FF /* ApplifierImpactIncentivizedZone.h in Headers */,
 				99466CC418D1D87E00A63151 /* ApplifierImpactAppSheetManager.h in Headers */,
 				CC095C991733A30E00A0BD3C /* ApplifierImpactBundle.h in Headers */,
@@ -707,7 +788,8 @@
 		CC1588FD150789ED00B3D188 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastTestingUpgradeCheck = 0510;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Applifier;
 			};
 			buildConfigurationList = CC158900150789ED00B3D188 /* Build configuration list for PBXProject "ApplifierImpact" */;
@@ -734,6 +816,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C86FABB218D06C56009EDE8F /* jsonData.txt in Resources */,
 				99FE3C1C17E87E1500845E0B /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -820,11 +903,71 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8426634418DB0AB6004AD5B3 /* ApplifierImpactAppSheetManager.m in Sources */,
+				C822D7A018CF4E56007AAE44 /* ApplifierImpactBundle.m in Sources */,
+				C822D7A118CF4E56007AAE44 /* ApplifierImpactVideoMuteButton.m in Sources */,
+				C822D7A218CF4E56007AAE44 /* ApplifierImpactVideoPlayer.m in Sources */,
+				C822D7A318CF4E56007AAE44 /* ApplifierImpactVideoView.m in Sources */,
+				C822D7A418CF4E56007AAE44 /* ApplifierImpactVideoViewController.m in Sources */,
+				C822D7A518CF4E56007AAE44 /* (null) in Sources */,
+				C822D7A618CF4E56007AAE44 /* (null) in Sources */,
+				C822D7A718CF4E56007AAE44 /* (null) in Sources */,
+				C822D7A818CF4E56007AAE44 /* (null) in Sources */,
+				C822D7A918CF4E56007AAE44 /* (null) in Sources */,
+				C822D7AA18CF4E56007AAE44 /* (null) in Sources */,
+				C86FABB818D075F7009EDE8F /* ApplifierImpactSBJsonStreamParser.m in Sources */,
+				C86FABBE18D075F7009EDE8F /* NSObject+ApplifierImpactSBJson.m in Sources */,
+				C86FABBD18D075F7009EDE8F /* ApplifierImpactSBJsonWriter.m in Sources */,
+				C822D7AB18CF4E56007AAE44 /* (null) in Sources */,
+				C86FABB318D075F7009EDE8F /* ApplifierImpactSBJsonUTF8Stream.m in Sources */,
+				C822D7AC18CF4E56007AAE44 /* (null) in Sources */,
+				C822D7AD18CF4E56007AAE44 /* ApplifierImpactViewStateVideoPlayer.m in Sources */,
+				C822D7AE18CF4E56007AAE44 /* (null) in Sources */,
+				C86FABB718D075F7009EDE8F /* ApplifierImpactSBJsonTokeniser.m in Sources */,
+				C822D76D18CF4CF8007AAE44 /* ApplifierImpact.m in Sources */,
+				C822D76E18CF4CF8007AAE44 /* ApplifierImpactCacheManager.m in Sources */,
+				C822D76F18CF4CF8007AAE44 /* ApplifierImpactCacheFileOperation.m in Sources */,
+				C822D77018CF4CF8007AAE44 /* ApplifierImpactInstrumentation.m in Sources */,
+				C822D77118CF4CF8007AAE44 /* ApplifierImpactAnalyticsUploader.m in Sources */,
+				C822D77218CF4CF8007AAE44 /* ApplifierImpactProperties.m in Sources */,
+				C86FABB618D075F7009EDE8F /* ApplifierImpactSBJsonStreamWriterState.m in Sources */,
+				C822D78F18CF4D66007AAE44 /* ApplifierImpactCampaign.m in Sources */,
+				C822D77318CF4CF8007AAE44 /* ApplifierImpactConstants.m in Sources */,
+				C822D79C18CF4DDB007AAE44 /* (null) in Sources */,
+				C822D77418CF4CF8007AAE44 /* ApplifierImpactURLProtocol.m in Sources */,
+				C822D79A18CF4DCC007AAE44 /* (null) in Sources */,
+				C822D79B18CF4DD3007AAE44 /* (null) in Sources */,
+				C822D79F18CF4E43007AAE44 /* (null) in Sources */,
+				C822D78318CF4CF8007AAE44 /* ApplifierImpactViewState.m in Sources */,
+				C822D78418CF4CF8007AAE44 /* ApplifierImpactViewStateOfferScreen.m in Sources */,
+				C822D76B18CF4CD7007AAE44 /* ApplifierImpactZone.m in Sources */,
+				C822D79018CF4D6F007AAE44 /* ApplifierImpactDefaultInitializer.m in Sources */,
+				C822D76818CF4CAA007AAE44 /* ApplifierImpactIncentivizedZone.m in Sources */,
 				99FE3C2617E87E9200845E0B /* ApplifierImpactZoneTests.m in Sources */,
+				C86FABB518D075F7009EDE8F /* ApplifierImpactSBJsonStreamWriterAccumulator.m in Sources */,
+				C822D79318CF4D91007AAE44 /* ApplifierImpactWebAppController.m in Sources */,
+				C822D79818CF4DB8007AAE44 /* ApplifierImpactViewStateEndScreen.m in Sources */,
+				C86FABB918D075F7009EDE8F /* ApplifierImpactSBJsonStreamParserAccumulator.m in Sources */,
+				C86FABBA18D075F7009EDE8F /* ApplifierImpactSBJsonStreamParserAdapter.m in Sources */,
+				C822D78E18CF4D5D007AAE44 /* ApplifierImpactCampaignManager.m in Sources */,
+				C822D79218CF4D86007AAE44 /* (null) in Sources */,
 				99A8516A17FC45160090F8FF /* ApplifierImpactRewardItemManagerTests.m in Sources */,
+				C86FABBB18D075F7009EDE8F /* ApplifierImpactSBJsonStreamParserState.m in Sources */,
+				C822D76C18CF4CDF007AAE44 /* ApplifierImpactZoneParser.m in Sources */,
+				C822D79118CF4D7C007AAE44 /* ApplifierImpactMainViewController.m in Sources */,
+				C822D79418CF4D98007AAE44 /* ApplifierImpactZoneManager.m in Sources */,
 				9945F95D180575A000A97B70 /* ApplifierImpactZoneManagerTests.m in Sources */,
+				C822D79718CF4DB0007AAE44 /* ApplifierImpactInitializer.m in Sources */,
+				C86FABB418D075F7009EDE8F /* ApplifierImpactSBJsonStreamWriter.m in Sources */,
+				C822D78D18CF4D47007AAE44 /* ApplifierImpactDevice.m in Sources */,
 				9945F95B180572A200A97B70 /* ApplifierImpactZoneParserTests.m in Sources */,
+				C8A51D0218D1DBB000A4DC07 /* ApplifierImpactCacheOperation.m in Sources */,
 				99A8516817FC41C00090F8FF /* ApplifierImpactRewardItemTests.m in Sources */,
+				C822D76A18CF4CC9007AAE44 /* ApplifierImpactRewardItem.m in Sources */,
+				C822D79918CF4DC3007AAE44 /* (null) in Sources */,
+				C86FABBC18D075F7009EDE8F /* ApplifierImpactSBJsonParser.m in Sources */,
+				C822D76918CF4CBD007AAE44 /* ApplifierImpactRewardItemManager.m in Sources */,
+				C822D76718CF4A94007AAE44 /* ApplifierImpactCacheManagerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -833,7 +976,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				78AC20221622EFF3007DE419 /* ApplifierImpactAnalyticsUploader.m in Sources */,
-				78AC20241622EFF3007DE419 /* ApplifierImpactCache.m in Sources */,
 				78AC202C1622EFFD007DE419 /* ApplifierImpactCampaign.m in Sources */,
 				99A8516217FACAAA0090F8FF /* ApplifierImpactIncentivizedZone.m in Sources */,
 				78AC202E1622EFFD007DE419 /* ApplifierImpactCampaignManager.m in Sources */,
@@ -845,6 +987,7 @@
 				786F5D991636AF9600FD34C4 /* ApplifierImpactWebAppController.m in Sources */,
 				78057A131643CADB005EF487 /* ApplifierImpactProperties.m in Sources */,
 				784E9315165245DC009667F6 /* ApplifierImpactSBJsonParser.m in Sources */,
+				C8A51D0118D1DBA600A4DC07 /* ApplifierImpactCacheOperation.m in Sources */,
 				784E9317165245DC009667F6 /* ApplifierImpactSBJsonWriter.m in Sources */,
 				784E9319165245DC009667F6 /* NSObject+ApplifierImpactSBJson.m in Sources */,
 				784E9323165246A6009667F6 /* ApplifierImpactSBJsonStreamParser.m in Sources */,
@@ -867,6 +1010,8 @@
 				7894D8DD170EF726000CFC99 /* ApplifierImpactInitializer.m in Sources */,
 				7894D8E1170EF73D000CFC99 /* ApplifierImpactDefaultInitializer.m in Sources */,
 				7894D8ED1716AA44000CFC99 /* ApplifierImpactViewStateVideoPlayer.m in Sources */,
+				C822D76118CF4A52007AAE44 /* ApplifierImpactCacheManager.m in Sources */,
+				C822D76318CF4A52007AAE44 /* ApplifierImpactCacheFileOperation.m in Sources */,
 				CC095C9A1733A30E00A0BD3C /* ApplifierImpactBundle.m in Sources */,
 				CC095CAF17377C2C00A0BD3C /* ApplifierImpactVideoMuteButton.m in Sources */,
 				78BC12F817392D0D0015A35E /* ApplifierImpactInstrumentation.m in Sources */,
@@ -934,7 +1079,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/build/Release-iphoneos\"",
 					"\"$(SRCROOT)/build/Release-iphonesimulator\"",
 				);
@@ -942,6 +1086,7 @@
 				GCC_PREFIX_HEADER = "ApplifierImpactTests/ApplifierImpactTests-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
+					"OS_OBJECT_USE_OBJC=0",
 					"TEST=1",
 				);
 				INFOPLIST_FILE = "ApplifierImpactTests/ApplifierImpactTests-Info.plist";
@@ -969,7 +1114,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/build/Release-iphoneos\"",
 					"\"$(SRCROOT)/build/Release-iphonesimulator\"",
 				);
@@ -991,12 +1135,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUILD_DIR = "$(SRCROOT)/build";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(SDKROOT)/Developer/Library/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1010,7 +1154,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TARGET_arm64 = 7.0;
@@ -1024,7 +1168,6 @@
 		99FE3C3B17E896F100845E0B /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CONTENTS_FOLDER_PATH = "$(WRAPPER_NAME)/Versions/$(FRAMEWORK_VERSION)";
@@ -1099,7 +1242,6 @@
 		99FE3C3D17E896F100845E0B /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -1111,7 +1253,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/build/Release-iphoneos\"",
 					"\"$(SRCROOT)/build/Release-iphonesimulator\"",
 				);
@@ -1122,6 +1263,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"TEST=1",
+					"OS_OBJECT_USE_OBJC=0",
 				);
 				INFOPLIST_FILE = "ApplifierImpactTests/ApplifierImpactTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
@@ -1140,7 +1282,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUILD_DIR = "$(SRCROOT)/build";
@@ -1152,6 +1293,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(SDKROOT)/Developer/Library/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1167,7 +1309,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1183,7 +1324,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUILD_DIR = "$(SRCROOT)/build";
@@ -1195,6 +1335,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SDKROOT)/Developer/Library/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = "OS_OBJECT_USE_OBJC=0";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -1204,7 +1345,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = "$(TARGET_$(CURRENT_ARCH))";
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TARGET_arm64 = 7.0;
