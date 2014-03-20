@@ -7,7 +7,11 @@
 //
 
 #import "ApplifierImpactUnity3DWrapper.h"
+#if UNITY_VERSION >= 420
+#import "UnityAppController.h"
+#else
 #import "AppController.h"
+#endif
 
 static ApplifierImpactUnity3DWrapper *applifierImpact = NULL;
 
@@ -35,16 +39,12 @@ extern "C" {
 
 @implementation ApplifierImpactUnity3DWrapper
 
-- (id)initWithGameId:(NSString*)gameId testModeOn:(bool)testMode debugModeOn:(bool)debugMode withGameObjectName:(NSString*)gameObjectName useNativeUI:(bool)useNativeWhenPossible {
+- (id)initWithGameId:(NSString*)gameId testModeOn:(bool)testMode debugModeOn:(bool)debugMode withGameObjectName:(NSString*)gameObjectName {
     self = [super init];
     
     if (self != nil) {
         self.gameObjectName = gameObjectName;
         self.gameId = gameId;
-        
-        if (useNativeWhenPossible) {
-            [[ApplifierImpact sharedInstance] setImpactMode:kApplifierImpactModeNoWebView];
-        }
         
         [[ApplifierImpact sharedInstance] setDelegate:self];
         [[ApplifierImpact sharedInstance] setDebugMode:debugMode];
@@ -93,9 +93,9 @@ extern "C" {
 
 
 extern "C" {
-    void init (const char *gameId, bool testMode, bool debugMode, const char *gameObjectName, bool useNativeUI) {
+    void init (const char *gameId, bool testMode, bool debugMode, const char *gameObjectName) {
         if (applifierImpact == NULL) {
-            applifierImpact = [[ApplifierImpactUnity3DWrapper alloc] initWithGameId:ImpactCreateNSString(gameId) testModeOn:testMode debugModeOn:debugMode withGameObjectName:ImpactCreateNSString(gameObjectName) useNativeUI:useNativeUI];
+            applifierImpact = [[ApplifierImpactUnity3DWrapper alloc] initWithGameId:ImpactCreateNSString(gameId) testModeOn:testMode debugModeOn:debugMode withGameObjectName:ImpactCreateNSString(gameObjectName)];
         }
     }
     

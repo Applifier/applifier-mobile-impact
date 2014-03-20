@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the 'ApplifierImpactMobileAIRWrapper' target in the 'ApplifierImpactMobileAIRWrapper' project
-//
-
-#ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-#endif

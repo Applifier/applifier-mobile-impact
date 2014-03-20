@@ -344,7 +344,38 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
 		sendActionToListener(ApplifierImpactMainViewAction.VideoSkipped);
 	}
-	
+
+	// Almost like onVideoSkip but this is a bit different situation
+	// This covers situations where user has e.g. pressed home button and hidden the video instead of pressing skip button
+	public void onVideoHidden() {
+		Map<String, Object> values = null;
+		values = new HashMap<String, Object>();
+		values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, videoplayerview.getBufferingDuration());
+		values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_HIDDEN);
+		ApplifierImpactInstrumentation.gaInstrumentationVideoAbort(ApplifierImpactProperties.SELECTED_CAMPAIGN, values);
+
+		if (videoplayerview != null) {
+			videoplayerview.setKeepScreenOn(false);
+		}
+
+		removeFromMainView(videoplayerview);
+		videoplayerview = null;
+
+		setViewState(ApplifierImpactMainViewState.WebView);
+		ApplifierImpactProperties.getCurrentActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+
+		JSONObject params = new JSONObject();
+		try {
+			params.put(ApplifierImpactConstants.IMPACT_NATIVEEVENT_CAMPAIGNID_KEY, ApplifierImpactProperties.SELECTED_CAMPAIGN.getCampaignId());
+		}
+		catch (Exception e) {
+			ApplifierImpactUtils.Log("Could not create JSON", this);
+		}
+		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
+
+		sendActionToListener(ApplifierImpactMainViewAction.VideoSkipped);
+	}
+
 	// IApplifierImpactWebViewListener
 	@Override
 	public void onWebAppLoaded () {

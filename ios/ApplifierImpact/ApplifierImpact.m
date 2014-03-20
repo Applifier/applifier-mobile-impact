@@ -13,9 +13,7 @@
 #import "ApplifierImpactMainViewController.h"
 #import "ApplifierImpactZoneManager.h"
 #import "ApplifierImpactIncentivizedZone.h"
-
 #import "ApplifierImpactDefaultInitializer.h"
-#import "ApplifierImpactNoWebViewInitializer.h"
 
 NSString * const kApplifierImpactRewardItemPictureKey = @"picture";
 NSString * const kApplifierImpactRewardItemNameKey = @"name";
@@ -28,7 +26,6 @@ NSString * const kApplifierImpactOptionVideoUsesDeviceOrientation = @"useDeviceO
 
 @interface ApplifierImpact () <ApplifierImpactInitializerDelegate, ApplifierImpactMainViewControllerDelegate>
   @property (nonatomic, strong) ApplifierImpactInitializer *initializer;
-  @property (nonatomic, assign) ApplifierImpactMode mode;
   @property (nonatomic, assign) Boolean debug;
 @end
 
@@ -56,10 +53,6 @@ NSString * const kApplifierImpactOptionVideoUsesDeviceOrientation = @"useDeviceO
 
 + (NSString *)getSDKVersion {
   return [[ApplifierImpactProperties sharedInstance] impactVersion];
-}
-
-- (void)setImpactMode:(ApplifierImpactMode)impactMode {
-  self.mode = impactMode;
 }
 
 - (void)setDebugMode:(BOOL)debugMode {
@@ -127,7 +120,7 @@ static ApplifierImpact *sharedImpact = nil;
 	[[ApplifierImpactProperties sharedInstance] setImpactGameId:gameId];
   [[ApplifierImpactMainViewController sharedInstance] setDelegate:self];
   
-  self.initializer = [self selectInitializerFromMode:self.mode];
+  self.initializer = [[ApplifierImpactDefaultInitializer alloc] init];
   
   if (self.initializer != nil) {
     [self.initializer setDelegate:self];
@@ -179,10 +172,6 @@ static ApplifierImpact *sharedImpact = nil;
   id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
   if(currentZone) {
     [currentZone mergeOptions:options];
-    
-    // If Impact is in "No WebView" -mode, always skip offerscreen
-    if (self.mode == kApplifierImpactModeNoWebView)
-      [currentZone setNoOfferScreen:true];
     
     if ([currentZone noOfferScreen]) {
       if (![self canShowCampaigns]) return false;
@@ -338,17 +327,6 @@ static ApplifierImpact *sharedImpact = nil;
 		return true;
   }
   return false;
-}
-
-- (ApplifierImpactInitializer *)selectInitializerFromMode:(ApplifierImpactMode)mode {
-  switch (mode) {
-    case kApplifierImpactModeDefault:
-      return [[ApplifierImpactDefaultInitializer alloc] init];
-    case kApplifierImpactModeNoWebView:
-      return [[ApplifierImpactNoWebViewInitializer alloc] init];
-  }
-  
-  return nil;
 }
 
 #pragma mark - Private data refreshing

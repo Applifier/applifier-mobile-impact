@@ -36,13 +36,26 @@ public class ApplifierImpactUtils {
 	@SuppressWarnings("rawtypes")
 	public static void Log (String message, Class cls) {
 		if (ApplifierImpactProperties.IMPACT_DEBUG_MODE) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, cls.getName() + " :: " +  message);
+			logWithPrefix(cls.getName() + " :: ", message);
 		}
 	}
 	
 	public static void Log (String message, Object obj) {
 		if (ApplifierImpactProperties.IMPACT_DEBUG_MODE) {
-			Log.d(ApplifierImpactConstants.LOG_NAME, obj.getClass().getName() + " :: " +  message);
+			logWithPrefix(obj.getClass().getName() + " :: ", message);
+		}
+	}
+
+	// Android will truncate log messages over four kilobytes so write to log in sub 4k chunks
+	private static void logWithPrefix(String prefix, String message) {
+		int maxLogMsg = 3500;
+
+		for(int i = 0; i * maxLogMsg < message.length() && i < 10; i++) {
+			if(message.length() - i * maxLogMsg > maxLogMsg) {
+				Log.d(ApplifierImpactConstants.LOG_NAME, prefix + message.substring(i * maxLogMsg, (i + 1) * maxLogMsg));
+			} else {
+				Log.d(ApplifierImpactConstants.LOG_NAME, prefix + message.substring(i * maxLogMsg));
+			}
 		}
 	}
 	

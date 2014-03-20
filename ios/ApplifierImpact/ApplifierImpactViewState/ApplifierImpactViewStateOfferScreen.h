@@ -1,5 +1,5 @@
 //
-//  ApplifierImpactViewStateDefaultEndScreen.h
+//  ApplifierImpactViewStateOfferScreen.h
 //  ApplifierImpact
 //
 //  Created by Pekka Palmu on 4/4/13.
@@ -8,5 +8,6 @@
 
 #import "ApplifierImpactViewState.h"
 
-@interface ApplifierImpactViewStateEndScreen : ApplifierImpactViewState
+@interface ApplifierImpactViewStateOfferScreen : ApplifierImpactViewState
+
 @end

@@ -207,7 +207,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 						ApplifierImpactProperties.SELECTED_CAMPAIGN = selectedCampaign;
 					}
 				}
-				
+
+				ApplifierImpactDownloader.stopAllDownloads();
+
 				_openRequestFromDeveloper = true;
 				_showingImpact = true;
 				startImpactFullscreenActivity();

@@ -9,7 +9,6 @@ import android.app.Activity;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
-import com.google.android.gms.ads.identifier.AdvertisingIdClient.Info;
 
 public class ApplifierImpactProperties {
 	//public static String CAMPAIGN_DATA_URL = "http://192.168.1.246:3500/mobile/campaigns";
@@ -26,7 +25,6 @@ public class ApplifierImpactProperties {
 	public static WeakReference<Activity> CURRENT_ACTIVITY = null;
 	public static ApplifierImpactCampaign SELECTED_CAMPAIGN = null;
 	public static Boolean IMPACT_DEBUG_MODE = false;
-	public static Info ADVERTISING_TRACKING_INFO = null;
 	public static int CAMPAIGN_REFRESH_VIEWS_COUNT = 0;
 	public static int CAMPAIGN_REFRESH_VIEWS_MAX = 0;
 	public static int CAMPAIGN_REFRESH_SECONDS = 0;
@@ -60,10 +58,14 @@ public class ApplifierImpactProperties {
 			if (!ApplifierImpactDevice.getMacAddress().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
 				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_MACADDRESS_KEY, URLEncoder.encode(ApplifierImpactDevice.getMacAddress(), "UTF-8"));
 			
-			if(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO != null) {
-				queryString = String.format("%s&%s=%d", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_TRACKINGENABLED_KEY, ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.isLimitAdTrackingEnabled() ? 0 : 1);
-				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ADVERTISINGTRACKINGID_KEY, URLEncoder.encode(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.getId(), "UTF-8"));
-				queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_RAWADVERTISINGTRACKINGID_KEY, URLEncoder.encode(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.getId(), "UTF-8"));
+			if(ApplifierImpactDevice.ADVERTISING_TRACKING_INFO != null) {
+				queryString = String.format("%s&%s=%d", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_TRACKINGENABLED_KEY, ApplifierImpactDevice.isLimitAdTrackingEnabled() ? 0 : 1);
+				String rawAdvertisingTrackingId = ApplifierImpactDevice.getAdvertisingTrackingId();
+				if(rawAdvertisingTrackingId != null) {
+					String advertisingTrackingId = ApplifierImpactUtils.Md5(rawAdvertisingTrackingId).toLowerCase();
+					queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ADVERTISINGTRACKINGID_KEY, URLEncoder.encode(advertisingTrackingId, "UTF-8"));
+					queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_RAWADVERTISINGTRACKINGID_KEY, URLEncoder.encode(rawAdvertisingTrackingId, "UTF-8"));					
+				}
 			}
 			
 			queryString = String.format("%s&%s=%s", queryString, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_PLATFORM_KEY, "android");
@@ -119,7 +121,11 @@ public class ApplifierImpactProperties {
 	
 	public static Activity getCurrentActivity() {
 		if(CURRENT_ACTIVITY != null) {
-			return CURRENT_ACTIVITY.get();
+			if(CURRENT_ACTIVITY.get() != null) {
+				return CURRENT_ACTIVITY.get();
+			} else {
+				return BASE_ACTIVITY.get();
+			}
 		}
 		return null;
 	}

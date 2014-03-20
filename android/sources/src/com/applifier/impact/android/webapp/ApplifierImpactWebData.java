@@ -182,10 +182,14 @@ public class ApplifierImpactWebData {
 				if (!ApplifierImpactDevice.getMacAddress().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
 					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_MACADDRESS_KEY, URLEncoder.encode(ApplifierImpactDevice.getMacAddress(), "UTF-8"));
 				
-				if(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO != null) {
-					queryParams = String.format("%s&%s=%d", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_TRACKINGENABLED_KEY, ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.isLimitAdTrackingEnabled() ? 0 : 1);
-					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ADVERTISINGTRACKINGID_KEY, URLEncoder.encode(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.getId(), "UTF-8"));
-					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_RAWADVERTISINGTRACKINGID_KEY, URLEncoder.encode(ApplifierImpactProperties.ADVERTISING_TRACKING_INFO.getId(), "UTF-8"));
+				if(ApplifierImpactDevice.ADVERTISING_TRACKING_INFO != null) {
+					queryParams = String.format("%s&%s=%d", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_TRACKINGENABLED_KEY, ApplifierImpactDevice.isLimitAdTrackingEnabled() ? 0 : 1);
+					String rawAdvertisingTrackingId = ApplifierImpactDevice.getAdvertisingTrackingId();
+					if(rawAdvertisingTrackingId != null) {
+						String advertisingTrackingId = ApplifierImpactUtils.Md5(rawAdvertisingTrackingId).toLowerCase();
+						queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ADVERTISINGTRACKINGID_KEY, URLEncoder.encode(advertisingTrackingId, "UTF-8"));
+						queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_RAWADVERTISINGTRACKINGID_KEY, URLEncoder.encode(rawAdvertisingTrackingId, "UTF-8"));					
+					}
 				}
 				
 				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_PLATFORM_KEY, "android");

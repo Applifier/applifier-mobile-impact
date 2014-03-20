@@ -23,11 +23,6 @@ extern NSString * const kApplifierImpactOptionGamerSIDKey;
 extern NSString * const kApplifierImpactOptionMuteVideoSounds;
 extern NSString * const kApplifierImpactOptionVideoUsesDeviceOrientation;
 
-typedef enum {
-  kApplifierImpactModeDefault,
-  kApplifierImpactModeNoWebView,
-} ApplifierImpactMode;
-
 @class ApplifierImpact;
 @class SKStoreProductViewController;
 
@@ -58,7 +53,6 @@ typedef enum {
 - (void)setTestDeveloperId:(NSString *)developerId;
 - (void)setTestOptionsId:(NSString *)optionsId;
 - (void)setDebugMode:(BOOL)debugMode;
-- (void)setImpactMode:(ApplifierImpactMode)impactMode;
 - (void)setTestMode:(BOOL)testModeEnabled;
 
 - (BOOL)isDebugMode;

@@ -191,6 +191,7 @@ public class ApplifierImpactConstants {
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_BACK = "back";
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_EXIT = "exit";
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_SKIP = "skip";
+	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_HIDDEN = "hidden";
 	
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOPLAY_HLSL = "stream";
 	public static final String IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOPLAY_CACHED = "cached";

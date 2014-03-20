@@ -14,6 +14,6 @@ extern UIViewController* UnityGetGLViewController();
 @interface ApplifierImpactUnity3DWrapper : NSObject <ApplifierImpactDelegate> {
 }
 
-- (id)initWithGameId:(NSString*)gameId testModeOn:(bool)testMode debugModeOn:(bool)debugMode withGameObjectName:(NSString*)gameObjectName useNativeUI:(bool)useNativeWhenPossible;
+- (id)initWithGameId:(NSString*)gameId testModeOn:(bool)testMode debugModeOn:(bool)debugMode withGameObjectName:(NSString*)gameObjectName;
 
 @end
