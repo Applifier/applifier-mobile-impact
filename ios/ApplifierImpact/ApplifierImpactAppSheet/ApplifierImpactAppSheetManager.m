@@ -29,6 +29,10 @@
   return YES;
 }
 
+- (BOOL)prefersStatusBarHidden {
+  return YES;
+}
+
 @end
 
 @interface ApplifierImpactAppSheetManager ()

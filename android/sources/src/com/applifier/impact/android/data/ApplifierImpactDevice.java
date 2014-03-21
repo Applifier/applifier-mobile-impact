@@ -35,15 +35,20 @@ public class ApplifierImpactDevice {
 	}
 
 	@SuppressLint("DefaultLocale")
-	public static String getAndroidId () {
+	public static String getAndroidId (boolean md5hashed) {
 		String androidID = ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		
 		try {
-			androidID = ApplifierImpactUtils.Md5(Secure.getString(ApplifierImpactProperties.getCurrentActivity().getContentResolver(), Secure.ANDROID_ID));
-			androidID = androidID.toLowerCase();
+			androidID = Secure.getString(ApplifierImpactProperties.getCurrentActivity().getContentResolver(), Secure.ANDROID_ID);
+
+			if(md5hashed) {
+				androidID = ApplifierImpactUtils.Md5(androidID);
+				androidID = androidID.toLowerCase();
+			}
 		}
 		catch (Exception e) {
 			ApplifierImpactUtils.Log("Problems fetching androidId: " + e.getMessage(), ApplifierImpactDevice.class);
+			return ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN;
 		}
 		
 		return androidID;

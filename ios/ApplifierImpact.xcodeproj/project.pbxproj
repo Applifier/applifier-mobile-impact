@@ -1135,6 +1135,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUILD_DIR = "$(SRCROOT)/build";
@@ -1168,6 +1169,7 @@
 		99FE3C3B17E896F100845E0B /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CONTENTS_FOLDER_PATH = "$(WRAPPER_NAME)/Versions/$(FRAMEWORK_VERSION)";
@@ -1242,6 +1244,7 @@
 		99FE3C3D17E896F100845E0B /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_$(XCODE_VERSION_MAJOR))";
 				ARCHS_0400 = "$(ARCHS_STANDARD_32_BIT)";
 				ARCHS_0500 = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
