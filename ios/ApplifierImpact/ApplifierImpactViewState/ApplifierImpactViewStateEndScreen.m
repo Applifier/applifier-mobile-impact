@@ -22,6 +22,10 @@
   
   [super enterState:options];
   
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    [[ApplifierImpactCampaignManager sharedInstance] cacheNextCampaignAfter:[[ApplifierImpactCampaignManager sharedInstance] selectedCampaign]];
+  });
+  
   if (![[[[ApplifierImpactWebAppController sharedInstance] webView] superview] isEqual:[[ApplifierImpactMainViewController sharedInstance] view]]) {
     [[[ApplifierImpactMainViewController sharedInstance] view] addSubview:[[ApplifierImpactWebAppController sharedInstance] webView]];
     [[[ApplifierImpactWebAppController sharedInstance] webView] setFrame:[[ApplifierImpactMainViewController sharedInstance] view].bounds];

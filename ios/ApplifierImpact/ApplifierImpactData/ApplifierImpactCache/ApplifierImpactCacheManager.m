@@ -201,8 +201,6 @@ static ApplifierImpactCacheManager * _inst = nil;
   }
 }
 
-
-
 - (NSString *)operationKey:(ApplifierImpactCampaign *)campaign resourceType:(ResourceType)resourceType {
   @synchronized(self) {
     return [NSString stringWithFormat:@"%@-%d", campaign.id, resourceType];
