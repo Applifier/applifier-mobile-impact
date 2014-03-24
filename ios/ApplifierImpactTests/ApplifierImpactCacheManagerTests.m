@@ -66,8 +66,8 @@ extern void __gcov_flush();
 
 - (void)tearDown {
   __gcov_flush();
-  [super tearDown];
   _cacheManager = nil;
+  [super tearDown];
 }
 
 - (void)testCacheNilCampaign {
@@ -105,7 +105,6 @@ extern void __gcov_flush();
 }
 
 - (void)testCacheCampaignFilledWithWrongValues {
-  _cachingResult = CachingResultUndefined;
   ApplifierImpactCampaign * campaignToCache = [ApplifierImpactCampaign new];
   campaignToCache.id = @"tmp";
   campaignToCache.isValidCampaign = YES;
@@ -113,6 +112,7 @@ extern void __gcov_flush();
   BOOL addedToQueue = [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
   
   if (addedToQueue) {
+    _cachingResult = CachingResultUndefined;
     [self threadBlocked:^BOOL{
       @synchronized(self) {
         return _cachingResult != CachingResultFinishedAll;
@@ -131,7 +131,6 @@ extern void __gcov_flush();
 }
 
 - (void)testCacheSingleValidCampaign {
-  _cachingResult = CachingResultUndefined;
   NSError * error = nil;
   NSStringEncoding encoding = NSStringEncodingConversionAllowLossy;
   NSString * pathToResource = [[NSBundle bundleForClass:[self class]] pathForResource:@"jsonData.txt" ofType:nil];
@@ -148,6 +147,7 @@ extern void __gcov_flush();
   BOOL addedToQueue = [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaignToCache];
   
   if (addedToQueue) {
+    _cachingResult = CachingResultUndefined;
     [self threadBlocked:^BOOL{
       @synchronized(self) {
         return _cachingResult != CachingResultFinishedAll;
@@ -170,7 +170,6 @@ extern void __gcov_flush();
 }
 
 - (void)testCacheAllCampaigns {
-  _cachingResult = CachingResultUndefined;
   NSError * error = nil;
   NSStringEncoding encoding = NSStringEncodingConversionAllowLossy;
   NSString * pathToResource = [[NSBundle bundleForClass:[self class]] pathForResource:@"jsonData.txt" ofType:nil];
@@ -191,7 +190,7 @@ extern void __gcov_flush();
       *stop = YES;
     }
   }];
-  
+  _cachingResult = CachingResultUndefined;
   [self threadBlocked:^BOOL{
     @synchronized(self) {
       return _cachingResult != CachingResultFinishedAll;
@@ -210,7 +209,6 @@ extern void __gcov_flush();
 }
 
 - (void)testCancelAllOperatons {
-  _cachingResult = CachingResultUndefined;
   NSError * error = nil;
   NSStringEncoding encoding = NSStringEncodingConversionAllowLossy;
   NSString * pathToResource = [[NSBundle bundleForClass:[self class]] pathForResource:@"jsonData.txt" ofType:nil];
@@ -228,8 +226,17 @@ extern void __gcov_flush();
       *stop = YES;
     }
   }];
-  sleep(4);
+
   [_cacheManager cancelAllDownloads];
+  
+  [campaigns  enumerateObjectsUsingBlock:^(ApplifierImpactCampaign *campaign, NSUInteger idx, BOOL *stop) {
+    [_cacheManager cache:ResourceTypeTrailerVideo forCampaign:campaign];
+    if (idx > 2) {
+      *stop = YES;
+    }
+  }];
+  
+  _cachingResult = CachingResultUndefined;
   [self threadBlocked:^BOOL{
     @synchronized(self) {
       return _cachingResult != CachingResultFinishedAll;
@@ -238,10 +245,16 @@ extern void __gcov_flush();
   
   STAssertTrue(_cachingResult == CachingResultFinishedAll,
                @"caching should be ok when caching valid campaigns");
+  
+  [campaigns  enumerateObjectsUsingBlock:^(ApplifierImpactCampaign *campaign, NSUInteger idx, BOOL *stop) {
+    STAssertTrue([_cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaign] == true, @"cache invalid for campaign %@", campaign.id);
+    if (idx > 2) {
+      *stop = YES;
+    }
+  }];
 }
 
 - (void)testCacheAllOperationsTwice {
-  _cachingResult = CachingResultUndefined;
   NSError * error = nil;
   NSStringEncoding encoding = NSStringEncodingConversionAllowLossy;
   NSString * pathToResource = [[NSBundle bundleForClass:[self class]] pathForResource:@"jsonData.txt" ofType:nil];
@@ -259,7 +272,7 @@ extern void __gcov_flush();
       *stop = YES;
     }
   }];
-  
+  _cachingResult = CachingResultUndefined;
   [self threadBlocked:^BOOL{
     @synchronized(self) {
       return _cachingResult != CachingResultFinishedAll;
@@ -275,7 +288,7 @@ extern void __gcov_flush();
       *stop = YES;
     }
   }];
-  
+  _cachingResult = CachingResultUndefined;
   [self threadBlocked:^BOOL{
     @synchronized(self) {
       return _cachingResult != CachingResultFinishedAll;
@@ -284,6 +297,12 @@ extern void __gcov_flush();
   
   STAssertTrue(_cachingResult == CachingResultFinishedAll,
                @"caching should be ok when caching valid campaigns");
+  [campaigns  enumerateObjectsUsingBlock:^(ApplifierImpactCampaign *campaign, NSUInteger idx, BOOL *stop) {
+    STAssertTrue([_cacheManager is:ResourceTypeTrailerVideo cachedForCampaign:campaign] == true, @"cache invalid for campaign %@", campaign.id);
+    if (idx > 2) {
+      *stop = YES;
+    }
+  }];
 }
 
 #pragma mark - ApplifierImpactCacheManagerDelegate

@@ -20,9 +20,15 @@
 
 @implementation ApplifierImpactCacheFileOperation
 
+- (BOOL)isExecuting {
+  @synchronized(self) {
+    return !_finished && !_cancelEventSent;
+  }
+}
+
 - (BOOL)isFinished {
   @synchronized (self) {
-    return _finished;
+    return _finished || _cancelEventSent;
   }
 }
 

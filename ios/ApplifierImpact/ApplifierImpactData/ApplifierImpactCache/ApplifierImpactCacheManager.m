@@ -165,6 +165,9 @@ static ApplifierImpactCacheManager * _inst = nil;
       tmp.expectedFileSize = campaign.expectedTrailerSize;
       cacheOperation = tmp;
     }
+    
+    if (!cacheOperation) return NO;
+    
     NSString * key = [self operationKey:campaign resourceType:resourceType];
     cacheOperation.delegate = self;
     cacheOperation.operationKey = key;
@@ -197,8 +200,6 @@ static ApplifierImpactCacheManager * _inst = nil;
     return result;
   }
 }
-
-
 
 - (NSString *)operationKey:(ApplifierImpactCampaign *)campaign resourceType:(ResourceType)resourceType {
   @synchronized(self) {

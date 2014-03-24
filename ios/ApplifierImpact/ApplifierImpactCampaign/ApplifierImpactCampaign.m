@@ -161,7 +161,6 @@
   }
 
   NSString *customClickURLString = [data objectForKey:kApplifierImpactCampaignCustomClickURLKey];
-  if (customClickURLString == nil) failedData = true;
   AIAssertV([customClickURLString isKindOfClass:[NSString class]], nil);
   
   if (customClickURLString != nil && [customClickURLString length] > 4) {
