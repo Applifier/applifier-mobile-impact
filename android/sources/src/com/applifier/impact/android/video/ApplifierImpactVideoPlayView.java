@@ -55,6 +55,7 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 	private Map<ApplifierVideoPosition, Boolean> _sentPositionEvents = new HashMap<ApplifierVideoPosition, Boolean>();
 	private boolean _videoPlaybackStartedSent = false;
 	private boolean _videoPlaybackErrors = false;
+	private boolean _videoCompleted = false;
 	private MediaPlayer _mediaPlayer = null;
 	private boolean _muted = false;
 	private float _volumeBeforeMute = 0.5f;
@@ -236,13 +237,15 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		ApplifierImpactUtils.Log("Creating custom view", this);
 				
 		setBackgroundColor(0xFF000000);
+		
+		_videoCompleted = false;
 		_videoView = new VideoView(getContext()) {
 			@Override
 			public void onWindowVisibilityChanged(int visibility) {
 				if(visibility == View.VISIBLE) {
 					super.onWindowVisibilityChanged(visibility);
-				} else {
-					_listener.onVideoHidden();
+				} else if(!_videoCompleted) {
+						_listener.onVideoHidden();
 				}
 			}
 		};
@@ -252,7 +255,13 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 		_videoView.setLayoutParams(videoLayoutParams);		
 		addView(_videoView, videoLayoutParams);
 		_videoView.setClickable(true);
-		_videoView.setOnCompletionListener(_listener);
+		_videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				_videoCompleted = true;
+				_listener.onCompletion(mp);
+			}
+		});
 		_videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {			
 			@Override
 			public void onPrepared(MediaPlayer mp) {
