@@ -174,10 +174,12 @@ public class ApplifierImpactWebData {
 			String queryParams = String.format("%s=%s", ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_ZONE_KEY, currentZone.getZoneId());
 			
 			try {
-				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_DEVICEID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidId(), "UTF-8"));
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_DEVICEID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidId(true), "UTF-8"));
 				
-				if (!ApplifierImpactDevice.getAndroidId().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
-					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ANDROIDID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidId(), "UTF-8"));
+				if (!ApplifierImpactDevice.getAndroidId(false).equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN)) {
+					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ANDROIDID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidId(true), "UTF-8"));
+					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_RAWANDROIDID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidId(false), "UTF-8"));
+				}
 
 				if (!ApplifierImpactDevice.getMacAddress().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
 					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_MACADDRESS_KEY, URLEncoder.encode(ApplifierImpactDevice.getMacAddress(), "UTF-8"));

@@ -138,10 +138,12 @@ public class ApplifierImpactWebView extends WebView {
 				// Basic data
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_CAMPAIGNDATA_KEY, data);
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_PLATFORM_KEY, "android");
-				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_DEVICEID_KEY, ApplifierImpactDevice.getAndroidId());
+				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_DEVICEID_KEY, ApplifierImpactDevice.getAndroidId(true));
 				
-				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getAndroidId()))
-					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_ANDROIDID_KEY, ApplifierImpactDevice.getAndroidId());
+				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getAndroidId(false))) {
+					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_ANDROIDID_KEY, ApplifierImpactDevice.getAndroidId(true));
+					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_RAWANDROIDID_KEY, ApplifierImpactDevice.getAndroidId(false));
+				}
 
 				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getAndroidSerial()))
 					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SERIALID_KEY, ApplifierImpactDevice.getAndroidSerial());
