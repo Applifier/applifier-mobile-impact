@@ -83,7 +83,24 @@ public class ApplifierImpactCampaignHandler implements IApplifierImpactDownloadL
 		}
 		*/
 	}
-		
+
+	public void downloadCampaign() {
+		if (!ApplifierImpactUtils.isFileInCache(_campaign.getVideoFilename()) && ApplifierImpactUtils.canUseExternalStorage()) {
+			if (!hasDownloads())
+				ApplifierImpactDownloader.addListener(this);
+			
+			addCampaignToDownloads();			
+		}
+		else if (!isFileOk(_campaign.getVideoFilename()) && ApplifierImpactUtils.canUseExternalStorage()) {
+			if (!hasDownloads())
+				ApplifierImpactDownloader.addListener(this);
+
+			ApplifierImpactUtils.removeFile(_campaign.getVideoFilename());
+			ApplifierImpactDownloader.addListener(this);
+			addCampaignToDownloads();
+		}		
+	}
+
 	public void clearData () {
 		if (_handlerListener != null)
 			_handlerListener = null;

@@ -7,11 +7,13 @@ import java.util.TimerTask;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.PowerManager;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -465,6 +467,15 @@ public class ApplifierImpactVideoPlayView extends RelativeLayout {
 			_skipText.setFocusable(true);
 			_skipTextView.setText("Skip video");
 			_skipText.requestFocus();
+			
+			// Get touch events for skip button from a larger area
+			Rect skipHitArea = new Rect();
+			_skipText.getHitRect(skipHitArea);
+			int textHeight = skipHitArea.bottom - skipHitArea.top;
+			skipHitArea.bottom += textHeight * 2;
+			skipHitArea.right += textHeight * 2;
+			TouchDelegate td = new TouchDelegate(skipHitArea, _skipText);
+			((View)_skipText.getParent()).setTouchDelegate(td);
 		}
 	}
 	
