@@ -350,16 +350,16 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 	public void onVideoHidden() {
 		Map<String, Object> values = null;
 		values = new HashMap<String, Object>();
-		values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, videoplayerview.getBufferingDuration());
+		if(videoplayerview != null) {
+			values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_BUFFERINGDURATION_KEY, videoplayerview.getBufferingDuration());
+		}
 		values.put(ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VALUE_KEY, ApplifierImpactConstants.IMPACT_GOOGLE_ANALYTICS_EVENT_VIDEOABORT_HIDDEN);
 		ApplifierImpactInstrumentation.gaInstrumentationVideoAbort(ApplifierImpactProperties.SELECTED_CAMPAIGN, values);
 
 		if (videoplayerview != null) {
 			videoplayerview.setKeepScreenOn(false);
+			videoplayerview = null;
 		}
-
-		removeFromMainView(videoplayerview);
-		videoplayerview = null;
 
 		setViewState(ApplifierImpactMainViewState.WebView);
 		ApplifierImpactProperties.getCurrentActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
