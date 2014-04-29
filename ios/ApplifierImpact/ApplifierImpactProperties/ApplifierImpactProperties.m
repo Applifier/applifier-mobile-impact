@@ -11,7 +11,7 @@
 #import "../ApplifierImpact.h"
 #import "../ApplifierImpactDevice/ApplifierImpactDevice.h"
 
-NSString * const kApplifierImpactVersion = @"1100";
+NSString * const kApplifierImpactVersion = @"1200";
 
 @implementation ApplifierImpactProperties
 
