@@ -14,7 +14,15 @@ Everyplay GameAds SDK is licensed under the Apache License, Version 2.0 (http://
 In any issues, please file in issue with us in this Github repository, or log a ticket with us by emailing support@applifier.zendesk.com
 
 Everyplay GameAds SDK Release Notes
-==================================
+===================================
+
+v1.2.0 April 30th, 2014
+-----------------------
+
+*iOS & Android*
+
+- Improved caching of videos
+- Various fixes on both platforms
 
 v1.1.0 February 20th, 2014
 --------------------------
