@@ -7,6 +7,11 @@ public class ApplifierImpactConstants {
 	public static final String CACHE_MANIFEST_FILENAME = "manifest.json";
 	public static final String PENDING_REQUESTS_FILENAME = "pendingrequests.dat";
 
+	/*
+	 * IMPACT_VERSION is an integer composed of SDK major (X), minor (Y) and fix (Z) versions with format XYZZ
+	 * Fix version number must be increased for all fixes and changes
+	 */
+
 	/* Impact */
 	public static final String IMPACT_VERSION = "1200";
 	public static final String IMPACT_REQUEST_METHOD_POST = "POST";
