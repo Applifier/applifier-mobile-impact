@@ -320,8 +320,10 @@ public class ApplifierImpactMainView extends RelativeLayout implements 	IApplifi
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_VIDEOCOMPLETED, params);
 		webview.sendNativeEventToWebApp(ApplifierImpactConstants.IMPACT_NATIVEEVENT_HIDESPINNER, spinnerParams);
 		
-		ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
-		ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
+		if(ApplifierImpactProperties.SELECTED_CAMPAIGN != null) {
+			ApplifierImpactProperties.SELECTED_CAMPAIGN.setCampaignStatus(ApplifierImpactCampaignStatus.VIEWED);
+			ApplifierImpactProperties.SELECTED_CAMPAIGN = null;
+		}
 	}
 	
 	public void onVideoSkip () {

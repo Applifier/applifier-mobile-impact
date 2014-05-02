@@ -818,7 +818,9 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		if(_refreshAfterShowImpact) {
 			_refreshAfterShowImpact = false;
 			ApplifierImpactUtils.Log("Starting delayed ad plan refresh", this);
-			webdata.initCampaigns();
+			if(webdata != null) {
+				webdata.initCampaigns();
+			}
 			return;
 		}
 
@@ -921,10 +923,12 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 											ApplifierImpactProperties.getCurrentActivity().finish();
 										}
 										
-										ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
-										if (!currentZone.openAnimated()) {
-											ApplifierImpactProperties.getCurrentActivity().overridePendingTransition(0, 0);
-										}	
+										if(ApplifierImpactWebData.getZoneManager() != null) {
+											ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
+											if (!currentZone.openAnimated()) {
+												ApplifierImpactProperties.getCurrentActivity().overridePendingTransition(0, 0);
+											}	
+										}
 										
 										_showingImpact = false;
 

@@ -16,6 +16,14 @@ In any issues, please file in issue with us in this Github repository, or log a 
 Everyplay GameAds SDK Release Notes
 ===================================
 
+v1.2.1 May 2nd, 2014
+--------------------
+
+*Android*
+
+- Fix crash when buffering over very slow connections
+- Fix crash when closing end screen on certain zone configurations
+
 v1.2.0 April 30th, 2014
 -----------------------
 
