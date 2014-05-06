@@ -24,6 +24,10 @@ v1.2.2 May 6th, 2014
 - Fix release build to universal binary
 - Fix unneccessary asserts on invalid campaign data while using the debug build
 
+*Android*
+
+- Fix multiple initializations in certain cases
+
 v1.2.1 May 2nd, 2014
 --------------------
 
