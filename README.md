@@ -16,6 +16,14 @@ In any issues, please file in issue with us in this Github repository, or log a 
 Everyplay GameAds SDK Release Notes
 ===================================
 
+v1.2.2 May 6th, 2014
+--------------------
+
+*iOS*
+
+- Fix release build to universal binary
+- Fix unneccessary asserts on invalid campaign data while using the debug build
+
 v1.2.1 May 2nd, 2014
 --------------------
 
