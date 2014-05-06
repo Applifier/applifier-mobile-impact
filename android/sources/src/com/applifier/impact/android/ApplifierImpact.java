@@ -65,6 +65,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	public static ApplifierImpactMainView mainview = null;
 	
 	// Temporary data
+	private boolean _instanceInitialized = false;
 	private boolean _initialized = false;
 	private boolean _showingImpact = false;
 	private boolean _impactReadySent = false;
@@ -617,7 +618,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 	}
 	
 	private void init (final Activity activity, String gameId, IApplifierImpactListener listener) {
-		if (_initialized) return; 
+		if (instance != null && instance._instanceInitialized) return;
 		
 		if(gameId.length() == 0) {
 			throw new IllegalArgumentException("gameId is empty");
@@ -646,6 +647,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 		cachemanager.setDownloadListener(this);
 		webdata = new ApplifierImpactWebData();
 		webdata.setWebDataListener(this);
+		
+		_instanceInitialized = true;
 
 		new Thread(new Runnable() {
 			public void run() {
