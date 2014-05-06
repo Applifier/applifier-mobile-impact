@@ -72,6 +72,7 @@
 		78CB843A16255FAA00E94915 /* ApplifierImpactURLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CB843816255FAA00E94915 /* ApplifierImpactURLProtocol.h */; };
 		78CB843B16255FAA00E94915 /* ApplifierImpactURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */; };
 		8426634418DB0AB6004AD5B3 /* ApplifierImpactAppSheetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 99466CC318D1D87E00A63151 /* ApplifierImpactAppSheetManager.m */; };
+		8464D4FF191127EB00B0E421 /* ApplifierImpactCampaignTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464D4FE191127EB00B0E421 /* ApplifierImpactCampaignTests.m */; };
 		9945F95B180572A200A97B70 /* ApplifierImpactZoneParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9945F95A180572A200A97B70 /* ApplifierImpactZoneParserTests.m */; };
 		9945F95D180575A000A97B70 /* ApplifierImpactZoneManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9945F95C180575A000A97B70 /* ApplifierImpactZoneManagerTests.m */; };
 		99466CC418D1D87E00A63151 /* ApplifierImpactAppSheetManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 99466CC218D1D87E00A63151 /* ApplifierImpactAppSheetManager.h */; };
@@ -253,6 +254,7 @@
 		78BC12F617392D0D0015A35E /* ApplifierImpactInstrumentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactInstrumentation.m; sourceTree = "<group>"; };
 		78CB843816255FAA00E94915 /* ApplifierImpactURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplifierImpactURLProtocol.h; sourceTree = "<group>"; };
 		78CB843916255FAA00E94915 /* ApplifierImpactURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactURLProtocol.m; sourceTree = "<group>"; };
+		8464D4FE191127EB00B0E421 /* ApplifierImpactCampaignTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactCampaignTests.m; sourceTree = "<group>"; };
 		9945F95A180572A200A97B70 /* ApplifierImpactZoneParserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactZoneParserTests.m; sourceTree = "<group>"; };
 		9945F95C180575A000A97B70 /* ApplifierImpactZoneManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplifierImpactZoneManagerTests.m; sourceTree = "<group>"; };
 		99466CC218D1D87E00A63151 /* ApplifierImpactAppSheetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApplifierImpactAppSheetManager.h; path = ApplifierImpactAppSheet/ApplifierImpactAppSheetManager.h; sourceTree = "<group>"; };
@@ -495,6 +497,7 @@
 		99FE3C1717E87E1400845E0B /* ApplifierImpactTests */ = {
 			isa = PBXGroup;
 			children = (
+				8464D4FE191127EB00B0E421 /* ApplifierImpactCampaignTests.m */,
 				C822D76618CF4A94007AAE44 /* ApplifierImpactCacheManagerTests.m */,
 				9945F95C180575A000A97B70 /* ApplifierImpactZoneManagerTests.m */,
 				9945F95A180572A200A97B70 /* ApplifierImpactZoneParserTests.m */,
@@ -951,6 +954,7 @@
 				C86FABBA18D075F7009EDE8F /* ApplifierImpactSBJsonStreamParserAdapter.m in Sources */,
 				C822D78E18CF4D5D007AAE44 /* ApplifierImpactCampaignManager.m in Sources */,
 				C822D79218CF4D86007AAE44 /* (null) in Sources */,
+				8464D4FF191127EB00B0E421 /* ApplifierImpactCampaignTests.m in Sources */,
 				99A8516A17FC45160090F8FF /* ApplifierImpactRewardItemManagerTests.m in Sources */,
 				C86FABBB18D075F7009EDE8F /* ApplifierImpactSBJsonStreamParserState.m in Sources */,
 				C822D76C18CF4CDF007AAE44 /* ApplifierImpactZoneParser.m in Sources */,
