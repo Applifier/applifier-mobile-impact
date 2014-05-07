@@ -38,6 +38,7 @@ public class ApplifierImpactWebData {
 	private ArrayList<ApplifierImpactUrlLoader> _urlLoaders = null;
 	private ArrayList<ApplifierImpactUrlLoader> _failedUrlLoaders = null;
 	private ApplifierImpactUrlLoader _currentLoader = null;
+	private Object _urlLoaderLock = null;
 	private static ApplifierImpactZoneManager _zoneManager = null;
 	private int _totalUrlsSent = 0;
 	private int _totalLoadersCreated = 0;
@@ -97,7 +98,8 @@ public class ApplifierImpactWebData {
 		}
 	};
 	
-	public ApplifierImpactWebData () {	
+	public ApplifierImpactWebData () {
+		_urlLoaderLock = new Object();
 	}
 	
 	public void setWebDataListener (IApplifierImpactWebDataListener listener) {
@@ -267,19 +269,21 @@ public class ApplifierImpactWebData {
 	}
 	
 	public void stopAllRequests () {
-		if (_urlLoaders != null) {
-			_urlLoaders.clear();
-			_urlLoaders = null;
-		}
+		synchronized(_urlLoaderLock) {
+			if (_urlLoaders != null) {
+				_urlLoaders.clear();
+				_urlLoaders = null;
+			}
 		
-		if (_failedUrlLoaders != null) {
-			_failedUrlLoaders.clear();
-			_failedUrlLoaders = null;
-		}
+			if (_failedUrlLoaders != null) {
+				_failedUrlLoaders.clear();
+				_failedUrlLoaders = null;
+			}
 		
-		if (_currentLoader != null) {
-			_currentLoader.cancel(true);
-			_currentLoader = null;
+			if (_currentLoader != null) {
+				_currentLoader.cancel(true);
+				_currentLoader = null;
+			}
 		}
 	}
 	
@@ -301,18 +305,22 @@ public class ApplifierImpactWebData {
 	/* INTERNAL METHODS */
 	
 	private void addLoader (ApplifierImpactUrlLoader loader) {
-		if (_urlLoaders == null)
-			_urlLoaders = new ArrayList<ApplifierImpactWebData.ApplifierImpactUrlLoader>();
+		synchronized(_urlLoaderLock) {
+			if (_urlLoaders == null)
+				_urlLoaders = new ArrayList<ApplifierImpactWebData.ApplifierImpactUrlLoader>();
 		
-		_urlLoaders.add(loader);
+			_urlLoaders.add(loader);
+		}
 	}
 	
-	private void startNextLoader () {		
-		if (_urlLoaders != null && _urlLoaders.size() > 0 && !_isLoading) {
-			ApplifierImpactUtils.Log("Starting next URL loader", this);
-			_isLoading = true;
-			_currentLoader = (ApplifierImpactUrlLoader)_urlLoaders.remove(0).execute();
-		}			
+	private void startNextLoader () {
+		synchronized(_urlLoaderLock) {
+			if (_urlLoaders != null && _urlLoaders.size() > 0 && !_isLoading) {
+				ApplifierImpactUtils.Log("Starting next URL loader", this);
+				_isLoading = true;
+				_currentLoader = (ApplifierImpactUrlLoader)_urlLoaders.remove(0).execute();
+			}
+		}
 	}
 	
 	private void urlLoadCompleted (ApplifierImpactUrlLoader loader) {
@@ -406,39 +414,41 @@ public class ApplifierImpactWebData {
 	}
 	
 	private void writeFailedUrl (ApplifierImpactUrlLoader loader) {
-		if (loader == null) return;
-		if (_failedUrlLoaders == null)
-			_failedUrlLoaders = new ArrayList<ApplifierImpactWebData.ApplifierImpactUrlLoader>();
-		
-		if (!_failedUrlLoaders.contains(loader)) {
-			_failedUrlLoaders.add(loader);
-		}
-		
-		JSONObject failedUrlsJson = new JSONObject();
-		JSONArray failedUrlsArray = new JSONArray();
-		
-		try {
-			JSONObject failedUrl = null;
-			for (ApplifierImpactUrlLoader failedLoader : _failedUrlLoaders) {
-				failedUrl = new JSONObject();
-				failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_URL_KEY, failedLoader.getBaseUrl());
-				failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_REQUESTTYPE_KEY, failedLoader.getRequestType());
-				failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_METHODTYPE_KEY, failedLoader.getHTTPMethod());
-				failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_BODY_KEY, failedLoader.getQueryParams());				
-				failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_RETRIES_KEY, failedLoader.getRetries());
-				
-				failedUrlsArray.put(failedUrl);
+		synchronized(_urlLoaderLock) {
+			if (loader == null) return;
+			if (_failedUrlLoaders == null)
+				_failedUrlLoaders = new ArrayList<ApplifierImpactWebData.ApplifierImpactUrlLoader>();
+			
+			if (!_failedUrlLoaders.contains(loader)) {
+				_failedUrlLoaders.add(loader);
 			}
 			
-			failedUrlsJson.put("data", failedUrlsArray);
-		}
-		catch (Exception e) {
-			ApplifierImpactUtils.Log("Error collecting failed urls", this);
-		}
-		
-		if (_failedUrlLoaders != null && _failedUrlLoaders.size() > 0 && ApplifierImpactUtils.canUseExternalStorage()) {
-			File pendingRequestFile = new File(ApplifierImpactUtils.getCacheDirectory() + "/" + ApplifierImpactConstants.PENDING_REQUESTS_FILENAME);
-			ApplifierImpactUtils.writeFile(pendingRequestFile, failedUrlsJson.toString());
+			JSONObject failedUrlsJson = new JSONObject();
+			JSONArray failedUrlsArray = new JSONArray();
+			
+			try {
+				JSONObject failedUrl = null;
+				for (ApplifierImpactUrlLoader failedLoader : _failedUrlLoaders) {
+					failedUrl = new JSONObject();
+					failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_URL_KEY, failedLoader.getBaseUrl());
+					failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_REQUESTTYPE_KEY, failedLoader.getRequestType());
+					failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_METHODTYPE_KEY, failedLoader.getHTTPMethod());
+					failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_BODY_KEY, failedLoader.getQueryParams());				
+					failedUrl.put(ApplifierImpactConstants.IMPACT_FAILED_URL_RETRIES_KEY, failedLoader.getRetries());
+					
+					failedUrlsArray.put(failedUrl);
+				}
+				
+				failedUrlsJson.put("data", failedUrlsArray);
+			}
+			catch (Exception e) {
+				ApplifierImpactUtils.Log("Error collecting failed urls", this);
+			}
+			
+			if (_failedUrlLoaders != null && _failedUrlLoaders.size() > 0 && ApplifierImpactUtils.canUseExternalStorage()) {
+				File pendingRequestFile = new File(ApplifierImpactUtils.getCacheDirectory() + "/" + ApplifierImpactConstants.PENDING_REQUESTS_FILENAME);
+				ApplifierImpactUtils.writeFile(pendingRequestFile, failedUrlsJson.toString());
+			}
 		}
 	}
 	
