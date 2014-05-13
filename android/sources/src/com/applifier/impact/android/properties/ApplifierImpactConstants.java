@@ -13,7 +13,7 @@ public class ApplifierImpactConstants {
 	 */
 
 	/* Impact */
-	public static final String IMPACT_VERSION = "1203";
+	public static final String IMPACT_VERSION = "1204";
 	public static final String IMPACT_REQUEST_METHOD_POST = "POST";
 	public static final String IMPACT_REQUEST_METHOD_GET = "GET";
 	
