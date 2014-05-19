@@ -16,6 +16,13 @@ In any issues, please file in issue with us in this Github repository, or log a 
 Everyplay GameAds SDK Release Notes
 ===================================
 
+v1.2.5 May 19th, 2014
+---------------------
+
+*Android*
+
+- Fix video caching issue
+
 v1.2.4 May 13th, 2014
 ---------------------
 

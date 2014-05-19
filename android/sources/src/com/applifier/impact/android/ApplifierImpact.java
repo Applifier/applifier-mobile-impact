@@ -200,6 +200,8 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 			ApplifierImpactZone currentZone = ApplifierImpactWebData.getZoneManager().getCurrentZone();
 			
 			if (currentZone != null) {
+				ApplifierImpactDownloader.stopAllDownloads();
+				
 				currentZone.mergeOptions(options);
 				
 				if (currentZone.noOfferScreen()) {
@@ -218,8 +220,6 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 						}
 					}
 				}
-
-				ApplifierImpactDownloader.stopAllDownloads();
 
 				_openRequestFromDeveloper = true;
 				_showingImpact = true;
