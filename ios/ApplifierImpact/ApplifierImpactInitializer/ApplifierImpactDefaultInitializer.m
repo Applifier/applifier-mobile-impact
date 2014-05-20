@@ -101,6 +101,7 @@
     id currentZone = [[ApplifierImpactZoneManager sharedInstance] getCurrentZone];
     if([currentZone isIncentivized]) {
       id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
+      if (!itemManager) return;
       [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIInitComplete, kApplifierImpactItemKeyKey:[itemManager getCurrentItem].key}];
     } else {
       [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIInitComplete}];
