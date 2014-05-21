@@ -102,6 +102,7 @@
     if([currentZone isIncentivized]) {
       id itemManager = [((ApplifierImpactIncentivizedZone *)currentZone) itemManager];
       AIAssert(itemManager != nil);
+      if (!itemManager) return;
       [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIInitComplete, kApplifierImpactItemKeyKey:[itemManager getCurrentItem].key}];
     } else {
       [[ApplifierImpactWebAppController sharedInstance] setWebViewCurrentView:kApplifierImpactWebViewViewTypeNone data:@{kApplifierImpactWebViewAPIActionKey:kApplifierImpactWebViewAPIInitComplete}];
