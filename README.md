@@ -5,9 +5,11 @@ If you don't have one, you can create an account at https://my.applifier.com/.
 
 Integration instructions can be found here:
 
-For iOS: http://docs.applifier.com/impact/ios/
+For iOS: https://developers.everyplay.com/documentation/GameAds-Integration-Guide-for-iOS
 
-For Android: http://docs.applifier.com/impact/android/
+For Android: https://developers.everyplay.com/documentation/GameAds-Integration-Guide-for-Android
+
+General documentation: https://developers.everyplay.com/documentation/GameAds-Publishers-Documentation
 
 Everyplay GameAds SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
 
