@@ -15,7 +15,6 @@ import com.mopub.mobileads.MoPubErrorCode;
 public class ImpactMopubEvents extends CustomEventInterstitial implements IApplifierImpactListener {
 	
 	private CustomEventInterstitialListener listener = null;
-	private ApplifierImpact impactInstance = null;
 	private String gameId = null;
 	private String zoneId = null;
 	private Map<String, Object> options = null;
@@ -24,62 +23,75 @@ public class ImpactMopubEvents extends CustomEventInterstitial implements IAppli
 	protected void loadInterstitial(Context context,
 			CustomEventInterstitialListener customEventInterstitialListener,
 			Map<String, Object> localExtras, Map<String, String> serverExtras) {
-		Log.i("foo", "Got loadInterstitial");
-		this.listener = customEventInterstitialListener;
+		listener = customEventInterstitialListener;	
 		
-		// The gameId must be sent from the server-side
 		if(serverExtras.get("gameId") == null || !(serverExtras.get("gameId") instanceof String)) {
-			this.listener.onInterstitialFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
+			listener.onInterstitialFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
 			return;
 		}
 		
-		this.gameId = serverExtras.get("gameId");
-		this.zoneId = serverExtras.get("zoneId");
+		gameId = serverExtras.get("gameId");
+		zoneId = serverExtras.get("zoneId");
 		
-		this.options = new HashMap<String, Object>();
-		this.options.putAll(localExtras);
-		this.options.putAll(serverExtras);
+		options = new HashMap<String, Object>();
+		options.putAll(localExtras);
+		options.putAll(serverExtras);
 		
-		ApplifierImpact.setDebugMode(true);
-		this.impactInstance = new ApplifierImpact((Activity)context, gameId, this);
-		
-		Log.d("foo", "impact inited");	
+		if(ApplifierImpact.instance == null) {
+			new ApplifierImpact((Activity)context, gameId, this);
+		} else {
+			ApplifierImpact.instance.changeActivity((Activity)context);
+			ApplifierImpact.instance.setImpactListener(this);
+			listener.onInterstitialLoaded();
+		}		
 	}
 
 	@Override
 	protected void showInterstitial() {
-		if(this.impactInstance.canShowCampaigns()) {
-			this.impactInstance.setZone(this.zoneId);			
-			this.impactInstance.showImpact(options);
+		if(ApplifierImpact.instance.canShowImpact() && ApplifierImpact.instance.canShowCampaigns()) {
+			ApplifierImpact.instance.setZone(zoneId);			
+			ApplifierImpact.instance.showImpact(options);
+		} else {
+			listener.onInterstitialFailed(MoPubErrorCode.NO_FILL);
 		}
 	}
 
 	@Override 
-	protected void onInvalidate() {}
+	protected void onInvalidate() {
+		Log.d("ApplifierImpact", "onInvalidate");
+	}
 
 	@Override
 	public void onImpactClose() {
-		this.listener.onInterstitialDismissed();
+		Log.d("ApplifierImpact", "onImpactClose");
+		listener.onInterstitialDismissed();
 	}
 
 	@Override
 	public void onImpactOpen() {
-		this.listener.onInterstitialShown();
+		Log.d("ApplifierImpact", "onImpactOpen");
+		listener.onInterstitialShown();
 	}
 	
 	@Override
-	public void onVideoStarted() {}
+	public void onVideoStarted() {
+		Log.d("ApplifierImpact", "onVideoStarted");
+	}
+	
 	@Override
-	public void onVideoCompleted(String rewardItemKey, boolean skipped) {}
+	public void onVideoCompleted(String rewardItemKey, boolean skipped) {
+		Log.d("ApplifierImpact", "onVideoCompleted - " + rewardItemKey + " - " + skipped);
+	}
 
 	@Override
 	public void onCampaignsAvailable() {
-		Log.d("foo", "onCampaignsAvailable");
-		this.listener.onInterstitialLoaded();
+		Log.d("ApplifierImpact", "onCampaignsAvailable");
+		listener.onInterstitialLoaded();
 	}
 
 	@Override
 	public void onCampaignsFetchFailed() {
-		this.listener.onInterstitialFailed(MoPubErrorCode.NO_FILL);	
+		Log.d("ApplifierImpact", "onCampaignsFetchFailed");
+		listener.onInterstitialFailed(MoPubErrorCode.NO_FILL);	
 	}
 }
