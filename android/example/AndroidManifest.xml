@@ -28,7 +28,7 @@
         
   		 <activity 
   		    android:name="com.applifier.impact.android.view.ApplifierImpactFullscreenActivity" 
-          	android:configChanges="keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize"
+          	android:configChanges="locale|mcc|mnc|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale"
           	android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
           	android:hardwareAccelerated="true" />
     </application>
