@@ -23,7 +23,7 @@ static NSString const * const kApplifierImpactOptionZoneIdKey = @"zoneId";
 @synthesize delegate;
 
 - (void)requestInterstitialWithCustomEventInfo:(NSDictionary *)info {
-  [[ApplifierImpact sharedInstance] setDebugMode:YES];
+  [[ApplifierImpact sharedInstance] setDebugMode:TRUE];
   [[ApplifierImpact sharedInstance] startWithGameId:[info objectForKey:@"gameId"]];
   [[ApplifierImpact sharedInstance] setDelegate:self];
   
@@ -53,15 +53,13 @@ static NSString const * const kApplifierImpactOptionZoneIdKey = @"zoneId";
     [_params setObject:videoUsesDeviceOrientationValue forKey:kApplifierImpactOptionVideoUsesDeviceOrientation];
   }
   
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    if([[ApplifierImpact sharedInstance] canShowCampaigns]) {
-      [self.delegate interstitialCustomEvent:self didLoadAd:nil];
-    }
-  });
+  if([[ApplifierImpact sharedInstance] canShowImpact] && [[ApplifierImpact sharedInstance] canShowCampaigns]) {
+    [self.delegate interstitialCustomEvent:self didLoadAd:nil];
+  }
 }
 
 - (void)showInterstitialFromRootViewController:(UIViewController *)rootViewController {
-  if([[ApplifierImpact sharedInstance] canShowCampaigns]) {
+  if([[ApplifierImpact sharedInstance] canShowImpact] && [[ApplifierImpact sharedInstance] canShowCampaigns]) {
     [[ApplifierImpact sharedInstance] setViewController:rootViewController showImmediatelyInNewController:NO];
     [[ApplifierImpact sharedInstance] setZone:_zoneId];
     [[ApplifierImpact sharedInstance] showImpact:_params];
