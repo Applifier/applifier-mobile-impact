@@ -24,7 +24,7 @@ import com.applifier.impact.android.cache.IApplifierImpactCacheListener;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaignHandler;
-import com.applifier.impact.android.data.ApplifierImpactAdvertisingID;
+import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.applifier.impact.android.item.ApplifierImpactRewardItem;
 import com.applifier.impact.android.item.ApplifierImpactRewardItemManager;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
@@ -652,7 +652,7 @@ public class ApplifierImpact implements IApplifierImpactCacheListener,
 
 		new Thread(new Runnable() {
 			public void run() {
-				ApplifierImpactAdvertisingID.init(activity);
+				ApplifierImpactDevice.fetchAdvertisingTrackingInfo(activity);
 				if (webdata.initCampaigns()) {
 					_initialized = true;
 				}

@@ -22,7 +22,6 @@ import android.os.AsyncTask;
 import com.applifier.impact.android.ApplifierImpactUtils;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign;
 import com.applifier.impact.android.campaign.ApplifierImpactCampaign.ApplifierImpactCampaignStatus;
-import com.applifier.impact.android.data.ApplifierImpactAdvertisingID;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.applifier.impact.android.item.ApplifierImpactRewardItemManager;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
@@ -177,18 +176,27 @@ public class ApplifierImpactWebData {
 			String queryParams = String.format("%s=%s", ApplifierImpactConstants.IMPACT_ANALYTICS_QUERYPARAM_ZONE_KEY, currentZone.getZoneId());
 			
 			try {
-				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_PLATFORM_KEY, "android");
-
-				String advertisingId = ApplifierImpactAdvertisingID.getAdvertisingTrackingId();
-				if(advertisingId != null) {
-					queryParams = String.format("%s&%s=%d", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_TRACKINGENABLED_KEY, ApplifierImpactDevice.isLimitAdTrackingEnabled() ? 0 : 1);
-					if(advertisingId != null) {
-						String advertisingIdMd5 = ApplifierImpactUtils.Md5(advertisingId).toLowerCase();
-						queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ADVERTISINGTRACKINGID_KEY, URLEncoder.encode(advertisingIdMd5, "UTF-8"));
-						queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_RAWADVERTISINGTRACKINGID_KEY, URLEncoder.encode(advertisingId, "UTF-8"));					
-					}
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_DEVICEID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidId(true), "UTF-8"));
+				
+				if (!ApplifierImpactDevice.getAndroidId(false).equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN)) {
+					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ANDROIDID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidId(true), "UTF-8"));
+					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_RAWANDROIDID_KEY, URLEncoder.encode(ApplifierImpactDevice.getAndroidId(false), "UTF-8"));
 				}
 
+				if (!ApplifierImpactDevice.getMacAddress().equals(ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN))
+					queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_MACADDRESS_KEY, URLEncoder.encode(ApplifierImpactDevice.getMacAddress(), "UTF-8"));
+				
+				if(ApplifierImpactDevice.ADVERTISING_TRACKING_INFO != null) {
+					queryParams = String.format("%s&%s=%d", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_TRACKINGENABLED_KEY, ApplifierImpactDevice.isLimitAdTrackingEnabled() ? 0 : 1);
+					String rawAdvertisingTrackingId = ApplifierImpactDevice.getAdvertisingTrackingId();
+					if(rawAdvertisingTrackingId != null) {
+						String advertisingTrackingId = ApplifierImpactUtils.Md5(rawAdvertisingTrackingId).toLowerCase();
+						queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ADVERTISINGTRACKINGID_KEY, URLEncoder.encode(advertisingTrackingId, "UTF-8"));
+						queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_RAWADVERTISINGTRACKINGID_KEY, URLEncoder.encode(rawAdvertisingTrackingId, "UTF-8"));					
+					}
+				}
+				
+				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_PLATFORM_KEY, "android");
 				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_GAMEID_KEY, URLEncoder.encode(ApplifierImpactProperties.IMPACT_GAME_ID, "UTF-8"));
 				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_SDKVERSION_KEY, URLEncoder.encode(ApplifierImpactConstants.IMPACT_VERSION, "UTF-8"));
 				queryParams = String.format("%s&%s=%s", queryParams, ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_SOFTWAREVERSION_KEY, URLEncoder.encode(ApplifierImpactDevice.getSoftwareVersion(), "UTF-8"));
