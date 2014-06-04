@@ -18,6 +18,17 @@ In any issues, please file in issue with us in this Github repository, or log a 
 Everyplay GameAds SDK Release Notes
 ===================================
 
+v1.2.6 June 3rd, 2014
+---------------------
+
+*Android*
+
+- Use only Google Play advertising ID to identify users
+
+*iOS*
+
+- Prevent crash with invalid zone configuration
+
 v1.2.5 May 19th, 2014
 ---------------------
 

@@ -22,6 +22,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.applifier.impact.android.ApplifierImpactUtils;
+import com.applifier.impact.android.data.ApplifierImpactAdvertisingID;
 import com.applifier.impact.android.data.ApplifierImpactDevice;
 import com.applifier.impact.android.properties.ApplifierImpactConstants;
 import com.applifier.impact.android.properties.ApplifierImpactProperties;
@@ -138,17 +139,6 @@ public class ApplifierImpactWebView extends WebView {
 				// Basic data
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_CAMPAIGNDATA_KEY, data);
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_PLATFORM_KEY, "android");
-				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_DEVICEID_KEY, ApplifierImpactDevice.getAndroidId(true));
-				
-				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getAndroidId(false))) {
-					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_ANDROIDID_KEY, ApplifierImpactDevice.getAndroidId(true));
-					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_RAWANDROIDID_KEY, ApplifierImpactDevice.getAndroidId(false));
-				}
-
-				if (!ApplifierImpactConstants.IMPACT_DEVICEID_UNKNOWN.equals(ApplifierImpactDevice.getAndroidSerial()))
-					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SERIALID_KEY, ApplifierImpactDevice.getAndroidSerial());
-				
-				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_MACADDRESS_KEY, ApplifierImpactDevice.getMacAddress());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SDKVERSION_KEY, ApplifierImpactConstants.IMPACT_VERSION);
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_GAMEID_KEY, ApplifierImpactProperties.IMPACT_GAME_ID);
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SCREENDENSITY_KEY, ApplifierImpactDevice.getScreenDensity());
@@ -158,6 +148,16 @@ public class ApplifierImpactWebView extends WebView {
 				// Tracking data
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_SOFTWAREVERSION_KEY, ApplifierImpactDevice.getSoftwareVersion());
 				initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_DEVICETYPE_KEY, ApplifierImpactDevice.getDeviceType());
+
+				// Advertising ID
+				String advertisingId = ApplifierImpactAdvertisingID.getAdvertisingTrackingId();
+				if(advertisingId != null) {
+					initData.put(ApplifierImpactConstants.IMPACT_WEBVIEW_DATAPARAM_TRACKINGENABLED_KEY, ApplifierImpactAdvertisingID.getLimitedAdTracking());
+					
+					String advertisingIdMd5 = ApplifierImpactUtils.Md5(advertisingId).toLowerCase();
+					initData.put(ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_ADVERTISINGTRACKINGID_KEY, advertisingIdMd5);
+					initData.put(ApplifierImpactConstants.IMPACT_INIT_QUERYPARAM_RAWADVERTISINGTRACKINGID_KEY, advertisingId);
+				}
 			}
 			catch (Exception e) {
 				ApplifierImpactUtils.Log("Error creating webview init params", this);
